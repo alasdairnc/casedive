@@ -4,8 +4,70 @@
 import { buildSystemPrompt } from "../src/lib/prompts.js";
 import { checkRateLimit, getClientIp } from "./_rateLimit.js";
 
+// ── Anthropic call ───────────────────────────────────────────────────────────
+
+async function callAnthropic(messages, system, apiKey) {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system,
+      messages,
+    }),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    const err = new Error(errData.error?.message || `Anthropic API error: ${response.status}`);
+    err.status = response.status;
+    throw err;
+  }
+
+  const data = await response.json();
+  const text = data.content?.map((b) => b.text || "").join("") || "";
+  return text.replace(/```json|```/g, "").trim();
+}
+
+// ── Parse with one retry ─────────────────────────────────────────────────────
+
+async function analyzeWithRetry(scenario, filters, apiKey) {
+  const system = buildSystemPrompt(filters || {});
+  const messages = [{ role: "user", content: scenario }];
+
+  // First attempt
+  const raw = await callAnthropic(messages, system, apiKey);
+  try {
+    return { result: JSON.parse(raw), raw };
+  } catch {
+    // Retry: feed Claude its bad output back and ask for valid JSON only
+    const retryMessages = [
+      ...messages,
+      { role: "assistant", content: raw },
+      {
+        role: "user",
+        content:
+          "Your previous response was not valid JSON. Return only the JSON object as specified — no explanation, no preamble, no markdown fences. Just the raw JSON.",
+      },
+    ];
+
+    const retryRaw = await callAnthropic(retryMessages, system, apiKey);
+    try {
+      return { result: JSON.parse(retryRaw), raw, retryRaw };
+    } catch {
+      return { result: null, raw, retryRaw };
+    }
+  }
+}
+
+// ── Handler ──────────────────────────────────────────────────────────────────
+
 export default async function handler(req, res) {
-  // CORS headers
   const origin = req.headers.origin ?? "";
   const allowed = ["https://casefinder-project.vercel.app"];
   if (allowed.includes(origin)) {
@@ -18,8 +80,8 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { allowed, remaining, resetAt } = checkRateLimit(getClientIp(req));
-  if (!allowed) {
+  const { allowed: rateLimitAllowed, remaining, resetAt } = checkRateLimit(getClientIp(req));
+  if (!rateLimitAllowed) {
     res.setHeader("Retry-After", resetAt);
     return res.status(429).json({ error: `Rate limit exceeded. Try again after ${resetAt}.` });
   }
@@ -34,40 +96,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        system: buildSystemPrompt(filters || {}),
-        messages: [{ role: "user", content: scenario }],
-      }),
-    });
+    const { result, raw, retryRaw } = await analyzeWithRetry(
+      scenario,
+      filters,
+      process.env.ANTHROPIC_API_KEY
+    );
 
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      return res.status(response.status).json({
-        error: errData.error?.message || `Anthropic API error: ${response.status}`,
+    if (!result) {
+      return res.status(422).json({
+        error:
+          "The AI returned an unstructured response for this scenario. Try adding more detail — specify the location, what happened, and any relevant context.",
+        debug: { raw, retryRaw },
       });
     }
 
-    const data = await response.json();
-    const text = data.content?.map((b) => b.text || "").join("") || "";
-    const clean = text.replace(/```json|```/g, "").trim();
-
-    try {
-      const parsed = JSON.parse(clean);
-      return res.status(200).json(parsed);
-    } catch {
-      return res.status(500).json({ error: "Failed to parse AI response", raw: clean });
-    }
+    return res.status(200).json(result);
   } catch (err) {
     console.error("Analyze error:", err);
+    if (err.status) {
+      return res.status(err.status).json({ error: err.message });
+    }
     return res.status(500).json({ error: "Internal server error" });
   }
 }
