@@ -10,12 +10,10 @@ export default defineConfig(({ mode }) => {
       {
         name: "api-dev-middleware",
         configureServer(server) {
+
+          // ── /api/analyze ──────────────────────────────────────────────
           server.middlewares.use("/api/analyze", async (req, res) => {
-            if (req.method === "OPTIONS") {
-              res.writeHead(200);
-              res.end();
-              return;
-            }
+            if (req.method === "OPTIONS") { res.writeHead(200); res.end(); return; }
             if (req.method !== "POST") {
               res.writeHead(405, { "Content-Type": "application/json" });
               res.end(JSON.stringify({ error: "Method not allowed" }));
@@ -73,11 +71,73 @@ export default defineConfig(({ mode }) => {
                 res.end(JSON.stringify({ error: "Failed to parse AI response", raw: clean }));
               }
             } catch (err) {
-              console.error("API middleware error:", err);
+              console.error("Analyze middleware error:", err);
               res.writeHead(500, { "Content-Type": "application/json" });
               res.end(JSON.stringify({ error: "Internal server error" }));
             }
           });
+
+          // ── /api/verify ───────────────────────────────────────────────
+          server.middlewares.use("/api/verify", async (req, res) => {
+            if (req.method === "OPTIONS") { res.writeHead(200); res.end(); return; }
+            if (req.method !== "POST") {
+              res.writeHead(405, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ error: "Method not allowed" }));
+              return;
+            }
+
+            const chunks = [];
+            for await (const chunk of req) chunks.push(chunk);
+            const { citations } = JSON.parse(Buffer.concat(chunks).toString());
+
+            if (!Array.isArray(citations) || citations.length === 0) {
+              res.writeHead(400, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ error: "citations array is required" }));
+              return;
+            }
+
+            const { parseCitation, buildCaseId, buildApiUrl, buildCaseUrl, buildSearchUrl } =
+              await import("./src/lib/canlii.js");
+
+            const apiKey = env.CANLII_API_KEY || "";
+            const results = {};
+
+            await Promise.all(
+              citations.map(async (citation) => {
+                const parsed = parseCitation(citation);
+                if (!parsed) {
+                  results[citation] = { status: "unparseable", searchUrl: buildSearchUrl(citation) };
+                  return;
+                }
+                if (!parsed.dbId) {
+                  results[citation] = { status: "unknown_court", searchUrl: buildSearchUrl(citation) };
+                  return;
+                }
+                const caseId = buildCaseId({ year: parsed.year, dbId: parsed.dbId, number: parsed.number });
+                const caseUrl = buildCaseUrl(parsed.dbId, caseId);
+                const searchUrl = buildSearchUrl(citation);
+
+                if (!apiKey) {
+                  results[citation] = { status: "unverified", url: caseUrl, searchUrl };
+                  return;
+                }
+
+                try {
+                  const apiRes = await fetch(buildApiUrl(parsed.dbId, caseId, apiKey));
+                  if (apiRes.status === 404) { results[citation] = { status: "not_found", searchUrl }; return; }
+                  if (!apiRes.ok) { results[citation] = { status: "error", searchUrl }; return; }
+                  const data = await apiRes.json();
+                  results[citation] = { status: "verified", url: caseUrl, searchUrl, title: data.title || citation };
+                } catch {
+                  results[citation] = { status: "error", searchUrl };
+                }
+              })
+            );
+
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify(results));
+          });
+
         },
       },
     ],

@@ -3,7 +3,7 @@ import { useTypewriter } from "../hooks/useTypewriter.js";
 import ChargeCard from "./ChargeCard.jsx";
 import CaseCard from "./CaseCard.jsx";
 
-export default function Results({ data }) {
+export default function Results({ data, verifications = {} }) {
   const t = useTheme();
   const analysisText = useTypewriter(data.analysis || "", 10);
 
@@ -45,7 +45,9 @@ export default function Results({ data }) {
         }}>
           Relevant Case Law ({data.cases?.length || 0})
         </div>
-        {data.cases?.map((c, i) => <CaseCard key={i} caseItem={c} />)}
+        {data.cases?.map((c, i) => (
+          <CaseCard key={i} caseItem={c} verification={verifications[c.citation]} />
+        ))}
       </div>
 
       {/* Analysis */}

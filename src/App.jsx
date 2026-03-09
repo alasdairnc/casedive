@@ -20,7 +20,26 @@ function AppInner() {
     courtLevel: "all",
     dateRange: "all",
   });
+  const [verifications, setVerifications] = useState({});
   const resultsRef = useRef(null);
+
+  const verifyInBackground = async (cases) => {
+    if (!cases?.length) return;
+    const citations = cases.map((c) => c.citation).filter(Boolean);
+    if (!citations.length) return;
+    try {
+      const res = await fetch("/api/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ citations }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      setVerifications(data);
+    } catch {
+      // Silent fail — verification is non-blocking
+    }
+  };
 
   const analyzeScenario = async () => {
     if (!query.trim()) return;
@@ -43,7 +62,9 @@ function AppInner() {
       const data = await response.json();
       if (data.error) throw new Error(data.error);
 
+      setVerifications({});
       setResult(data);
+      verifyInBackground(data.cases);
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);
@@ -110,7 +131,7 @@ function AppInner() {
       <div ref={resultsRef}>
         {loading && <StagedLoading />}
         {error && <ErrorMessage message={error} onRetry={analyzeScenario} />}
-        {result && <Results data={result} />}
+        {result && <Results data={result} verifications={verifications} />}
       </div>
 
       {/* Footer */}
