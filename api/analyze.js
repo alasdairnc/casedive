@@ -2,6 +2,7 @@
 // Keeps the Anthropic API key server-side
 
 import { buildSystemPrompt } from "../src/lib/prompts.js";
+import { checkRateLimit, getClientIp } from "./_rateLimit.js";
 
 export default async function handler(req, res) {
   // CORS headers
@@ -11,6 +12,12 @@ export default async function handler(req, res) {
 
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+  const { allowed, remaining, resetAt } = checkRateLimit(getClientIp(req));
+  if (!allowed) {
+    res.setHeader("Retry-After", resetAt);
+    return res.status(429).json({ error: `Rate limit exceeded. Try again after ${resetAt}.` });
+  }
 
   const { scenario, filters } = req.body;
 

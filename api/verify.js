@@ -2,6 +2,7 @@
 // Batch-verifies AI-generated case citations against the CanLII API.
 // Degrades gracefully when CANLII_API_KEY is not set.
 
+import { checkRateLimit, getClientIp } from "./_rateLimit.js";
 import {
   parseCitation,
   buildCaseId,
@@ -17,6 +18,12 @@ export default async function handler(req, res) {
 
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+  const { allowed, resetAt } = checkRateLimit(getClientIp(req));
+  if (!allowed) {
+    res.setHeader("Retry-After", resetAt);
+    return res.status(429).json({ error: `Rate limit exceeded. Try again after ${resetAt}.` });
+  }
 
   const { citations } = req.body;
 
