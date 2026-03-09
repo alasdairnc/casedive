@@ -24,6 +24,9 @@ export default async function handler(req, res) {
   if (!scenario || typeof scenario !== "string" || !scenario.trim()) {
     return res.status(400).json({ error: "Scenario is required" });
   }
+  if (scenario.length > 5000) {
+    return res.status(400).json({ error: "Scenario must be 5,000 characters or fewer." });
+  }
 
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
