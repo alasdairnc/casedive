@@ -183,12 +183,20 @@ function AppInner() {
       {/* Footer */}
       <footer style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px" }}>
         <div style={{ borderTop: `1px solid ${t.borderLight}`, paddingTop: 24 }}>
-          <span style={{
+          <p style={{
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 11, color: t.textFaint, letterSpacing: 1.5,
+            margin: "0 0 10px 0",
           }}>
-            CaseFinder — Built by Alasdair NC {"\u00B7"} 2026
-          </span>
+            casedive {"\u00B7"} Criminal Code Research Tool
+          </p>
+          <p style={{
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 11, color: t.textFaint, lineHeight: 1.6,
+            margin: 0, letterSpacing: 0.3,
+          }}>
+            {"\u26A0\uFE0F"} Educational Tool Only. This is not legal advice. Always consult a qualified lawyer for legal matters. Verify all citations with official sources like CanLII.
+          </p>
         </div>
       </footer>
     </div>

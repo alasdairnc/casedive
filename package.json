@@ -1,8 +1,8 @@
 {
-  "name": "casefinder",
+  "name": "casedive",
   "private": true,
   "version": "1.0.0",
-  "description": "AI-powered Canadian criminal case research tool",
+  "description": "AI-powered Canadian criminal code analysis tool",
   "author": "Alasdair NC",
   "type": "module",
   "scripts": {

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /.env
+
+Crawl-delay: 1
+Request-rate: 30/1m
+
+Sitemap: https://casedive.ca/sitemap.xml

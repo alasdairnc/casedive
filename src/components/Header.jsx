@@ -17,14 +17,14 @@ export default function Header() {
             fontFamily: "'Times New Roman', Times, serif",
             letterSpacing: -2, lineHeight: 1, color: t.text,
           }}>
-            CaseFinder
+            casedive
           </h1>
           <span style={{
             fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase",
             color: t.textTertiary, fontFamily: "'Helvetica Neue', Helvetica, sans-serif",
             whiteSpace: "nowrap",
           }}>
-            Canadian Criminal Case Research
+            Criminal Code Analysis
           </span>
         </div>
 
@@ -50,7 +50,7 @@ export default function Header() {
         letterSpacing: 0.2, lineHeight: 1.6,
       }}>
         Describe any criminal scenario — receive likely charges, Criminal Code sections,
-        relevant case law, and legal analysis powered by AI.
+        relevant case law, and legal analysis powered by AI. Educational tool only — not legal advice.
       </p>
       <div style={{ borderTop: `1px solid ${t.border}`, marginTop: 22 }} />
     </header>
