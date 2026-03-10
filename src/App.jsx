@@ -135,7 +135,7 @@ function AppInner() {
       </div>
 
       {/* Footer */}
-      <footer style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px", textAlign: "center" }}>
+      <footer style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px" }}>
         <div style={{ borderTop: `1px solid ${t.borderLight}`, paddingTop: 24 }}>
           <span style={{
             fontFamily: "'Helvetica Neue', sans-serif",
