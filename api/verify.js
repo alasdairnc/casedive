@@ -78,8 +78,8 @@ export default async function handler(req, res) {
         return;
       }
 
-      const caseId = buildCaseId({ year: parsed.year, dbId: parsed.dbId, number: parsed.number });
-      const caseUrl = buildCaseUrl(parsed.dbId, caseId);
+      const caseId = buildCaseId({ year: parsed.year, courtCode: parsed.courtCode, number: parsed.number });
+      const caseUrl = buildCaseUrl(parsed.dbId, parsed.year, caseId);
       const searchUrl = buildSearchUrl(citation);
 
       if (!apiKey) {

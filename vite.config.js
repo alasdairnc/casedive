@@ -126,8 +126,8 @@ export default defineConfig(({ mode }) => {
                   results[citation] = { status: "unknown_court", searchUrl: buildSearchUrl(citation) };
                   return;
                 }
-                const caseId = buildCaseId({ year: parsed.year, dbId: parsed.dbId, number: parsed.number });
-                const caseUrl = buildCaseUrl(parsed.dbId, caseId);
+                const caseId = buildCaseId({ year: parsed.year, courtCode: parsed.courtCode, number: parsed.number });
+                const caseUrl = buildCaseUrl(parsed.dbId, parsed.year, caseId);
                 const searchUrl = buildSearchUrl(citation);
 
                 if (!apiKey) {
