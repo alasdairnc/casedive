@@ -5,44 +5,45 @@ const CANLII_BASE = "https://api.canlii.org/v1";
 const CANLII_WEB = "https://www.canlii.org";
 
 // Maps Canadian court abbreviations to CanLII database IDs
+// Format: jurisdiction/court (e.g., ca/scc, on/ca, bc/sc)
 export const COURT_DB_MAP = {
-  SCC: "csc-scc",
-  CSC: "csc-scc",
-  FCA: "fca-caf",
-  FCC: "fct-cf",
-  ONCA: "onca",
-  ONSC: "onsc",
-  ONCJ: "oncj",
-  ONDC: "ondc",
-  BCCA: "bcca",
-  BCSC: "bcsc",
-  BCPC: "bcpc",
-  ABCA: "abca",
-  ABQB: "abqb",
-  ABPC: "abpc",
-  MBCA: "mbca",
-  MBQB: "mbqb",
-  MBPC: "mbpc",
-  SKCA: "skca",
-  SKQB: "skqb",
-  SKPC: "skpc",
-  NSCA: "nsca",
-  NSSC: "nssc",
-  NSPC: "nspc",
-  NBCA: "nbca",
-  NBQB: "nbqb",
-  NBPC: "nbpc",
-  PECA: "peca",
-  PEICA: "peca",
-  NLCA: "nlca",
-  NLSC: "nlsc",
-  NWTCA: "nwtca",
-  NWTSC: "nwtsc",
-  NUCJ: "nucj",
-  NUCI: "nucj",
-  YKCA: "ykca",
-  YKSC: "yksc",
-  YKPC: "ykpc",
+  SCC: "ca/scc",
+  CSC: "ca/scc",
+  FCA: "ca/fca",
+  FCC: "ca/fc",
+  ONCA: "on/ca",
+  ONSC: "on/sc",
+  ONCJ: "on/cj",
+  ONDC: "on/dc",
+  BCCA: "bc/ca",
+  BCSC: "bc/sc",
+  BCPC: "bc/pc",
+  ABCA: "ab/ca",
+  ABQB: "ab/qb",
+  ABPC: "ab/pc",
+  MBCA: "mb/ca",
+  MBQB: "mb/qb",
+  MBPC: "mb/pc",
+  SKCA: "sk/ca",
+  SKQB: "sk/qb",
+  SKPC: "sk/pc",
+  NSCA: "ns/ca",
+  NSSC: "ns/sc",
+  NSPC: "ns/pc",
+  NBCA: "nb/ca",
+  NBQB: "nb/qb",
+  NBPC: "nb/pc",
+  PECA: "pe/ca",
+  PEICA: "pe/ca",
+  NLCA: "nl/ca",
+  NLSC: "nl/sc",
+  NWTCA: "nt/ca",
+  NWTSC: "nt/sc",
+  NUCJ: "nu/cj",
+  NUCI: "nu/cj",
+  YKCA: "yk/ca",
+  YKSC: "yk/sc",
+  YKPC: "yk/pc",
 };
 
 /**
@@ -72,11 +73,11 @@ export function parseCitation(citation) {
 
 /**
  * Build the CanLII internal case ID.
- * e.g. year=2020, dbId=onca, number=123 → "2020onca123"
+ * e.g. year=2021, courtCode=scc, number=37 → "2021scc37"
  */
-export function buildCaseId({ year, dbId, number }) {
-  if (!year || !dbId || !number) return null;
-  return `${year}${dbId}${number}`;
+export function buildCaseId({ year, courtCode, number }) {
+  if (!year || !courtCode || !number) return null;
+  return `${year}${courtCode.toLowerCase()}${number}`;
 }
 
 /**
@@ -88,9 +89,10 @@ export function buildApiUrl(dbId, caseId, apiKey) {
 
 /**
  * Build a CanLII web URL for a case (no API key, public).
+ * dbId: "ca/scc", caseId: "2021scc37" → https://www.canlii.org/en/ca/scc/doc/2021/2021scc37/index.html
  */
-export function buildCaseUrl(dbId, caseId) {
-  return `${CANLII_WEB}/en/${dbId}/doc/${caseId}/index.html`;
+export function buildCaseUrl(dbId, year, caseId) {
+  return `${CANLII_WEB}/en/${dbId}/doc/${year}/${caseId}/index.html`;
 }
 
 /**
@@ -118,12 +120,12 @@ export async function lookupCase(citation, apiKey) {
     return { status: "unknown_court", searchUrl: buildSearchUrl(citation) };
   }
 
-  const caseId = buildCaseId({ year: parsed.year, dbId: parsed.dbId, number: parsed.number });
+  const caseId = buildCaseId({ year: parsed.year, courtCode: parsed.courtCode, number: parsed.number });
   if (!caseId) {
     return { status: "unparseable", searchUrl: buildSearchUrl(citation) };
   }
 
-  const caseUrl = buildCaseUrl(parsed.dbId, caseId);
+  const caseUrl = buildCaseUrl(parsed.dbId, parsed.year, caseId);
   const searchUrl = buildSearchUrl(citation);
 
   // No API key — return unverified with a best-guess URL
