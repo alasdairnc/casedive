@@ -167,6 +167,16 @@ function AppInner() {
         </div>
       )}
 
+      {/* Top overhead ad */}
+      <div style={{
+        maxWidth: 760,
+        margin: "0 auto",
+        padding: "24px 24px 0",
+        textAlign: "center",
+      }}>
+        <AdUnit slotId="7399604405" style={{ maxWidth: "100%" }} />
+      </div>
+
       {/* Responsive ad layout: side ads on wide screens, bottom ad on mobile */}
       <div style={{
         display: "flex",
@@ -180,7 +190,7 @@ function AppInner() {
           flex: "0 0 160px",
           minHeight: 600,
         }}>
-          <AdUnit slotId="1" style={{ minHeight: 600 }} />
+          <AdUnit slotId="5671735556" style={{ minHeight: 600 }} />
         </div>
 
         <div style={{ flex: "1 1 auto", maxWidth: 760 }}>
@@ -190,12 +200,12 @@ function AppInner() {
             {result && <Results data={result} verifications={verifications} />}
           </div>
 
-          {/* Bottom ad for mobile */}
+          {/* Bottom ad */}
           <div className="ad-bottom" style={{
             margin: "32px 24px 0",
             textAlign: "center",
           }}>
-            <AdUnit slotId="2" style={{ maxWidth: "100%", height: "auto" }} />
+            <AdUnit slotId="1225553652" style={{ maxWidth: "100%", height: "auto" }} />
           </div>
         </div>
 
@@ -203,7 +213,7 @@ function AppInner() {
           flex: "0 0 160px",
           minHeight: 600,
         }}>
-          <AdUnit slotId="3" style={{ minHeight: 600 }} />
+          <AdUnit slotId="3173060142" style={{ minHeight: 600 }} />
         </div>
       </div>
 
