@@ -1,6 +1,7 @@
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { useTypewriter } from "../hooks/useTypewriter.js";
 import ResultCard from "./ResultCard.jsx";
+import { useEffect, useState } from "react";
 
 const SECTIONS = [
   { key: "criminal_code", label: "Criminal Code" },
@@ -9,9 +10,62 @@ const SECTIONS = [
   { key: "charter", label: "Charter Rights" },
 ];
 
-export default function Results({ data, verifications = {} }) {
+export default function Results({ data, verifications: externalVerifications = {} }) {
   const t = useTheme();
   const analysisText = useTypewriter(data.analysis || "", 10);
+  const [verifications, setVerifications] = useState(externalVerifications);
+  const [verifyingCitations, setVerifyingCitations] = useState(false);
+
+  // Extract and verify citations on mount
+  useEffect(() => {
+    if (!data || verifyingCitations) return;
+
+    const citationSet = new Set();
+    const sections = ["criminal_code", "case_law", "civil_law", "charter"];
+    
+    // Extract all unique citations (max 20 per API limit)
+    for (const section of sections) {
+      const items = data[section];
+      if (!Array.isArray(items)) continue;
+      for (const item of items) {
+        if (item.citation && !citationSet.has(item.citation)) {
+          citationSet.add(item.citation);
+          if (citationSet.size >= 20) break;
+        }
+      }
+      if (citationSet.size >= 20) break;
+    }
+
+    if (citationSet.size === 0) return;
+
+    setVerifyingCitations(true);
+    
+    fetch("/api/verify-citations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ citations: Array.from(citationSet) }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.results && Array.isArray(json.results)) {
+          const verificationMap = {};
+          json.results.forEach((result) => {
+            verificationMap[result.citation] = {
+              status: result.status,
+              url: result.url,
+              searchUrl: result.searchUrl,
+              title: result.title,
+            };
+          });
+          setVerifications(verificationMap);
+        }
+      })
+      .catch((err) => {
+        console.error("Citation verification failed:", err);
+        // Silently fail — verification is non-blocking
+      })
+      .finally(() => setVerifyingCitations(false));
+  }, [data]);
 
   // Old-format detection: data has charges/cases but not the new grouped keys
   const isOldFormat = data.charges && !data.criminal_code;
