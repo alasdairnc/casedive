@@ -263,6 +263,8 @@ function AppInner() {
             fontSize: 10, color: t.textFaint, lineHeight: 1.4,
             margin: 0,
           }}>
+            <a href="/about.html" style={{ color: t.textFaint, textDecoration: 'none' }}>About</a>
+            {" \u00B7 "}
             <a href="/privacy.html" style={{ color: t.textFaint, textDecoration: 'none' }}>Privacy Policy</a>
             {" \u00B7 "}
             <a href="/terms.html" style={{ color: t.textFaint, textDecoration: 'none' }}>Terms of Service</a>
