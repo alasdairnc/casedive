@@ -11,10 +11,10 @@ const SECTIONS = [
   { key: "charter", label: "Charter Rights" },
 ];
 
-export default function Results({ data, verifications: externalVerifications = {}, scenario }) {
+export default function Results({ data, scenario }) {
   const t = useTheme();
   const analysisText = useTypewriter(data.analysis || "", 10);
-  const [verifications, setVerifications] = useState(externalVerifications);
+  const [verifications, setVerifications] = useState({});
   const [verifyingCitations, setVerifyingCitations] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
 

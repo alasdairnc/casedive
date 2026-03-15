@@ -10,23 +10,17 @@ import ErrorMessage from "./components/ErrorMessage.jsx";
 import SearchHistory from "./components/SearchHistory.jsx";
 import { useSearchHistory } from "./hooks/useSearchHistory.js";
 
-// AdSense script loader
-function useAdSense() {
-  useEffect(() => {
-    if (window.adsbygoogle) {
-      try {
-        window.adsbygoogle.push({});
-      } catch {
-        // Silently fail if ad not ready
-      }
-    }
-  }, []);
-}
-
+// AdSense — only push once per <ins> element
 function AdUnit({ slotId, style }) {
-  useAdSense();
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current || ref.current.dataset.adLoaded) return;
+    ref.current.dataset.adLoaded = "true";
+    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch {}
+  }, []);
   return (
     <ins
+      ref={ref}
       className="adsbygoogle"
       style={{ display: "block", ...style }}
       data-ad-client="ca-pub-5931276184603899"
@@ -51,28 +45,9 @@ function AppInner() {
     dateRange: "all",
     lawTypes: { ...defaultLawTypes },
   });
-  const [verifications, setVerifications] = useState({});
   const [submittedQuery, setSubmittedQuery] = useState("");
   const resultsRef = useRef(null);
   const { history, addToHistory, clearHistory, rerunQuery } = useSearchHistory();
-
-  const verifyInBackground = async (citations) => {
-    if (!citations?.length) return;
-    const filtered = citations.filter(Boolean);
-    if (!filtered.length) return;
-    try {
-      const res = await fetch("/api/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ citations: filtered.slice(0, 10) }),
-      });
-      if (!res.ok) return;
-      const data = await res.json();
-      setVerifications(data);
-    } catch {
-      // Silent fail — verification is non-blocking
-    }
-  };
 
   const analyzeScenario = async (overrideQuery, overrideFilters) => {
     const activeQuery = typeof overrideQuery === "string" ? overrideQuery : query;
@@ -97,16 +72,9 @@ function AppInner() {
       const data = await response.json();
       if (data.error) throw new Error(data.error);
 
-      setVerifications({});
       setSubmittedQuery(activeQuery.trim());
       setResult(data);
       addToHistory(activeQuery.trim(), activeFilters, data);
-
-      const citationsToVerify = [
-        ...(data.case_law || []).map(c => c.citation),
-        ...(data.criminal_code || []).map(c => c.citation),
-      ].filter(Boolean);
-      verifyInBackground(citationsToVerify);
 
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -179,7 +147,13 @@ function AppInner() {
         <AdUnit slotId="7399604405" style={{ maxWidth: "100%" }} />
       </div>
 
-      {/* Only show ads when there are search results */}
+      {/* Loading/error — always visible regardless of result state */}
+      <div ref={resultsRef}>
+        {loading && <StagedLoading />}
+        {error && <ErrorMessage message={error} onRetry={analyzeScenario} />}
+      </div>
+
+      {/* Results with side ads */}
       {result && (
         <div style={{
           display: "flex",
@@ -197,11 +171,7 @@ function AppInner() {
           </div>
 
           <div style={{ flex: "1 1 auto", maxWidth: 760 }}>
-            <div ref={resultsRef}>
-              {loading && <StagedLoading />}
-              {error && <ErrorMessage message={error} onRetry={analyzeScenario} />}
-              {result && <Results data={result} verifications={verifications} scenario={submittedQuery} />}
-            </div>
+            <Results data={result} scenario={submittedQuery} />
 
             {/* Bottom ad */}
             <div className="ad-bottom" style={{
