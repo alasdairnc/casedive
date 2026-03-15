@@ -24,7 +24,7 @@ async function verifyCitation(citation, apiKey) {
     };
   }
 
-  if (!parsed.dbId) {
+  if (!parsed.apiDbId) {
     return {
       citation,
       status: "unknown_court",
@@ -46,7 +46,7 @@ async function verifyCitation(citation, apiKey) {
     };
   }
 
-  const url = buildCaseUrl(parsed.dbId, parsed.year, caseId);
+  const url = buildCaseUrl(parsed.webDbId, parsed.year, caseId);
   const searchUrl = buildSearchUrl(citation);
 
   if (!apiKey) {
@@ -57,7 +57,7 @@ async function verifyCitation(citation, apiKey) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-    const apiUrl = `https://api.canlii.org/v1/caseBrowse/en/${parsed.dbId}/${caseId}/?api_key=${encodeURIComponent(
+    const apiUrl = `https://api.canlii.org/v1/caseBrowse/en/${parsed.apiDbId}/${caseId}/?api_key=${encodeURIComponent(
       apiKey
     )}`;
 
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
   }
 
   // Rate limit check
-  const { allowed, remaining, resetAt } = await checkRateLimit(getClientIp(req));
+  const { allowed, remaining, resetAt } = await checkRateLimit(getClientIp(req), "verify");
   if (!allowed) {
     res.setHeader("Retry-After", resetAt);
     return res.status(429).json({

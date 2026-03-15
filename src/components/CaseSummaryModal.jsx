@@ -131,7 +131,15 @@ export default function CaseSummaryModal({ item, canliiUrl, scenario, onClose })
   const viewUrl = canliiUrl || null;
 
   // Mobile: full-width bottom sheet; desktop: centered card
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth < 640
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   return (
     <div
