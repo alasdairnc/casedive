@@ -2,7 +2,7 @@ import { useTheme } from "../lib/ThemeContext.jsx";
 import { useTypewriter } from "../hooks/useTypewriter.js";
 import ResultCard from "./ResultCard.jsx";
 import CaseSummaryModal from "./CaseSummaryModal.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const SECTIONS = [
   { key: "criminal_code", label: "Criminal Code" },
@@ -17,6 +17,8 @@ export default function Results({ data, scenario }) {
   const [verifications, setVerifications] = useState({});
   const [verifyingCitations, setVerifyingCitations] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
+  const [pdfState, setPdfState] = useState("idle"); // idle | loading | error
+  const pdfErrorTimer = useRef(null);
 
   // Extract and verify citations on mount
   useEffect(() => {
@@ -64,6 +66,44 @@ export default function Results({ data, scenario }) {
   // Old-format detection: data has charges/cases but not the new grouped keys
   const isOldFormat = data.charges && !data.criminal_code;
 
+  async function handleExportPdf() {
+    if (pdfState === "loading") return;
+    clearTimeout(pdfErrorTimer.current);
+    setPdfState("loading");
+
+    try {
+      const res = await fetch("/api/export-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          summary: data.summary,
+          criminal_code: data.criminal_code,
+          case_law: data.case_law,
+          civil_law: data.civil_law,
+          charter: data.charter,
+          analysis: data.analysis,
+          verifications,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Export failed (${res.status})`);
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "casedive-analysis.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
+      setPdfState("idle");
+    } catch {
+      setPdfState("error");
+      pdfErrorTimer.current = setTimeout(() => setPdfState("idle"), 4000);
+    }
+  }
+
   return (
     <section style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 60px" }}>
       {/* Summary */}
@@ -81,6 +121,31 @@ export default function Results({ data, scenario }) {
         }}>
           {data.summary}
         </p>
+      </div>
+
+      {/* Export PDF */}
+      <div style={{ marginTop: 20, marginBottom: 8, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <button
+          onClick={handleExportPdf}
+          disabled={pdfState === "loading"}
+          style={{
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 10,
+            letterSpacing: 3.5,
+            textTransform: "uppercase",
+            border: `1px solid ${t.border}`,
+            background: "transparent",
+            color: pdfState === "error" ? t.accentRed : t.text,
+            padding: "8px 16px",
+            cursor: pdfState === "loading" ? "default" : "pointer",
+            opacity: pdfState === "loading" ? 0.6 : 1,
+            transition: "all 0.15s",
+          }}
+          onMouseEnter={(e) => { if (pdfState !== "loading") e.currentTarget.style.color = t.accent; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = pdfState === "error" ? t.accentRed : t.text; }}
+        >
+          {pdfState === "loading" ? "Generating..." : pdfState === "error" ? "Export failed" : "Export PDF"}
+        </button>
       </div>
 
       {/* Old format notice */}
