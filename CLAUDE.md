@@ -194,15 +194,20 @@ Read the relevant skill file BEFORE starting any task in these categories. Skill
 
 ## Active Roadmap
 
+### Done
+- [x] Wire `/api/verify.js` into Results — live citation verification with badges
+- [x] Build Criminal Code JSON database (490 sections, 46 enriched with definitions/defences)
+- [x] PDF export from Results (`/api/export-pdf.js`, pdfkit, branded)
+- [x] Case bookmarking (localStorage, 30-day TTL, max 50, BookmarksPanel)
+- [x] Rate limit headers (`X-RateLimit-*`, `Retry-After`) on all endpoints
+- [x] Structured JSON logging on analyze.js
+- [x] Distilled rules from ECC skills into CLAUDE.md
+
 ### Now
-- [ ] Wire `/api/verify.js` into Results component — verify citations live after analysis
-- [ ] Build Criminal Code JSON database (start with 50 priority sections from skill)
-- [ ] Build civil law JSON database (federal statutes from skill checklist)
+- [ ] Build civil law JSON database (federal statutes — see `civil-law-database-builder-SKILL.md`)
 - [ ] Build Charter rights JSON (all 35 sections)
 
 ### Next
-- [ ] PDF export from Results
-- [ ] Case bookmarking (localStorage)
 - [ ] Citation export in legal formats
 - [ ] Vercel Analytics
 - [ ] SEO + Open Graph meta improvements
