@@ -3,6 +3,7 @@ import { useTypewriter } from "../hooks/useTypewriter.js";
 import ResultCard from "./ResultCard.jsx";
 import CaseSummaryModal from "./CaseSummaryModal.jsx";
 import { useEffect, useState, useRef } from "react";
+import { useBookmarks } from "../hooks/useBookmarks.js";
 
 const SECTIONS = [
   { key: "criminal_code", label: "Criminal Code" },
@@ -11,7 +12,7 @@ const SECTIONS = [
   { key: "charter", label: "Charter Rights" },
 ];
 
-export default function Results({ data, scenario }) {
+export default function Results({ data, scenario, addBookmark, removeBookmark, isBookmarked }) {
   const t = useTheme();
   const analysisText = useTypewriter(data.analysis || "", 10);
   const [verifications, setVerifications] = useState({});
@@ -244,6 +245,9 @@ export default function Results({ data, scenario }) {
                 type={key}
                 verification={verifications[item.citation]}
                 onCardClick={key === "case_law" ? setSelectedCase : undefined}
+                addBookmark={addBookmark}
+                removeBookmark={removeBookmark}
+                isBookmarked={isBookmarked}
               />
             ))}
           </div>

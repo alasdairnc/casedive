@@ -8,7 +8,9 @@ import StagedLoading from "./components/StagedLoading.jsx";
 import Results from "./components/Results.jsx";
 import ErrorMessage from "./components/ErrorMessage.jsx";
 import SearchHistory from "./components/SearchHistory.jsx";
+import BookmarksPanel from "./components/BookmarksPanel.jsx";
 import { useSearchHistory } from "./hooks/useSearchHistory.js";
+import { useBookmarks } from "./hooks/useBookmarks.js";
 
 // AdSense — only push once per <ins> element
 function AdUnit({ slotId, style }) {
@@ -39,6 +41,7 @@ function AppInner() {
   const [error, setError] = useState(null);
   const [filtersOpen, setFiltersOpen] = useState(true);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [bookmarksOpen, setBookmarksOpen] = useState(false);
   const [filters, setFilters] = useState({
     jurisdiction: "all",
     courtLevel: "all",
@@ -48,6 +51,7 @@ function AppInner() {
   const [submittedQuery, setSubmittedQuery] = useState("");
   const resultsRef = useRef(null);
   const { history, addToHistory, clearHistory, rerunQuery } = useSearchHistory();
+  const { bookmarks, addBookmark, removeBookmark, isBookmarked, clearBookmarks } = useBookmarks();
 
   const analyzeScenario = async (overrideQuery, overrideFilters) => {
     const activeQuery = typeof overrideQuery === "string" ? overrideQuery : query;
@@ -104,7 +108,7 @@ function AppInner() {
         }
       `}</style>
 
-      <Header />
+      <Header bookmarkCount={bookmarks.length} onOpenBookmarks={() => setBookmarksOpen(true)} />
       <FiltersPanel
         filters={filters} setFilters={setFilters}
         filtersOpen={filtersOpen} setFiltersOpen={setFiltersOpen}
@@ -171,7 +175,13 @@ function AppInner() {
           </div>
 
           <div style={{ flex: "1 1 auto", maxWidth: 760 }}>
-            <Results data={result} scenario={submittedQuery} />
+            <Results
+                data={result}
+                scenario={submittedQuery}
+                addBookmark={addBookmark}
+                removeBookmark={removeBookmark}
+                isBookmarked={isBookmarked}
+              />
 
             {/* Bottom ad */}
             <div className="ad-bottom" style={{
@@ -189,6 +199,15 @@ function AppInner() {
             <AdUnit slotId="3173060142" style={{ minHeight: 600 }} />
           </div>
         </div>
+      )}
+
+      {bookmarksOpen && (
+        <BookmarksPanel
+          bookmarks={bookmarks}
+          removeBookmark={removeBookmark}
+          clearBookmarks={clearBookmarks}
+          onClose={() => setBookmarksOpen(false)}
+        />
       )}
 
       {historyOpen && (
