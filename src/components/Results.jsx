@@ -116,9 +116,15 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          scenario,
           summary: data.summary,
           criminal_code: data.criminal_code,
-          case_law: data.case_law,
+          case_law: Array.isArray(data.case_law)
+            ? data.case_law.filter((item) => {
+                const v = verifications[item.citation];
+                return !v || v.status !== "unparseable";
+              })
+            : data.case_law,
           civil_law: data.civil_law,
           charter: data.charter,
           analysis: data.analysis,
@@ -289,7 +295,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
           items = rawItems.filter((item) => {
             const v = verifications[item.citation];
             if (!v) return true; // not yet verified — keep
-            return v.status === "verified" || v.status === "unverified";
+            return v.status !== "unparseable"; // only remove citations we couldn't parse at all
           });
           const verified = rawItems.filter((item) => verifications[item.citation]?.status === "verified").length;
           const removed = rawItems.length - items.length;
