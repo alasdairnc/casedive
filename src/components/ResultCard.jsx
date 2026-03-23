@@ -51,7 +51,7 @@ function VerificationBadge({ verification, t, type }) {
   }
 
   if (status === "unverified") {
-    const safeUrl = (isValidUrl(url) && url) || (isValidUrl(searchUrl) && searchUrl);
+    const safeUrl = (isValidUrl(searchUrl) && searchUrl) || (isValidUrl(url) && url);
     if (!safeUrl) return null;
     return (
       <a
