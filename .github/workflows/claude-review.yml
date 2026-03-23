@@ -1,0 +1,36 @@
+name: Claude PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          direct_prompt: |
+            Review this PR against the casefinder architecture rules in CLAUDE.md.
+
+            Check for:
+            1. API keys or secrets in src/ (must stay in api/ only)
+            2. Any inline CSS or CSS framework imports (project uses inline styles via ThemeContext only)
+            3. New API endpoints missing rate limiting (all endpoints must use api/_rateLimit.js)
+            4. Fabricated or incorrectly formatted case citations (must use YYYY COURT # neutral format)
+            5. Made-up Criminal Code section numbers
+            6. Security issues: SQL injection, XSS, command injection, unvalidated inputs
+            7. .env or secret files accidentally staged
+
+            Post a concise comment summarising findings. If everything looks good, say so clearly.
+            Flag any hard blocks (architecture rule violations) vs. minor suggestions separately.
