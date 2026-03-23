@@ -1,8 +1,15 @@
 // /api/analyze.js — Vercel Serverless Function
 // Keeps the Anthropic API key server-side
 
+import { createHash } from "crypto";
 import { buildSystemPrompt } from "../src/lib/prompts.js";
-import { checkRateLimit, getClientIp } from "./_rateLimit.js";
+import { checkRateLimit, getClientIp, redis } from "./_rateLimit.js";
+
+const CACHE_TTL_S = 60 * 60 * 24; // 24 hours
+
+function cacheKey(scenario, filters) {
+  return "cache:analyze:" + createHash("sha256").update(scenario + JSON.stringify(filters)).digest("hex");
+}
 
 // ── Anthropic call ───────────────────────────────────────────────────────────
 
@@ -16,8 +23,8 @@ async function callAnthropic(messages, system, apiKey) {
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 2000,
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 1200,
       system,
       messages,
     }),
@@ -128,6 +135,14 @@ export default async function handler(req, res) {
   };
 
   try {
+    // Check cache first
+    if (redis) {
+      try {
+        const cached = await redis.get(cacheKey(scenario, filters));
+        if (cached) return res.status(200).json(typeof cached === "string" ? JSON.parse(cached) : cached);
+      } catch { /* cache miss — proceed normally */ }
+    }
+
     const { result, raw, retryRaw } = await analyzeWithRetry(
       scenario,
       filters,
@@ -139,6 +154,11 @@ export default async function handler(req, res) {
         error:
           "The AI returned an unstructured response for this scenario. Try adding more detail — specify the location, what happened, and any relevant context.",
       });
+    }
+
+    // Store in cache (fire-and-forget)
+    if (redis) {
+      redis.setex(cacheKey(scenario, filters), CACHE_TTL_S, JSON.stringify(result)).catch(() => {});
     }
 
     return res.status(200).json(result);

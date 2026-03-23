@@ -5,10 +5,10 @@
 
 import { Redis } from "@upstash/redis";
 
-const MAX_REQUESTS = 10;
+const MAX_REQUESTS = 5;
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
-let redis = null;
+export let redis = null;
 
 // Initialize Redis client only if credentials are provided
 if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
