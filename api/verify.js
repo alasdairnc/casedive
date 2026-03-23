@@ -2,7 +2,7 @@
 // Batch-verifies AI-generated case citations against the CanLII API.
 // Degrades gracefully when CANLII_API_KEY is not set.
 
-import { checkRateLimit, getClientIp } from "./_rateLimit.js";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import {
   parseCitation,
   buildCaseId,
@@ -40,8 +40,10 @@ export default async function handler(req, res) {
   const contentLength = parseInt(req.headers["content-length"] || "0", 10);
   if (contentLength > 50_000) return res.status(413).json({ error: "Request body too large" });
 
-  const { allowed: rateLimitAllowed, resetAt } = await checkRateLimit(getClientIp(req));
-  if (!rateLimitAllowed) {
+  const rlResult = await checkRateLimit(getClientIp(req));
+  const rlHeaders = rateLimitHeaders(rlResult);
+  Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
+  if (!rlResult.allowed) {
     return res.status(429).json({ error: "Rate limit exceeded. Please try again later." });
   }
 

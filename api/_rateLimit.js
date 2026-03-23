@@ -90,6 +90,23 @@ export async function checkRateLimit(ip, endpoint) {
 }
 
 /**
+ * Build standard rate limit response headers.
+ * @param {{ remaining: number, resetAt?: string }} result
+ */
+export function rateLimitHeaders(result) {
+  const headers = {
+    "X-RateLimit-Limit": String(MAX_REQUESTS),
+    "X-RateLimit-Remaining": String(result.remaining ?? 0),
+  };
+  if (result.resetAt) {
+    const resetEpoch = Math.ceil(new Date(result.resetAt).getTime() / 1000);
+    headers["X-RateLimit-Reset"] = String(resetEpoch);
+    headers["Retry-After"] = String(Math.max(0, resetEpoch - Math.ceil(Date.now() / 1000)));
+  }
+  return headers;
+}
+
+/**
  * Extract the real client IP from Vercel's request headers.
  */
 export function getClientIp(req) {

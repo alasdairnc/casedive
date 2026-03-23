@@ -3,7 +3,7 @@
 
 import { createHash } from "crypto";
 import { buildSystemPrompt } from "../src/lib/prompts.js";
-import { checkRateLimit, getClientIp, redis } from "./_rateLimit.js";
+import { checkRateLimit, getClientIp, rateLimitHeaders, redis } from "./_rateLimit.js";
 
 // Strip XML-like tags from user input to prevent delimiter escape
 function sanitizeUserInput(input) {
@@ -82,6 +82,8 @@ async function analyzeWithRetry(scenario, filters, apiKey) {
 // ── Handler ──────────────────────────────────────────────────────────────────
 
 export default async function handler(req, res) {
+  const requestId = Math.random().toString(36).slice(2, 10);
+  const startMs = Date.now();
   const origin = req.headers.origin ?? "";
   const allowed = ["https://casedive.ca", "https://casefinder-project.vercel.app"];
   if (allowed.includes(origin)) {
@@ -106,9 +108,15 @@ export default async function handler(req, res) {
   const contentLength = parseInt(req.headers["content-length"] || "0", 10);
   if (contentLength > 50_000) return res.status(413).json({ error: "Request body too large" });
 
-  const { allowed: rateLimitAllowed, remaining, resetAt } = await checkRateLimit(getClientIp(req), "analyze");
-  if (!rateLimitAllowed) {
-    return res.status(429).json({ error: "Rate limit exceeded. Please try again later." });
+  const rlResult = await checkRateLimit(getClientIp(req), "analyze");
+  const rlHeaders = rateLimitHeaders(rlResult);
+  Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
+  if (!rlResult.allowed) {
+    const retryAfter = rlHeaders["Retry-After"] ? Math.ceil(Number(rlHeaders["Retry-After"]) / 60) : null;
+    const msg = retryAfter
+      ? `Rate limit reached. Try again in ${retryAfter} minute${retryAfter !== 1 ? "s" : ""}.`
+      : "Rate limit exceeded. Please try again later.";
+    return res.status(429).json({ error: msg });
   }
 
   const { scenario, filters: rawFilters } = req.body;
@@ -173,7 +181,10 @@ export default async function handler(req, res) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error("Analyze error:", err);
+    console.error(JSON.stringify({
+      requestId, event: "analyze_error", durationMs: Date.now() - startMs,
+      status: err.status, message: err.message,
+    }));
     if (err.status) {
       return res.status(err.status >= 500 ? 502 : err.status).json({ error: "Analysis service temporarily unavailable." });
     }
