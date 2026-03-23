@@ -28,6 +28,7 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
         </span>
       </div>
       <textarea
+        data-testid="scenario-input"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => {
@@ -52,6 +53,7 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
         alignItems: "center", flexWrap: "wrap",
       }}>
         <button
+          data-testid="research-submit"
           onClick={onSubmit}
           disabled={loading || !query.trim() || atLimit}
           style={{

@@ -137,6 +137,7 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
           )}
           {addBookmark && removeBookmark && isBookmarked && citationId && (
             <button
+              data-testid={bookmarked ? "bookmark-remove" : "bookmark-add"}
               onClick={handleBookmarkClick}
               aria-label={bookmarked ? "Remove bookmark" : "Bookmark this citation"}
               style={{

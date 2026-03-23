@@ -40,7 +40,7 @@ export default function BookmarksPanel({ bookmarks, removeBookmark, clearBookmar
 
   return (
     <div style={overlayStyle} onClick={onClose}>
-      <div style={sheetStyle} onClick={e => e.stopPropagation()}>
+      <div data-testid="bookmarks-panel" style={sheetStyle} onClick={e => e.stopPropagation()}>
         {/* Drag handle */}
         <div style={{ display: "flex", justifyContent: "center", padding: "12px 0 4px" }}>
           <div style={{ width: 36, height: 4, background: t.border, borderRadius: 2 }} />

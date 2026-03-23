@@ -70,6 +70,12 @@ function AppInner() {
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
+        // Surface Retry-After for rate limit responses
+        if (response.status === 429) {
+          const retryAfter = response.headers.get("Retry-After");
+          const mins = retryAfter ? Math.ceil(Number(retryAfter) / 60) : null;
+          throw new Error(errData.error || (mins ? `Rate limit reached. Try again in ${mins} minute${mins !== 1 ? "s" : ""}.` : "Rate limit exceeded."));
+        }
         throw new Error(errData.error || `Request failed (${response.status})`);
       }
 

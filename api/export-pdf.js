@@ -1,7 +1,7 @@
 // /api/export-pdf.js — Vercel Serverless Function
 // Generates a branded CaseDive PDF from analysis results.
 
-import { checkRateLimit, getClientIp } from "./_rateLimit.js";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import PDFDocument from "pdfkit";
 
 const ACCENT = "#d4a040";
@@ -53,8 +53,10 @@ export default async function handler(req, res) {
   const contentLength = parseInt(req.headers["content-length"] || "0", 10);
   if (contentLength > 200_000) return res.status(413).json({ error: "Request body too large" });
 
-  const { allowed: rateLimitAllowed } = await checkRateLimit(getClientIp(req), "export-pdf");
-  if (!rateLimitAllowed) {
+  const rlResult = await checkRateLimit(getClientIp(req), "export-pdf");
+  const rlHeaders = rateLimitHeaders(rlResult);
+  Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
+  if (!rlResult.allowed) {
     return res.status(429).json({ error: "Rate limit exceeded. Please try again later." });
   }
 

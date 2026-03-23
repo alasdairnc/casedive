@@ -2,7 +2,9 @@ import { useTheme } from "../lib/ThemeContext.jsx";
 import { useTypewriter } from "../hooks/useTypewriter.js";
 import ResultCard from "./ResultCard.jsx";
 import CaseSummaryModal from "./CaseSummaryModal.jsx";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
+
+const PDF_ERROR_RESET_MS = 4000;
 import { useBookmarks } from "../hooks/useBookmarks.js";
 
 const SECTIONS = [
@@ -67,7 +69,10 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
   // Old-format detection: data has charges/cases but not the new grouped keys
   const isOldFormat = data.charges && !data.criminal_code;
 
-  async function handleExportPdf() {
+  // Cleanup timer on unmount
+  useEffect(() => () => clearTimeout(pdfErrorTimer.current), []);
+
+  const handleExportPdf = useCallback(async () => {
     if (pdfState === "loading") return;
     clearTimeout(pdfErrorTimer.current);
     setPdfState("loading");
@@ -101,12 +106,12 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       setPdfState("idle");
     } catch {
       setPdfState("error");
-      pdfErrorTimer.current = setTimeout(() => setPdfState("idle"), 4000);
+      pdfErrorTimer.current = setTimeout(() => setPdfState("idle"), PDF_ERROR_RESET_MS);
     }
-  }
+  }, [pdfState, data, verifications]);
 
   return (
-    <section style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 60px" }}>
+    <section data-testid="results-section" style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 60px" }}>
       {/* Summary */}
       <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 28, marginBottom: 8 }}>
         <div style={{
@@ -128,6 +133,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       <div style={{ marginTop: 20, marginBottom: 8, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
         <button
           onClick={handleExportPdf}
+          data-testid="export-pdf-btn"
           disabled={pdfState === "loading"}
           style={{
             fontFamily: "'Helvetica Neue', sans-serif",
