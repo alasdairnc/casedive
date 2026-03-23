@@ -103,7 +103,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Request body is required" });
   }
 
-  let { summary, criminal_code, case_law, civil_law, charter, analysis, verifications } = body;
+  let { scenario, summary, criminal_code, case_law, civil_law, charter, analysis, verifications } = body;
+  scenario = cleanField(scenario || "").slice(0, 2_000);
 
   if (!summary && !analysis && !criminal_code && !case_law && !civil_law && !charter) {
     logValidationError(requestId, "export-pdf", "Results data is required", "data");
@@ -159,6 +160,26 @@ export default async function handler(req, res) {
 
   doc.moveDown(0.8);
   drawDivider(doc, margin);
+
+  // ── User Scenario ──────────────────────────────────────────────────────────
+  if (scenario) {
+    doc
+      .font("Helvetica")
+      .fontSize(8)
+      .fillColor(sr, sg, sb)
+      .text("SCENARIO", margin, doc.y, { characterSpacing: 2 });
+
+    doc.moveDown(0.4);
+
+    doc
+      .font("Times-Roman")
+      .fontSize(12)
+      .fillColor(tr, tg, tb)
+      .text(scenario, margin, doc.y, { width: pageWidth, lineGap: 3 });
+
+    doc.moveDown(1);
+    drawDivider(doc, margin);
+  }
 
   // ── Scenario Summary ───────────────────────────────────────────────────────
   doc
