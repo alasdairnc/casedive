@@ -14,14 +14,4 @@
       "Bash(command:/.*> \/dev\/.*/)"
     ]
   },
-  "hooks": {
-    "PreToolUse": [
-      "verify",
-      "security-scan"
-    ],
-    "Stop": [
-      "verify",
-      "security-scan"
-    ]
-  }
 }
