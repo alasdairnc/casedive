@@ -1,7 +1,7 @@
 // /api/analyze.js — Vercel Serverless Function
 // Keeps the Anthropic API key server-side
 
-import { createHash } from "crypto";
+import { createHash, randomUUID } from "crypto";
 import { buildSystemPrompt } from "../src/lib/prompts.js";
 import { checkRateLimit, getClientIp, rateLimitHeaders, redis } from "./_rateLimit.js";
 import {
@@ -93,7 +93,7 @@ async function analyzeWithRetry(scenario, filters, apiKey) {
 // ── Handler ──────────────────────────────────────────────────────────────────
 
 export default async function handler(req, res) {
-  const requestId = Math.random().toString(36).slice(2, 10);
+  const requestId = req.headers['x-vercel-id'] || randomUUID();
   const startMs = Date.now();
   logRequestStart(req, "analyze", requestId);
   const origin = req.headers.origin ?? "";
@@ -173,6 +173,12 @@ export default async function handler(req, res) {
   };
 
   try {
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      logValidationError(requestId, "analyze", "ANTHROPIC_API_KEY is not configured", "environment");
+      return res.status(503).json({ error: "Analysis service temporarily unavailable." });
+    }
+
     // Check cache first
     if (redis) {
       try {
@@ -191,7 +197,7 @@ export default async function handler(req, res) {
     const { result, raw, retryRaw } = await analyzeWithRetry(
       scenario,
       filters,
-      process.env.ANTHROPIC_API_KEY
+      apiKey
     );
     const anthropicDurationMs = Date.now() - anthropicStartMs;
     logExternalApiCall(requestId, "analyze", "anthropic", 200, anthropicDurationMs, { retried: !!retryRaw });
