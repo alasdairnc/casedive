@@ -1,6 +1,5 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path";
 
 /**
  * A helper function to create a POST-only API handler for the dev server.
@@ -41,11 +40,6 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "VITE_");
 
   return {
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-    },
     plugins: [
       react(),
       {
@@ -181,8 +175,8 @@ export default defineConfig(({ mode }) => {
             }
           });
 
-          // ── /api/verify-citations ────────────────────────────────────
-          server.middlewares.use("/api/verify-citations", async (req, res) => {
+          // ── /api/verify ──────────────────────────────────────────────
+          server.middlewares.use("/api/verify", async (req, res) => {
             if (req.method === "OPTIONS") { res.writeHead(200); res.end(); return; }
             if (req.method !== "POST") {
               res.writeHead(405, { "Content-Type": "application/json" });
@@ -207,17 +201,17 @@ export default defineConfig(({ mode }) => {
               await import("./src/lib/canlii.js");
 
             const apiKey = process.env.CANLII_API_KEY || "";
-            const results = [];
+            const results = {};
 
             await Promise.all(
               citations.map(async (citation) => {
                 const parsed = parseCitation(citation);
                 if (!parsed) {
-                  results.push({ citation, status: "unparseable", searchUrl: buildSearchUrl(citation) });
+                  results[citation] = { status: "unparseable", searchUrl: buildSearchUrl(citation) };
                   return;
                 }
                 if (!parsed.apiDbId) {
-                  results.push({ citation, status: "unknown_court", searchUrl: buildSearchUrl(citation) });
+                  results[citation] = { status: "unknown_court", searchUrl: buildSearchUrl(citation) };
                   return;
                 }
                 const caseId = buildCaseId({ year: parsed.year, courtCode: parsed.courtCode, number: parsed.number });
@@ -225,24 +219,24 @@ export default defineConfig(({ mode }) => {
                 const searchUrl = buildSearchUrl(citation);
 
                 if (!apiKey) {
-                  results.push({ citation, status: "unverified", url: caseUrl, searchUrl });
+                  results[citation] = { status: "unverified", url: caseUrl, searchUrl };
                   return;
                 }
 
                 try {
                   const apiRes = await fetch(buildApiUrl(parsed.apiDbId, caseId, apiKey));
-                  if (apiRes.status === 404) { results.push({ citation, status: "not_found", searchUrl }); return; }
-                  if (!apiRes.ok) { results.push({ citation, status: "error", searchUrl }); return; }
+                  if (apiRes.status === 404) { results[citation] = { status: "not_found", searchUrl }; return; }
+                  if (!apiRes.ok) { results[citation] = { status: "error", searchUrl }; return; }
                   const data = await apiRes.json();
-                  results.push({ citation, status: "verified", url: caseUrl, searchUrl, title: data.title || citation });
+                  results[citation] = { status: "verified", url: caseUrl, searchUrl, title: data.title || citation };
                 } catch {
-                  results.push({ citation, status: "error", searchUrl });
+                  results[citation] = { status: "error", searchUrl };
                 }
               })
             );
 
             res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ results }));
+            res.end(JSON.stringify(results));
           });
 
         },
