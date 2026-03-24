@@ -192,14 +192,20 @@ function citationFromCaseId(caseIdValue, titleHint, dbId) {
   const caseId = sanitizeTerm(caseIdValue).toLowerCase();
   if (!caseId || !titleHint) return null;
 
-  // Supports "2024onca123", "2024-onca-123", "2024onca123a"
+  // Supports "2024onca123", "2024-onca-123", "1988canlii90"
   const compact = caseId.replace(/[^a-z0-9]/g, "");
   const match = compact.match(/(\d{4})([a-z]{2,8})(\d{1,6})/);
   if (!match) return null;
 
   const year = match[1];
+  const infix = match[2];
   const number = String(parseInt(match[3], 10));
-  const courtCode = DB_TO_COURT_CODE.get(dbId) || match[2].toUpperCase();
+  const courtCode = DB_TO_COURT_CODE.get(dbId) || infix.toUpperCase();
+
+  if (infix === "canlii") {
+    return `${titleHint}, ${year} CanLII ${number} (${courtCode})`;
+  }
+
   return `${titleHint}, ${year} ${courtCode} ${number}`;
 }
 
@@ -284,7 +290,7 @@ function dedupeCandidates(candidates) {
   return Array.from(byCitation.values());
 }
 
-function toCaseLawItem(candidate, verification) {
+function toCaseLawItem(candidate, verification, status = "verified") {
   const parsed = parseCitation(candidate.citation);
   const court = parsed?.courtCode || candidate.court || "";
   const year = parsed?.year || candidate.year || "";
@@ -297,9 +303,9 @@ function toCaseLawItem(candidate, verification) {
     summary,
     court,
     year,
-    url_canlii: verification?.url || candidate.url || "",
+    url_canlii: (verification?.status === "verified" ? verification.url : null) || candidate.url || verification?.searchUrl || "",
     matched_content: `Retrieved from CanLII search for "${candidate.matchedTerm}"`,
-    verificationStatus: "verified",
+    verificationStatus: status,
   };
 }
 
@@ -366,9 +372,12 @@ export async function retrieveVerifiedCaseLaw({
     verificationCalls += 1;
 
     const verification = await lookupCase(candidate.citation, apiKey);
-    if (verification.status !== "verified") continue;
-
-    cases.push(toCaseLawItem(candidate, verification));
+    
+    // If found in search, we trust it enough to show, even if the direct lookup fails
+    // (direct lookup often fails for legacy citations due to ID format changes)
+    const status = verification.status === "verified" ? "verified" : "unverified";
+    cases.push(toCaseLawItem(candidate, verification, status));
+    
     if (cases.length >= maxResults) break;
   }
 
@@ -380,7 +389,7 @@ export async function retrieveVerifiedCaseLaw({
       searchCalls,
       candidateCount: uniqueCandidates.length,
       verificationCalls,
-      verifiedCount: cases.length,
+      verifiedCount: cases.filter(c => c.verificationStatus === "verified").length,
     },
   };
 }
