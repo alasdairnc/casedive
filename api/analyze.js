@@ -78,7 +78,7 @@ async function rerankCasesWithAI(scenario, candidates, apiKey) {
     `ID: ${i}\nCitation: ${c.citation}\nSummary: ${c.summary}`
   ).join("\n\n");
 
-  const system = "You are CaseDive, a Canadian legal research expert. Your task is to select the 3 most relevant cases from a list of candidates based on a specific legal scenario. Prioritize landmark SCC decisions and cases that directly address the core legal issues in the scenario.";
+  const system = "You are CaseDive, a Canadian legal research expert. Your task is to select the 3 most relevant cases from a list of candidates based on a specific legal scenario. HIGHEST PRIORITY: If a case name is explicitly mentioned in the user scenario (e.g., 'R v Jordan' or 'Morgentaler'), that case MUST be included in the top 3 if it exists in the candidates. SECONDARY PRIORITY: Landmark SCC decisions and cases that directly address the core legal issues in the scenario.";
   const messages = [
     {
       role: "user",
@@ -347,7 +347,26 @@ export default async function handler(req, res) {
 
         // 3. AI Re-Ranking Pass: Select top 3 from the larger pool
         const rerankStartMs = Date.now();
-        const topCases = await rerankCasesWithAI(scenario, candidates, apiKey);
+        let topCases = await rerankCasesWithAI(scenario, candidates, apiKey);
+        
+        // 4. Safety Fallback: Ensure specifically mentioned cases are NOT dropped
+        const scenarioLower = scenario.toLowerCase();
+        for (const candidate of candidates) {
+          // If the citation contains a name mentioned in the scenario (e.g., "Jordan" or "Morgentaler")
+          const parties = candidate.citation.split(",")[0].toLowerCase();
+          const words = parties.replace(/r v /g, "").split(/\s+/).filter(w => w.length > 3);
+          
+          const isMentioned = words.some(w => scenarioLower.includes(w));
+          if (isMentioned) {
+            // Check if it's already in topCases
+            const alreadyIn = topCases.some(t => t.citation.toLowerCase() === candidate.citation.toLowerCase());
+            if (!alreadyIn) {
+              // Swap it into the bottom of the list
+              topCases = [topCases[0], topCases[1], candidate];
+            }
+          }
+        }
+
         const rerankDurationMs = Date.now() - rerankStartMs;
         logExternalApiCall(requestId, "analyze", "ai-rerank", 200, rerankDurationMs, {
           candidatesProvided: candidates.length,
