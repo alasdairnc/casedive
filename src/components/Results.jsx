@@ -5,39 +5,7 @@ import CaseSummaryModal from "./CaseSummaryModal.jsx";
 import { useEffect, useState, useRef, useCallback } from "react";
 
 const PDF_ERROR_RESET_MS = 4000;
-const COPY_RESET_MS = 2000;
 import { useBookmarks } from "../hooks/useBookmarks.js";
-
-const SECTION_LABELS = {
-  criminal_code: "Criminal Code",
-  case_law: "Case Law",
-  civil_law: "Civil Law",
-  charter: "Charter Rights",
-};
-
-function buildCitationText(data, verifications = {}) {
-  const dateStr = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
-  const lines = ["CASEDIVE — CITATION EXPORT", dateStr, ""];
-
-  for (const [key, label] of Object.entries(SECTION_LABELS)) {
-    const items = data[key];
-    if (!Array.isArray(items) || items.length === 0) continue;
-    lines.push(label.toUpperCase());
-    lines.push("─".repeat(40));
-    for (const item of items) {
-      const citation = item.citation || item.section || "";
-      const summary = item.summary || item.description || "";
-      const verified = key === "case_law" && verifications[citation]?.status === "verified";
-      lines.push(`${citation}${verified ? " [Verified on CanLII]" : ""}`);
-      if (summary) lines.push(`  ${summary}`);
-    }
-    lines.push("");
-  }
-
-  lines.push("─".repeat(40));
-  lines.push("Educational tool only — not legal advice. Verify citations at canlii.org");
-  return lines.join("\n");
-}
 
 const SECTIONS = [
   { key: "criminal_code", label: "Criminal Code" },
@@ -53,9 +21,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
   const [verifyingCitations, setVerifyingCitations] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
   const [pdfState, setPdfState] = useState("idle"); // idle | loading | error
-  const [copyState, setCopyState] = useState("idle"); // idle | copied
   const pdfErrorTimer = useRef(null);
-  const copyTimer = useRef(null);
 
   // Extract and verify citations on mount
   useEffect(() => {
@@ -103,8 +69,8 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
   // Old-format detection: data has charges/cases but not the new grouped keys
   const isOldFormat = data.charges && !data.criminal_code;
 
-  // Cleanup timers on unmount
-  useEffect(() => () => { clearTimeout(pdfErrorTimer.current); clearTimeout(copyTimer.current); }, []);
+  // Cleanup timer on unmount
+  useEffect(() => () => clearTimeout(pdfErrorTimer.current), []);
 
   const handleExportPdf = useCallback(async () => {
     if (pdfState === "loading") return;
@@ -116,15 +82,9 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          scenario,
           summary: data.summary,
           criminal_code: data.criminal_code,
-          case_law: Array.isArray(data.case_law)
-            ? data.case_law.filter((item) => {
-                const v = verifications[item.citation];
-                return !v || v.status !== "unparseable";
-              })
-            : data.case_law,
+          case_law: data.case_law,
           civil_law: data.civil_law,
           charter: data.charter,
           analysis: data.analysis,
@@ -149,40 +109,6 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       pdfErrorTimer.current = setTimeout(() => setPdfState("idle"), PDF_ERROR_RESET_MS);
     }
   }, [pdfState, data, verifications]);
-
-  const handleCopyCitations = useCallback(async () => {
-    const text = buildCitationText(data, verifications);
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopyState("copied");
-      clearTimeout(copyTimer.current);
-      copyTimer.current = setTimeout(() => setCopyState("idle"), COPY_RESET_MS);
-    } catch {
-      // Fallback for browsers without clipboard API
-      const el = document.createElement("textarea");
-      el.value = text;
-      el.style.position = "fixed";
-      el.style.opacity = "0";
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-      setCopyState("copied");
-      clearTimeout(copyTimer.current);
-      copyTimer.current = setTimeout(() => setCopyState("idle"), COPY_RESET_MS);
-    }
-  }, [data, verifications]);
-
-  const handleExportTxt = useCallback(() => {
-    const text = buildCitationText(data, verifications);
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "casedive-citations.txt";
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [data, verifications]);
 
   return (
     <section data-testid="results-section" style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 60px" }}>
@@ -227,48 +153,6 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         >
           {pdfState === "loading" ? "Generating..." : pdfState === "error" ? "Export failed" : "Export PDF"}
         </button>
-
-        <button
-          onClick={handleExportTxt}
-          data-testid="export-txt-btn"
-          style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 10,
-            letterSpacing: 3.5,
-            textTransform: "uppercase",
-            border: `1px solid ${t.border}`,
-            background: "transparent",
-            color: t.text,
-            padding: "8px 16px",
-            cursor: "pointer",
-            transition: "all 0.15s",
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = t.accent; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = t.text; }}
-        >
-          Export .txt
-        </button>
-
-        <button
-          onClick={handleCopyCitations}
-          data-testid="copy-citations-btn"
-          style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 10,
-            letterSpacing: 3.5,
-            textTransform: "uppercase",
-            border: `1px solid ${t.border}`,
-            background: "transparent",
-            color: copyState === "copied" ? t.accentGreen : t.text,
-            padding: "8px 16px",
-            cursor: "pointer",
-            transition: "all 0.15s",
-          }}
-          onMouseEnter={(e) => { if (copyState !== "copied") e.currentTarget.style.color = t.accent; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = copyState === "copied" ? t.accentGreen : t.text; }}
-        >
-          {copyState === "copied" ? "Copied" : "Copy Citations"}
-        </button>
       </div>
 
       {/* Old format notice */}
@@ -295,7 +179,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
           items = rawItems.filter((item) => {
             const v = verifications[item.citation];
             if (!v) return true; // not yet verified — keep
-            return v.status !== "unparseable" && v.status !== "not_found"; // remove unverifiable citations
+            return v.status === "verified" || v.status === "unverified";
           });
           const verified = rawItems.filter((item) => verifications[item.citation]?.status === "verified").length;
           const removed = rawItems.length - items.length;
@@ -370,6 +254,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
                           {groupItems.length}
                         </span>
                       </div>
+                      {idx === 0 && verificationBanner}
                       {groupItems.map((item, i) => (
                         <ResultCard
                           key={i}
@@ -490,12 +375,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       {selectedCase && (
         <CaseSummaryModal
           item={selectedCase}
-          canliiUrl={(() => {
-            const v = verifications[selectedCase.citation];
-            if (!v) return null;
-            if (v.status === "unverified") return v.searchUrl || null;
-            return v.url || v.searchUrl || null;
-          })()}
+          canliiUrl={verifications[selectedCase.citation]?.url || verifications[selectedCase.citation]?.searchUrl || null}
           scenario={scenario}
           onClose={() => setSelectedCase(null)}
         />
