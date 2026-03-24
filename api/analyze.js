@@ -6,7 +6,6 @@ import { buildSystemPrompt } from "../src/lib/prompts.js";
 import { checkRateLimit, getClientIp, rateLimitHeaders, redis } from "./_rateLimit.js";
 import { retrieveVerifiedCaseLaw } from "./_caseLawRetrieval.js";
 import { logRetrievalMetrics } from "./_retrievalMetrics.js";
-import { lookupCase } from "../src/lib/canlii.js";
 import {
   logRequestStart,
   logRateLimitCheck,
@@ -68,41 +67,69 @@ async function callAnthropic(messages, system, apiKey) {
   return text.replace(/```json|```/g, "").trim();
 }
 
-// ── Re-ranking with AI ───────────────────────────────────────────────────────
+// ── Deterministic retrieval ranking ──────────────────────────────────────────
 
-async function rerankCasesWithAI(scenario, candidates, apiKey) {
-  // Only re-rank if we have enough candidates to make it meaningful
-  if (!candidates || candidates.length <= 3) return candidates;
+const RANK_STOP_WORDS = new Set([
+  "the", "and", "for", "with", "that", "this", "from", "into", "were", "was", "when", "where",
+  "while", "have", "has", "had", "over", "under", "they", "their", "them", "than", "then", "been",
+  "about", "would", "could", "should", "after", "before", "because", "through", "between",
+  "driver", "person", "police", "case", "law",
+]);
 
-  const candidateList = candidates.map((c, i) => 
-    `ID: ${i}\nCitation: ${c.citation}\nSummary: ${c.summary}`
-  ).join("\n\n");
+function tokenizeForRanking(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .map((w) => w.trim())
+    .filter((w) => w.length >= 3 && !RANK_STOP_WORDS.has(w));
+}
 
-  const system = "You are CaseDive, a Canadian legal research expert. Your task is to select the 3 most relevant cases from a list of candidates based on a specific legal scenario. HIGHEST PRIORITY: If a case name is explicitly mentioned in the user scenario (e.g., 'R v Jordan' or 'Morgentaler'), that case MUST be included in the top 3 if it exists in the candidates. SECONDARY PRIORITY: Landmark SCC decisions and cases that directly address the core legal issues in the scenario.";
-  const messages = [
-    {
-      role: "user",
-      content: `Scenario: ${scenario}\n\nCandidates:\n${candidateList}\n\nReturn ONLY a JSON array of the IDs (0-indexed integers) of the top 3 most relevant cases, in order of relevance. Example: [2, 0, 5]`
-    }
-  ];
+function scoreRetrievedCase(scenarioTokens, item) {
+  const haystack = `${item?.citation || ""} ${item?.summary || ""} ${item?.matched_content || ""}`.toLowerCase();
+  const haystackTokens = new Set(tokenizeForRanking(haystack));
 
-  try {
-    const raw = await callAnthropic(messages, system, apiKey);
-    // Clean up response to find just the array
-    const match = raw.match(/\[\s*\d+\s*(?:,\s*\d+\s*)*\]/);
-    if (match) {
-      const topIndices = JSON.parse(match[0]);
-      if (Array.isArray(topIndices)) {
-        return topIndices
-          .map(id => candidates[id])
-          .filter(Boolean)
-          .slice(0, 3);
-      }
-    }
-  } catch (err) {
-    // Fail gracefully: return first 3 if re-ranking fails
+  let overlap = 0;
+  for (const token of scenarioTokens) {
+    if (haystackTokens.has(token)) overlap += 1;
   }
-  return candidates.slice(0, 3);
+
+  let score = overlap * 4;
+
+  // Domain-specific boosts for common impaired-driving / search-and-seizure scenarios.
+  const impairedScenario = scenarioTokens.has("ride") || scenarioTokens.has("breath") || scenarioTokens.has("breathalyzer");
+  if (impairedScenario) {
+    if (/\bcharter\b/.test(haystack)) score += 2;
+    if (/\bdetention\b|\barrest\b/.test(haystack)) score += 2;
+    if (/\bsearch\b|\bseizure\b/.test(haystack)) score += 2;
+    if (/\bbreath\b|\bblood\b|\bimpaired\b/.test(haystack)) score += 3;
+  }
+
+  if (/\bSCC\b/i.test(item?.citation || "")) score += 1.5;
+  if (/\bONCA\b/i.test(item?.citation || "")) score += 1;
+
+  const yearNum = Number(item?.year);
+  if (Number.isFinite(yearNum) && yearNum >= 2000) score += 0.4;
+
+  return score;
+}
+
+function selectTopRetrievedCases(scenario, retrievedCases, limit = 3) {
+  const cases = Array.isArray(retrievedCases) ? [...retrievedCases] : [];
+  const scenarioTokens = new Set(tokenizeForRanking(scenario));
+
+  cases.sort((a, b) => {
+    const scoreDiff = scoreRetrievedCase(scenarioTokens, b) - scoreRetrievedCase(scenarioTokens, a);
+    if (scoreDiff !== 0) return scoreDiff;
+
+    const yearA = Number(a?.year) || 0;
+    const yearB = Number(b?.year) || 0;
+    if (yearB !== yearA) return yearB - yearA;
+
+    return String(a?.citation || "").localeCompare(String(b?.citation || ""));
+  });
+
+  return cases.slice(0, limit);
 }
 
 // ── Parse with one retry ─────────────────────────────────────────────────────
@@ -288,9 +315,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // Phase B retrieval-first path: merge AI-generated case_law with retrieval results.
+    // Phase B retrieval-first path: use retrieved verified case-law as final source.
     const meta = ensureMetaContainer(result);
-    const aiSuggestedCases = Array.isArray(result.case_law) ? result.case_law : [];
     
     if (filters.lawTypes.case_law !== false) {
       const canliiKey = process.env.CANLII_API_KEY || "";
@@ -313,71 +339,11 @@ export default async function handler(req, res) {
           });
         }
 
-        // Deduplicate: merge AI suggestions (if any) with retrieved cases
-        const seenCitations = new Set();
-        const candidates = [];
-
-        // 1. Prioritize AI suggested cases (we trust Claude's relevance, but verify later via client or batch)
-        // Actually, verify them NOW using lookupCase to ensure they are real
-        for (const c of aiSuggestedCases) {
-          if (!c.citation) continue;
-          const key = c.citation.toLowerCase().trim();
-          if (seenCitations.has(key)) continue;
-          
-          // Basic verification check for AI citations
-          const v = await lookupCase(c.citation, canliiKey);
-          if (v.status === "verified" || v.status === "unverified" || v.status === "not_found" || v.status === "unparseable") {
-            candidates.push({
-              ...c,
-              url_canlii: v.url || v.searchUrl || "",
-              verificationStatus: v.status === "verified" ? "verified" : "unverified"
-            });
-            seenCitations.add(key);
-          }
-        }
-
-        // 2. Append retrieval results
-        for (const c of retrievedCases) {
-          if (!c.citation) continue;
-          const key = c.citation.toLowerCase().trim();
-          if (seenCitations.has(key)) continue;
-          candidates.push(c);
-          seenCitations.add(key);
-        }
-
-        // 3. AI Re-Ranking Pass: Select top 3 from the larger pool
-        const rerankStartMs = Date.now();
-        let topCases = await rerankCasesWithAI(scenario, candidates, apiKey);
-        
-        // 4. Safety Fallback: Ensure specifically mentioned cases are NOT dropped
-        const scenarioLower = scenario.toLowerCase();
-        for (const candidate of candidates) {
-          // If the citation contains a name mentioned in the scenario (e.g., "Jordan" or "Morgentaler")
-          const parties = candidate.citation.split(",")[0].toLowerCase();
-          const words = parties.replace(/r v /g, "").split(/\s+/).filter(w => w.length > 3);
-          
-          const isMentioned = words.some(w => scenarioLower.includes(w));
-          if (isMentioned) {
-            // Check if it's already in topCases
-            const alreadyIn = topCases.some(t => t.citation.toLowerCase() === candidate.citation.toLowerCase());
-            if (!alreadyIn) {
-              // Swap it into the bottom of the list
-              topCases = [topCases[0], topCases[1], candidate];
-            }
-          }
-        }
-
-        const rerankDurationMs = Date.now() - rerankStartMs;
-        logExternalApiCall(requestId, "analyze", "ai-rerank", 200, rerankDurationMs, {
-          candidatesProvided: candidates.length,
-          finalCount: topCases.length
-        });
-
-        result.case_law = topCases;
+        result.case_law = selectTopRetrievedCases(scenario, retrievedCases, 3);
         
         const reason = retrievalMeta.reason || (result.case_law.length > 0 ? "verified_results" : "no_verified");
         meta.case_law = {
-          source: "hybrid_reranked",
+          source: "retrieval_ranked",
           verifiedCount: result.case_law.length,
           reason,
         };
@@ -392,11 +358,11 @@ export default async function handler(req, res) {
           finalCaseLawCount: result.case_law.length,
         });
       } catch (retrievalErr) {
-        // Fallback to AI suggestions only if retrieval fails
-        result.case_law = aiSuggestedCases;
+        // Keep retrieval-first behavior even on retrieval failures.
+        result.case_law = [];
         meta.case_law = {
-          source: "ai_fallback",
-          verifiedCount: aiSuggestedCases.length,
+          source: "retrieval_error",
+          verifiedCount: 0,
           reason: "retrieval_error",
         };
       }
