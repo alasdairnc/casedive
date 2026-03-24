@@ -3,6 +3,7 @@
 // Degrades gracefully when CANLII_API_KEY is not set.
 
 import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { randomUUID } from "crypto";
 import {
   parseCitation,
   buildCaseId,
@@ -30,14 +31,14 @@ const CRIMINAL_CODE_PATTERN = /^(s\.\s*|section\s+)?\d+/i;
 const CHARTER_PATTERN = /^(canadian\s+)?charter(\s+of\s+rights\s+and\s+freedoms)?,?\s*s\.\s*\d+|^s\.\s*\d+\s*(\(\w+\))?$/i;
 
 // Matches civil law statute citations with a statute name prefix
-const CIVIL_LAW_PATTERN = /\b(CDSA|YCJA|CHRA|CEA|CCRA|HTA|MVA|controlled drugs|youth criminal justice|canadian human rights|canada evidence|corrections and conditional release|highway traffic|motor vehicle)\b/i;
+const CIVIL_LAW_PATTERN = /\b(CDSA|YCJA|CHRA|CEA|CCRA|HTA|MVA|TSA|AHRA|HRC|controlled drugs|youth criminal justice|canadian human rights|human rights code|human rights act|canada evidence|corrections and conditional release|highway traffic|motor vehicle|residential tenanc|traffic safety)\b/i;
 
 // Explicit Criminal Code check
 const EXPLICIT_CC_PATTERN = /\b(criminal\s+code|CC)\b/i;
 
 
 export default async function handler(req, res) {
-  const requestId = Math.random().toString(36).slice(2, 10);
+  const requestId = req.headers['x-vercel-id'] || randomUUID();
   const startMs = Date.now();
   logRequestStart(req, "verify", requestId);
   const origin = req.headers.origin ?? "";
