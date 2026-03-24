@@ -199,12 +199,16 @@ export async function lookupCase(citation, apiKey) {
     number: parsed.number,
     isLegacy: parsed.isLegacy 
   });
+
+  const searchUrl = buildSearchUrl(citation);
+
   if (!caseId) {
-    return { status: "unparseable", searchUrl: buildSearchUrl(citation) };
+    // Valid citation format but no direct CanLII ID (e.g. SCR citation)
+    // Return as unverified with search URL
+    return { status: "unverified", searchUrl };
   }
 
   const caseUrl = buildCaseUrl(parsed.webDbId, parsed.year, caseId);
-  const searchUrl = buildSearchUrl(citation);
 
   // No API key — return unverified with a best-guess URL
   if (!apiKey) {

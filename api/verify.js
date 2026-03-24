@@ -250,8 +250,16 @@ export default async function handler(req, res) {
         number: parsed.number,
         isLegacy: parsed.isLegacy 
       });
-      const caseUrl = buildCaseUrl(parsed.webDbId, parsed.year, caseId);
+
       const searchUrl = buildSearchUrl(citation);
+
+      if (!caseId) {
+        // Valid citation format but no direct CanLII ID (e.g. SCR citation)
+        results[citation] = { status: "unverified", searchUrl };
+        return;
+      }
+
+      const caseUrl = buildCaseUrl(parsed.webDbId, parsed.year, caseId);
 
       if (!apiKey) {
         results[citation] = { status: "unverified", url: caseUrl, searchUrl };

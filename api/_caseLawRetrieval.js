@@ -375,7 +375,7 @@ export async function retrieveVerifiedCaseLaw({
     
     // If found in search, we trust it enough to show, even if the direct lookup fails
     // (direct lookup often fails for legacy citations due to ID format changes)
-    const status = verification.status === "verified" ? "verified" : "unverified";
+    const status = (verification.status === "verified") ? "verified" : "unverified";
     cases.push(toCaseLawItem(candidate, verification, status));
     
     if (cases.length >= maxResults) break;
