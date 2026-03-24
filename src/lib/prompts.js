@@ -90,17 +90,22 @@ export function buildSystemPrompt(filters = {}) {
   "analysis": "A 2-3 sentence legal analysis of the scenario, including key considerations for prosecution or defence",
   "suggestions": [
     {
-      "type": "'canlii' for a search term, 'criminal_code' for a federal statute, or 'provincial_statute' for a provincial one",
-      "label": "The display text for the link (e.g., 'impaired driving', 's. 320.14', 'HTA s. 172')",
-      "term": "The CanLII search term, if type is 'canlii'",
-      "citation": "The full citation, if type is a statute (e.g., 'Criminal Code, s. 320.14', 'HTA (ON), s. 172')"
+      "type": "canlii",
+      "label": "The display text for the link (e.g., 'R v Jordan - 11(b) delay')",
+      "term": "Specific search terms for CanLII (e.g., 'Jordan 11b unreasonable delay')"
+    },
+    {
+      "type": "criminal_code",
+      "label": "s. 320.14",
+      "citation": "Criminal Code, s. 320.14"
     }
   ]
 }
 
 RULES:
 - Provide 1-3 items per category where applicable. Return empty arrays for categories that don't apply.${filterInstructions}${lawTypeInstructions}
-- For suggestions, provide a mix of 3-5 CanLII search terms and direct links to relevant statutes. Use the 'canlii' type for general searches and 'criminal_code' or 'provincial_statute' for specific sections.
+- For suggestions, provide 3-5 high-quality CanLII search terms (type: "canlii"). THESE ARE CRITICAL: they are used to retrieve real case law server-side.
+- A good CanLII search term includes the name of the leading case and the specific legal test (e.g., "Oakes test section 1 justification", "Grant 24(2) evidence exclusion").
 - Criminal Code sections are verified against a full local Criminal Code database. Use real section numbers only (e.g., "s. 348(1)(b)").
 - For civil_law: cite specific statutes with section numbers. Use formats like "Controlled Drugs and Substances Act, s. 4" or "CDSA, s. 4" for drug charges; "Youth Criminal Justice Act, s. 38" or "YCJA, s. 38" for youth matters; "Criminal Code, s. 718.2" for sentencing principles. For provincial statutes, include the jurisdiction: "Highway Traffic Act (ON), s. 172" or "HTA (ON), s. 172", "Motor Vehicle Act (BC), s. 144" or "MVA (BC), s. 144". These are verified against a local database.
 - For charter: use section number format like "s. 7", "s. 8", "s. 11(b)", "s. 24(2)". These are verified against the full Charter database.

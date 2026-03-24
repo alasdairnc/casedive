@@ -77,26 +77,47 @@ function dedupeStrings(values) {
   return deduped;
 }
 
-function extractCaseLawSearchTerms({ scenario, aiSuggestions }) {
+function extractCaseLawSearchTerms({ scenario, aiSuggestions, criminalCode = [] }) {
   const terms = [];
 
+  // 1. Primary: Use explicit CanLII search terms from AI suggestions
   if (Array.isArray(aiSuggestions)) {
     for (const suggestion of aiSuggestions) {
-      if (!suggestion || suggestion.type !== "canlii") continue;
-      const value = sanitizeTerm(suggestion.term || suggestion.label || "");
-      if (value) terms.push(value);
+      if (!suggestion) continue;
+      // Accept 'canlii' type, or any suggestion that has a 'term' field
+      if (suggestion.type === "canlii" || suggestion.term) {
+        const value = sanitizeTerm(suggestion.term || suggestion.label || "");
+        if (value) terms.push(value);
+      }
     }
   }
 
-  const scenarioFallback = sanitizeTerm(scenario || "")
-    .split(" ")
-    .slice(0, 12)
-    .join(" ");
-  if (scenarioFallback) {
-    terms.push(scenarioFallback);
+  // 2. Secondary: Use criminal code sections (e.g., "s. 265") as search keywords
+  if (Array.isArray(criminalCode)) {
+    for (const item of criminalCode) {
+      if (!item || !item.citation) continue;
+      const sectionMatch = item.citation.match(/s\.\s*([\d.]+)/);
+      if (sectionMatch) {
+        // Search for the section number + short title
+        const keyword = `Criminal Code s. ${sectionMatch[1]}`;
+        terms.push(keyword);
+      }
+    }
   }
 
-  return dedupeStrings(terms).slice(0, MAX_TERMS);
+  // 3. Fallback: Take a few key nouns/verbs from the scenario (better than first 12 words)
+  const words = sanitizeTerm(scenario || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(w => w.length > 3 && !["this", "that", "with", "from", "into", "into", "their"].includes(w));
+  
+  if (words.length > 0 && terms.length < MAX_TERMS) {
+    const fallback = words.slice(0, 5).join(" ");
+    if (fallback) terms.push(fallback);
+  }
+
+  return dedupeStrings(terms).slice(0, MAX_TERMS + 1);
 }
 
 function pickDatabaseTargets(filters = {}) {
@@ -106,18 +127,19 @@ function pickDatabaseTargets(filters = {}) {
 
   let ids = [];
   if (jurisdiction !== "all" && JURISDICTION_DB_IDS[jurisdiction]) {
-    ids = [...JURISDICTION_DB_IDS[jurisdiction]];
+    ids = [...JURISDICTION_DB_IDS[jurisdiction], "csc-scc"]; // Always include SCC as fallback
   } else {
     ids = [...DEFAULT_DB_IDS];
   }
 
   if (courtLevel !== "all" && COURT_LEVEL_DB_IDS[courtLevel]) {
     const levelSet = new Set(COURT_LEVEL_DB_IDS[courtLevel]);
+    // Filter to prioritized level, but keep others as fallbacks if needed
     const filtered = ids.filter((dbId) => levelSet.has(dbId));
     ids = filtered.length > 0 ? filtered : COURT_LEVEL_DB_IDS[courtLevel];
   }
 
-  return dedupeStrings(ids).slice(0, MAX_DATABASES);
+  return dedupeStrings(ids).slice(0, MAX_DATABASES + 1);
 }
 
 function buildSearchUrls(term, dbId, apiKey) {
@@ -125,6 +147,7 @@ function buildSearchUrls(term, dbId, apiKey) {
   const encDb = encodeURIComponent(dbId);
   const encKey = encodeURIComponent(apiKey);
 
+  // Attempt search using both the /search (text) and /cases (keywords) endpoints
   return [
     `${CANLII_API_BASE}/search/?text=${encTerm}&databaseId=${encDb}&api_key=${encKey}`,
     `${CANLII_API_BASE}/cases?db=${encDb}&keywords=${encTerm}&api_key=${encKey}`,
@@ -133,12 +156,13 @@ function buildSearchUrls(term, dbId, apiKey) {
 
 async function fetchJson(url) {
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(SEARCH_TIMEOUT_MS) });
+    const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(SEARCH_TIMEOUT_MS) : undefined });
     if (!res.ok) return null;
     const contentType = res.headers.get("content-type") || "";
     if (!contentType.includes("application/json")) return null;
     return await res.json();
-  } catch {
+  } catch (err) {
+    // Suppress console error to keep logs clean during batch search
     return null;
   }
 }
@@ -148,6 +172,7 @@ function normalizeCitationText(citation, titleHint = "") {
   if (!raw) return null;
   if (parseCitation(raw)) return raw;
 
+  // Handle common format errors:
   // Neutral only: "2021 SCC 10" -> "R v X, 2021 SCC 10"
   const neutralOnly = raw.match(/^(\d{4})\s+([A-Z]{2,8})\s+(\d+)$/);
   if (neutralOnly && titleHint) {
@@ -281,6 +306,7 @@ export async function retrieveVerifiedCaseLaw({
   scenario = "",
   filters = {},
   aiSuggestions = [],
+  criminalCode = [],
   apiKey = "",
   maxResults = 3,
 } = {}) {
@@ -298,7 +324,7 @@ export async function retrieveVerifiedCaseLaw({
     };
   }
 
-  const terms = extractCaseLawSearchTerms({ scenario, aiSuggestions });
+  const terms = extractCaseLawSearchTerms({ scenario, aiSuggestions, criminalCode });
   const dbTargets = pickDatabaseTargets(filters);
   if (terms.length === 0 || dbTargets.length === 0) {
     return {
