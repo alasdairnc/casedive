@@ -501,7 +501,9 @@ export async function retrieveVerifiedCaseLaw({
     if (remaining > 0 && fbTerms.length > 0 && fbDbs.length > 0) {
       const phase2 = await gatherSearchCandidates(fbTerms, fbDbs, apiKey, remaining);
       searchCalls += phase2.searchCalls;
-      rawCandidates.push(...phase2.rawCandidates);
+      // Prioritize newly discovered fallback candidates before phase-1 candidates.
+      // Otherwise, slice(0, MAX_CANDIDATES) can starve fallback results.
+      rawCandidates = [...phase2.rawCandidates, ...rawCandidates];
       fallbackSearchUsed = true;
       uniqueCandidates = dedupeCandidates(rawCandidates).slice(0, MAX_CANDIDATES);
       cases = await verifyCandidates(uniqueCandidates, MAX_VERIFICATION_CALLS_FALLBACK);
