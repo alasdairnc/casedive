@@ -49,25 +49,61 @@ export const COURT_DB_MAP = COURT_API_MAP;
 
 /**
  * Parse a Canadian case citation.
- * Handles: "R v Smith, 2020 ONCA 123" and "R v Smith, [2020] 2 SCR 123"
- * Returns { parties, year, courtCode, number, dbId } or null if unparseable.
+ * Handles:
+ * - Neutral citation: "R v Smith, 2020 ONCA 123" or "2020 ONCA 123"
+ * - CanLII neutral: "R v Smith, 2020 CanLII 123 (SCC)" or "2020 CanLII 123 (SCC)"
+ * - SCR citation: "R v Smith, [1988] 1 SCR 30"
+ * Returns { parties, year, courtCode, number, apiDbId, webDbId, isLegacy } or null.
  */
 export function parseCitation(citation) {
   if (!citation || typeof citation !== "string") return null;
 
-  // Standard neutral citation: "Parties, YYYY COURT NUM"
-  const neutral = citation.match(/^(.+?),\s*(\d{4})\s+([A-Z]{2,8})\s+(\d+)$/);
+  const trimmed = citation.trim();
+
+  // 1. Standard neutral citation: "Parties, YYYY COURT NUM" or bare "YYYY COURT NUM"
+  const neutral = trimmed.match(/^(?:(.+?),\s*)?(\d{4})\s+([A-Z]{2,8})\s+(\d+)$/);
   if (neutral) {
     const [, parties, year, courtCode, number] = neutral;
     const upper = courtCode.toUpperCase();
     return {
-      parties: parties.trim(),
+      parties: parties ? parties.trim() : null,
       year,
       courtCode: upper,
       number,
       apiDbId: COURT_API_MAP[upper] || null,
       webDbId: COURT_WEB_MAP[upper] || null,
-      dbId: COURT_API_MAP[upper] || null, // backwards compat
+      isLegacy: false,
+    };
+  }
+
+  // 2. CanLII neutral citation: "Parties, YYYY CanLII NUM (COURT)" or bare "YYYY CanLII NUM (COURT)"
+  const canliiNeutral = trimmed.match(/^(?:(.+?),\s*)?(\d{4})\s+CanLII\s+(\d+)\s+\(([A-Z]{2,8})\)$/i);
+  if (canliiNeutral) {
+    const [, parties, year, number, courtCode] = canliiNeutral;
+    const upper = courtCode.toUpperCase();
+    return {
+      parties: parties ? parties.trim() : null,
+      year,
+      courtCode: upper,
+      number,
+      apiDbId: COURT_API_MAP[upper] || null,
+      webDbId: COURT_WEB_MAP[upper] || null,
+      isLegacy: true, // Uses "canlii" as part of ID: YYYYcanliiNNN
+    };
+  }
+
+  // 3. SCR citation: "Parties, [YYYY] N SCR NNN"
+  const scr = trimmed.match(/^(?:(.+?),\s*)?\[(\d{4})\]\s+\d+\s+SCR\s+\d+$/i);
+  if (scr) {
+    const [, parties, year] = scr;
+    return {
+      parties: parties ? parties.trim() : null,
+      year,
+      courtCode: "SCC",
+      number: null, // SCR doesn't map directly to CanLII number without lookup
+      apiDbId: "csc-scc",
+      webDbId: "ca/scc",
+      isLegacy: true,
     };
   }
 
@@ -76,11 +112,14 @@ export function parseCitation(citation) {
 
 /**
  * Build the CanLII internal case ID.
- * Uses the lowercase court abbreviation, NOT the dbId path.
- * e.g. year=2020, courtCode="ONCA", number=123 → "2020onca123"
+ * Handles both neutral (2020onca123) and CanLII-neutral (1988canlii90).
  */
-export function buildCaseId({ year, courtCode, number }) {
-  if (!year || !courtCode || !number) return null;
+export function buildCaseId({ year, courtCode, number, isLegacy }) {
+  if (!year || !courtCode) return null;
+  if (isLegacy && number) {
+    return `${year}canlii${number}`;
+  }
+  if (!number) return null;
   return `${year}${courtCode.toLowerCase()}${number}`;
 }
 
@@ -112,7 +151,8 @@ export function buildSearchUrl(citation) {
  * with a real but unrelated case (e.g. "R v Penno, 2021 SCC 44" → H.M.B. Holdings Ltd.).
  */
 export function partiesMatch(submittedParties, canliiTitle) {
-  if (!submittedParties || !canliiTitle) return false;
+  if (!submittedParties) return true; // Can't verify if not provided, assume match
+  if (!canliiTitle) return false;
 
   const STOP_WORDS = new Set([
     "r", "v", "the", "her", "his", "majesty", "queen", "king",
