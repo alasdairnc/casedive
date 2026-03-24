@@ -222,6 +222,26 @@ function AppInner() {
         onSubmit={analyzeScenario} loading={loading}
       />
 
+      {/* Legal Disclaimer */}
+      <div style={{
+        maxWidth: 760,
+        margin: '0 auto',
+        padding: '16px 24px 0',
+      }}>
+        <p style={{
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 11,
+          lineHeight: 1.5,
+          color: t.textTertiary,
+          letterSpacing: 0.3,
+          borderLeft: `2px solid ${t.border}`,
+          paddingLeft: 12,
+          margin: 0,
+        }}>
+          CaseFinder is an educational research tool and does not provide legal advice. Results are AI-generated and may contain errors. Always consult a qualified lawyer for legal matters. Case citations are verified against CanLII where possible.
+        </p>
+      </div>
+
       {/* History button */}
       {history.length > 0 && (
         <div style={{ maxWidth: 760, margin: "0 auto", padding: "8px 24px 0", textAlign: "right" }}>
