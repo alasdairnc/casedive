@@ -289,7 +289,7 @@ export default async function handler(req, res) {
           
           // Basic verification check for AI citations
           const v = await lookupCase(c.citation, canliiKey);
-          if (v.status === "verified" || v.status === "unverified" || v.status === "not_found") {
+          if (v.status === "verified" || v.status === "unverified" || v.status === "not_found" || v.status === "unparseable") {
             mergedCases.push({
               ...c,
               url_canlii: v.url || v.searchUrl || "",
