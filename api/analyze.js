@@ -68,6 +68,43 @@ async function callAnthropic(messages, system, apiKey) {
   return text.replace(/```json|```/g, "").trim();
 }
 
+// ── Re-ranking with AI ───────────────────────────────────────────────────────
+
+async function rerankCasesWithAI(scenario, candidates, apiKey) {
+  // Only re-rank if we have enough candidates to make it meaningful
+  if (!candidates || candidates.length <= 3) return candidates;
+
+  const candidateList = candidates.map((c, i) => 
+    `ID: ${i}\nCitation: ${c.citation}\nSummary: ${c.summary}`
+  ).join("\n\n");
+
+  const system = "You are CaseDive, a Canadian legal research expert. Your task is to select the 3 most relevant cases from a list of candidates based on a specific legal scenario. Prioritize landmark SCC decisions and cases that directly address the core legal issues in the scenario.";
+  const messages = [
+    {
+      role: "user",
+      content: `Scenario: ${scenario}\n\nCandidates:\n${candidateList}\n\nReturn ONLY a JSON array of the IDs (0-indexed integers) of the top 3 most relevant cases, in order of relevance. Example: [2, 0, 5]`
+    }
+  ];
+
+  try {
+    const raw = await callAnthropic(messages, system, apiKey);
+    // Clean up response to find just the array
+    const match = raw.match(/\[\s*\d+\s*(?:,\s*\d+\s*)*\]/);
+    if (match) {
+      const topIndices = JSON.parse(match[0]);
+      if (Array.isArray(topIndices)) {
+        return topIndices
+          .map(id => candidates[id])
+          .filter(Boolean)
+          .slice(0, 3);
+      }
+    }
+  } catch (err) {
+    // Fail gracefully: return first 3 if re-ranking fails
+  }
+  return candidates.slice(0, 3);
+}
+
 // ── Parse with one retry ─────────────────────────────────────────────────────
 
 async function analyzeWithRetry(scenario, filters, apiKey) {
@@ -265,7 +302,7 @@ export default async function handler(req, res) {
           aiSuggestions: Array.isArray(result.suggestions) ? result.suggestions : [],
           criminalCode: Array.isArray(result.criminal_code) ? result.criminal_code : [],
           apiKey: canliiKey,
-          maxResults: 3,
+          maxResults: 10,
         });
         const retrievalDurationMs = Date.now() - retrievalStartMs;
 
@@ -278,7 +315,7 @@ export default async function handler(req, res) {
 
         // Deduplicate: merge AI suggestions (if any) with retrieved cases
         const seenCitations = new Set();
-        const mergedCases = [];
+        const candidates = [];
 
         // 1. Prioritize AI suggested cases (we trust Claude's relevance, but verify later via client or batch)
         // Actually, verify them NOW using lookupCase to ensure they are real
@@ -290,7 +327,7 @@ export default async function handler(req, res) {
           // Basic verification check for AI citations
           const v = await lookupCase(c.citation, canliiKey);
           if (v.status === "verified" || v.status === "unverified" || v.status === "not_found" || v.status === "unparseable") {
-            mergedCases.push({
+            candidates.push({
               ...c,
               url_canlii: v.url || v.searchUrl || "",
               verificationStatus: v.status === "verified" ? "verified" : "unverified"
@@ -304,15 +341,24 @@ export default async function handler(req, res) {
           if (!c.citation) continue;
           const key = c.citation.toLowerCase().trim();
           if (seenCitations.has(key)) continue;
-          mergedCases.push(c);
+          candidates.push(c);
           seenCitations.add(key);
         }
 
-        result.case_law = mergedCases.slice(0, 5); // Allow up to 5 total
+        // 3. AI Re-Ranking Pass: Select top 3 from the larger pool
+        const rerankStartMs = Date.now();
+        const topCases = await rerankCasesWithAI(scenario, candidates, apiKey);
+        const rerankDurationMs = Date.now() - rerankStartMs;
+        logExternalApiCall(requestId, "analyze", "ai-rerank", 200, rerankDurationMs, {
+          candidatesProvided: candidates.length,
+          finalCount: topCases.length
+        });
+
+        result.case_law = topCases;
         
         const reason = retrievalMeta.reason || (result.case_law.length > 0 ? "verified_results" : "no_verified");
         meta.case_law = {
-          source: "hybrid",
+          source: "hybrid_reranked",
           verifiedCount: result.case_law.length,
           reason,
         };

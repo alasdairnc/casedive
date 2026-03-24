@@ -8,9 +8,9 @@ const CANLII_API_BASE = "https://api.canlii.org/v1";
 const SEARCH_TIMEOUT_MS = 3000;
 const MAX_TERMS = 2;
 const MAX_DATABASES = 3;
-const MAX_SEARCH_CALLS = 6;
-const MAX_CANDIDATES = 6;
-const MAX_VERIFICATION_CALLS = 6;
+const MAX_SEARCH_CALLS = 12;
+const MAX_CANDIDATES = 15;
+const MAX_VERIFICATION_CALLS = 15;
 
 const DEFAULT_DB_IDS = ["csc-scc", "onca", "onsc", "bcca", "abca"];
 
@@ -19,10 +19,10 @@ const JURISDICTION_DB_IDS = {
   "British Columbia": ["bcca", "bcsc", "bcpc"],
   Alberta: ["abca", "abkb", "abqb", "abpc"],
   Quebec: ["qcca", "qccs", "qccq"],
-  Manitoba: ["mbca", "mbqb", "mbpc"],
-  Saskatchewan: ["skca", "skqb", "skpc"],
+  Manitoba: ["mbca", "mbkb", "mbqb", "mbpc"],
+  Saskatchewan: ["skca", "skkb", "skqb", "skpc"],
   "Nova Scotia": ["nsca", "nssc", "nspc"],
-  "New Brunswick": ["nbca", "nbqb", "nbpc"],
+  "New Brunswick": ["nbca", "nbkb", "nbqb", "nbpc"],
   "Newfoundland and Labrador": ["nlca", "nlsc", "nlpc"],
   "Prince Edward Island": ["peca"],
 };
@@ -30,7 +30,7 @@ const JURISDICTION_DB_IDS = {
 const COURT_LEVEL_DB_IDS = {
   scc: ["csc-scc"],
   appeal: ["onca", "bcca", "abca", "qcca", "mbca", "skca", "nsca", "nbca", "nlca", "peca"],
-  superior: ["onsc", "bcsc", "abkb", "abqb", "qccs", "mbqb", "skqb", "nssc", "nbqb", "nlsc"],
+  superior: ["onsc", "bcsc", "abkb", "abqb", "mbkb", "mbqb", "skkb", "skqb", "nbkb", "nbqb", "qccs", "mbqb", "skqb", "nssc", "nbqb", "nlsc"],
   provincial: ["oncj", "bcpc", "abpc", "qccq", "mbpc", "skpc", "nspc", "nbpc", "nlpc"],
 };
 
@@ -315,7 +315,7 @@ export async function retrieveVerifiedCaseLaw({
   aiSuggestions = [],
   criminalCode = [],
   apiKey = "",
-  maxResults = 3,
+  maxResults = 5,
 } = {}) {
   if (!apiKey) {
     return {
@@ -347,48 +347,45 @@ export async function retrieveVerifiedCaseLaw({
     };
   }
 
-  const rawCandidates = [];
-  let searchCalls = 0;
-
+  // 1. Parallel Search: generate all (term, dbId) tasks
+  const searchTasks = [];
   for (const term of terms) {
     for (const dbId of dbTargets) {
-      if (searchCalls >= MAX_SEARCH_CALLS) break;
-      searchCalls += 1;
-
-      const found = await searchCandidatesForTerm(term, dbId, apiKey);
-      rawCandidates.push(...found);
-
-      if (rawCandidates.length >= MAX_CANDIDATES * 3) break;
+      if (searchTasks.length >= MAX_SEARCH_CALLS) break;
+      searchTasks.push({ term, dbId });
     }
-    if (searchCalls >= MAX_SEARCH_CALLS || rawCandidates.length >= MAX_CANDIDATES * 3) break;
+    if (searchTasks.length >= MAX_SEARCH_CALLS) break;
   }
 
+  const searchResults = await Promise.all(
+    searchTasks.map(t => searchCandidatesForTerm(t.term, t.dbId, apiKey))
+  );
+
+  const rawCandidates = searchResults.flat();
   const uniqueCandidates = dedupeCandidates(rawCandidates).slice(0, MAX_CANDIDATES);
-  const cases = [];
-  let verificationCalls = 0;
 
-  for (const candidate of uniqueCandidates) {
-    if (verificationCalls >= MAX_VERIFICATION_CALLS) break;
-    verificationCalls += 1;
+  // 2. Parallel Verification: verify the best candidates in parallel
+  const verificationTasks = uniqueCandidates.slice(0, MAX_VERIFICATION_CALLS);
+  const verificationResults = await Promise.all(
+    verificationTasks.map(async (candidate) => {
+      const v = await lookupCase(candidate.citation, apiKey);
+      // Even if direct lookup fails (status !== verified), search-found items 
+      // are included as 'unverified' so they still appear in the UI.
+      const status = (v.status === "verified") ? "verified" : "unverified";
+      return toCaseLawItem(candidate, v, status);
+    })
+  );
 
-    const verification = await lookupCase(candidate.citation, apiKey);
-    
-    // If found in search, we trust it enough to show, even if the direct lookup fails
-    // (direct lookup often fails for legacy citations due to ID format changes)
-    const status = (verification.status === "verified") ? "verified" : "unverified";
-    cases.push(toCaseLawItem(candidate, verification, status));
-    
-    if (cases.length >= maxResults) break;
-  }
+  const cases = verificationResults.slice(0, MAX_CANDIDATES);
 
   return {
     cases,
     meta: {
       termsTried: terms.length,
       databasesTried: dbTargets.length,
-      searchCalls,
+      searchCalls: searchTasks.length,
       candidateCount: uniqueCandidates.length,
-      verificationCalls,
+      verificationCalls: verificationTasks.length,
       verifiedCount: cases.filter(c => c.verificationStatus === "verified").length,
     },
   };
