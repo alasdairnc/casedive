@@ -140,11 +140,26 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
         alignItems: "baseline", flexWrap: "wrap", gap: 8,
       }}>
         <div style={{
-          fontFamily: "'Times New Roman', serif",
-          fontSize: "clamp(15px, 2.3vw, 17px)",
-          color: t.text, fontWeight: "bold",
+          display: "flex", alignItems: "center", gap: 10,
         }}>
-          {item.citation}
+          <div style={{
+            fontFamily: "'Times New Roman', serif",
+            fontSize: "clamp(15px, 2.3vw, 17px)",
+            color: t.text, fontWeight: "bold",
+          }}>
+            {item.citation}
+          </div>
+          {type === "civil_law" && verification?.jurisdiction && (
+            <div style={{
+              fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
+              color: verification.jurisdiction === "Federal" ? t.accentGreen : t.accent,
+              background: t.bgAlt, border: `1px solid ${t.borderLight}`,
+              padding: "2px 6px", borderRadius: 4, letterSpacing: 0.5,
+              textTransform: "uppercase"
+            }}>
+              {verification.jurisdiction}
+            </div>
+          )}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {type === "case_law" && item.court && (

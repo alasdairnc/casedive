@@ -30,7 +30,7 @@ const CRIMINAL_CODE_PATTERN = /^s\.\s*\d+/i;
 const CHARTER_PATTERN = /^(canadian\s+)?charter(\s+of\s+rights\s+and\s+freedoms)?,?\s*s\.\s*\d+|^s\.\s*\d+\s*(\(\w+\))?$/i;
 
 // Matches civil law statute citations with a statute name prefix
-const CIVIL_LAW_PATTERN = /\b(CDSA|YCJA|CHRA|CEA|CCRA|controlled drugs|youth criminal justice|canadian human rights|canada evidence|corrections and conditional release|criminal code)\b/i;
+const CIVIL_LAW_PATTERN = /\b(CDSA|YCJA|CHRA|CEA|CCRA|HTA|MVA|controlled drugs|youth criminal justice|canadian human rights|canada evidence|corrections and conditional release|highway traffic|motor vehicle|criminal code)\b/i;
 
 
 export default async function handler(req, res) {
@@ -111,6 +111,7 @@ export default async function handler(req, res) {
             searchUrl: buildSearchUrl(citation),
             title: found.entry.title,
             statute: found.entry.statute,
+            jurisdiction: found.entry.jurisdiction,
           };
         } else {
           results[citation] = {

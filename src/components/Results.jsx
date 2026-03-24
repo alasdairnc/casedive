@@ -343,6 +343,50 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
           return null;
         }
 
+        if (key === "civil_law") {
+          const groups = {};
+          items.forEach(item => {
+             const v = verifications[item.citation];
+             const groupName = v?.jurisdiction ? (v.jurisdiction === "Federal" ? "Federal Statutes" : `${v.jurisdiction} Statutes`) : "Civil Law";
+             if (!groups[groupName]) groups[groupName] = [];
+             groups[groupName].push(item);
+          });
+          
+          return (
+             <div key={key} style={{ marginTop: 40 }}>
+                {Object.entries(groups).map(([groupName, groupItems], idx) => (
+                   <div key={`${key}-${idx}`} style={{ marginBottom: idx < Object.keys(groups).length - 1 ? 24 : 0 }}>
+                      <div style={{
+                        fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
+                        letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 8,
+                        display: "flex", alignItems: "center", gap: 10,
+                      }}>
+                        {groupName}
+                        <span style={{
+                          fontSize: 10, color: t.tagText, background: t.tagBg,
+                          padding: "1px 6px", border: `1px solid ${t.border}`,
+                          fontWeight: 700,
+                        }}>
+                          {groupItems.length}
+                        </span>
+                      </div>
+                      {groupItems.map((item, i) => (
+                        <ResultCard
+                          key={i}
+                          item={item}
+                          type={key}
+                          verification={verifications[item.citation]}
+                          addBookmark={addBookmark}
+                          removeBookmark={removeBookmark}
+                          isBookmarked={isBookmarked}
+                        />
+                      ))}
+                   </div>
+                ))}
+             </div>
+          );
+        }
+
         return (
           <div key={key} style={{ marginTop: 40 }}>
             <div style={{
