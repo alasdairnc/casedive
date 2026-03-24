@@ -289,11 +289,11 @@ export default async function handler(req, res) {
           
           // Basic verification check for AI citations
           const v = await lookupCase(c.citation, canliiKey);
-          if (v.status === "verified" || v.status === "unverified") {
+          if (v.status === "verified" || v.status === "unverified" || v.status === "not_found") {
             mergedCases.push({
               ...c,
-              url_canlii: v.url || "",
-              verificationStatus: v.status
+              url_canlii: v.url || v.searchUrl || "",
+              verificationStatus: v.status === "verified" ? "verified" : "unverified"
             });
             seenCitations.add(key);
           }
