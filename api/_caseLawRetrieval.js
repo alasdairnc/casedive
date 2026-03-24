@@ -5,10 +5,10 @@
 import { COURT_API_MAP, lookupCase, parseCitation } from "../src/lib/canlii.js";
 
 const CANLII_API_BASE = "https://api.canlii.org/v1";
-const SEARCH_TIMEOUT_MS = 1800;
+const SEARCH_TIMEOUT_MS = 3000;
 const MAX_TERMS = 2;
 const MAX_DATABASES = 3;
-const MAX_SEARCH_CALLS = 4;
+const MAX_SEARCH_CALLS = 6;
 const MAX_CANDIDATES = 6;
 const MAX_VERIFICATION_CALLS = 6;
 
@@ -17,7 +17,7 @@ const DEFAULT_DB_IDS = ["csc-scc", "onca", "onsc", "bcca", "abca"];
 const JURISDICTION_DB_IDS = {
   Ontario: ["onca", "onsc", "oncj"],
   "British Columbia": ["bcca", "bcsc", "bcpc"],
-  Alberta: ["abca", "abqb", "abpc"],
+  Alberta: ["abca", "abkb", "abqb", "abpc"],
   Quebec: ["qcca", "qccs", "qccq"],
   Manitoba: ["mbca", "mbqb", "mbpc"],
   Saskatchewan: ["skca", "skqb", "skpc"],
@@ -30,7 +30,7 @@ const JURISDICTION_DB_IDS = {
 const COURT_LEVEL_DB_IDS = {
   scc: ["csc-scc"],
   appeal: ["onca", "bcca", "abca", "qcca", "mbca", "skca", "nsca", "nbca", "nlca", "peca"],
-  superior: ["onsc", "bcsc", "abqb", "qccs", "mbqb", "skqb", "nssc", "nbqb", "nlsc"],
+  superior: ["onsc", "bcsc", "abkb", "abqb", "qccs", "mbqb", "skqb", "nssc", "nbqb", "nlsc"],
   provincial: ["oncj", "bcpc", "abpc", "qccq", "mbpc", "skpc", "nspc", "nbpc", "nlpc"],
 };
 
