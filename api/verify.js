@@ -239,12 +239,17 @@ export default async function handler(req, res) {
         return;
       }
 
-      if (!parsed.dbId) {
+      if (!parsed.apiDbId) {
         results[citation] = { status: "unknown_court", searchUrl: buildSearchUrl(citation) };
         return;
       }
 
-      const caseId = buildCaseId({ year: parsed.year, courtCode: parsed.courtCode, number: parsed.number });
+      const caseId = buildCaseId({ 
+        year: parsed.year, 
+        courtCode: parsed.courtCode, 
+        number: parsed.number,
+        isLegacy: parsed.isLegacy 
+      });
       const caseUrl = buildCaseUrl(parsed.webDbId, parsed.year, caseId);
       const searchUrl = buildSearchUrl(citation);
 
@@ -255,7 +260,7 @@ export default async function handler(req, res) {
 
       try {
         const apiStartMs = Date.now();
-        const apiRes = await fetch(buildApiUrl(parsed.dbId, caseId, apiKey));
+        const apiRes = await fetch(buildApiUrl(parsed.apiDbId, caseId, apiKey));
         const apiDurationMs = Date.now() - apiStartMs;
         logExternalApiCall(requestId, "verify", "canlii", apiRes.status, apiDurationMs);
 
