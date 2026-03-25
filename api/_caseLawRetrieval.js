@@ -5,19 +5,8 @@
 import { COURT_API_MAP, lookupCase, parseCitation } from "../src/lib/canlii.js";
 
 const CANLII_API_BASE = "https://api.canlii.org/v1";
-const SEARCH_TIMEOUT_MS = 1800;
 const MAX_TERMS = 4;
 const MAX_DATABASES = 3;
-const MAX_SEARCH_CALLS_PHASE1 = 4;
-const MAX_SEARCH_CALLS_TOTAL = 10;
-const MAX_FALLBACK_TERMS = 5;
-const MAX_DATABASES_FALLBACK = 8;
-const MAX_CANDIDATES = 8;
-/** Run this many unique (term × SCC) searches before widening to other databases. */
-const SCC_FIRST_SEARCH_SLOTS = 2;
-const MAX_VERIFICATION_CALLS = 6;
-const MAX_VERIFICATION_CALLS_PHASE1 = Math.ceil(MAX_VERIFICATION_CALLS / 2);
-const MAX_VERIFICATION_CALLS_FALLBACK = Math.floor(MAX_VERIFICATION_CALLS / 2);
 
 const DEFAULT_DB_IDS = ["csc-scc", "onca", "onsc", "bcca", "abca"];
 
@@ -42,22 +31,6 @@ const COURT_LEVEL_DB_IDS = {
 };
 
 const FEDERAL_DATABASE_IDS = ["csc-scc", "fca", "fct"];
-
-/** When a province-specific search under-fetches, add appellate courts from other major jurisdictions. */
-const ADJACENT_JURISDICTION_DB_IDS = {
-  Ontario: ["bcca", "abca", "qcca"],
-  "British Columbia": ["onca", "abca", "qcca"],
-  Alberta: ["onca", "bcca", "qcca"],
-  Quebec: ["onca", "bcca", "abca"],
-  Manitoba: ["onca", "bcca", "skca"],
-  Saskatchewan: ["onca", "bcca", "abca"],
-  "Nova Scotia": ["onca", "nbca", "nlca"],
-  "New Brunswick": ["onca", "nsca", "nlca"],
-  "Newfoundland and Labrador": ["onca", "nsca", "nbca"],
-  "Prince Edward Island": ["onca", "nsca", "nbca"],
-};
-
-const NATIONAL_SPREAD_DB_IDS = ["csc-scc", "fca", "fct", "onca", "bcca", "abca", "qcca", "mbca"];
 
 /** Lower rank = verify / display earlier (deterministic ordering). */
 const DATABASE_VERIFY_RANK = (() => {
@@ -431,113 +404,7 @@ function pickDatabaseTargets(filters = {}) {
   return dedupeStrings(ids).slice(0, MAX_DATABASES + 1);
 }
 
-/**
- * Broaden database targets with federal courts and (when applicable) adjacent appellate courts.
- * Used only when the primary search pass yields no verified cases.
- */
-export function expandDatabaseTargetsForFallback(filters = {}, primaryDbIds = []) {
-  const { jurisdiction = "all" } = filters || {};
-  const primary = Array.isArray(primaryDbIds) ? primaryDbIds : [];
-
-  const extra =
-    jurisdiction === "all"
-      ? [...FEDERAL_DATABASE_IDS, ...NATIONAL_SPREAD_DB_IDS]
-      : [
-          ...FEDERAL_DATABASE_IDS,
-          ...(ADJACENT_JURISDICTION_DB_IDS[jurisdiction] || []),
-        ];
-
-  return dedupeStrings([...primary, ...extra]).slice(0, MAX_DATABASES_FALLBACK);
-}
-
-const FALLBACK_STOPWORDS = new Set([
-  "this",
-  "that",
-  "with",
-  "from",
-  "into",
-  "their",
-  "there",
-  "where",
-  "which",
-  "would",
-  "could",
-  "should",
-  "being",
-  "after",
-  "before",
-]);
-
-function buildFallbackSearchTerms({ scenario = "", terms = [], criminalCode = [] }) {
-  const out = [];
-
-  for (const term of terms) {
-    const parts = sanitizeTerm(term)
-      .split(/\s+/)
-      .filter(Boolean);
-    if (parts.length >= 4) {
-      out.push(parts.slice(0, 2).join(" "));
-      out.push(parts.slice(0, 3).join(" "));
-    } else if (parts.length === 3) {
-      out.push(parts.slice(0, 2).join(" "));
-      out.push(parts[0]);
-    } else if (parts.length === 2) {
-      out.push(parts[0]);
-    }
-  }
-
-  const scenWords = sanitizeTerm(scenario || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .split(/\s+/)
-    .filter((w) => w.length > 4 && !FALLBACK_STOPWORDS.has(w));
-  out.push(...scenWords.slice(0, 4));
-
-  if (Array.isArray(criminalCode)) {
-    for (const item of criminalCode) {
-      if (!item?.citation) continue;
-      const sectionMatch = item.citation.match(/s\.\s*([\d.]+)/);
-      if (sectionMatch) out.push(sectionMatch[1]);
-    }
-  }
-
-  return dedupeStrings(out).slice(0, MAX_FALLBACK_TERMS);
-}
-
-async function gatherSearchCandidates(terms, dbTargets, apiKey, maxCalls, sccFirstSlots = 0) {
-  const rawCandidates = [];
-  let searchCalls = 0;
-  const tried = new Set();
-
-  const tryPair = async (term, dbId) => {
-    if (searchCalls >= maxCalls || rawCandidates.length >= MAX_CANDIDATES * 3) return;
-    const key = `${term}|${dbId}`;
-    if (tried.has(key)) return;
-    tried.add(key);
-    searchCalls += 1;
-    const found = await searchCandidatesForTerm(term, dbId, apiKey);
-    rawCandidates.push(...found);
-  };
-
-  if (sccFirstSlots > 0 && dbTargets.includes("csc-scc")) {
-    let sccUsed = 0;
-    for (const term of terms) {
-      if (searchCalls >= maxCalls || sccUsed >= sccFirstSlots || rawCandidates.length >= MAX_CANDIDATES * 3) break;
-      await tryPair(term, "csc-scc");
-      sccUsed += 1;
-    }
-  }
-
-  for (const term of terms) {
-    for (const dbId of dbTargets) {
-      if (searchCalls >= maxCalls || rawCandidates.length >= MAX_CANDIDATES * 3) break;
-      await tryPair(term, dbId);
-    }
-    if (searchCalls >= maxCalls || rawCandidates.length >= MAX_CANDIDATES * 3) break;
-  }
-
-  return { rawCandidates, searchCalls };
-}
+// ── Candidate ranking ────────────────────────────────────────────────────────
 
 function candidateDatabaseRank(candidate) {
   const parsed = parseCitation(candidate?.citation || "");
@@ -556,137 +423,6 @@ function sortCandidatesForStableVerification(candidates) {
     if (yearB !== yearA) return yearB - yearA;
     return String(a?.citation || "").localeCompare(String(b?.citation || ""));
   });
-}
-
-function buildSearchUrls(term, dbId, apiKey) {
-  const encTerm = encodeURIComponent(term);
-  const encDb = encodeURIComponent(dbId);
-  const encKey = encodeURIComponent(apiKey);
-
-  // Attempt search using both the /search (text) and /cases (keywords) endpoints
-  return [
-    `${CANLII_API_BASE}/search/?text=${encTerm}&databaseId=${encDb}&api_key=${encKey}`,
-    `${CANLII_API_BASE}/cases?db=${encDb}&keywords=${encTerm}&api_key=${encKey}`,
-  ];
-}
-
-async function fetchJson(url) {
-  try {
-    const res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(SEARCH_TIMEOUT_MS) : undefined });
-    if (!res.ok) return null;
-    const contentType = res.headers.get("content-type") || "";
-    if (!contentType.includes("application/json")) return null;
-    return await res.json();
-  } catch (err) {
-    // Suppress console error to keep logs clean during batch search
-    return null;
-  }
-}
-
-function normalizeCitationText(citation, titleHint = "") {
-  const raw = sanitizeTerm(citation);
-  if (!raw) return null;
-  if (parseCitation(raw)) return raw;
-
-  // Handle common format errors:
-  // Neutral only: "2021 SCC 10" -> "R v X, 2021 SCC 10"
-  const neutralOnly = raw.match(/^(\d{4})\s+([A-Z]{2,8})\s+(\d+)$/);
-  if (neutralOnly && titleHint) {
-    return `${titleHint}, ${neutralOnly[1]} ${neutralOnly[2]} ${neutralOnly[3]}`;
-  }
-
-  // Missing comma before neutral citation: "R v X 2021 SCC 10"
-  const missingComma = raw.match(/^(.+?)\s+(\d{4})\s+([A-Z]{2,8})\s+(\d+)$/);
-  if (missingComma) {
-    return `${missingComma[1].trim()}, ${missingComma[2]} ${missingComma[3]} ${missingComma[4]}`;
-  }
-
-  return null;
-}
-
-function citationFromCaseId(caseIdValue, titleHint, dbId) {
-  const caseId = sanitizeTerm(caseIdValue).toLowerCase();
-  if (!caseId || !titleHint) return null;
-
-  // Supports "2024onca123", "2024-onca-123", "2024onca123a"
-  const compact = caseId.replace(/[^a-z0-9]/g, "");
-  const match = compact.match(/(\d{4})([a-z]{2,8})(\d{1,6})/);
-  if (!match) return null;
-
-  const year = match[1];
-  const number = String(parseInt(match[3], 10));
-  const courtCode = DB_TO_COURT_CODE.get(dbId) || match[2].toUpperCase();
-  return `${titleHint}, ${year} ${courtCode} ${number}`;
-}
-
-function candidateFromObject(obj, dbId, term) {
-  if (!obj || typeof obj !== "object") return null;
-
-  const title = getString(obj.title) || getString(obj.parties) || getString(obj.styleOfCause) || getString(obj.caseName);
-  const citationRaw =
-    getString(obj.citation) ||
-    getString(obj.caseCitation) ||
-    getString(obj.neutralCitation) ||
-    getString(obj.neutral);
-
-  let citation = normalizeCitationText(citationRaw, title);
-  if (!citation && title) {
-    const caseId = getString(obj.caseId) || getString(obj.id);
-    citation = citationFromCaseId(caseId, title, dbId);
-  }
-  if (!citation) return null;
-
-  const parsed = parseCitation(citation);
-  if (!parsed) return null;
-
-  return {
-    citation,
-    title: title || parsed.parties,
-    summary: getString(obj.summary) || getString(obj.abstract) || getString(obj.snippet),
-    url: getString(obj.url) || getString(obj.caseUrl),
-    matchedTerm: term,
-    court: parsed.courtCode,
-    year: parsed.year,
-  };
-}
-
-function collectCandidates(node, dbId, term, out, depth = 0) {
-  if (!node || depth > 4 || out.length >= MAX_CANDIDATES * 3) return;
-
-  if (Array.isArray(node)) {
-    for (const item of node) {
-      collectCandidates(item, dbId, term, out, depth + 1);
-      if (out.length >= MAX_CANDIDATES * 3) return;
-    }
-    return;
-  }
-
-  if (typeof node !== "object") return;
-
-  const candidate = candidateFromObject(node, dbId, term);
-  if (candidate) {
-    out.push(candidate);
-  }
-
-  for (const value of Object.values(node)) {
-    collectCandidates(value, dbId, term, out, depth + 1);
-    if (out.length >= MAX_CANDIDATES * 3) return;
-  }
-}
-
-async function searchCandidatesForTerm(term, dbId, apiKey) {
-  const urls = buildSearchUrls(term, dbId, apiKey);
-  for (const url of urls) {
-    const payload = await fetchJson(url);
-    if (!payload) continue;
-
-    const candidates = [];
-    collectCandidates(payload, dbId, term, candidates);
-    if (candidates.length > 0) {
-      return candidates;
-    }
-  }
-  return [];
 }
 
 function dedupeCandidates(candidates) {
@@ -714,10 +450,19 @@ function toCaseLawItem(candidate, verification) {
     court,
     year,
     url_canlii: verification?.url || candidate.url || "",
-    matched_content: `Retrieved from CanLII search for "${candidate.matchedTerm}"`,
+    matched_content: candidate.matchedTerm
+      ? `Verified via CanLII (${candidate.matchedTerm})`
+      : "Verified via CanLII (AI metadata)",
     verificationStatus: "verified",
   };
 }
+
+// ── Main retrieval function ──────────────────────────────────────────────────
+// NOTE: The CanLII API has NO text search endpoint. The only working endpoint
+// is /v1/caseBrowse/en/{dbId}/{caseId}/ for per-case lookup by exact ID.
+// This function verifies AI-generated citations directly via lookupCase().
+
+const MAX_VERIFICATION_CALLS = 10;
 
 export async function retrieveVerifiedCaseLaw({
   scenario = "",
@@ -739,70 +484,15 @@ export async function retrieveVerifiedCaseLaw({
         candidateCount: 0,
         verificationCalls: 0,
         verifiedCount: 0,
-        fallbackSearchUsed: false,
       },
     };
   }
 
   const terms = extractCaseLawSearchTerms({ scenario, aiSuggestions, criminalCode });
   const dbTargets = pickDatabaseTargets(filters);
-  if (terms.length === 0 || dbTargets.length === 0) {
-    return {
-      cases: [],
-      meta: {
-        reason: "no_terms_or_databases",
-        termsTried: terms.length,
-        databasesTried: dbTargets.length,
-        searchCalls: 0,
-        candidateCount: 0,
-        verificationCalls: 0,
-        fallbackSearchUsed: false,
-      },
-    };
-  }
 
-  let rawCandidates = [];
-  let searchCalls = 0;
-
-  const phase1 = await gatherSearchCandidates(
-    terms,
-    dbTargets,
-    apiKey,
-    MAX_SEARCH_CALLS_PHASE1,
-    dbTargets.includes("csc-scc") ? SCC_FIRST_SEARCH_SLOTS : 0
-  );
-  rawCandidates = phase1.rawCandidates;
-  searchCalls = phase1.searchCalls;
-
-  let uniqueCandidates = sortCandidatesForStableVerification(dedupeCandidates(rawCandidates)).slice(0, MAX_CANDIDATES);
-
-  const citationLookupTried = new Set();
-  let verificationCallsTotal = 0;
-
-  async function verifyCandidates(candidates, maxVerificationCalls) {
-    const out = [];
-    let verificationCallsThisPass = 0;
-    for (const candidate of candidates) {
-      if (out.length >= maxResults) break;
-      const key = candidate.citation.toLowerCase();
-      if (citationLookupTried.has(key)) continue;
-      citationLookupTried.add(key);
-      if (verificationCallsThisPass >= maxVerificationCalls) break;
-      verificationCallsThisPass += 1;
-      verificationCallsTotal += 1;
-
-      const verification = await lookupCase(candidate.citation, apiKey);
-      if (verification.status !== "verified") continue;
-
-      out.push(toCaseLawItem(candidate, verification));
-    }
-    return out;
-  }
-
-  // ── Phase 0: Direct verification of AI-generated citations ──
-  // The CanLII API has no text search endpoint. Instead, verify citations
-  // the AI already suggested (with neutral citation format) directly.
-  let aiCitationCandidates = [];
+  // Build candidates from AI-generated case citations
+  const aiCitationCandidates = [];
   if (Array.isArray(aiCaseLaw)) {
     for (const item of aiCaseLaw) {
       if (!item || !item.citation) continue;
@@ -821,48 +511,40 @@ export async function retrieveVerifiedCaseLaw({
     }
   }
 
-  // Verify AI citations first (highest confidence — these are real citations)
-  let cases = [];
-  if (aiCitationCandidates.length > 0) {
-    cases = await verifyCandidates(
-      sortCandidatesForStableVerification(aiCitationCandidates),
-      Math.min(aiCitationCandidates.length, MAX_VERIFICATION_CALLS_PHASE1)
-    );
+  if (aiCitationCandidates.length === 0) {
+    return {
+      cases: [],
+      meta: {
+        reason: terms.length === 0 ? "no_terms_or_databases" : "no_verified",
+        termsTried: terms.length,
+        databasesTried: dbTargets.length,
+        searchCalls: 0,
+        candidateCount: 0,
+        verificationCalls: 0,
+        verifiedCount: 0,
+      },
+    };
   }
 
-  // ── Phase 1: Search-based candidates (if AI citations didn't suffice) ──
-  if (cases.length < maxResults && uniqueCandidates.length > 0) {
-    const remaining = maxResults - cases.length;
-    const searchVerified = await verifyCandidates(
-      uniqueCandidates,
-      MAX_VERIFICATION_CALLS_PHASE1
-    );
-    cases.push(...searchVerified.slice(0, remaining));
-  }
+  // Verify AI citations via the working lookupCase() endpoint
+  const sorted = sortCandidatesForStableVerification(dedupeCandidates(aiCitationCandidates));
+  const citationLookupTried = new Set();
+  let verificationCallsTotal = 0;
+  const cases = [];
 
-  let fallbackSearchUsed = false;
+  for (const candidate of sorted) {
+    if (cases.length >= maxResults) break;
+    if (verificationCallsTotal >= MAX_VERIFICATION_CALLS) break;
 
-  if (cases.length === 0 && searchCalls < MAX_SEARCH_CALLS_TOTAL) {
-    const fbTerms = buildFallbackSearchTerms({ scenario, terms, criminalCode });
-    const fbDbs = expandDatabaseTargetsForFallback(filters, dbTargets);
-    const remaining = MAX_SEARCH_CALLS_TOTAL - searchCalls;
+    const key = candidate.citation.toLowerCase();
+    if (citationLookupTried.has(key)) continue;
+    citationLookupTried.add(key);
+    verificationCallsTotal += 1;
 
-    if (remaining > 0 && fbTerms.length > 0 && fbDbs.length > 0) {
-      const phase2 = await gatherSearchCandidates(
-        fbTerms,
-        fbDbs,
-        apiKey,
-        remaining,
-        fbDbs.includes("csc-scc") ? SCC_FIRST_SEARCH_SLOTS : 0
-      );
-      searchCalls += phase2.searchCalls;
-      // Prioritize newly discovered fallback candidates before phase-1 candidates.
-      // Otherwise, slice(0, MAX_CANDIDATES) can starve fallback results.
-      rawCandidates = [...phase2.rawCandidates, ...rawCandidates];
-      fallbackSearchUsed = true;
-      uniqueCandidates = sortCandidatesForStableVerification(dedupeCandidates(rawCandidates)).slice(0, MAX_CANDIDATES);
-      cases = await verifyCandidates(uniqueCandidates, MAX_VERIFICATION_CALLS_FALLBACK);
-    }
+    const verification = await lookupCase(candidate.citation, apiKey);
+    if (verification.status !== "verified") continue;
+
+    cases.push(toCaseLawItem(candidate, verification));
   }
 
   return {
@@ -870,11 +552,10 @@ export async function retrieveVerifiedCaseLaw({
     meta: {
       termsTried: terms.length,
       databasesTried: dbTargets.length,
-      searchCalls,
-      candidateCount: uniqueCandidates.length + aiCitationCandidates.length,
+      searchCalls: 0,
+      candidateCount: aiCitationCandidates.length,
       verificationCalls: verificationCallsTotal,
       verifiedCount: cases.length,
-      fallbackSearchUsed,
       aiCitationsVerified: aiCitationCandidates.length,
       reason: cases.length > 0 ? "verified_results" : "no_verified",
     },
