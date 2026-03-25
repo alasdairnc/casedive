@@ -3,6 +3,7 @@
 
 import { createHash, randomUUID } from "crypto";
 import { buildSystemPrompt } from "../src/lib/prompts.js";
+import { criminalCaseLawData } from "../src/lib/criminalCaseLawData.js";
 import { checkRateLimit, getClientIp, rateLimitHeaders, redis } from "./_rateLimit.js";
 import { applyCorsHeaders } from "./_cors.js";
 import { retrieveVerifiedCaseLaw } from "./_caseLawRetrieval.js";
@@ -191,10 +192,45 @@ function selectTopRetrievedCases(scenario, retrievedCases, limit = 3) {
   return cases.slice(0, limit);
 }
 
+// ── Deterministic RAG Substring Matching ─────────────────────────────────────
+function matchLandmarkCases(scenario) {
+  if (!scenario) return [];
+  const s = scenario.toLowerCase();
+  const matched = [];
+
+  for (const caseLaw of criminalCaseLawData) {
+    let score = 0;
+    for (const tag of caseLaw.tags) {
+      if (s.includes(tag.toLowerCase())) score += 3;
+    }
+    for (const topic of caseLaw.topics) {
+      if (s.includes(topic.toLowerCase())) score += 2;
+    }
+    // High-priority case-name specific match
+    if (s.includes(caseLaw.title.toLowerCase())) score += 10;
+
+    if (score >= 3) {
+      matched.push({ caseLaw, score });
+    }
+  }
+
+  matched.sort((a, b) => b.score - a.score);
+  return matched.slice(0, 3).map((m) => m.caseLaw);
+}
+
 // ── Parse with one retry ─────────────────────────────────────────────────────
 
 async function analyzeWithRetry(scenario, filters, apiKey) {
-  const system = buildSystemPrompt(filters || {});
+  let system = buildSystemPrompt(filters || {});
+  
+  if (filters?.lawTypes?.case_law !== false) {
+    const landmarks = matchLandmarkCases(scenario);
+    if (landmarks.length > 0) {
+      const contextStr = landmarks.map((c) => `- ${c.title} (${c.citation}): ${c.ratio}`).join("\n");
+      system += `\n\nCRITICAL CONTEXT: Based on the user's scenario, you MUST consider applying the following Supreme Court of Canada landmark cases:\n${contextStr}\nEnsure you accurately cite these specific cases and strictly apply their ratios to the analysis where relevant.`;
+    }
+  }
+
   const sanitized = sanitizeUserInput(scenario);
   const messages = [{ role: "user", content: `<user_input>\n${sanitized}\n</user_input>` }];
 
