@@ -1,7 +1,7 @@
 // /api/retrieval-health.js — Internal retrieval health + alert status endpoint.
 
 import { randomUUID } from "crypto";
-import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { redis, checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import { applyCorsHeaders } from "./_cors.js";
 import { getRetrievalHealthSnapshot } from "./_retrievalHealthStore.js";
 import { evaluateRetrievalAlerts, RETRIEVAL_ALERT_THRESHOLDS } from "./_retrievalThresholds.js";
@@ -52,6 +52,18 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
+  const cacheKey = "cache:retrieval-health";
+  if (redis) {
+    try {
+      const timeoutGet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
+      if (cached) {
+        logSuccess(requestId, "retrieval-health", 200, Date.now() - startMs, rlResult, { cached: true });
+        return res.status(200).json(typeof cached === "string" ? JSON.parse(cached) : cached);
+      }
+    } catch (err) {}
+  }
+
   try {
     const snapshot = await getRetrievalHealthSnapshot();
     const alerts = evaluateRetrievalAlerts(snapshot);
@@ -69,6 +81,14 @@ export default async function handler(req, res) {
       alerts: alerts.length,
       totalStoredEvents: snapshot.totalStoredEvents,
     });
+
+    if (redis) {
+      try {
+        const timeoutSet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+        await Promise.race([redis.setex(cacheKey, 300, JSON.stringify(response)), timeoutSet]);
+      } catch (err) {}
+    }
+
     return res.status(200).json(response);
   } catch (err) {
     const statusCode = err.status ? (err.status >= 500 ? 502 : err.status) : 500;

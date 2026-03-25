@@ -2,9 +2,9 @@
 // Batch-verifies AI-generated case citations against the CanLII API.
 // Degrades gracefully when CANLII_API_KEY is not set.
 
-import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { redis, checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import { applyCorsHeaders } from "./_cors.js";
-import { randomUUID } from "crypto";
+import { randomUUID, createHash } from "crypto";
 import {
   parseCitation,
   buildCaseId,
@@ -81,6 +81,18 @@ export default async function handler(req, res) {
   if (citations.length > 10) {
     logValidationError(requestId, "verify", "Too many citations", "citations");
     return res.status(400).json({ error: "Maximum 10 citations per request." });
+  }
+
+  const cacheKey = `cache:verify:${createHash("sha256").update(JSON.stringify(citations)).digest("hex")}`;
+  if (redis) {
+    try {
+      const timeoutGet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
+      if (cached) {
+        logSuccess(requestId, "verify", 200, Date.now() - startMs, rlResult, { cached: true, citationsProcessed: citations.length });
+        return res.status(200).json(typeof cached === "string" ? JSON.parse(cached) : cached);
+      }
+    } catch (err) {}
   }
 
   const apiKey = process.env.CANLII_API_KEY || "";
@@ -304,6 +316,13 @@ export default async function handler(req, res) {
 
   for (let i = 0; i < citations.length; i += CONCURRENCY) {
     await Promise.all(citations.slice(i, i + CONCURRENCY).map(processCitation));
+  }
+
+  if (redis) {
+    try {
+      const timeoutSet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+      await Promise.race([redis.setex(cacheKey, 7 * 24 * 60 * 60, JSON.stringify(results)), timeoutSet]);
+    } catch (err) {}
   }
 
   logSuccess(requestId, "verify", 200, Date.now() - startMs, rlResult, { citationsProcessed: citations.length });

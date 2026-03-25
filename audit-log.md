@@ -57,3 +57,15 @@ Append-only. Each run adds a dated section. Never overwrite previous entries.
 - 5/6 API endpoints have no response caching | Low | api/verify.js, api/case-summary.js, api/retrieve-caselaw.js, api/export-pdf.js, api/retrieval-health.js
 - 7 stale audit/migration/deploy .md files in project root | Low | DEPLOYMENT_VALIDATION_REPORT.md, POST_DEPLOYMENT_VERIFICATION_REPORT.md, SECURITY_AUDIT_REPORT.md, SECURITY_AUDIT_REPORT_III.md, SECURITY_REVIEW_FOLLOW_UP.md, MIGRATION_GUIDE.md, phase-b-complete-prompt.md
 - Missing packageManager field in package.json | Low | package.json
+
+## Audit — 2026-03-25 (run 5)
+### Fixed since last run
+- 1/14 React components has zero E2E test coverage — E2E tests added for `SearchArea.jsx`. All 14 components are now covered by E2E tests, suite passes with 83 tests.
+### New findings
+- None
+### Still open
+- No Playwright mobile device profiles configured | Medium | playwright.config.js:14-16
+- 5/6 API endpoints have no response caching | Low | api/verify.js, api/case-summary.js, api/retrieve-caselaw.js, api/export-pdf.js, api/retrieval-health.js
+- 7 stale audit/migration/deploy .md files in project root | Low | DEPLOYMENT_VALIDATION_REPORT.md, POST_DEPLOYMENT_VERIFICATION_REPORT.md, SECURITY_AUDIT_REPORT.md, SECURITY_AUDIT_REPORT_III.md, SECURITY_REVIEW_FOLLOW_UP.md, MIGRATION_GUIDE.md, phase-b-complete-prompt.md
+- Missing packageManager field in package.json | Low | package.json
+- 3 unlinked skills in `.claude/skills/` not mentioned in CLAUDE.md | Low | .claude/skills/casefinder-audit, casefinder-skill-router, everything-claude-code

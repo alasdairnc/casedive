@@ -116,10 +116,11 @@ test.describe("Search flow", () => {
     await page.locator('[data-testid="research-submit"]').click();
 
     await expect(page.getByText("R v Dorfer")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole("link", { name: /Verified on CanLII/i })).toBeVisible();
+    
     expect(verifyPayload).toEqual({
       citations: ["s. 348(1)(b)", "s. 334(b)", "R v Dorfer, 2014 BCCA 449"],
     });
-    await expect(page.getByRole("link", { name: /Verified on CanLII/i })).toBeVisible();
   });
 
   test("shows legal analysis", async ({ page }) => {
