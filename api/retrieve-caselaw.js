@@ -1,8 +1,8 @@
 // /api/retrieve-caselaw.js — Phase A retrieval endpoint
 // Retrieves real, verified case-law candidates from CanLII search + verification.
 
-import { randomUUID } from "crypto";
-import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { randomUUID, createHash } from "crypto";
+import { redis, checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import { applyCorsHeaders } from "./_cors.js";
 import { retrieveVerifiedCaseLaw } from "./_caseLawRetrieval.js";
 import { logRetrievalMetrics } from "./_retrievalMetrics.js";
@@ -66,6 +66,20 @@ export default async function handler(req, res) {
   }
 
   const apiKey = process.env.CANLII_API_KEY || "";
+
+  const cacheKey = `cache:retrieve-caselaw:${createHash("sha256").update(JSON.stringify({ scenario, filters, suggestions })).digest("hex")}`;
+  if (redis) {
+    try {
+      const timeoutGet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
+      if (cached) {
+        const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+        logSuccess(requestId, "retrieve-caselaw", 200, Date.now() - startMs, rlResult, { cached: true, casesReturned: parsed.case_law?.length });
+        return res.status(200).json(parsed);
+      }
+    } catch (err) {}
+  }
+
   if (!apiKey) {
     await logRetrievalMetrics({
       requestId,
@@ -118,6 +132,13 @@ export default async function handler(req, res) {
     logSuccess(requestId, "retrieve-caselaw", 200, Date.now() - startMs, rlResult, {
       casesReturned: cases.length,
     });
+
+    if (redis) {
+      try {
+        const timeoutSet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+        await Promise.race([redis.setex(cacheKey, 7 * 24 * 60 * 60, JSON.stringify({ case_law: cases, meta })), timeoutSet]);
+      } catch (err) {}
+    }
 
     return res.status(200).json({ case_law: cases, meta });
   } catch (err) {

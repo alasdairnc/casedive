@@ -1,10 +1,10 @@
 // /api/export-pdf.js — Vercel Serverless Function
 // Generates a branded CaseDive PDF from analysis results.
 
-import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { redis, checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import { applyCorsHeaders } from "./_cors.js";
 import PDFDocument from "pdfkit";
-import { randomUUID } from "crypto";
+import { randomUUID, createHash } from "crypto";
 import {
   logRequestStart,
   logRateLimitCheck,
@@ -96,6 +96,22 @@ export default async function handler(req, res) {
   if (!body || typeof body !== "object") {
     logValidationError(requestId, "export-pdf", "Request body is required", "body");
     return res.status(400).json({ error: "Request body is required" });
+  }
+
+  const cacheKey = `cache:export-pdf:${createHash("sha256").update(JSON.stringify(body)).digest("hex")}`;
+  if (redis) {
+    try {
+      const timeoutGet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
+      if (cached) {
+        const pdfBuffer = Buffer.from(cached, "base64");
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", 'attachment; filename="casedive-analysis.pdf"');
+        res.setHeader("Content-Length", pdfBuffer.length);
+        logSuccess(requestId, "export-pdf", 200, Date.now() - startMs, rlResult, { cached: true, pdfSize: pdfBuffer.length });
+        return res.status(200).send(pdfBuffer);
+      }
+    } catch (err) {}
   }
 
   let { scenario, summary, criminal_code, case_law, civil_law, charter, analysis, verifications } = body;
@@ -298,6 +314,13 @@ export default async function handler(req, res) {
   await new Promise((resolve) => doc.once("end", resolve));
 
   const pdfBuffer = Buffer.concat(chunks);
+
+  if (redis) {
+    try {
+      const timeoutSet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+      await Promise.race([redis.setex(cacheKey, 7 * 24 * 60 * 60, pdfBuffer.toString("base64")), timeoutSet]);
+    } catch (err) {}
+  }
 
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", 'attachment; filename="casedive-analysis.pdf"');

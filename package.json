@@ -2,6 +2,7 @@
   "name": "casedive",
   "private": true,
   "version": "1.0.0",
+  "packageManager": "npm@11.11.0",
   "description": "AI-powered Canadian legal research tool",
   "type": "module",
   "scripts": {

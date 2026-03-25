@@ -124,6 +124,11 @@ These are passed into `buildSystemPrompt()` and enforced server-side via allowli
 - Civil law index: 191 entries (`src/lib/civilLawData.js`)
 - Charter index: 55 entries (`src/lib/charterData.js`, including key base sections and common subsections)
 
+## Agent Skills (Claude)
+- `casefinder-audit`: Comprehensive codebase auditing tool
+- `casefinder-skill-router`: Internal skill routing logic
+- `everything-claude-code`: Master rulebook for agent behaviors
+
 ## Environment Variables
 ```bash
 ANTHROPIC_API_KEY=sk-ant-...          # Required for /api/analyze and /api/case-summary

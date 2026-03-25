@@ -1,7 +1,7 @@
 // /api/case-summary.js — Generate structured case summary via Claude
-import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { redis, checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import { applyCorsHeaders } from "./_cors.js";
-import { randomUUID } from "crypto";
+import { randomUUID, createHash } from "crypto";
 import {
   logRequestStart,
   logRateLimitCheck,
@@ -131,6 +131,18 @@ export default async function handler(req, res) {
     }
   }
 
+  const cacheKey = `cache:case-summary:${createHash("sha256").update(JSON.stringify(body)).digest("hex")}`;
+  if (redis) {
+    try {
+      const timeoutGet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
+      if (cached) {
+        logSuccess(requestId, "case-summary", 200, Date.now() - startMs, rlResult, { cached: true });
+        return res.status(200).json(typeof cached === "string" ? JSON.parse(cached) : cached);
+      }
+    } catch (err) {}
+  }
+
   const prompt = [
     `<user_input>`,
     `Citation: ${sanitizeUserInput(citation)}`,
@@ -168,6 +180,13 @@ export default async function handler(req, res) {
     if (!normalized) {
       logValidationError(requestId, "case-summary", "Structured summary did not match expected schema", "ai_output");
       return res.status(422).json({ error: "Structured summary was incomplete." });
+    }
+
+    if (redis) {
+      try {
+        const timeoutSet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
+        await Promise.race([redis.setex(cacheKey, 7 * 24 * 60 * 60, JSON.stringify(normalized)), timeoutSet]);
+      } catch (err) {}
     }
 
     logSuccess(requestId, "case-summary", 200, Date.now() - startMs, rlResult);
