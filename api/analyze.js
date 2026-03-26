@@ -428,17 +428,35 @@ export default async function handler(req, res) {
     if (filters.lawTypes.case_law !== false) {
       const canliiKey = process.env.CANLII_API_KEY || "";
       const retrievalStartMs = Date.now();
-      try {
-        const { cases: retrievedCases, meta: retrievalMeta } = await retrieveVerifiedCaseLaw({
-          scenario: scenario.trim(),
+      
+      if (!canliiKey) {
+        result.case_law = [];
+        meta.case_law = {
+          source: "retrieval",
+          verifiedCount: 0,
+          reason: "missing_api_key",
+        };
+        await logRetrievalMetrics({
+          requestId,
+          endpoint: "analyze",
+          source: "retrieval",
           filters,
-          aiSuggestions: Array.isArray(result.suggestions) ? result.suggestions : [],
-          aiCaseLaw: Array.isArray(result.case_law) ? result.case_law : [],
-          landmarkMatches: matchedLandmarks,
-          criminalCode: Array.isArray(result.criminal_code) ? result.criminal_code : [],
-          apiKey: canliiKey,
-          maxResults: 10,
+          reason: "missing_api_key",
+          retrievalLatencyMs: 0,
+          finalCaseLawCount: 0,
         });
+      } else {
+        try {
+          const { cases: retrievedCases, meta: retrievalMeta } = await retrieveVerifiedCaseLaw({
+            scenario: scenario.trim(),
+            filters,
+            aiSuggestions: Array.isArray(result.suggestions) ? result.suggestions : [],
+            aiCaseLaw: Array.isArray(result.case_law) ? result.case_law : [],
+            landmarkMatches: matchedLandmarks,
+            criminalCode: Array.isArray(result.criminal_code) ? result.criminal_code : [],
+            apiKey: canliiKey,
+            maxResults: 10,
+          });
         const retrievalDurationMs = Date.now() - retrievalStartMs;
 
         if ((retrievalMeta.searchCalls || 0) > 0 || (retrievalMeta.verificationCalls || 0) > 0) {
@@ -475,14 +493,19 @@ export default async function handler(req, res) {
         });
       } catch (retrievalErr) {
         // Keep retrieval-first behavior even on retrieval failures.
+        console.error(`[analyze] Retrieval failed for requestId ${requestId}:`, retrievalErr);
+        logError(requestId, "analyze-retrieval", retrievalErr, 500, Date.now() - retrievalStartMs);
+        
         result.case_law = [];
         meta.case_law = {
           source: "retrieval_error",
           verifiedCount: 0,
           reason: "retrieval_error",
+          error: retrievalErr.message,
         };
       }
-    } else {
+    }
+  } else {
       result.case_law = [];
       meta.case_law = {
         source: "retrieval",
