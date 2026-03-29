@@ -6,7 +6,7 @@ node:fs:2760
       const stats = binding.lstat(base, true, undefined, true /* throwIfNoEntry */);
                             ^
 
-Error: EPERM: operation not permitted, lstat '/Users/alasdairnc/Desktop/casefinder-project/node_modules'
+Error: EPERM: operation not permitted, lstat '/Users/alasdairnc/Desktop/casedive/node_modules'
     at Object.realpathSync (node:fs:2760:29)
     at toRealPath (node:internal/modules/helpers:65:13)
     at Module._findPath (node:internal/modules/cjs/loader:780:22)
@@ -16,7 +16,7 @@ Error: EPERM: operation not permitted, lstat '/Users/alasdairnc/Desktop/casefind
   errno: -1,
   code: 'EPERM',
   syscall: 'lstat',
-  path: '/Users/alasdairnc/Desktop/casefinder-project/node_modules'
+  path: '/Users/alasdairnc/Desktop/casedive/node_modules'
 }
 
 Node.js v25.8.0

@@ -1,10 +1,10 @@
 [codex]
 version = "1.0"
 profile = "full"
-repo = "casefinder"
+repo = "casedive"
 
 [project]
-name = "CaseFinder"
+name = "CaseDive"
 description = "AI-powered Canadian criminal law research tool"
 website = "casedive.ca"
 

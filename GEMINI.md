@@ -1,6 +1,6 @@
-# GEMINI.md — CaseFinder Project Bridge
+# GEMINI.md — CaseDive Project Bridge
 
-This file provides Gemini CLI-specific instructions for working within the CaseFinder ecosystem. **`CLAUDE.md` remains the master source of truth and architectural mandate for this repository.**
+This file provides Gemini CLI-specific instructions for working within the CaseDive ecosystem. **`CLAUDE.md` remains the master source of truth and architectural mandate for this repository.**
 
 ## 1. Primary Mandate
 As Gemini CLI, I am a guest in this Claude-optimized codebase. I must strictly adhere to the rules, patterns, and workflows defined in:
@@ -9,7 +9,7 @@ As Gemini CLI, I am a guest in this Claude-optimized codebase. I must strictly a
 3. **`.claude/`** (Agent configurations and custom commands)
 
 ## 2. Skills System (Claude-First)
-The CaseFinder Skills system is the primary way to execute complex tasks. I will treat the instructions in `Skills/*.md` as expert procedural guidance that overrides my default behaviors.
+The CaseDive Skills system is the primary way to execute complex tasks. I will treat the instructions in `Skills/*.md` as expert procedural guidance that overrides my default behaviors.
 
 ### Required Skills Reading
 | Task | Primary Source (Master) |

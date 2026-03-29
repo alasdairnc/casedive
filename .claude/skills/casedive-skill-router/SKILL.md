@@ -1,20 +1,20 @@
 ---
-name: casefinder-skill-router
-description: Use when working in the CaseFinder repo to choose the right custom CaseFinder skills, ECC skills, and slash commands based on the task, files touched, or bug type. Applies to API routes, React UI, CanLII verification, prompt work, legal data updates, Claude config, testing, and deployment.
+name: casedive-skill-router
+description: Use when working in the CaseDive repo to choose the right custom CaseDive skills, ECC skills, and slash commands based on the task, files touched, or bug type. Applies to API routes, React UI, CanLII verification, prompt work, legal data updates, Claude config, testing, and deployment.
 ---
 
-# CaseFinder Skill Router
+# CaseDive Skill Router
 
 Use this skill before any non-trivial work in this repository.
 
 ## Selection Order
 
-1. Match the task to one CaseFinder custom skill if possible.
+1. Match the task to one CaseDive custom skill if possible.
 2. Add one or two ECC skills for the engineering concern.
 3. Run the matching command after the change.
 4. Keep the active stack small unless the task genuinely crosses domains.
 
-## CaseFinder Custom Skills
+## CaseDive Custom Skills
 
 - `Skills/criminal-code-builder-SKILL.md`
   Use for `criminalCodeData.js`, section enrichment, Criminal Code structure, and validation.
@@ -61,7 +61,7 @@ Use this skill before any non-trivial work in this repository.
 
 ## Guardrails
 
-- Custom CaseFinder skills override ECC skills on legal-domain rules.
+- Custom CaseDive skills override ECC skills on legal-domain rules.
 - Do not load more skills than needed.
 - Use `security-review` for application code and `security-scan` for Claude configuration.
 - If the task does not clearly match a custom skill, choose the closest ECC skill by file and concern.

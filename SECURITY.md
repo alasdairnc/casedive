@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-CaseFinder is a portfolio project. Only the latest version deployed at casedive.ca is maintained.
+CaseDive is a portfolio project. Only the latest version deployed at casedive.ca is maintained.
 
 ## Reporting a Vulnerability
 

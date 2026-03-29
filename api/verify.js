@@ -184,7 +184,9 @@ export default async function handler(req, res) {
       }
 
       // 4. Bare section references (could be CC or Charter)
-      if (CRIMINAL_CODE_PATTERN.test(citation)) {
+      // Guard: skip if this parses as a case citation — year-like numbers (e.g. [1992] in SCR
+      // citations) must not be misclassified as Criminal Code section numbers.
+      if (CRIMINAL_CODE_PATTERN.test(citation) && !parseCitation(citation)) {
         const sectionNum = normalizeSection(citation);
         const num = parseFloat(sectionNum);
         

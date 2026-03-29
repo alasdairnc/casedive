@@ -1,11 +1,11 @@
 ---
-name: casefinder-audit
+name: casedive-audit
 description: Self-updating audit skill for the CaseDive project. Scans API security, test coverage, legal data quality, config hygiene, and performance. Appends findings to a persistent audit log with diff-against-history tracking.
 ---
 
 # CaseDive Project Audit
 
-> Invoke with `/casefinder-audit`. Audit only — never fix anything.
+> Invoke with `/casedive-audit`. Audit only — never fix anything.
 
 ## Overview
 
@@ -37,7 +37,7 @@ Activate this skill when:
 
 ### Phase 1 — Load History
 
-1. Read `.claude/skills/casefinder-audit/AUDIT_LOG.md` from the project root.
+1. Read `.claude/skills/casedive-audit/AUDIT_LOG.md` from the project root.
 2. Parse all previously logged issues and their status tags: `FIXED`, `OPEN`, `WONT_FIX`.
 3. Build an internal tracking list of prior findings keyed by issue description.
 
@@ -110,7 +110,7 @@ Output a single markdown table with all findings:
 
 ### Phase 5 — Append to AUDIT_LOG.md
 
-Open `.claude/skills/casefinder-audit/AUDIT_LOG.md` and **append** (never overwrite) a new dated section at the end of the file:
+Open `.claude/skills/casedive-audit/AUDIT_LOG.md` and **append** (never overwrite) a new dated section at the end of the file:
 
 ```markdown
 ## Audit — YYYY-MM-DD

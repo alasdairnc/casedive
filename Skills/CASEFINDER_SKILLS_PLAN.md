@@ -1,4 +1,4 @@
-# CaseFinder Skills Strategy
+# CaseDive Skills Strategy
 
 ## Planned Skills (In Priority Order)
 
@@ -76,11 +76,11 @@
 
 **Build time:** 15 min | **Saves:** 2 hrs
 
-### 5. `casefinder-testing-framework` MEDIUM PRIORITY
+### 5. `casedive-testing-framework` MEDIUM PRIORITY
 **Purpose:** End-to-end testing (input → Claude → verification → display)
 
 **Triggers:**
-- "Test CaseFinder end-to-end"
+- "Test CaseDive end-to-end"
 - "Verify search results"
 - "Debug API responses"
 
@@ -109,11 +109,11 @@
 
 **Build time:** 10 min | **Saves:** 30 min
 
-### 7. `casefinder-deployment-guide` LOW PRIORITY
+### 7. `casedive-deployment-guide` LOW PRIORITY
 **Purpose:** Deploy to Vercel, manage environment variables, debug production
 
 **Triggers:**
-- "Deploy CaseFinder"
+- "Deploy CaseDive"
 - "Fix production issue"
 - "Update API key"
 
@@ -126,7 +126,7 @@
 
 **Build time:** 15 min | **Saves:** 1 hr
 
-### 8. `casefinder-phase-2-expansion` LOW PRIORITY
+### 8. `casedive-phase-2-expansion` LOW PRIORITY
 **Purpose:** Guide adding provincial courts (ONCA, BCCA, FCA, etc.)
 
 **Triggers:**
@@ -150,10 +150,10 @@
 | canlii-case-verification | HIGH | 25 min | 2 hrs | Sunday |
 | canlii-prompt-engineering | MEDIUM | 15 min | 1 hr | Sunday |
 | civil-law-database-builder | MEDIUM | 15 min | 2 hrs | Sunday |
-| casefinder-testing-framework | MEDIUM | 20 min | 3 hrs | After Phase 1 |
+| casedive-testing-framework | MEDIUM | 20 min | 3 hrs | After Phase 1 |
 | charter-rights-database-builder | LOW | 10 min | 30 min | After Criminal Code |
-| casefinder-deployment-guide | LOW | 15 min | 1 hr | Before deploy |
-| casefinder-phase-2-expansion | LOW | 20 min | - | Phase 2 |
+| casedive-deployment-guide | LOW | 15 min | 1 hr | Before deploy |
+| casedive-phase-2-expansion | LOW | 20 min | - | Phase 2 |
 
 ## Recommended Sunday Prep
 

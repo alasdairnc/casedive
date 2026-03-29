@@ -50,7 +50,7 @@ Append-only. Each run adds a dated section. Never overwrite previous entries.
 ### Fixed since last run
 - 8/9 React components previously lacking E2E coverage are now tested (CaseSummaryModal, Header, Results, ResultCard, RetrievalHealthDashboard, Select, SuggestionLink, SearchHistory). Only SearchArea.jsx remains uncovered.
 ### New findings
-- 3 unlinked skills in `.claude/skills/` not mentioned in CLAUDE.md | Low | .claude/skills/casefinder-audit, casefinder-skill-router, everything-claude-code
+- 3 unlinked skills in `.claude/skills/` not mentioned in CLAUDE.md | Low | .claude/skills/casedive-audit, casedive-skill-router, everything-claude-code
 ### Still open
 - 1/14 React components has zero E2E test coverage | Medium | src/components/SearchArea.jsx
 - No Playwright mobile device profiles configured | Medium | playwright.config.js:14-16
@@ -68,7 +68,7 @@ Append-only. Each run adds a dated section. Never overwrite previous entries.
 - 5/6 API endpoints have no response caching | Low | api/verify.js, api/case-summary.js, api/retrieve-caselaw.js, api/export-pdf.js, api/retrieval-health.js
 - 7 stale audit/migration/deploy .md files in project root | Low | DEPLOYMENT_VALIDATION_REPORT.md, POST_DEPLOYMENT_VERIFICATION_REPORT.md, SECURITY_AUDIT_REPORT.md, SECURITY_AUDIT_REPORT_III.md, SECURITY_REVIEW_FOLLOW_UP.md, MIGRATION_GUIDE.md, phase-b-complete-prompt.md
 - Missing packageManager field in package.json | Low | package.json
-- 3 unlinked skills in `.claude/skills/` not mentioned in CLAUDE.md | Low | .claude/skills/casefinder-audit, casefinder-skill-router, everything-claude-code
+- 3 unlinked skills in `.claude/skills/` not mentioned in CLAUDE.md | Low | .claude/skills/casedive-audit, casedive-skill-router, everything-claude-code
 
 ## Audit — 2026-03-25 (run 6)
 ### Fixed since last run

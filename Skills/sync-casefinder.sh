@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# CaseFinder Sync Script
+# CaseDive Sync Script
 # Syncs all files from this conversation to your local project
 # Usage: bash sync-casefinder.sh
 
@@ -12,10 +12,10 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}=== CaseFinder File Sync ===${NC}\n"
+echo -e "${BLUE}=== CaseDive File Sync ===${NC}\n"
 
 # Check if project directory exists
-PROJECT_DIR="$HOME/Desktop/casefinder-project"
+PROJECT_DIR="$HOME/Desktop/casedive"
 
 if [ ! -d "$PROJECT_DIR" ]; then
     echo -e "${YELLOW}Error: Project directory not found at $PROJECT_DIR${NC}"

@@ -1,4 +1,4 @@
-# CaseFinder Skills Collection
+# CaseDive Skills Collection
 
 **Ready to use on Sunday!** All 4 skills are drafted and ready to go.
 
