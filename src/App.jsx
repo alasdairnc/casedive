@@ -260,7 +260,7 @@ function AppInner() {
           paddingLeft: 12,
           margin: 0,
         }}>
-          CaseFinder is an educational research tool and does not provide legal advice. Results are AI-generated and may contain errors. Always consult a qualified lawyer for legal matters. Case citations are verified against CanLII where possible.
+          CaseDive is an educational research tool and does not provide legal advice. Results are AI-generated and may contain errors. Always consult a qualified lawyer for legal matters. Case citations are verified against CanLII where possible.
         </p>
       </div>
 

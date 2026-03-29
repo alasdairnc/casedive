@@ -1,6 +1,6 @@
-# CaseFinder Codex Agents
+# CaseDive Codex Agents
 
-Specialized agent roles for CaseFinder development and analysis.
+Specialized agent roles for CaseDive development and analysis.
 
 ## Agents
 

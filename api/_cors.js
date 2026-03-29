@@ -3,7 +3,7 @@
 export const ALLOWED_ORIGINS = [
   "https://casedive.ca",
   "https://www.casedive.ca",
-  "https://casefinder-project.vercel.app",
+  "https://casedive.vercel.app",
 ];
 
 /**

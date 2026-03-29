@@ -129,8 +129,8 @@ These are passed into `buildSystemPrompt()` and enforced server-side via allowli
 - Charter index: 55 entries (`src/lib/charterData.js`, including key base sections and common subsections)
 
 ## Agent Skills (Claude)
-- `casefinder-audit`: Comprehensive codebase auditing tool
-- `casefinder-skill-router`: Internal skill routing logic
+- `casedive-audit`: Comprehensive codebase auditing tool
+- `casedive-skill-router`: Internal skill routing logic
 - `everything-claude-code`: Master rulebook for agent behaviors
 
 ## Environment Variables
@@ -154,7 +154,7 @@ RETRIEVAL_ALERT_WEBHOOK_URL=...        # Optional; Slack/generic webhook for ded
 
 ## Security
 - API keys are server-side only.
-- CORS is restricted to `casedive.ca`, `www.casedive.ca`, and `casefinder-project.vercel.app`.
+- CORS is restricted to `casedive.ca`, `www.casedive.ca`, and `casedive.vercel.app`.
 - Security headers are set on all API routes.
 - Input validation includes content-type, payload size caps, and schema checks.
 - Rate limiting is sliding-window based via `_rateLimit.js` (Redis-backed when configured).
