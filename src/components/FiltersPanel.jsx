@@ -1,136 +1,132 @@
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { jurisdictions, courtLevels, dateRanges, lawTypeOptions, defaultLawTypes } from "../lib/constants.js";
-import Select from "./Select.jsx";
 
-export default function FiltersPanel({ filters, setFilters, filtersOpen, setFiltersOpen }) {
+// filtersOpen / setFiltersOpen are accepted but unused — filters are always visible inline
+export default function FiltersPanel({ filters, setFilters }) {
   const t = useTheme();
-  const selectCount = [filters.jurisdiction, filters.courtLevel, filters.dateRange]
-    .filter(v => v !== "all").length;
-  const uncheckedCount = lawTypeOptions.filter(o => !filters.lawTypes?.[o.key]).length;
-  const activeCount = selectCount + uncheckedCount;
+
+  const selectStyle = {
+    background: "none",
+    border: "none",
+    borderBottom: `1px solid ${t.borderLight}`,
+    color: t.textTertiary,
+    fontFamily: "'Helvetica Neue', sans-serif",
+    fontSize: 11,
+    letterSpacing: "0.06em",
+    padding: "3px 18px 3px 0",
+    cursor: "pointer",
+    outline: "none",
+    appearance: "none",
+    WebkitAppearance: "none",
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4'%3E%3Cpath fill='%23666' d='M0 0l3.5 4L7 0z'/%3E%3C/svg%3E")`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "right 2px center",
+    backgroundSize: "6px",
+  };
+
+  const isNonDefault =
+    filters.jurisdiction !== "all" ||
+    filters.courtLevel !== "all" ||
+    filters.dateRange !== "all" ||
+    lawTypeOptions.some(o => !filters.lawTypes?.[o.key]);
 
   return (
-    <div style={{ maxWidth: 760, margin: "0 auto", padding: "20px 24px 0" }}>
-      <button
-        onClick={() => setFiltersOpen(!filtersOpen)}
-        style={{
-          background: "none", border: "none", cursor: "pointer",
-          fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-          letterSpacing: 2.5, textTransform: "uppercase",
-          color: t.textTertiary, padding: 0,
-          display: "flex", alignItems: "center", gap: 10,
-          transition: "color 0.15s",
-        }}
+    <div style={{
+      maxWidth: 760,
+      margin: "0 auto",
+      padding: "12px 24px 0",
+      display: "flex",
+      alignItems: "center",
+      flexWrap: "wrap",
+      gap: "8px 18px",
+    }}>
+      <select
+        value={filters.jurisdiction}
+        onChange={(e) => setFilters({ ...filters, jurisdiction: e.target.value })}
+        style={selectStyle}
+        aria-label="Jurisdiction"
       >
-        <span style={{
-          display: "inline-block",
-          transform: filtersOpen ? "rotate(90deg)" : "rotate(0deg)",
-          transition: "transform 0.2s", fontSize: 10,
-        }}>
-          {"\u25B6"}
-        </span>
-        Filters
-        {activeCount > 0 && (
-          <span style={{
-            background: t.accent, color: t.bg,
-            fontSize: 10, fontWeight: 700,
-            padding: "2px 7px", marginLeft: 2,
-          }}>
-            {activeCount}
-          </span>
-        )}
-      </button>
+        {jurisdictions.map(o => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
 
-      {filtersOpen && (
-        <div style={{ marginTop: 16, paddingBottom: 4 }}>
-          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <Select
-              label="Jurisdiction"
-              options={jurisdictions}
-              value={filters.jurisdiction}
-              onChange={(v) => setFilters({ ...filters, jurisdiction: v })}
-            />
-            <Select
-              label="Court Level"
-              options={courtLevels}
-              value={filters.courtLevel}
-              onChange={(v) => setFilters({ ...filters, courtLevel: v })}
-            />
-            <Select
-              label="Date Range"
-              options={dateRanges}
-              value={filters.dateRange}
-              onChange={(v) => setFilters({ ...filters, dateRange: v })}
-            />
-          </div>
+      <select
+        value={filters.courtLevel}
+        onChange={(e) => setFilters({ ...filters, courtLevel: e.target.value })}
+        style={selectStyle}
+        aria-label="Court level"
+      >
+        {courtLevels.map(o => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
 
-          {/* Law Type checkboxes */}
-          <div style={{ marginTop: 18 }}>
-            <div style={{
-              fontFamily: "'Helvetica Neue', Helvetica, sans-serif",
-              fontSize: 9, letterSpacing: 3, textTransform: "uppercase",
-              color: t.textTertiary, marginBottom: 10,
-            }}>
-              Law Types
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 20px" }}>
-              {lawTypeOptions.map(o => (
-                <label
-                  key={o.key}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 7, cursor: "pointer",
-                    fontFamily: "'Helvetica Neue', sans-serif", fontSize: 13,
-                    color: filters.lawTypes?.[o.key] ? t.text : t.textTertiary,
-                    transition: "color 0.2s",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={!!filters.lawTypes?.[o.key]}
-                    onChange={() => setFilters({
-                      ...filters,
-                      lawTypes: {
-                        ...filters.lawTypes,
-                        [o.key]: !filters.lawTypes?.[o.key],
-                      },
-                    })}
-                    style={{ accentColor: t.accent, cursor: "pointer" }}
-                  />
-                  {o.label}
-                </label>
-              ))}
-            </div>
-          </div>
+      <select
+        value={filters.dateRange}
+        onChange={(e) => setFilters({ ...filters, dateRange: e.target.value })}
+        style={selectStyle}
+        aria-label="Date range"
+      >
+        {dateRanges.map(o => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
 
-          {activeCount > 0 && (
-            <div style={{ marginTop: 14 }}>
-              <button
-                onClick={() => setFilters({
-                  jurisdiction: "all", courtLevel: "all", dateRange: "all",
-                  lawTypes: { ...defaultLawTypes },
-                })}
-                style={{
-                  background: "none", border: "none", cursor: "pointer",
-                  fontFamily: "'Helvetica Neue', sans-serif",
-                  fontSize: 11, color: t.accentRed, textDecoration: "underline",
-                  padding: "4px 0",
-                }}
-              >
-                Clear all
-              </button>
-            </div>
-          )}
-        </div>
+      {/* Visual divider */}
+      <div style={{ width: 1, height: 12, background: t.border, flexShrink: 0 }} />
+
+      {/* Law type toggles — strikethrough when off */}
+      {lawTypeOptions.map(o => {
+        const active = !!filters.lawTypes?.[o.key];
+        return (
+          <button
+            key={o.key}
+            onClick={() => setFilters({
+              ...filters,
+              lawTypes: { ...filters.lawTypes, [o.key]: !active },
+            })}
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 11,
+              letterSpacing: "0.06em",
+              color: active ? t.textSecondary : t.textFaint,
+              transition: "color 0.15s",
+              textDecoration: active ? "none" : "line-through",
+            }}
+          >
+            {o.label}
+          </button>
+        );
+      })}
+
+      {isNonDefault && (
+        <button
+          onClick={() => setFilters({
+            jurisdiction: "all",
+            courtLevel: "all",
+            dateRange: "all",
+            lawTypes: { ...defaultLawTypes },
+          })}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 10,
+            letterSpacing: "0.14em",
+            color: t.textFaint,
+            padding: 0,
+            textTransform: "uppercase",
+          }}
+        >
+          Reset
+        </button>
       )}
-
-      {/* Guidance text — always visible */}
-      <p style={{
-        fontFamily: "'Helvetica Neue', Helvetica, sans-serif",
-        fontSize: 12, color: t.textTertiary, lineHeight: 1.6,
-        margin: "16px 0 0 0", letterSpacing: 0.2,
-      }}>
-        Type in a crime or complex legal issue and it will come up with relevant crimes, provincial offences, case law, and civil law.
-      </p>
     </div>
   );
 }
