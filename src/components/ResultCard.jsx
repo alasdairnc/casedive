@@ -3,7 +3,6 @@ import { isValidUrl } from "../lib/validateUrl.js";
 
 function VerificationBadge({ verification, t, type }) {
   if (!verification) return null;
-
   const { status, url, searchUrl } = verification;
 
   if (status === "verified") {
@@ -16,13 +15,20 @@ function VerificationBadge({ verification, t, type }) {
         target="_blank"
         rel="noopener noreferrer"
         style={{
-          display: "inline-flex", alignItems: "center", gap: 5,
-          fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-          color: t.accentGreen, textDecoration: "none", marginTop: 8,
-          letterSpacing: 0.5,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5,
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 10,
+          letterSpacing: "0.08em",
+          color: t.accentGreen,
+          textDecoration: "none",
+          marginTop: 10,
         }}
+        onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
       >
-        {"\u2713"} {label} {"\u2197"}
+        {"\u2713"}&thinsp;{label}&thinsp;{"\u2197"}
       </a>
     );
   }
@@ -39,13 +45,20 @@ function VerificationBadge({ verification, t, type }) {
         target="_blank"
         rel="noopener noreferrer"
         style={{
-          display: "inline-flex", alignItems: "center", gap: 5,
-          fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-          color: t.accentRed, textDecoration: "none", marginTop: 8,
-          letterSpacing: 0.5,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5,
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 10,
+          letterSpacing: "0.08em",
+          color: t.accentRed,
+          textDecoration: "none",
+          marginTop: 10,
         }}
+        onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
       >
-        {"\u26A0"} {label} {"\u2197"}
+        {"\u26A0"}&thinsp;{label}&thinsp;{"\u2197"}
       </a>
     );
   }
@@ -59,13 +72,20 @@ function VerificationBadge({ verification, t, type }) {
         target="_blank"
         rel="noopener noreferrer"
         style={{
-          display: "inline-flex", alignItems: "center", gap: 5,
-          fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-          color: t.textTertiary, textDecoration: "none", marginTop: 8,
-          letterSpacing: 0.5,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5,
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 10,
+          letterSpacing: "0.08em",
+          color: t.textTertiary,
+          textDecoration: "none",
+          marginTop: 10,
         }}
+        onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
       >
-        {"\u2192"} Pre-2000 cases aren{"'"}t always indexed — verify on CanLII {"\u2197"}
+        {"\u2192"}&thinsp;Pre-2000 — verify on CanLII&thinsp;{"\u2197"}
       </a>
     );
   }
@@ -78,13 +98,20 @@ function VerificationBadge({ verification, t, type }) {
       target="_blank"
       rel="noopener noreferrer"
       style={{
-        display: "inline-flex", alignItems: "center", gap: 5,
-        fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-        color: t.textTertiary, textDecoration: "none", marginTop: 8,
-        letterSpacing: 0.5,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 5,
+        fontFamily: "'Helvetica Neue', sans-serif",
+        fontSize: 10,
+        letterSpacing: "0.08em",
+        color: t.textTertiary,
+        textDecoration: "none",
+        marginTop: 10,
       }}
+      onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
     >
-      {"\u2192"} Search CanLII {"\u2197"}
+      {"\u2192"}&thinsp;Search CanLII&thinsp;{"\u2197"}
     </a>
   );
 }
@@ -92,7 +119,7 @@ function VerificationBadge({ verification, t, type }) {
 function BookmarkIcon({ filled, color }) {
   return (
     <svg
-      width="16" height="16" viewBox="0 0 16 16"
+      width="14" height="14" viewBox="0 0 16 16"
       fill={filled ? color : "none"}
       stroke={color}
       strokeWidth="1.5"
@@ -125,118 +152,146 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
     <div
       onClick={clickable ? () => onCardClick(item) : undefined}
       style={{
-        borderBottom: `1px solid ${t.border}`,
-        padding: "18px 0",
+        borderBottom: `1px solid ${t.borderLight}`,
+        padding: "20px 0",
         cursor: clickable ? "pointer" : "default",
-        transition: clickable ? "opacity 0.15s" : undefined,
-        position: "relative",
       }}
-      onMouseEnter={clickable ? (e) => { e.currentTarget.style.opacity = "0.75"; } : undefined}
+      onMouseEnter={clickable ? (e) => { e.currentTarget.style.opacity = "0.72"; } : undefined}
       onMouseLeave={clickable ? (e) => { e.currentTarget.style.opacity = "1"; } : undefined}
     >
-      {/* Citation + court/year + bookmark */}
+      {/* Citation row */}
       <div style={{
-        display: "flex", justifyContent: "space-between",
-        alignItems: "baseline", flexWrap: "wrap", gap: 8,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        gap: 12,
       }}>
-        <div style={{
-          display: "flex", alignItems: "center", gap: 10,
-        }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Citation */}
           <div style={{
             fontFamily: "'Times New Roman', serif",
-            fontSize: "clamp(15px, 2.3vw, 17px)",
-            color: t.text, fontWeight: "bold",
+            fontSize: "clamp(15px, 2.2vw, 17px)",
+            color: t.text,
+            fontWeight: 700,
+            lineHeight: 1.3,
           }}>
             {item.citation}
           </div>
-          {type === "civil_law" && verification?.jurisdiction && (
-            <div style={{
-              fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
-              color: verification.jurisdiction === "Federal" ? t.accentGreen : t.accent,
-              background: t.bgAlt, border: `1px solid ${t.borderLight}`,
-              padding: "2px 6px", borderRadius: 4, letterSpacing: 0.5,
-              textTransform: "uppercase"
-            }}>
-              {verification.jurisdiction}
-            </div>
-          )}
+
+          {/* Court / year / jurisdiction tag — same line below citation */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 4,
+            flexWrap: "wrap",
+          }}>
+            {type === "case_law" && item.court && (
+              <div style={{
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 11,
+                color: t.textTertiary,
+                letterSpacing: "0.04em",
+              }}>
+                {item.court}{item.year ? ` \u00B7 ${item.year}` : ""}
+              </div>
+            )}
+            {type === "civil_law" && verification?.jurisdiction && (
+              <div style={{
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 10,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: verification.jurisdiction === "Federal" ? t.accentGreen : t.accent,
+              }}>
+                {verification.jurisdiction}
+              </div>
+            )}
+          </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {type === "case_law" && item.court && (
-            <div style={{
-              fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-              color: t.textTertiary, letterSpacing: 1, whiteSpace: "nowrap",
-            }}>
-              {item.court}{item.year ? ` · ${item.year}` : ""}
-            </div>
-          )}
-          {addBookmark && removeBookmark && isBookmarked && citationId && (
-            <button
-              data-testid={bookmarked ? "bookmark-remove" : "bookmark-add"}
-              onClick={handleBookmarkClick}
-              aria-label={bookmarked ? "Remove bookmark" : "Bookmark this citation"}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                padding: "4px",
-                minWidth: 36, minHeight: 36,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: bookmarked ? t.accent : t.textTertiary,
-                transition: "color 0.15s",
-              }}
-            >
-              <BookmarkIcon filled={bookmarked} color={bookmarked ? t.accent : t.textTertiary} />
-            </button>
-          )}
-        </div>
+
+        {/* Bookmark button — right aligned */}
+        {addBookmark && removeBookmark && isBookmarked && citationId && (
+          <button
+            data-testid={bookmarked ? "bookmark-remove" : "bookmark-add"}
+            onClick={handleBookmarkClick}
+            aria-label={bookmarked ? "Remove bookmark" : "Bookmark this citation"}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 4,
+              color: bookmarked ? t.accent : t.textFaint,
+              transition: "color 0.15s",
+              flexShrink: 0,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = t.accent; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = bookmarked ? t.accent : t.textFaint; }}
+          >
+            <BookmarkIcon filled={bookmarked} color={bookmarked ? t.accent : "currentColor"} />
+          </button>
+        )}
       </div>
 
       {/* Summary */}
-      <div style={{
-        fontFamily: "'Helvetica Neue', sans-serif", fontSize: 13,
-        color: t.textSecondary, lineHeight: 1.6, marginTop: 8,
-      }}>
-        {item.summary}
-      </div>
+      {item.summary && (
+        <div style={{
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 13,
+          color: t.textSecondary,
+          lineHeight: 1.65,
+          marginTop: 10,
+        }}>
+          {item.summary}
+        </div>
+      )}
 
       {/* Why It Matched */}
       {matchedText && (
-        <div style={{ marginTop: 10 }}>
+        <div style={{ marginTop: 12 }}>
           <div style={{
-            fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
-            letterSpacing: 2, textTransform: "uppercase",
-            color: t.textTertiary, marginBottom: 4,
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 9,
+            letterSpacing: "0.32em",
+            textTransform: "uppercase",
+            color: t.textFaint,
+            marginBottom: 5,
           }}>
-            Why It Matched
+            Why it matched
           </div>
           <div style={{
-            fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
-            color: t.textSecondary, lineHeight: 1.6,
-            borderLeft: `2px solid ${t.borderLight}`, paddingLeft: 12,
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 12,
+            color: t.textTertiary,
+            lineHeight: 1.65,
+            borderLeft: `1px solid ${t.border}`,
+            paddingLeft: 12,
           }}>
             {matchedText}
           </div>
         </div>
       )}
 
-      {/* Ground truth enrichment for verified Criminal Code sections */}
+      {/* Verified Criminal Code enrichment */}
       {type === "criminal_code" && verification?.status === "verified" && verification.title && (
         <div style={{
-          marginTop: 8, padding: "8px 12px",
-          background: t.bgAlt, border: `1px solid ${t.borderLight}`,
-          fontFamily: "'Courier New', monospace", fontSize: 12,
-          color: t.textSecondary, lineHeight: 1.5,
+          marginTop: 10,
+          fontFamily: "'Courier New', monospace",
+          fontSize: 11,
+          color: t.textTertiary,
+          lineHeight: 1.5,
         }}>
-          <span style={{ fontWeight: 700, color: t.text }}>{verification.title}</span>
+          <span style={{ color: t.text }}>{verification.title}</span>
           {verification.severity && verification.severity !== "N/A" && (
-            <span> · {verification.severity}</span>
+            <span style={{ color: t.textFaint }}> &middot; {verification.severity}</span>
           )}
           {verification.maxPenalty && verification.maxPenalty !== "N/A" && (
-            <span> · Max: {verification.maxPenalty}</span>
+            <span style={{ color: t.textFaint }}> &middot; Max: {verification.maxPenalty}</span>
           )}
         </div>
       )}
 
-      {/* Verification badge (case_law + criminal_code only) */}
+      {/* Verification badge */}
       {showCanLII && <VerificationBadge verification={verification} t={t} type={type} />}
     </div>
   );

@@ -23,43 +23,36 @@ const EXAMPLE_SCENARIOS = [
   { label: "Fraud over $5,000", text: "An accused allegedly defrauded an elderly victim of $90,000 through a fake investment scheme, collecting payments over 18 months before the victim discovered the fraud." },
 ];
 
-const COVERAGE_AREAS = [
-  { label: "Criminal Code", desc: "Offence sections, penalties, and defences from the Criminal Code of Canada" },
-  { label: "Case Law", desc: "Verified Supreme Court and appellate decisions cross-referenced with CanLII" },
-  { label: "Charter Rights", desc: "Constitutional rights under the Canadian Charter of Rights and Freedoms" },
-  { label: "Civil Law", desc: "Provincial offences and federal statutes including CDSA, YCJA, and HTA" },
-];
-
-// Empty state — editorial landing moment: headline + descriptor + 3 example chips
 function EmptyState({ setQuery, t }) {
   return (
-    <div className="cd-fade-in" style={{ maxWidth: 760, margin: "0 auto", padding: "32px 24px 0" }}>
-      {/* Headline + descriptor */}
-      <div style={{ marginBottom: 28 }}>
-        <h2 style={{
-          fontFamily: "'Times New Roman', Times, serif",
-          fontSize: "clamp(22px, 3.8vw, 30px)",
-          fontWeight: 400,
-          fontStyle: "italic",
-          color: t.text,
-          margin: "0 0 13px 0",
-          lineHeight: 1.25,
-          letterSpacing: "-0.2px",
-        }}>
-          Describe your legal scenario.
-        </h2>
-        <p style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: "clamp(12px, 1.8vw, 13px)",
-          color: t.textSecondary,
-          lineHeight: 1.75,
-          margin: 0,
-          maxWidth: 520,
-        }}>
-          Get Criminal Code sections, verified case law, Charter rights, and civil law statutes —
-          drawn from CanLII and the Justice Laws database.
-        </p>
-      </div>
+    <div className="cd-fade-in" style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 0" }}>
+      {/* Thin rule above headline */}
+      <div style={{ borderTop: `1px solid ${t.border}`, marginBottom: 24 }} />
+
+      <h2 style={{
+        fontFamily: "'Times New Roman', Times, serif",
+        fontSize: "clamp(26px, 4.5vw, 38px)",
+        fontWeight: 400,
+        fontStyle: "italic",
+        color: t.text,
+        margin: "0 0 14px 0",
+        lineHeight: 1.2,
+        letterSpacing: "-0.3px",
+      }}>
+        Describe your legal scenario.
+      </h2>
+
+      <p style={{
+        fontFamily: "'Helvetica Neue', sans-serif",
+        fontSize: "clamp(12px, 1.8vw, 13px)",
+        color: t.textTertiary,
+        lineHeight: 1.75,
+        margin: "0 0 28px 0",
+        maxWidth: 480,
+      }}>
+        Criminal Code sections, verified case law, Charter rights, and civil law statutes —
+        drawn from CanLII and the Justice Laws database.
+      </p>
 
       {/* Example chips */}
       <div>
@@ -68,8 +61,8 @@ function EmptyState({ setQuery, t }) {
           fontSize: 9,
           letterSpacing: "0.38em",
           textTransform: "uppercase",
-          color: t.textTertiary,
-          marginBottom: 12,
+          color: t.textFaint,
+          marginBottom: 10,
         }}>
           Try an example
         </div>
@@ -81,12 +74,12 @@ function EmptyState({ setQuery, t }) {
               style={{
                 background: "none",
                 border: `1px solid ${t.border}`,
-                padding: "9px 20px",
+                padding: "8px 18px",
                 cursor: "pointer",
                 fontFamily: "'Helvetica Neue', sans-serif",
-                fontSize: 12,
-                color: t.textSecondary,
-                letterSpacing: "0.04em",
+                fontSize: 11,
+                letterSpacing: "0.05em",
+                color: t.textTertiary,
                 transition: "border-color 0.15s, color 0.15s",
               }}
               onMouseEnter={(e) => {
@@ -95,65 +88,13 @@ function EmptyState({ setQuery, t }) {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = t.border;
-                e.currentTarget.style.color = t.textSecondary;
+                e.currentTarget.style.color = t.textTertiary;
               }}
             >
               {label}
             </button>
           ))}
         </div>
-      </div>
-    </div>
-  );
-}
-
-// Coverage grid — shown in the center column on the empty state
-function CoverageGrid({ t }) {
-  return (
-    <div style={{ padding: "40px 24px 40px" }}>
-      <div style={{
-        fontFamily: "'Helvetica Neue', sans-serif",
-        fontSize: 9,
-        letterSpacing: "0.38em",
-        textTransform: "uppercase",
-        color: t.textTertiary,
-        marginBottom: 16,
-      }}>
-        Coverage
-      </div>
-      {/* 1px gap between cells creates hairline grid lines */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)",
-        gap: 1,
-        background: t.borderLight,
-      }}>
-        {COVERAGE_AREAS.map(({ label, desc }) => (
-          <div key={label} style={{
-            padding: "18px 20px",
-            background: t.cardBg,
-          }}>
-            <div style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: t.text,
-              marginBottom: 7,
-            }}>
-              {label}
-            </div>
-            <div style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
-              fontSize: 11,
-              color: t.textTertiary,
-              lineHeight: 1.65,
-            }}>
-              {desc}
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -196,7 +137,6 @@ function AppInner() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const [filtersOpen, setFiltersOpen] = useState(true);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [bookmarksOpen, setBookmarksOpen] = useState(false);
   const [codeExplorerOpen, setCodeExplorerOpen] = useState(false);
@@ -273,7 +213,9 @@ function AppInner() {
 
   return (
     <div style={{
-      background: t.bg, minHeight: "100vh", color: t.text,
+      background: t.bg,
+      minHeight: "100vh",
+      color: t.text,
       transition: "background 0.3s, color 0.3s",
     }}>
       <style>{`
@@ -284,76 +226,83 @@ function AppInner() {
           .ad-bottom { display: none !important; }
         }
         @keyframes cdFadeSlideIn {
-          from { opacity: 0; transform: translateY(10px); }
+          from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
         }
         .cd-fade-in {
           animation: cdFadeSlideIn 0.38s ease-out forwards;
         }
         .cd-results-in {
-          animation: cdFadeSlideIn 0.32s ease-out forwards;
+          animation: cdFadeSlideIn 0.28s ease-out forwards;
+        }
+        ::placeholder {
+          color: ${t.textFaint};
+          opacity: 1;
+        }
+        select option {
+          background: ${t.bgAlt};
+          color: ${t.text};
         }
       `}</style>
 
-      {/* Above the fold — input is the first thing after the header */}
-      <Header bookmarkCount={bookmarks.length} onOpenBookmarks={() => setBookmarksOpen(true)} onOpenCodeExplorer={() => setCodeExplorerOpen(true)} />
-      <FiltersPanel
-        filters={filters} setFilters={setFilters}
-        filtersOpen={filtersOpen} setFiltersOpen={setFiltersOpen}
-      />
-      <SearchArea
-        query={query} setQuery={setQuery}
-        onSubmit={analyzeScenario} loading={loading}
+      <Header
+        bookmarkCount={bookmarks.length}
+        onOpenBookmarks={() => setBookmarksOpen(true)}
+        onOpenCodeExplorer={() => setCodeExplorerOpen(true)}
       />
 
-      {/* Legal Disclaimer */}
-      <div style={{
-        maxWidth: 760,
-        margin: '0 auto',
-        padding: '16px 24px 0',
-      }}>
+      <FiltersPanel filters={filters} setFilters={setFilters} />
+
+      <SearchArea
+        query={query}
+        setQuery={setQuery}
+        onSubmit={analyzeScenario}
+        loading={loading}
+      />
+
+      {/* Disclaimer */}
+      <div style={{ maxWidth: 760, margin: "0 auto", padding: "12px 24px 0" }}>
         <p style={{
           fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: 11,
+          fontSize: 10,
           lineHeight: 1.5,
-          color: t.textTertiary,
-          letterSpacing: 0.3,
-          borderLeft: `2px solid ${t.border}`,
-          paddingLeft: 12,
+          color: t.textFaint,
+          letterSpacing: "0.02em",
           margin: 0,
         }}>
-          CaseDive is an educational research tool and does not provide legal advice. Results are AI-generated and may contain errors. Always consult a qualified lawyer for legal matters. Case citations are verified against CanLII where possible.
+          Educational tool only — not legal advice. Always consult a qualified lawyer. Citations verified against CanLII where possible.
         </p>
       </div>
 
       {/* History button */}
       {history.length > 0 && (
-        <div style={{ maxWidth: 760, margin: "0 auto", padding: "8px 24px 0", textAlign: "right" }}>
+        <div style={{ maxWidth: 760, margin: "0 auto", padding: "10px 24px 0", textAlign: "right" }}>
           <button
             onClick={() => setHistoryOpen(true)}
             style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-              letterSpacing: 1.5, textTransform: "uppercase",
-              color: t.textTertiary, padding: 0,
-              display: "inline-flex", alignItems: "center", gap: 6,
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 10,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: t.textFaint,
+              padding: 0,
+              transition: "color 0.15s",
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = t.textSecondary; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = t.textFaint; }}
           >
-            <span>History</span>
-            <span style={{
-              fontSize: 10, color: t.tagText, background: t.tagBg,
-              padding: "1px 6px", border: `1px solid ${t.border}`,
-            }}>
-              {Math.min(history.length, 10)}
-            </span>
+            History ({Math.min(history.length, 10)})
           </button>
         </div>
       )}
 
-      {/* Empty state landing — right below search */}
+      {/* Empty state */}
       {isEmpty && <EmptyState setQuery={setQuery} t={t} />}
 
-      {/* 3-column layout — always rendered so side ads are always visible */}
+      {/* 3-column layout */}
       <div style={{
         display: "flex",
         justifyContent: "center",
@@ -363,7 +312,7 @@ function AppInner() {
         margin: "0 auto",
         padding: "24px 12px",
       }}>
-        {/* Left side ad — sticky, desktop only */}
+        {/* Left side ad */}
         <div className="ad-side-left" style={{ flex: "0 0 160px" }}>
           <div style={{ position: "sticky", top: 24 }}>
             <AdUnit slotId="5671735556" style={{ minHeight: 600 }} />
@@ -372,21 +321,15 @@ function AppInner() {
 
         {/* Center column */}
         <div style={{ flex: "1 1 auto", maxWidth: 760, minWidth: 0 }}>
-          {/* Top ad — always shown */}
           <div style={{ marginBottom: 8 }}>
             <AdUnit slotId="7399604405" style={{ maxWidth: "100%" }} />
           </div>
 
-          {/* Coverage grid — empty state only */}
-          {isEmpty && <CoverageGrid t={t} />}
-
-          {/* Loading / error */}
           <div ref={resultsRef}>
             {loading && <StagedLoading />}
             {error && <ErrorMessage message={error} onRetry={analyzeScenario} />}
           </div>
 
-          {/* Results */}
           {result && (
             <div className="cd-results-in">
               <Results
@@ -396,7 +339,6 @@ function AppInner() {
                 removeBookmark={removeBookmark}
                 isBookmarked={isBookmarked}
               />
-              {/* Bottom ad — mobile only (hidden on >1200px via CSS) */}
               <div className="ad-bottom" style={{ margin: "32px 24px 0", textAlign: "center" }}>
                 <AdUnit slotId="1225553652" style={{ maxWidth: "100%", height: "auto" }} />
               </div>
@@ -404,7 +346,7 @@ function AppInner() {
           )}
         </div>
 
-        {/* Right side ad — sticky, desktop only */}
+        {/* Right side ad */}
         <div className="ad-side-right" style={{ flex: "0 0 160px" }}>
           <div style={{ position: "sticky", top: 24 }}>
             <AdUnit slotId="3173060142" style={{ minHeight: 600 }} />
@@ -447,31 +389,38 @@ function AppInner() {
       )}
 
       <footer style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px" }}>
-        <div style={{ borderTop: `1px solid ${t.borderLight}`, paddingTop: 24 }}>
+        <div style={{ borderTop: `1px solid ${t.borderLight}`, paddingTop: 20 }}>
           <p style={{
             fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 11, color: t.textFaint, letterSpacing: 1.5,
+            fontSize: 10,
+            color: t.textFaint,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
             margin: "0 0 10px 0",
           }}>
-            casedive {"\u00B7"} Legal Research Tool
+            CaseDive &middot; Canadian Legal Research
           </p>
           <p style={{
             fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 11, color: t.textFaint, lineHeight: 1.6,
-            margin: "0 0 15px 0", letterSpacing: 0.3,
+            fontSize: 10,
+            color: t.textFaint,
+            lineHeight: 1.6,
+            margin: "0 0 14px 0",
           }}>
-            {"\u26A0\uFE0F"} Educational Tool Only. This is not legal advice. Always consult a qualified lawyer for legal matters. Verify all citations with official sources like CanLII.
+            Educational tool only. Not legal advice. Always consult a qualified lawyer.
+            Verify all citations with CanLII.
           </p>
           <p style={{
             fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 10, color: t.textFaint, lineHeight: 1.4,
+            fontSize: 10,
+            color: t.textFaint,
             margin: 0,
           }}>
             <a href="/about.html" style={{ color: t.textFaint, textDecoration: "none" }}>About</a>
             {" \u00B7 "}
-            <a href="/privacy.html" style={{ color: t.textFaint, textDecoration: "none" }}>Privacy Policy</a>
+            <a href="/privacy.html" style={{ color: t.textFaint, textDecoration: "none" }}>Privacy</a>
             {" \u00B7 "}
-            <a href="/terms.html" style={{ color: t.textFaint, textDecoration: "none" }}>Terms of Service</a>
+            <a href="/terms.html" style={{ color: t.textFaint, textDecoration: "none" }}>Terms</a>
           </p>
         </div>
       </footer>

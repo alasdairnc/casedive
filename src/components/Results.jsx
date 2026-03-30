@@ -5,36 +5,39 @@ import CaseSummaryModal from "./CaseSummaryModal.jsx";
 import SuggestionLink from "./SuggestionLink.jsx";
 import { useEffect, useState, useRef, useCallback } from "react";
 
-// Section header with a 2px gold left accent marker
-function SectionLabel({ label, count, t }) {
+// Newspaper-style section break: large label + full hairline rule
+function SectionBreak({ label, count, t }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-      <div style={{ width: 2, height: 14, background: t.accent, flexShrink: 0 }} />
-      <div style={{
-        fontFamily: "'Helvetica Neue', sans-serif",
-        fontSize: 9,
-        letterSpacing: "0.38em",
-        textTransform: "uppercase",
-        color: t.textTertiary,
-      }}>
-        {label}
+    <div style={{ marginBottom: 24, marginTop: 56 }}>
+      <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 10 }}>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+          <div style={{
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 9,
+            letterSpacing: "0.44em",
+            textTransform: "uppercase",
+            color: t.textTertiary,
+          }}>
+            {label}
+          </div>
+          {count != null && (
+            <div style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 9,
+              letterSpacing: "0.2em",
+              color: t.textFaint,
+            }}>
+              {count}
+            </div>
+          )}
+        </div>
       </div>
-      {count != null && (
-        <span style={{
-          fontSize: 10, color: t.tagText, background: t.tagBg,
-          padding: "1px 6px", border: `1px solid ${t.border}`,
-          fontWeight: 700,
-        }}>
-          {count}
-        </span>
-      )}
     </div>
   );
 }
 
 const PDF_ERROR_RESET_MS = 4000;
 
-/** Sources where an empty `case_law` array should still show the Case Law section (must stay in sync with `api/analyze.js`). */
 const CASE_LAW_EMPTY_SOURCES = new Set([
   "retrieval",
   "hybrid",
@@ -57,7 +60,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
   const [verifications, setVerifications] = useState({});
   const [verifyingCitations, setVerifyingCitations] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
-  const [pdfState, setPdfState] = useState("idle"); // idle | loading | error
+  const [pdfState, setPdfState] = useState("idle");
   const pdfErrorTimer = useRef(null);
   const caseLawMeta = data?.meta?.case_law;
   const showCaseLawEmptyState =
@@ -72,7 +75,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         ? "Case law retrieval is unavailable (CanLII not configured)."
         : caseLawMeta?.reason === "no_terms_or_databases"
           ? "No search terms could be formed from this scenario."
-          : "No verified Supreme Court or Appellate cases perfectly matched this highly specific scenario.";
+          : "No verified Supreme Court or Appellate cases perfectly matched this scenario.";
 
   const canliiSearchUrl = scenario
     ? `https://www.canlii.org/en/#search/text=${encodeURIComponent(scenario.slice(0, 200))}`
@@ -83,14 +86,10 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
     retrievalStats &&
     (retrievalStats.searchCalls > 0 || retrievalStats.candidateCount > 0);
 
-  // Extract and verify citations on mount
   useEffect(() => {
     if (!data || verifyingCitations) return;
-
     const citationSet = new Set();
     const sections = ["criminal_code", "case_law", "civil_law", "charter"];
-    
-    // Extract all unique citations (max 20 per API limit)
     for (const section of sections) {
       const items = data[section];
       if (!Array.isArray(items)) continue;
@@ -102,11 +101,8 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       }
       if (citationSet.size >= 20) break;
     }
-
     if (citationSet.size === 0) return;
-
     setVerifyingCitations(true);
-
     fetch("/api/verify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -114,29 +110,21 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
     })
       .then((res) => res.json())
       .then((json) => {
-        // /api/verify returns a flat map: { citation: { status, url, searchUrl, title } }
         if (json && typeof json === "object" && !Array.isArray(json)) {
           setVerifications(json);
         }
       })
-      .catch((err) => {
-        console.error("Citation verification failed:", err);
-        // Silently fail — verification is non-blocking
-      })
+      .catch(() => {})
       .finally(() => setVerifyingCitations(false));
   }, [data]);
 
-  // Old-format detection: data has charges/cases but not the new grouped keys
   const isOldFormat = data.charges && !data.criminal_code;
-
-  // Cleanup timer on unmount
   useEffect(() => () => clearTimeout(pdfErrorTimer.current), []);
 
   const handleExportPdf = useCallback(async () => {
     if (pdfState === "loading") return;
     clearTimeout(pdfErrorTimer.current);
     setPdfState("loading");
-
     try {
       const res = await fetch("/api/export-pdf", {
         method: "POST",
@@ -152,11 +140,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
           verifications,
         }),
       });
-
-      if (!res.ok) {
-        throw new Error(`Export failed (${res.status})`);
-      }
-
+      if (!res.ok) throw new Error(`Export failed (${res.status})`);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -172,21 +156,34 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
   }, [pdfState, data, verifications]);
 
   return (
-    <section data-testid="results-section" style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 60px" }}>
-      {/* Summary */}
-      <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 28, marginBottom: 8 }}>
-        <SectionLabel label="Scenario Summary" t={t} />
+    <section data-testid="results-section" style={{ maxWidth: 760, margin: "0 auto", padding: "0 24px 80px" }}>
+
+      {/* Summary — first section, top rule built in */}
+      <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 10, marginTop: 40 }}>
+        <div style={{
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 9,
+          letterSpacing: "0.44em",
+          textTransform: "uppercase",
+          color: t.textTertiary,
+          marginBottom: 18,
+        }}>
+          Scenario Summary
+        </div>
         <p style={{
           fontFamily: "'Times New Roman', serif",
-          fontSize: "clamp(16px, 2.5vw, 18px)",
-          color: t.text, lineHeight: 1.6, margin: 0,
+          fontSize: "clamp(17px, 2.5vw, 20px)",
+          color: t.text,
+          lineHeight: 1.65,
+          margin: 0,
+          fontStyle: "italic",
         }}>
           {data.summary}
         </p>
       </div>
 
       {/* Export PDF */}
-      <div style={{ marginTop: 20, marginBottom: 8, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+      <div style={{ marginTop: 20 }}>
         <button
           onClick={handleExportPdf}
           data-testid="export-pdf-btn"
@@ -194,31 +191,33 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
           style={{
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 10,
-            letterSpacing: 3.5,
+            letterSpacing: "0.2em",
             textTransform: "uppercase",
-            border: `1px solid ${t.border}`,
-            background: "transparent",
-            color: pdfState === "error" ? t.accentRed : t.text,
-            padding: "8px 16px",
+            border: "none",
+            background: "none",
+            color: pdfState === "error" ? t.accentRed : t.textFaint,
+            padding: 0,
             cursor: pdfState === "loading" ? "default" : "pointer",
-            opacity: pdfState === "loading" ? 0.6 : 1,
-            pointerEvents: pdfState === "loading" ? "none" : "auto",
-            transition: "all 0.15s",
+            opacity: pdfState === "loading" ? 0.5 : 1,
+            transition: "color 0.15s",
           }}
-          onMouseEnter={(e) => { if (pdfState !== "loading") e.currentTarget.style.color = t.accent; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = pdfState === "error" ? t.accentRed : t.text; }}
+          onMouseEnter={(e) => { if (pdfState !== "loading") e.currentTarget.style.color = t.textSecondary; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = pdfState === "error" ? t.accentRed : t.textFaint; }}
         >
-          {pdfState === "loading" ? "Generating..." : pdfState === "error" ? "Export failed" : "Export PDF"}
+          {pdfState === "loading" ? "Generating\u2026" : pdfState === "error" ? "Export failed" : "\u2193 Export PDF"}
         </button>
       </div>
 
       {/* Old format notice */}
       {isOldFormat && (
         <div style={{
-          marginTop: 24, padding: "14px 18px",
-          border: `1px solid ${t.border}`, background: t.bgAlt,
-          fontFamily: "'Helvetica Neue', sans-serif", fontSize: 13,
-          color: t.textSecondary, lineHeight: 1.5,
+          marginTop: 32,
+          borderLeft: `3px solid ${t.border}`,
+          paddingLeft: 16,
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 13,
+          color: t.textSecondary,
+          lineHeight: 1.5,
         }}>
           This result uses an older format. Re-run your search to see grouped results by law type.
         </div>
@@ -229,14 +228,14 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         const rawItems = data[key];
         if (!rawItems?.length) return null;
 
-        // For case_law, filter out hallucinated/unverifiable citations once verification completes
         let items = rawItems;
         let verificationBanner = null;
+
         if (key === "case_law" && Object.keys(verifications).length > 0) {
           items = rawItems.filter((item) => {
             if (item.verificationStatus === "verified") return true;
             const v = verifications[item.citation];
-            if (!v) return true; // not yet verified — keep
+            if (!v) return true;
             if (v.status === "not_found" || v.status === "unparseable" || v.status === "unknown_court" || v.status === "error")
               return false;
             return v.status === "verified" || v.status === "unverified";
@@ -249,17 +248,22 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
           if (removed > 0) {
             verificationBanner = (
               <div style={{
-                fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
-                color: t.accent, marginBottom: 10, lineHeight: 1.5,
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 11,
+                color: t.textTertiary,
+                marginBottom: 16,
+                letterSpacing: "0.02em",
               }}>
-                {verified} of {rawItems.length} citation{rawItems.length !== 1 ? "s" : ""} verified — {removed} unconfirmed removed
+                {verified} of {rawItems.length} verified — {removed} unconfirmed removed
               </div>
             );
           } else if (verified === rawItems.length && verified > 0) {
             verificationBanner = (
               <div style={{
-                fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
-                color: t.accentGreen, marginBottom: 10, lineHeight: 1.5,
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 11,
+                color: t.accentGreen,
+                marginBottom: 16,
               }}>
                 {verified} of {verified} citation{verified !== 1 ? "s" : ""} verified on CanLII
               </div>
@@ -268,16 +272,17 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         }
 
         if (!items.length) {
-          // All case_law items were filtered out
           if (key === "case_law" && rawItems.length > 0) {
             return (
-              <div key={key} style={{ marginTop: 40 }}>
-                <SectionLabel label={label} t={t} />
+              <div key={key}>
+                <SectionBreak label={label} t={t} />
                 <div style={{
-                  fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
-                  color: t.textTertiary, lineHeight: 1.5,
+                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontSize: 12,
+                  color: t.textTertiary,
+                  lineHeight: 1.5,
                 }}>
-                  No case law citations could be verified
+                  No case law citations could be verified.
                 </div>
               </div>
             );
@@ -288,38 +293,40 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         if (key === "civil_law") {
           const groups = {};
           items.forEach(item => {
-             const v = verifications[item.citation];
-             const groupName = v?.jurisdiction ? (v.jurisdiction === "Federal" ? "Federal Statutes" : `${v.jurisdiction} Statutes`) : "Civil Law";
-             if (!groups[groupName]) groups[groupName] = [];
-             groups[groupName].push(item);
+            const v = verifications[item.citation];
+            const groupName = v?.jurisdiction
+              ? (v.jurisdiction === "Federal" ? "Federal Statutes" : `${v.jurisdiction} Statutes`)
+              : "Civil Law";
+            if (!groups[groupName]) groups[groupName] = [];
+            groups[groupName].push(item);
           });
-          
+
           return (
-             <div key={key} style={{ marginTop: 40 }}>
-                {Object.entries(groups).map(([groupName, groupItems], idx) => (
-                   <div key={`${key}-${idx}`} style={{ marginBottom: idx < Object.keys(groups).length - 1 ? 24 : 0 }}>
-                      <SectionLabel label={groupName} count={groupItems.length} t={t} />
-                      {idx === 0 && verificationBanner}
-                      {groupItems.map((item, i) => (
-                        <ResultCard
-                          key={i}
-                          item={item}
-                          type={key}
-                          verification={verifications[item.citation]}
-                          addBookmark={addBookmark}
-                          removeBookmark={removeBookmark}
-                          isBookmarked={isBookmarked}
-                        />
-                      ))}
-                   </div>
-                ))}
-             </div>
+            <div key={key}>
+              {Object.entries(groups).map(([groupName, groupItems], idx) => (
+                <div key={`${key}-${idx}`}>
+                  <SectionBreak label={groupName} count={groupItems.length} t={t} />
+                  {idx === 0 && verificationBanner}
+                  {groupItems.map((item, i) => (
+                    <ResultCard
+                      key={i}
+                      item={item}
+                      type={key}
+                      verification={verifications[item.citation]}
+                      addBookmark={addBookmark}
+                      removeBookmark={removeBookmark}
+                      isBookmarked={isBookmarked}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           );
         }
 
         return (
-          <div key={key} style={{ marginTop: 40 }}>
-            <SectionLabel label={label} count={items.length} t={t} />
+          <div key={key}>
+            <SectionBreak label={label} count={items.length} t={t} />
             {verificationBanner}
             {items.map((item, i) => (
               <ResultCard
@@ -337,105 +344,87 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         );
       })}
 
+      {/* Case law empty state */}
       {showCaseLawEmptyState && (
-        <div style={{ marginTop: 40 }}>
-          <SectionLabel label="Case Law" t={t} />
+        <div>
+          <SectionBreak label="Case Law" t={t} />
           <div style={{
-            border: `1px solid ${t.border}`,
-            borderLeft: `3px solid ${t.accent}`,
-            background: t.bgAlt,
-            padding: "24px 28px",
-            borderRadius: "4px",
-            boxShadow: `0 4px 12px ${t.borderLight}`,
+            borderLeft: `2px solid ${t.accent}`,
+            paddingLeft: 18,
           }}>
-            {/* Icon + primary message */}
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-              <span style={{
-                fontSize: 22, lineHeight: 1, color: t.accent,
-                flexShrink: 0, marginTop: 2,
-              }}>
-                {"\u2315"}
-              </span>
-              <div>
-                <div style={{
-                  fontFamily: "'Helvetica Neue', sans-serif", fontSize: 14,
-                  fontWeight: 500, letterSpacing: 0.5,
-                  color: t.text, lineHeight: 1.6,
-                }}>
-                  {caseLawEmptyMessage}
-                </div>
-
-                {/* Actionable tips — shown for no_verified or no_terms */}
-                {(caseLawMeta?.reason === "no_verified" || caseLawMeta?.reason === "no_terms_or_databases" || !caseLawMeta?.reason) && (
-                  <div style={{ marginTop: 12 }}>
-                    <div style={{
-                      fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
-                      letterSpacing: 2, textTransform: "uppercase",
-                      color: t.textTertiary, marginBottom: 6,
-                    }}>
-                      Tips to improve results
-                    </div>
-                    <ul style={{
-                      fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
-                      color: t.textTertiary, lineHeight: 1.7,
-                      margin: 0, paddingLeft: 18,
-                    }}>
-                      <li>Specify the offence type (e.g. &quot;assault causing bodily harm&quot;)</li>
-                      <li>Include a jurisdiction (e.g. &quot;in Ontario&quot;)</li>
-                      <li>Mention a specific legal issue (e.g. &quot;Charter s. 8 search&quot;)</li>
-                    </ul>
-                  </div>
-                )}
-
-                {/* Direct CanLII search link */}
-                {canliiSearchUrl && (
-                  <a
-                    href={canliiSearchUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: 6,
-                      fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-                      fontWeight: 600,
-                      color: t.accent, textDecoration: "none", marginTop: 16,
-                      letterSpacing: 0.5,
-                      transition: "opacity 0.15s",
-                      padding: "6px 12px",
-                      border: `1px solid ${t.border}`,
-                      borderRadius: "3px",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
-                  >
-                    Launch CanLII Manual Search {"\u2197"}
-                  </a>
-                )}
-
-                {/* Retrieval stats */}
-                {showRetrievalStats && (
-                  <div style={{
-                    fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
-                    color: t.textFaint, marginTop: 12, letterSpacing: 0.5,
-                  }}>
-                    {retrievalStats.searchCalls} database{retrievalStats.searchCalls !== 1 ? "s" : ""} searched
-                    {" · "}
-                    {retrievalStats.candidateCount} candidate{retrievalStats.candidateCount !== 1 ? "s" : ""} evaluated
-                  </div>
-                )}
-              </div>
+            <div style={{
+              fontFamily: "'Times New Roman', serif",
+              fontSize: "clamp(14px, 2vw, 16px)",
+              color: t.textSecondary,
+              lineHeight: 1.6,
+              fontStyle: "italic",
+            }}>
+              {caseLawEmptyMessage}
             </div>
+
+            {(caseLawMeta?.reason === "no_verified" || caseLawMeta?.reason === "no_terms_or_databases" || !caseLawMeta?.reason) && (
+              <ul style={{
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 12,
+                color: t.textTertiary,
+                lineHeight: 1.8,
+                margin: "12px 0 0",
+                paddingLeft: 16,
+              }}>
+                <li>Specify the offence type (e.g. &quot;assault causing bodily harm&quot;)</li>
+                <li>Include a jurisdiction (e.g. &quot;in Ontario&quot;)</li>
+                <li>Mention a specific legal issue (e.g. &quot;Charter s. 8 search&quot;)</li>
+              </ul>
+            )}
+
+            {canliiSearchUrl && (
+              <a
+                href={canliiSearchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-block",
+                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  color: t.accent,
+                  textDecoration: "none",
+                  marginTop: 14,
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
+              >
+                Search CanLII manually {"\u2197"}
+              </a>
+            )}
+
+            {showRetrievalStats && (
+              <div style={{
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 10,
+                color: t.textFaint,
+                marginTop: 10,
+                letterSpacing: "0.04em",
+              }}>
+                {retrievalStats.searchCalls} database{retrievalStats.searchCalls !== 1 ? "s" : ""} searched
+                {" · "}
+                {retrievalStats.candidateCount} candidate{retrievalStats.candidateCount !== 1 ? "s" : ""} evaluated
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Analysis */}
-      <div style={{ marginTop: 40 }}>
-        <SectionLabel label="Legal Analysis" t={t} />
+      {/* Legal Analysis */}
+      <div>
+        <SectionBreak label="Legal Analysis" t={t} />
         <div style={{
           fontFamily: "'Times New Roman', serif",
           fontSize: "clamp(15px, 2.3vw, 17px)",
-          color: t.text, lineHeight: 1.8,
-          borderLeft: `2px solid ${t.accent}`, paddingLeft: 24,
+          color: t.text,
+          lineHeight: 1.85,
+          borderLeft: `2px solid ${t.accent}`,
+          paddingLeft: 20,
         }}>
           {analysisText}
         </div>
@@ -443,8 +432,8 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
 
       {/* Suggested Links */}
       {data.suggestions?.length > 0 && (
-        <div style={{ marginTop: 40 }}>
-          <SectionLabel label="Suggested Links" t={t} />
+        <div>
+          <SectionBreak label="Suggested Links" t={t} />
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {data.suggestions.map((suggestion, i) => (
               <SuggestionLink key={i} suggestion={suggestion} />
@@ -454,18 +443,21 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: 48, paddingTop: 20, borderTop: `1px solid ${t.borderLight}` }}>
+      <div style={{ marginTop: 56, borderTop: `1px solid ${t.borderLight}`, paddingTop: 16 }}>
         <p style={{
           fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: 11, color: t.textFaint, lineHeight: 1.6, margin: 0,
+          fontSize: 11,
+          color: t.textFaint,
+          lineHeight: 1.65,
+          margin: 0,
+          letterSpacing: "0.02em",
         }}>
-          Disclaimer — CaseDive is an educational research tool and does not constitute legal advice.
-          Case citations should be verified through CanLII or other official legal databases.
-          Always consult a qualified legal professional for legal matters.
+          CaseDive is an educational research tool and does not constitute legal advice.
+          Case citations should be verified through CanLII or official legal databases.
+          Always consult a qualified legal professional.
         </p>
       </div>
 
-      {/* Case summary modal */}
       {selectedCase && (
         <CaseSummaryModal
           item={selectedCase}

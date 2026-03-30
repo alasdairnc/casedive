@@ -4,96 +4,66 @@ export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeE
   const t = useTheme();
   const { isDark, toggleTheme } = useThemeActions();
 
-  const navBtn = {
+  const navItem = {
     background: "none",
-    border: `1px solid ${t.borderLight}`,
-    color: t.textSecondary,
+    border: "none",
+    color: t.textTertiary,
     cursor: "pointer",
-    padding: "7px 14px",
+    padding: 0,
     fontFamily: "'Helvetica Neue', sans-serif",
     fontSize: 11,
-    display: "flex",
+    letterSpacing: "0.18em",
+    textTransform: "uppercase",
+    textDecoration: "none",
+    transition: "color 0.15s",
+    display: "inline-flex",
     alignItems: "center",
-    gap: 7,
-    transition: "border-color 0.2s, color 0.2s",
+    gap: 4,
   };
 
-  const navHover = (e) => {
-    e.currentTarget.style.borderColor = t.accent;
-    e.currentTarget.style.color = t.accent;
-  };
-  const navLeave = (e) => {
-    e.currentTarget.style.borderColor = t.borderLight;
-    e.currentTarget.style.color = t.textSecondary;
-  };
+  const hover = (e) => { e.currentTarget.style.color = t.text; };
+  const leave = (e) => { e.currentTarget.style.color = t.textTertiary; };
 
   return (
     <header>
-      {/* Gold accent top rule — full viewport width */}
+      {/* Gold top rule */}
       <div style={{ height: 2, background: t.accent }} />
 
-      <div style={{ maxWidth: 760, margin: "0 auto", padding: "26px 24px 0" }}>
+      <div style={{ maxWidth: 760, margin: "0 auto", padding: "16px 24px 0" }}>
         <div style={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "flex-start",
+          alignItems: "center",
           flexWrap: "wrap",
-          gap: 16,
+          gap: 12,
         }}>
           {/* Wordmark */}
-          <div>
-            <h1 style={{
-              fontSize: "clamp(30px, 5.5vw, 46px)",
-              fontWeight: 400,
-              margin: 0,
-              fontFamily: "'Times New Roman', Times, serif",
-              letterSpacing: "0.06em",
-              lineHeight: 1,
-              color: t.accent,
-            }}>
-              casedive
-            </h1>
-            <div style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
-              fontSize: 9,
-              letterSpacing: "0.44em",
-              textTransform: "uppercase",
-              color: t.textTertiary,
-              marginTop: 9,
-            }}>
-              Canadian Legal Research
-            </div>
-          </div>
+          <h1 style={{
+            fontSize: "clamp(20px, 3vw, 26px)",
+            fontWeight: 400,
+            margin: 0,
+            fontFamily: "'Times New Roman', Times, serif",
+            letterSpacing: "0.14em",
+            lineHeight: 1,
+            color: t.text,
+          }}>
+            CaseDive
+          </h1>
 
-          {/* Nav buttons */}
-          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+          {/* Nav */}
+          <nav style={{ display: "flex", gap: 22, alignItems: "center", flexWrap: "wrap" }}>
             {onOpenBookmarks && (
               <button
                 onClick={onOpenBookmarks}
                 aria-label="Saved citations"
-                style={{ ...navBtn, position: "relative" }}
-                onMouseEnter={navHover}
-                onMouseLeave={navLeave}
+                style={{ ...navItem, position: "relative" }}
+                onMouseEnter={hover}
+                onMouseLeave={leave}
               >
-                <svg
-                  width="12" height="12" viewBox="0 0 16 16"
-                  fill={bookmarkCount > 0 ? t.accent : "none"}
-                  stroke={bookmarkCount > 0 ? t.accent : "currentColor"}
-                  strokeWidth="1.5"
-                  style={{ display: "block" }}
-                >
-                  <path d="M3 2h10v12l-5-3-5 3V2z" />
-                </svg>
-                <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.2em" }}>Saved</span>
+                Saved
                 {bookmarkCount > 0 && (
-                  <span style={{
-                    background: t.accent, color: "#fff",
-                    borderRadius: "50%", width: 15, height: 15,
-                    fontSize: 8, fontWeight: 700, letterSpacing: 0,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    position: "absolute", top: -5, right: -5,
-                  }}>
-                    {bookmarkCount > 9 ? "9+" : bookmarkCount}
+                  <span style={{ color: t.accent }}>
+                    &thinsp;({bookmarkCount})
                   </span>
                 )}
               </button>
@@ -102,40 +72,37 @@ export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeE
               <button
                 onClick={onOpenCodeExplorer}
                 aria-label="Criminal Code Explorer"
-                style={navBtn}
-                onMouseEnter={navHover}
-                onMouseLeave={navLeave}
+                style={navItem}
+                onMouseEnter={hover}
+                onMouseLeave={leave}
               >
-                <span style={{ fontFamily: "'Courier New', monospace", fontSize: 14, fontWeight: 700 }}>§</span>
-                <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.2em" }}>Code</span>
+                <span style={{ fontFamily: "'Courier New', monospace", fontSize: 12 }}>§</span>
+                &thinsp;Code
               </button>
             )}
             <a
               href="https://buymeacoffee.com/alasdairnc"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ ...navBtn, textDecoration: "none" }}
-              onMouseEnter={navHover}
-              onMouseLeave={navLeave}
+              style={{ ...navItem, textDecoration: "none" }}
+              onMouseEnter={hover}
+              onMouseLeave={leave}
             >
-              <span style={{ fontSize: 13 }}>☕</span>
-              <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.2em" }}>Coffee</span>
+              Coffee
             </a>
             <button
               onClick={toggleTheme}
-              style={navBtn}
-              onMouseEnter={navHover}
-              onMouseLeave={navLeave}
+              style={navItem}
+              onMouseEnter={hover}
+              onMouseLeave={leave}
             >
-              <span style={{ fontSize: 13 }}>{isDark ? "○" : "●"}</span>
-              <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.2em" }}>
-                {isDark ? "Light" : "Dark"}
-              </span>
+              {isDark ? "Light" : "Dark"}
             </button>
-          </div>
+          </nav>
         </div>
 
-        <div style={{ borderTop: `1px solid ${t.border}`, marginTop: 22 }} />
+        {/* Hairline rule */}
+        <div style={{ borderBottom: `1px solid ${t.border}`, marginTop: 14 }} />
       </div>
     </header>
   );
