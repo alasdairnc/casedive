@@ -30,73 +30,125 @@ const COVERAGE_AREAS = [
   { label: "Civil Law", desc: "Provincial offences and federal statutes including CDSA, YCJA, and HTA" },
 ];
 
-// Compact chips shown directly below the submit button
-function ScenarioChips({ setQuery, t }) {
+// Empty state — editorial landing moment: headline + descriptor + 3 example chips
+function EmptyState({ setQuery, t }) {
   return (
-    <div style={{ maxWidth: 760, margin: "0 auto", padding: "16px 24px 0" }}>
-      <div style={{
-        fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
-        letterSpacing: 2.5, textTransform: "uppercase",
-        color: t.textTertiary, marginBottom: 10,
-      }}>
-        Try an example
+    <div className="cd-fade-in" style={{ maxWidth: 760, margin: "0 auto", padding: "32px 24px 0" }}>
+      {/* Headline + descriptor */}
+      <div style={{ marginBottom: 28 }}>
+        <h2 style={{
+          fontFamily: "'Times New Roman', Times, serif",
+          fontSize: "clamp(22px, 3.8vw, 30px)",
+          fontWeight: 400,
+          fontStyle: "italic",
+          color: t.text,
+          margin: "0 0 13px 0",
+          lineHeight: 1.25,
+          letterSpacing: "-0.2px",
+        }}>
+          Describe your legal scenario.
+        </h2>
+        <p style={{
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: "clamp(12px, 1.8vw, 13px)",
+          color: t.textSecondary,
+          lineHeight: 1.75,
+          margin: 0,
+          maxWidth: 520,
+        }}>
+          Get Criminal Code sections, verified case law, Charter rights, and civil law statutes —
+          drawn from CanLII and the Justice Laws database.
+        </p>
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {EXAMPLE_SCENARIOS.map(({ label, text }, i) => (
-          <button
-            key={i}
-            onClick={() => setQuery(text)}
-            style={{
-              background: "none", border: `1px solid ${t.borderLight}`,
-              padding: "6px 14px", cursor: "pointer",
-              fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
-              color: t.textTertiary, letterSpacing: 0.5,
-              transition: "border-color 0.15s, color 0.15s",
-              whiteSpace: "nowrap",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = t.border; e.currentTarget.style.color = t.text; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = t.borderLight; e.currentTarget.style.color = t.textTertiary; }}
-          >
-            {label}
-          </button>
-        ))}
+
+      {/* Example chips */}
+      <div>
+        <div style={{
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 9,
+          letterSpacing: "0.38em",
+          textTransform: "uppercase",
+          color: t.textTertiary,
+          marginBottom: 12,
+        }}>
+          Try an example
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {EXAMPLE_SCENARIOS.slice(0, 3).map(({ label, text }, i) => (
+            <button
+              key={i}
+              onClick={() => setQuery(text)}
+              style={{
+                background: "none",
+                border: `1px solid ${t.border}`,
+                padding: "9px 20px",
+                cursor: "pointer",
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 12,
+                color: t.textSecondary,
+                letterSpacing: "0.04em",
+                transition: "border-color 0.15s, color 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = t.text;
+                e.currentTarget.style.color = t.text;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = t.border;
+                e.currentTarget.style.color = t.textSecondary;
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-// Description + coverage grid shown in center column below the fold
-function LandingDescription({ t }) {
+// Coverage grid — shown in the center column on the empty state
+function CoverageGrid({ t }) {
   return (
-    <div style={{ padding: "8px 24px 32px" }}>
-      <p style={{
-        fontFamily: "'Times New Roman', serif",
-        fontSize: "clamp(15px, 2.3vw, 17px)",
-        color: t.textSecondary, lineHeight: 1.8, margin: "0 0 32px 0",
-      }}>
-        CaseDive is a Canadian criminal law research tool. Describe a legal scenario and receive
-        relevant Criminal Code sections, verified case law citations, Charter rights implications,
-        and a legal analysis — drawn from CanLII and the Justice Laws database.
-      </p>
+    <div style={{ padding: "40px 24px 40px" }}>
       <div style={{
-        fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
-        letterSpacing: 3.5, textTransform: "uppercase",
-        color: t.textTertiary, marginBottom: 16,
+        fontFamily: "'Helvetica Neue', sans-serif",
+        fontSize: 9,
+        letterSpacing: "0.38em",
+        textTransform: "uppercase",
+        color: t.textTertiary,
+        marginBottom: 16,
       }}>
         Coverage
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
+      {/* 1px gap between cells creates hairline grid lines */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2, 1fr)",
+        gap: 1,
+        background: t.borderLight,
+      }}>
         {COVERAGE_AREAS.map(({ label, desc }) => (
-          <div key={label} style={{ border: `1px solid ${t.borderLight}`, padding: "14px 16px" }}>
+          <div key={label} style={{
+            padding: "18px 20px",
+            background: t.cardBg,
+          }}>
             <div style={{
-              fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11,
-              fontWeight: 700, color: t.text, marginBottom: 6, letterSpacing: 0.5,
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: t.text,
+              marginBottom: 7,
             }}>
               {label}
             </div>
             <div style={{
-              fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
-              color: t.textTertiary, lineHeight: 1.5,
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 11,
+              color: t.textTertiary,
+              lineHeight: 1.65,
             }}>
               {desc}
             </div>
@@ -231,6 +283,16 @@ function AppInner() {
         @media (min-width: 1201px) {
           .ad-bottom { display: none !important; }
         }
+        @keyframes cdFadeSlideIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .cd-fade-in {
+          animation: cdFadeSlideIn 0.38s ease-out forwards;
+        }
+        .cd-results-in {
+          animation: cdFadeSlideIn 0.32s ease-out forwards;
+        }
       `}</style>
 
       {/* Above the fold — input is the first thing after the header */}
@@ -288,8 +350,8 @@ function AppInner() {
         </div>
       )}
 
-      {/* Compact scenario chips — empty state only, right below submit */}
-      {isEmpty && <ScenarioChips setQuery={setQuery} t={t} />}
+      {/* Empty state landing — right below search */}
+      {isEmpty && <EmptyState setQuery={setQuery} t={t} />}
 
       {/* 3-column layout — always rendered so side ads are always visible */}
       <div style={{
@@ -315,8 +377,8 @@ function AppInner() {
             <AdUnit slotId="7399604405" style={{ maxWidth: "100%" }} />
           </div>
 
-          {/* Landing description + coverage — empty state only */}
-          {isEmpty && <LandingDescription t={t} />}
+          {/* Coverage grid — empty state only */}
+          {isEmpty && <CoverageGrid t={t} />}
 
           {/* Loading / error */}
           <div ref={resultsRef}>
@@ -326,7 +388,7 @@ function AppInner() {
 
           {/* Results */}
           {result && (
-            <>
+            <div className="cd-results-in">
               <Results
                 data={result}
                 scenario={submittedQuery}
@@ -338,7 +400,7 @@ function AppInner() {
               <div className="ad-bottom" style={{ margin: "32px 24px 0", textAlign: "center" }}>
                 <AdUnit slotId="1225553652" style={{ maxWidth: "100%", height: "auto" }} />
               </div>
-            </>
+            </div>
           )}
         </div>
 
