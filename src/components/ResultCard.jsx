@@ -1,9 +1,10 @@
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { isValidUrl } from "../lib/validateUrl.js";
 
-function VerificationBadge({ verification, t, type }) {
+function VerificationBadge({ verification, item, t, type }) {
   if (!verification) return null;
   const { status, url, searchUrl } = verification;
+  const itemUrl = type === "case_law" && isValidUrl(item?.url_canlii) ? item.url_canlii : null;
 
   if (status === "verified") {
     const safeUrl = isValidUrl(url) ? url : null;
@@ -34,7 +35,7 @@ function VerificationBadge({ verification, t, type }) {
   }
 
   if (status === "not_found") {
-    const safeSearchUrl = isValidUrl(searchUrl) ? searchUrl : null;
+    const safeSearchUrl = itemUrl || (isValidUrl(searchUrl) ? searchUrl : null);
     if (!safeSearchUrl) return null;
     const label = type === "criminal_code"
       ? "Section not confirmed — check Justice Laws"
@@ -64,7 +65,7 @@ function VerificationBadge({ verification, t, type }) {
   }
 
   if (status === "unverified") {
-    const safeUrl = (isValidUrl(searchUrl) && searchUrl) || (isValidUrl(url) && url);
+    const safeUrl = itemUrl || (isValidUrl(searchUrl) && searchUrl) || (isValidUrl(url) && url);
     if (!safeUrl) return null;
     return (
       <a
@@ -90,7 +91,7 @@ function VerificationBadge({ verification, t, type }) {
     );
   }
 
-  const href = (isValidUrl(url) && url) || (isValidUrl(searchUrl) && searchUrl);
+  const href = itemUrl || (isValidUrl(url) && url) || (isValidUrl(searchUrl) && searchUrl);
   if (!href) return null;
   return (
     <a
@@ -304,7 +305,7 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
       )}
 
       {/* Verification badge */}
-      {showCanLII && <VerificationBadge verification={verification} t={t} type={type} />}
+      {showCanLII && <VerificationBadge verification={verification} item={item} t={t} type={type} />}
     </div>
   );
 }
