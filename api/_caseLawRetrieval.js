@@ -580,9 +580,15 @@ export async function retrieveVerifiedCaseLaw({
         const parsed = parseCitation(candidate.citation);
         if (parsed?.webDbId) {
           const caseId = buildCaseId({ year: parsed.year, courtCode: parsed.courtCode, number: parsed.number, isLegacy: parsed.isLegacy });
-          landmarkUrl = caseId ? buildCaseUrl(parsed.webDbId, parsed.year, caseId) : buildSearchUrl(candidate.citation);
+          const searchQuery = candidate.title && candidate.title !== candidate.citation
+            ? `${candidate.title} ${candidate.citation}`
+            : candidate.citation;
+          landmarkUrl = caseId ? buildCaseUrl(parsed.webDbId, parsed.year, caseId) : buildSearchUrl(searchQuery);
         } else {
-          landmarkUrl = buildSearchUrl(candidate.citation);
+          const searchQuery = candidate.title && candidate.title !== candidate.citation
+            ? `${candidate.title} ${candidate.citation}`
+            : candidate.citation;
+          landmarkUrl = buildSearchUrl(searchQuery);
         }
       }
       cases.push({
