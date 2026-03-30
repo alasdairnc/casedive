@@ -461,7 +461,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       {selectedCase && (
         <CaseSummaryModal
           item={selectedCase}
-          canliiUrl={verifications[selectedCase.citation]?.url || verifications[selectedCase.citation]?.searchUrl || null}
+          canliiUrl={selectedCase.url_canlii || verifications[selectedCase.citation]?.url || verifications[selectedCase.citation]?.searchUrl || null}
           onClose={() => setSelectedCase(null)}
         />
       )}
