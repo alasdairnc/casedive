@@ -19,8 +19,8 @@ export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeE
   };
 
   const navHover = (e) => {
-    e.currentTarget.style.borderColor = t.border;
-    e.currentTarget.style.color = t.text;
+    e.currentTarget.style.borderColor = t.accent;
+    e.currentTarget.style.color = t.accent;
   };
   const navLeave = (e) => {
     e.currentTarget.style.borderColor = t.borderLight;
@@ -49,7 +49,7 @@ export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeE
               fontFamily: "'Times New Roman', Times, serif",
               letterSpacing: "0.06em",
               lineHeight: 1,
-              color: t.text,
+              color: t.accent,
             }}>
               casedive
             </h1>
