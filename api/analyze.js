@@ -521,6 +521,15 @@ export default async function handler(req, res) {
         verifiedCount: 0,
         reason: "filter_disabled",
       };
+      await logRetrievalMetrics({
+        requestId,
+        endpoint: "analyze",
+        source: "retrieval",
+        filters,
+        reason: "filter_disabled",
+        retrievalLatencyMs: 0,
+        finalCaseLawCount: 0,
+      });
     }
 
     // Store in cache (fire-and-forget)

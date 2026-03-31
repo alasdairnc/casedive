@@ -51,18 +51,6 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const cacheKey = "cache:retrieval-health";
-  if (redis) {
-    try {
-      const timeoutGet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
-      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
-      if (cached) {
-        logSuccess(requestId, "retrieval-health", 200, Date.now() - startMs, rlResult, { cached: true });
-        return res.status(200).json(typeof cached === "string" ? JSON.parse(cached) : cached);
-      }
-    } catch (err) {}
-  }
-
   try {
     const [snapshot, trendline] = await Promise.all([
       getRetrievalHealthSnapshot(),
@@ -84,13 +72,6 @@ export default async function handler(req, res) {
       alerts: alerts.length,
       totalStoredEvents: snapshot.totalStoredEvents,
     });
-
-    if (redis) {
-      try {
-        const timeoutSet = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 500));
-        await Promise.race([redis.setex(cacheKey, 300, JSON.stringify(response)), timeoutSet]);
-      } catch (err) {}
-    }
 
     return res.status(200).json(response);
   } catch (err) {
