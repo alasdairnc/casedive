@@ -5,6 +5,7 @@ import { redis } from "./_rateLimit.js";
 
 const EVENT_LIST_KEY = "metrics:retrieval:events:v1";
 const LAST_EVENT_KEY = "metrics:retrieval:last-event:v1";
+const EVENT_COUNT_KEY = "metrics:retrieval:event-count:v1";
 const REDIS_TIMEOUT_MS = 2000;
 const MAX_EVENTS = 2500;
 const MAX_RETENTION_MS = 2 * 60 * 60 * 1000;
@@ -125,6 +126,28 @@ async function writeRedisLastEvent(event) {
   ]);
 }
 
+async function incrementRedisEventCount() {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS)
+  );
+  const count = await Promise.race([redis.incr(EVENT_COUNT_KEY), timeout]);
+  await Promise.race([
+    redis.expire(EVENT_COUNT_KEY, Math.ceil(MAX_RETENTION_MS / 1000)),
+    timeout,
+  ]);
+  const num = Number(count);
+  return Number.isFinite(num) ? num : null;
+}
+
+async function readRedisEventCount() {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS)
+  );
+  const raw = await Promise.race([redis.get(EVENT_COUNT_KEY), timeout]);
+  const num = Number(raw);
+  return Number.isFinite(num) && num > 0 ? Math.floor(num) : 0;
+}
+
 function ratio(numerator, denominator) {
   if (!denominator) return null;
   return Number((numerator / denominator).toFixed(4));
@@ -210,6 +233,13 @@ export async function recordRetrievalMetricsEvent(metricsPayload = {}) {
   if (!event) return false;
 
   if (redis) {
+    // Guaranteed lightweight writes first.
+    try {
+      await Promise.allSettled([writeRedisLastEvent(event), incrementRedisEventCount()]);
+    } catch {
+      // Ignore; continue to best-effort primary write path.
+    }
+
     try {
       const timeout = () =>
         new Promise((_, reject) =>
@@ -315,12 +345,13 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
 
   let totalStoredEvents = events.length;
 
-  // Backup read path: if primary storage returns no events, fall back to the latest event key.
+  // Backup read path: if primary storage returns no events, fall back to count + latest event keys.
   if (totalStoredEvents === 0 && redis) {
     try {
+      const backupCount = await readRedisEventCount();
       const lastEvent = await readRedisLastEvent();
-      if (lastEvent && lastEvent.ts >= nowMs - MAX_RETENTION_MS) {
-        totalStoredEvents = 1;
+      if (backupCount > 0 || (lastEvent && lastEvent.ts >= nowMs - MAX_RETENTION_MS)) {
+        totalStoredEvents = Math.max(backupCount, 1);
         snapshotSource = "backup_last_event";
 
         for (const [label, windowMs] of Object.entries(RETRIEVAL_WINDOWS)) {
