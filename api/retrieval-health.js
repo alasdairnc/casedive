@@ -1,7 +1,7 @@
 // /api/retrieval-health.js — Internal retrieval health + alert status endpoint.
 
 import { randomUUID } from "crypto";
-import { redis, redisConfigSource, checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import { applyCorsHeaders } from "./_cors.js";
 import { getRetrievalHealthSnapshot, getTrendlineSnapshots } from "./_retrievalHealthStore.js";
 import { evaluateRetrievalAlerts, RETRIEVAL_ALERT_THRESHOLDS } from "./_retrievalThresholds.js";
@@ -21,39 +21,6 @@ function isAuthorized(req) {
   }
   const authHeader = req.headers.authorization || "";
   return authHeader === `Bearer ${expectedToken}`;
-}
-
-async function probeRedisStorage() {
-  if (!redis) {
-    return {
-      configured: false,
-      writeOk: false,
-      readOk: false,
-      error: "redis_not_configured",
-    };
-  }
-
-  const probeKey = "metrics:retrieval:probe:v1";
-  const probeValue = String(Date.now());
-  const timeout = () => new Promise((_, reject) => setTimeout(() => reject(new Error("redis_timeout")), 1500));
-
-  try {
-    await Promise.race([redis.setex(probeKey, 60, probeValue), timeout()]);
-    const got = await Promise.race([redis.get(probeKey), timeout()]);
-    return {
-      configured: true,
-      writeOk: true,
-      readOk: String(got) === probeValue,
-      error: String(got) === probeValue ? null : "redis_probe_mismatch",
-    };
-  } catch (err) {
-    return {
-      configured: true,
-      writeOk: false,
-      readOk: false,
-      error: err?.message || "redis_probe_failed",
-    };
-  }
 }
 
 export default async function handler(req, res) {
@@ -85,8 +52,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    const storageDiagnostics = await probeRedisStorage();
-
     const [snapshot, trendline] = await Promise.all([
       getRetrievalHealthSnapshot(),
       getTrendlineSnapshots(),
@@ -95,18 +60,12 @@ export default async function handler(req, res) {
 
     const response = {
       generatedAt: snapshot.generatedAt,
-      snapshotSource: snapshot.snapshotSource,
       retentionMs: snapshot.retentionMs,
       totalStoredEvents: snapshot.totalStoredEvents,
       windows: snapshot.windows,
       trendline,
       thresholds: RETRIEVAL_ALERT_THRESHOLDS,
       alerts,
-      diagnostics: {
-        redis: storageDiagnostics,
-        redisConfigSource,
-        canliiApiKeyConfigured: Boolean((process.env.CANLII_API_KEY || "").trim()),
-      },
     };
 
     logSuccess(requestId, "retrieval-health", 200, Date.now() - startMs, rlResult, {
