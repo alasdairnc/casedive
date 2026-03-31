@@ -25,6 +25,7 @@ AI-powered Canadian legal research tool. User describes a legal scenario in plai
 - Completed: retrieval-health endpoint unit tests for auth, method guards, rate limiting, CORS/security headers, and upstream error mapping.
 - Completed: verify endpoint unit tests for timeout handling, non-JSON upstream responses, mixed citation batches, and request guard branches (415/413/429).
 - Completed: retrieval-health dashboard E2E coverage for auth failure (401) and successful render after token save.
+- Completed: hallucination-filter E2E flake hardening (DOM content navigation + strict locator assertions + resilient banner matcher), validated with repeat-run browser stress checks.
 - Completed: docs sync for current retrieval telemetry + alert status.
 - Next priorities:
   - Optional: retrieval health trendlines over time (dashboard shows 5m/1h snapshots today)

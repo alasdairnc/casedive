@@ -228,6 +228,40 @@ test.describe("RetrievalHealthDashboard", () => {
     await expect(page.getByText(/1 hour window/i)).toBeVisible({ timeout: 5000 });
   });
 
+  test("persists retrieval health token across reload", async ({ page }) => {
+    await page.route("/api/retrieval-health", async (route) => {
+      const auth = route.request().headers()["authorization"];
+      if (auth === "Bearer persist-token") {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(MOCK_HEALTH_SNAPSHOT),
+        });
+        return;
+      }
+
+      await route.fulfill({
+        status: 401,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Unauthorized" }),
+      });
+    });
+
+    await page.goto("/internal/retrieval-health");
+    await expect(page.getByText("Unauthorized")).toBeVisible({ timeout: 5000 });
+
+    await page.getByPlaceholder("Bearer token").fill("persist-token");
+    await page.getByRole("button", { name: /save/i }).click();
+    await page.getByRole("button", { name: /refresh/i }).click();
+    await expect(page.getByText(/5 minute window/i)).toBeVisible({ timeout: 5000 });
+
+    await page.reload();
+
+    await expect(page.getByText(/token on file/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/1 hour window/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("Unauthorized")).not.toBeVisible();
+  });
+
   test("Back to app button navigates home", async ({ page }) => {
     await page.route("/api/retrieval-health", async (route) => {
       await route.fulfill({

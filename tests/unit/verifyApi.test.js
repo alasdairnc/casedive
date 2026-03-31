@@ -146,6 +146,24 @@ describe("verify handler", () => {
     expect(res.body["2016 SCC 27"]).toMatchObject({ status: "error" });
   });
 
+  it("returns unverified when CanLII responds 404 for parsed citation", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      status: 404,
+      ok: false,
+      headers: { get: vi.fn(() => "application/json") },
+      json: vi.fn(),
+    });
+
+    const req = createReq({ body: { citations: ["2016 SCC 27"] } });
+    const res = createRes();
+
+    await handler(req, res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body["2016 SCC 27"]).toMatchObject({ status: "unverified" });
+    expect(res.body["2016 SCC 27"]).not.toHaveProperty("url");
+  });
+
   it("handles mixed citation batches across verified and error branches", async () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
       status: 200,
