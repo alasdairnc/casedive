@@ -4,7 +4,6 @@
 import { redis } from "./_rateLimit.js";
 
 const EVENT_LIST_KEY = "metrics:retrieval:events:v1";
-const HEALTH_CACHE_KEY = "cache:retrieval-health";
 const REDIS_TIMEOUT_MS = 2000;
 const MAX_EVENTS = 2500;
 const MAX_RETENTION_MS = 2 * 60 * 60 * 1000;
@@ -87,7 +86,17 @@ async function readRedisEvents() {
   const timeout = new Promise((_, reject) =>
     setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS)
   );
-  const rows = await Promise.race([redis.lrange(EVENT_LIST_KEY, 0, -1), timeout]);
+  const raw = await Promise.race([redis.get(EVENT_LIST_KEY), timeout]);
+  let rows = raw;
+
+  if (typeof raw === "string") {
+    try {
+      rows = JSON.parse(raw);
+    } catch {
+      rows = [];
+    }
+  }
+
   if (!Array.isArray(rows)) return [];
   const out = [];
   for (const row of rows) {
@@ -187,12 +196,16 @@ export async function recordRetrievalMetricsEvent(metricsPayload = {}) {
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS)
         );
-      await Promise.race([redis.rpush(EVENT_LIST_KEY, JSON.stringify(event)), timeout()]);
-      await Promise.race([redis.ltrim(EVENT_LIST_KEY, -MAX_EVENTS, -1), timeout()]);
-      await Promise.race([redis.expire(EVENT_LIST_KEY, Math.ceil(MAX_RETENTION_MS / 1000)), timeout()]);
+      const existing = await Promise.race([readRedisEvents(), timeout()]);
+      const merged = [...existing, event];
+      const cutoff = Date.now() - MAX_RETENTION_MS;
+      const pruned = merged.filter((e) => e.ts >= cutoff);
+      const capped = pruned.length > MAX_EVENTS ? pruned.slice(pruned.length - MAX_EVENTS) : pruned;
 
-      // Invalidate snapshot cache so the health endpoint reflects new events immediately.
-      await Promise.race([redis.del(HEALTH_CACHE_KEY), timeout()]);
+      await Promise.race([
+        redis.setex(EVENT_LIST_KEY, Math.ceil(MAX_RETENTION_MS / 1000), JSON.stringify(capped)),
+        timeout(),
+      ]);
       return true;
     } catch {
       // fall through to in-memory store
