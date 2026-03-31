@@ -8,6 +8,7 @@ import { Redis } from "@upstash/redis";
 const MAX_REQUESTS = 5;
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const REDIS_TIMEOUT_MS = 500;
+const RETRIEVAL_HEALTH_MAX_REQUESTS = 100; // Higher limit for internal monitoring
 
 export let redis = null;
 
@@ -32,6 +33,7 @@ export async function checkRateLimit(ip, endpoint) {
   const now = Date.now();
   const prefix = endpoint ? `rl:${endpoint}` : "rl";
   const key = `${prefix}:${ip ?? "unknown"}`;
+  const maxRequests = endpoint === "retrieval-health" ? RETRIEVAL_HEALTH_MAX_REQUESTS : MAX_REQUESTS;
 
   try {
     // Try Redis if available
@@ -43,7 +45,7 @@ export async function checkRateLimit(ip, endpoint) {
       let hits = hitsJson ? JSON.parse(hitsJson) : [];
       hits = hits.filter((t) => now - t < WINDOW_MS);
 
-      if (hits.length >= MAX_REQUESTS) {
+      if (hits.length >= maxRequests) {
         return {
           allowed: false,
           remaining: 0,
@@ -57,7 +59,7 @@ export async function checkRateLimit(ip, endpoint) {
         new Promise((_, reject) => setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS)),
       ]);
 
-      return { allowed: true, remaining: MAX_REQUESTS - hits.length };
+      return { allowed: true, remaining: maxRequests - hits.length };
     }
   } catch (err) {
     console.error("Redis rate limit check failed, falling back to in-memory:", err.message);
@@ -66,7 +68,7 @@ export async function checkRateLimit(ip, endpoint) {
   // Fallback: in-memory store (development or Redis unavailable)
   const hits = (store.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
 
-  if (hits.length >= MAX_REQUESTS) {
+  if (hits.length >= maxRequests) {
     return {
       allowed: false,
       remaining: 0,
@@ -77,7 +79,7 @@ export async function checkRateLimit(ip, endpoint) {
   hits.push(now);
   store.set(key, hits);
 
-  // Prune old entries to avoid unbounded memory growth
+  return { allowed: true, remaining: maxRequests - hits.length };
   if (store.size > 500) {
     // Remove expired entries first
     for (const [k, v] of store) {
