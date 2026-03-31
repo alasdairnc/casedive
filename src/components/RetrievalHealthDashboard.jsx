@@ -13,7 +13,115 @@ function num(value) {
   return String(value);
 }
 
-function BarRow({ label, value, max, t }) {
+function fmtDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleString();
+}
+
+function severityForMetric(value, threshold, direction = "above_is_bad") {
+  if (value == null || threshold == null) {
+    return { label: "No data", color: "#8c8c8c", border: "#b3b3b3", level: "neutral" };
+  }
+
+  if (direction === "below_is_bad") {
+    if (value < threshold) return { label: "Critical", color: "#c75454", border: "#c75454", level: "critical" };
+    if (value < threshold * 1.2) return { label: "Warning", color: "#d08c2f", border: "#d08c2f", level: "warning" };
+    return { label: "OK", color: "#3f8d56", border: "#3f8d56", level: "ok" };
+  }
+
+  if (value > threshold) return { label: "Critical", color: "#c75454", border: "#c75454", level: "critical" };
+  if (value > threshold * 0.8) return { label: "Warning", color: "#d08c2f", border: "#d08c2f", level: "warning" };
+  return { label: "OK", color: "#3f8d56", border: "#3f8d56", level: "ok" };
+}
+
+function statusFromData(data) {
+  const alerts = Array.isArray(data?.alerts) ? data.alerts.length : 0;
+  const oneHour = data?.windows?.["1h"];
+  if (!oneHour) return { label: "No data", color: "#8c8c8c" };
+
+  const errorRate = oneHour?.rates?.errorRate;
+  const noVerifiedRate = oneHour?.rates?.noVerifiedRate;
+  const p95 = oneHour?.latencyMs?.p95;
+  const thresholds = data?.thresholds || {};
+
+  if (alerts > 0) return { label: "Alerting", color: "#c75454" };
+  if (
+    (errorRate != null && thresholds.errorRate1h != null && errorRate > thresholds.errorRate1h * 0.8) ||
+    (noVerifiedRate != null && thresholds.noVerifiedRate1h != null && noVerifiedRate > thresholds.noVerifiedRate1h * 0.8) ||
+    (p95 != null && thresholds.p95LatencyMs1h != null && p95 > thresholds.p95LatencyMs1h * 0.8)
+  ) {
+    return { label: "Warning", color: "#d08c2f" };
+  }
+  if ((data?.totalStoredEvents || 0) === 0) return { label: "No events", color: "#8c8c8c" };
+  return { label: "Healthy", color: "#3f8d56" };
+}
+
+function MetricCard({ label, value, hint, badge, t }) {
+  return (
+    <div
+      style={{
+        border: `1px solid ${t.borderLight}`,
+        padding: 14,
+        background: t.bg,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: 10,
+          letterSpacing: 2.8,
+          textTransform: "uppercase",
+          color: t.textTertiary,
+          marginBottom: 8,
+        }}
+      >
+        {label}
+      </div>
+      {badge && (
+        <div
+          style={{
+            display: "inline-block",
+            border: `1px solid ${badge.border}`,
+            color: badge.color,
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 10,
+            letterSpacing: 1.2,
+            textTransform: "uppercase",
+            padding: "2px 6px",
+            marginBottom: 8,
+          }}
+        >
+          {badge.label}
+        </div>
+      )}
+      <div style={{ fontFamily: "'Courier New', monospace", fontSize: 22, color: t.text, marginBottom: 6 }}>{value}</div>
+      <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textSecondary }}>{hint}</div>
+    </div>
+  );
+}
+
+function StatusChip({ badge }) {
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        border: `1px solid ${badge.border}`,
+        color: badge.color,
+        fontFamily: "'Helvetica Neue', sans-serif",
+        fontSize: 10,
+        letterSpacing: 1.2,
+        textTransform: "uppercase",
+        padding: "2px 6px",
+      }}
+    >
+      {badge.label}
+    </span>
+  );
+}
+
+function BarRow({ label, value, max, t, color }) {
   const width = max > 0 ? Math.min(100, (value / max) * 100) : 0;
   return (
     <div style={{ marginBottom: 10 }}>
@@ -26,7 +134,7 @@ function BarRow({ label, value, max, t }) {
           style={{
             height: "100%",
             width: `${width}%`,
-            background: t.accent,
+            background: color || t.accent,
             borderRadius: 1,
             transition: "width 0.3s ease",
           }}
@@ -73,6 +181,7 @@ function TrendlineChart({ trendline, t }) {
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} style={{ width: "100%", maxWidth: width, display: "block" }}>
+      <line x1={pad} y1={height - pad} x2={width - pad} y2={height - pad} stroke={t.borderLight} strokeWidth="1" />
       {errorPoints && (
         <polyline points={errorPoints} fill="none" stroke={t.accent} strokeWidth="1.5" strokeLinejoin="round" />
       )}
@@ -100,19 +209,28 @@ function WindowPanel({ label, windowStats, thresholds, t }) {
   const samples = windowStats.samples || {};
   const err = rates.errorRate ?? 0;
   const noV = rates.noVerifiedRate ?? 0;
+  const p95 = latency.p95 ?? null;
   const barMax = Math.max(0.5, err, noV, thresholds?.errorRate1h ?? 0.05, thresholds?.noVerifiedRate1h ?? 0.45);
+  const errBadge = severityForMetric(rates.errorRate, thresholds?.errorRate1h);
+  const noVBadge = severityForMetric(rates.noVerifiedRate, thresholds?.noVerifiedRate1h);
+  const p95Badge = severityForMetric(p95, thresholds?.p95LatencyMs1h);
 
   return (
-    <div style={{ border: `1px solid ${t.borderLight}`, padding: 16 }}>
+    <div style={{ border: `1px solid ${t.borderLight}`, padding: 16, background: t.bg }}>
       <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 12 }}>
         {label}
       </div>
       <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary, lineHeight: 1.6, marginBottom: 12 }}>
         <div>Samples (operational / quality / latency): {num(samples.operational)} / {num(samples.quality)} / {num(samples.latency)}</div>
-        <div>Last event: {windowStats.lastEventAt || "—"}</div>
+        <div>Last event: {fmtDate(windowStats.lastEventAt)}</div>
       </div>
-      <BarRow label={`Error rate (${pct(err)})`} value={err} max={barMax} t={t} />
-      <BarRow label={`No-verified rate (${pct(noV)})`} value={noV} max={barMax} t={t} />
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
+        <StatusChip badge={errBadge} />
+        <StatusChip badge={noVBadge} />
+        <StatusChip badge={p95Badge} />
+      </div>
+      <BarRow label={`Error rate (${pct(err)})`} value={err} max={barMax} t={t} color={errBadge.color} />
+      <BarRow label={`No-verified rate (${pct(noV)})`} value={noV} max={barMax} t={t} color={noVBadge.color} />
       <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary, marginTop: 12 }}>
         Avg verified / request: {num(rates.avgVerifiedPerRequest)}
       </div>
@@ -131,6 +249,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [autoRefresh, setAutoRefresh] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -158,6 +277,14 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
     load();
   }, [load]);
 
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const id = setInterval(() => {
+      load();
+    }, 30_000);
+    return () => clearInterval(id);
+  }, [autoRefresh, load]);
+
   const saveToken = () => {
     const v = tokenInput.trim();
     sessionStorage.setItem(TOKEN_STORAGE_KEY, v);
@@ -170,6 +297,14 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
     setToken("");
     setData(null);
   };
+
+  const status = statusFromData(data);
+  const oneHour = data?.windows?.["1h"];
+  const fiveMin = data?.windows?.["5m"];
+  const thresholds = data?.thresholds || {};
+  const errorBadge = severityForMetric(oneHour?.rates?.errorRate, thresholds?.errorRate1h, "above_is_bad");
+  const noVerifiedBadge = severityForMetric(oneHour?.rates?.noVerifiedRate, thresholds?.noVerifiedRate1h, "above_is_bad");
+  const p95Badge = severityForMetric(oneHour?.latencyMs?.p95, thresholds?.p95LatencyMs1h, "above_is_bad");
 
   return (
     <div style={{ background: t.bg, minHeight: "100vh", color: t.text }}>
@@ -219,6 +354,49 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
       </header>
 
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px" }}>
+        <div
+          style={{
+            border: `1px solid ${t.borderLight}`,
+            padding: 16,
+            marginBottom: 20,
+            background: `linear-gradient(135deg, ${t.bg} 0%, ${t.bg} 65%, ${t.borderLight} 100%)`,
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <div>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 8 }}>
+                Retrieval System Status
+              </div>
+              <div style={{ fontFamily: "'Times New Roman', serif", fontSize: 28, color: t.text, lineHeight: 1.1 }}>
+                {status.label}
+              </div>
+            </div>
+            <div
+              style={{
+                border: `1px solid ${status.color}`,
+                color: status.color,
+                padding: "6px 10px",
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 11,
+                letterSpacing: 1.6,
+                textTransform: "uppercase",
+              }}
+            >
+              Live Internal Telemetry
+            </div>
+          </div>
+        </div>
+
+        {data && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 20 }}>
+            <MetricCard label="Stored Events" value={num(data.totalStoredEvents)} hint="2h rolling retention" t={t} />
+            <MetricCard label="5m Operational" value={num(fiveMin?.samples?.operational)} hint="Requests eligible for quality checks" t={t} />
+            <MetricCard label="1h Error Rate" value={pct(oneHour?.rates?.errorRate)} hint="Operational retrieval failures" badge={errorBadge} t={t} />
+            <MetricCard label="1h No-Verified" value={pct(oneHour?.rates?.noVerifiedRate)} hint="Quality requests with 0 verified" badge={noVerifiedBadge} t={t} />
+            <MetricCard label="1h p95 Latency" value={`${num(oneHour?.latencyMs?.p95)} ms`} hint="Tail latency for retrieval path" badge={p95Badge} t={t} />
+          </div>
+        )}
+
         <div style={{ border: `1px solid ${t.borderLight}`, padding: 16, marginBottom: 24 }}>
           <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 10 }}>
             Access
@@ -295,6 +473,25 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             >
               {loading ? "Loading…" : "Refresh"}
             </button>
+            <label
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                border: `1px solid ${t.borderLight}`,
+                padding: "8px 10px",
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 11,
+                color: t.textSecondary,
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={autoRefresh}
+                onChange={(e) => setAutoRefresh(e.target.checked)}
+              />
+              Auto-refresh 30s
+            </label>
           </div>
           {token && (
             <p style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textTertiary, margin: "12px 0 0 0" }}>
@@ -312,7 +509,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
         {data && (
           <>
             <p style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary, margin: "0 0 16px 0" }}>
-              Generated {data.generatedAt} · Stored events: {data.totalStoredEvents}
+              Generated {fmtDate(data.generatedAt)} · Stored events: {data.totalStoredEvents}
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 24 }}>
               <WindowPanel label="5 minute window" windowStats={data.windows?.["5m"]} thresholds={data.thresholds} t={t} />
@@ -343,6 +540,25 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               ) : (
                 <p style={{ margin: 0, fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textTertiary }}>No threshold breaches</p>
               )}
+            </div>
+            <div style={{ border: `1px solid ${t.borderLight}`, padding: 16, marginTop: 16 }}>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 12 }}>
+                Threshold Reference (1h)
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+                <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary }}>
+                  Error rate threshold: <strong style={{ color: t.text }}>{pct(thresholds.errorRate1h)}</strong>
+                </div>
+                <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary }}>
+                  No-verified threshold: <strong style={{ color: t.text }}>{pct(thresholds.noVerifiedRate1h)}</strong>
+                </div>
+                <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary }}>
+                  p95 latency threshold: <strong style={{ color: t.text }}>{num(thresholds.p95LatencyMs1h)} ms</strong>
+                </div>
+                <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary }}>
+                  Min sample size: <strong style={{ color: t.text }}>{num(thresholds.minSampleSize1h)}</strong>
+                </div>
+              </div>
             </div>
           </>
         )}
