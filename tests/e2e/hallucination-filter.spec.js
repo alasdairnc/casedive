@@ -15,6 +15,10 @@ async function expectAmberVerificationBanner(page, verified, total, removed) {
   await expect(page.getByText(pattern)).toBeVisible({ timeout: 10000 });
 }
 
+async function gotoHome(page) {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+}
+
 test.describe("Hallucination filtering", () => {
   test("hides not_found case law citations", async ({ page }) => {
     await page.route("/api/analyze", (route) =>
@@ -42,14 +46,14 @@ test.describe("Hallucination filtering", () => {
       })
     );
 
-    await page.goto("/");
+    await gotoHome(page);
     await page.locator("textarea").fill("test scenario");
     await page.locator("button").filter({ hasText: /research/i }).click();
 
     await expect(page.getByText("Scenario Summary", { exact: true })).toBeVisible({ timeout: 10000 });
     await page.waitForTimeout(500);
 
-    await expect(page.getByText("R v Fake")).not.toBeVisible();
+    await expect(page.getByText("R v Fake, 2099 ONCA 999", { exact: true })).toHaveCount(0);
     await expect(page.getByText("No case law citations could be verified")).toBeVisible();
   });
 
@@ -81,7 +85,7 @@ test.describe("Hallucination filtering", () => {
       })
     );
 
-    await page.goto("/");
+    await gotoHome(page);
     await page.locator("textarea").fill("test scenario");
     await page.locator("button").filter({ hasText: /research/i }).click();
 
@@ -114,12 +118,12 @@ test.describe("Hallucination filtering", () => {
       })
     );
 
-    await page.goto("/");
+    await gotoHome(page);
     await page.locator("textarea").fill("test scenario");
     await page.locator("button").filter({ hasText: /research/i }).click();
 
     await expect(page.getByText("R v Dorfer, 2014 BCCA 449")).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText("R v Fake")).not.toBeVisible();
     await expectAmberVerificationBanner(page, 1, 2, 1);
+    await expect(page.getByText("R v Fake, 2099 ONCA 999", { exact: true })).toHaveCount(0);
   });
 });
