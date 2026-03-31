@@ -89,3 +89,19 @@ Append-only. Each run adds a dated section. Never overwrite previous entries.
 - None (Codebase fully complies with new Level 2 Advanced Rules: A11y semantics verified via Playwright roles, strictly enforced `setex` bounds found on all 5 Redis endpoints, and `manualChunks` present in Vite config).
 ### Still open
 - None
+
+## Audit — 2026-03-30
+
+### Fixed since last run
+
+- None
+
+### New findings
+
+- Bare `fetch()` without `AbortSignal.timeout()` in Vite dev middleware | Low | vite.config.js:227
+- Toggle theme button missing `aria-label` — FALSE POSITIVE: button has visible text ("Light"/"Dark") | Low | src/components/Header.jsx:94
+- Bookmark button missing `aria-label` — FALSE POSITIVE: aria-label already present | Low | src/components/ResultCard.jsx:229
+
+### Still open
+
+- None
