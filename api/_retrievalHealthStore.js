@@ -5,7 +5,7 @@ import { redis } from "./_rateLimit.js";
 
 const EVENT_LIST_KEY = "metrics:retrieval:events:v1";
 const HEALTH_CACHE_KEY = "cache:retrieval-health";
-const REDIS_TIMEOUT_MS = 500;
+const REDIS_TIMEOUT_MS = 2000;
 const MAX_EVENTS = 2500;
 const MAX_RETENTION_MS = 2 * 60 * 60 * 1000;
 
