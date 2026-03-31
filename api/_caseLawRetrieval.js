@@ -571,14 +571,13 @@ export async function retrieveVerifiedCaseLaw({
 
   // Verify AI citations via the working lookupCase() endpoint
   const sorted = sortCandidatesForStableVerification(dedupeCandidates(aiCitationCandidates));
-  const citationLookupTried = new Set();
-  let verificationCallsTotal = 0;
-  const cases = [];
+
+  // Split landmarks (no API call needed) from regular candidates
+  const landmarkResults = [];
+  const toVerify = [];
+  const citationLookupSeen = new Set();
 
   for (const candidate of sorted) {
-    if (cases.length >= maxResults) break;
-
-    // Use absolute bypass for Local Landmarks (we already know they're valid)
     if (candidate.isLandmark) {
       let landmarkUrl = candidate.url || "";
       if (!landmarkUrl) {
@@ -596,7 +595,7 @@ export async function retrieveVerifiedCaseLaw({
           landmarkUrl = buildSearchUrl(searchQuery);
         }
       }
-      cases.push({
+      landmarkResults.push({
         citation: candidate.citation,
         title: candidate.title || null,
         summary: candidate.summary,
@@ -604,24 +603,33 @@ export async function retrieveVerifiedCaseLaw({
         year: candidate.year,
         url_canlii: landmarkUrl,
         matched_content: "Landmark Case Law Database",
-        verificationStatus: "verified"
+        verificationStatus: "verified",
       });
-      continue;
+    } else {
+      if (toVerify.length >= MAX_VERIFICATION_CALLS) continue;
+      const neutral = extractNeutralCitation(candidate.citation);
+      const key = neutral ?? candidate.citation.toLowerCase();
+      if (citationLookupSeen.has(key)) continue;
+      citationLookupSeen.add(key);
+      toVerify.push(candidate);
     }
-
-    if (verificationCallsTotal >= MAX_VERIFICATION_CALLS) break;
-
-    const neutral = extractNeutralCitation(candidate.citation);
-    const key = neutral ?? candidate.citation.toLowerCase();
-    if (citationLookupTried.has(key)) continue;
-    citationLookupTried.add(key);
-    verificationCallsTotal += 1;
-
-    const verification = await lookupCase(candidate.citation, apiKey);
-    if (verification.status !== "verified") continue;
-
-    cases.push(toCaseLawItem(candidate, verification));
   }
+
+  // Verify non-landmark candidates in parallel
+  const verificationResults = await Promise.all(
+    toVerify.map((candidate) => lookupCase(candidate.citation, apiKey))
+  );
+
+  const verifiedCases = [];
+  for (let i = 0; i < toVerify.length; i++) {
+    if (verificationResults[i].status === "verified") {
+      verifiedCases.push(toCaseLawItem(toVerify[i], verificationResults[i]));
+    }
+  }
+
+  // Merge landmarks first, then verified cases, then cap at maxResults
+  const cases = [...landmarkResults, ...verifiedCases].slice(0, maxResults);
+  const verificationCallsTotal = toVerify.length;
 
   return {
     cases,
