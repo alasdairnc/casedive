@@ -81,11 +81,14 @@ function LoadingSkeleton({ t }) {
   );
 }
 
+// Module-level cache: citation string → normalized summary object
+const summaryCache = new Map();
+
 export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
   const t = useTheme();
-  const [summary, setSummary] = useState(null);
+  const [summary, setSummary] = useState(() => summaryCache.get(item.citation) || null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!summaryCache.has(item.citation));
 
   // Close on Escape
   useEffect(() => {
@@ -94,8 +97,10 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  // Fetch summary
+  // Fetch summary (skip if already in module-level cache)
   useEffect(() => {
+    if (summaryCache.has(item.citation)) return;
+
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -116,8 +121,12 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
       .then((res) => res.json())
       .then((data) => {
         if (cancelled) return;
-        if (data.error) setError(data.error);
-        else setSummary(data);
+        if (data.error) {
+          setError(data.error);
+        } else {
+          summaryCache.set(item.citation, data);
+          setSummary(data);
+        }
       })
       .catch(() => {
         if (!cancelled) setError("Failed to load summary. Please try again.");

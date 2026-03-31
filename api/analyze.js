@@ -27,7 +27,7 @@ function sanitizeUserInput(input) {
   return input.replace(/<\/?[a-zA-Z_][a-zA-Z0-9_]*(?:\s[^>\s][^>]*)?>/g, "");
 }
 
-const CACHE_TTL_S = 60 * 60 * 24; // 24 hours
+const CACHE_TTL_S = 60 * 60 * 24 * 7; // 7 days
 
 function cacheKey(scenario, filters) {
   return (
@@ -293,6 +293,7 @@ export default async function handler(req, res) {
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Content-Security-Policy", "default-src 'none'");
+  res.setHeader("Cache-Control", "no-store");
 
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
