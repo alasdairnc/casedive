@@ -1,0 +1,14 @@
+dist
+node_modules
+node_modules_old
+playwright-report
+playwright-report-live
+test-results
+tmp
+.vercel
+.DS_Store
+.env
+.env.local
+.env.*.local
+.retrieval-health-token
+filter-quality-report.html

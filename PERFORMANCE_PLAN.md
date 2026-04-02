@@ -30,10 +30,18 @@ Environment variables required for monitor script:
 
 1. Run npm run perf:monitor.
 2. If failed, open retrieval health dashboard and inspect Recent Failed Scenarios.
-3. For each top failure, use Copy Fix Prompt and run an agent fix pass.
-4. Validate with:
+3. If the failure is a no-verified spike, let the Performance Triage workflow open or refresh the autofix issue.
+4. For each top failure, use Copy Fix Prompt and run an agent fix pass.
+5. Validate with:
    - npm run test:guardrails
    - targeted vitest files for touched modules
+
+## GitHub Autofix Loop
+
+- Performance Monitor runs on a schedule and fails on retrieval quality regressions.
+- Performance Triage turns exit code 1 into a tracked autofix issue.
+- The issue is deduped by scenario class, labeled `autofix`, and assigned to Copilot when possible.
+- The issue body points the agent at the smallest safe patch path and the relevant regression tests.
 
 ## Weekly Workflow (45 min)
 
@@ -55,6 +63,7 @@ Suggested prompt template:
 Investigate and fix retrieval failure for this CaseDive scenario.
 
 Failure context:
+
 - ts: [timestamp]
 - endpoint: [endpoint]
 - reason: [reason]
@@ -66,10 +75,11 @@ Failure context:
 - errorMessage: [optional]
 
 Tasks:
-1) Identify likely root cause in retrieval pipeline.
-2) Implement minimal code fix.
-3) Add or update tests to prevent recurrence.
-4) Run relevant tests and summarize measurable impact.
+
+1. Identify likely root cause in retrieval pipeline.
+2. Implement minimal code fix.
+3. Add or update tests to prevent recurrence.
+4. Run relevant tests and summarize measurable impact.
 
 ## Prioritized Optimization Backlog
 
