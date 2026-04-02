@@ -89,12 +89,63 @@ const RANK_STOP_WORDS = new Set([
 ]);
 
 function tokenizeForRanking(text) {
-  return String(text || "")
+  const rawTokens = String(text || "")
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
     .map((w) => w.trim())
     .filter((w) => w.length >= 3 && !RANK_STOP_WORDS.has(w));
+
+  const expanded = new Set();
+  for (const token of rawTokens) {
+    expanded.add(token);
+    if (token.endsWith("ies") && token.length > 4) {
+      expanded.add(`${token.slice(0, -3)}y`);
+    }
+    if (token.endsWith("ied") && token.length > 4) {
+      expanded.add(`${token.slice(0, -3)}y`);
+    }
+    if (token.endsWith("ed") && token.length > 4) {
+      expanded.add(token.slice(0, -2));
+    }
+    if (token.endsWith("ing") && token.length > 5) {
+      expanded.add(token.slice(0, -3));
+    }
+    if (token.endsWith("es") && token.length > 4) {
+      expanded.add(token.slice(0, -2));
+    }
+    if (token.endsWith("s") && token.length > 4) {
+      expanded.add(token.slice(0, -1));
+    }
+    if (token === "delayed" || token === "delaying" || token === "delays") {
+      expanded.add("delay");
+    }
+    if (token === "searched" || token === "searching" || token === "searches") {
+      expanded.add("search");
+    }
+    if (token === "seized" || token === "seizing" || token === "seizes" || token === "seizure") {
+      expanded.add("seize");
+      expanded.add("seizure");
+    }
+    if (token === "detained" || token === "detaining" || token === "detains") {
+      expanded.add("detain");
+      expanded.add("detention");
+    }
+    if (token === "warrants" || token === "warranted") {
+      expanded.add("warrant");
+    }
+    if (token === "adjourned" || token === "adjourning") {
+      expanded.add("adjournment");
+    }
+    if (token === "postponed" || token === "postponing") {
+      expanded.add("postpone");
+    }
+    if (token === "backlogged" || token === "backlogging") {
+      expanded.add("backlog");
+    }
+  }
+
+  return Array.from(expanded);
 }
 
 function scoreRetrievedCase(scenarioTokens, item) {
@@ -128,6 +179,16 @@ function scoreRetrievedCase(scenarioTokens, item) {
     if (/\bweapon\b/.test(haystack)) score += 2;
     if (/\bdefence\b|\bself[\s-]?defence\b/.test(haystack)) score += 2;
     if (/\bconsent\b/.test(haystack)) score += 1;
+  }
+
+  // Search and seizure scenarios
+  const searchScenario = scenarioTokens.has("search") || scenarioTokens.has("seizure") || scenarioTokens.has("warrant") || scenarioTokens.has("privacy");
+  if (searchScenario) {
+    if (/\bsearch\b/.test(haystack)) score += 3;
+    if (/\bseizure\b/.test(haystack)) score += 3;
+    if (/\bwarrant\b/.test(haystack)) score += 2;
+    if (/\bprivacy\b/.test(haystack)) score += 2;
+    if (/\bhunter\b|\bmarakah\b|\bvu\b/.test(haystack)) score += 3;
   }
 
   // Drug / CDSA scenarios
@@ -189,8 +250,9 @@ function scoreRetrievedCase(scenarioTokens, item) {
 function selectTopRetrievedCases(scenario, retrievedCases, limit = 3) {
   const cases = Array.isArray(retrievedCases) ? [...retrievedCases] : [];
   const scenarioTokens = new Set(tokenizeForRanking(scenario));
+  const minOverlap = scenarioTokens.size >= 8 ? 3 : scenarioTokens.size >= 4 ? 2 : 1;
 
-  // Filter: require minimum 3 scenario tokens OR landmark match to avoid tangential results
+  // Filter: allow a dynamic overlap threshold or strong ranked score to avoid overly strict misses.
   const filtered = cases.filter(c => {
     const haystack = `${c?.citation || ""} ${c?.summary || ""}`.toLowerCase();
     let overlapCount = 0;
@@ -199,7 +261,8 @@ function selectTopRetrievedCases(scenario, retrievedCases, limit = 3) {
     }
     // Accept if: (1) meets minimum overlap threshold, OR (2) it's a landmark RAG match
     const isLandmark = String(c?.matched_content || "").includes("Landmark RAG Match");
-    return overlapCount >= 3 || isLandmark;
+    const strongScore = scoreRetrievedCase(scenarioTokens, c) >= 10;
+    return overlapCount >= minOverlap || isLandmark || strongScore;
   });
 
   filtered.sort((a, b) => {

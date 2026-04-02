@@ -175,6 +175,73 @@ describe("safeLine — landmark data sanitization before system prompt injection
     expect(systemText).toContain("script alert(1) /script");
   });
 
+  it("injects Jordan landmark context for delayed trial scenarios", async () => {
+    const { MASTER_CASE_LAW_DB } = await import("../../src/lib/caselaw/index.js");
+    MASTER_CASE_LAW_DB.length = 0;
+    MASTER_CASE_LAW_DB.push({
+      citation: "2016 SCC 27",
+      title: "R. v. Jordan",
+      year: 2016,
+      court: "SCC",
+      topics: ["Charter", "s. 11(b)", "Trial Delay", "Stay of Proceedings"],
+      tags: ["unreasonable delay", "time limits", "ceilings", "institutional delay", "11b", "jordan"],
+      facts: "Delay framework case.",
+      ratio: "Sets presumptive ceilings for unreasonable trial delay.",
+    });
+
+    mockAnthropicSuccess();
+
+    const req = createReq({ body: { scenario: "my trial was delayed 2 years by the Crown" } });
+    const res = createRes();
+    await handler(req, res);
+
+    const fetchCalls = globalThis.fetch.mock.calls;
+    const anthropicCall = fetchCalls.find((c) => String(c[0]).includes("anthropic.com"));
+    expect(anthropicCall).toBeDefined();
+
+    const body = JSON.parse(anthropicCall[1].body);
+    const systemText = Array.isArray(body.system)
+      ? body.system.map((b) => b.text).join("")
+      : body.system;
+
+    expect(systemText).toContain("Jordan");
+    expect(systemText).toContain("11(b)");
+  });
+
+  it("injects search-and-seizure landmark context for warrant scenarios", async () => {
+    const { MASTER_CASE_LAW_DB } = await import("../../src/lib/caselaw/index.js");
+    MASTER_CASE_LAW_DB.length = 0;
+    MASTER_CASE_LAW_DB.push({
+      citation: "Hunter v Southam Inc, [1984] 2 SCR 145",
+      title: "Hunter v Southam Inc",
+      year: 1984,
+      court: "SCC",
+      topics: ["Charter", "s. 8", "Search", "Seizure", "Privacy"],
+      tags: ["search", "seizure", "warrant", "privacy", "section 8", "hunter"],
+      facts: "Search and seizure framework case.",
+      ratio: "Foundational s. 8 Charter case on unreasonable search and seizure.",
+    });
+
+    mockAnthropicSuccess();
+
+    const req = createReq({ body: { scenario: "police searched my phone without a warrant" } });
+    const res = createRes();
+    await handler(req, res);
+
+    const fetchCalls = globalThis.fetch.mock.calls;
+    const anthropicCall = fetchCalls.find((c) => String(c[0]).includes("anthropic.com"));
+    expect(anthropicCall).toBeDefined();
+
+    const body = JSON.parse(anthropicCall[1].body);
+    const systemText = Array.isArray(body.system)
+      ? body.system.map((b) => b.text).join("")
+      : body.system;
+
+    expect(systemText).toContain("Hunter");
+    expect(systemText).toContain("search");
+    expect(systemText).toContain("seizure");
+  });
+
   it("strips backticks from landmark data", async () => {
     const { MASTER_CASE_LAW_DB } = await import("../../src/lib/caselaw/index.js");
     MASTER_CASE_LAW_DB.length = 0;
