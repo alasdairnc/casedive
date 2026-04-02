@@ -48,6 +48,11 @@ jobs:
           fi
           export PERF_HEALTH_URL="${INPUT_PERF_HEALTH_URL:-${SECRET_PERF_HEALTH_URL:-https://www.casedive.ca/api/retrieval-health}}"
 
+          # Canonicalize apex domain to www to avoid redirect/auth header loss.
+          if [[ "$PERF_HEALTH_URL" == https://casedive.ca/* ]]; then
+            PERF_HEALTH_URL="https://www.casedive.ca/${PERF_HEALTH_URL#https://casedive.ca/}"
+          fi
+
           if [ -z "$RETRIEVAL_HEALTH_TOKEN" ]; then
             echo "Missing RETRIEVAL_HEALTH_TOKEN"
             exit 1
