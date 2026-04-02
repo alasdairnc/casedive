@@ -12,6 +12,7 @@ import {
   buildCitationIdentityKey,
 } from "../src/lib/canlii.js";
 import { MASTER_CASE_LAW_DB } from "../src/lib/caselaw/index.js";
+import { findLandmarkSeeds } from "../src/lib/landmarkCases.js";
 
 // SECURITY TESTING: Set CANLII_API_BASE_URL env var to redirect to a mock server.
 // Also update the matching constant in src/lib/canlii.js (where HTTP calls originate).
@@ -393,6 +394,22 @@ function detectCoreIssue(scenario) {
       ],
       primary: "domestic_assault",
       subIssues: new Set(["domestic", "intimate partner", "assault", "s. 266", "s. 267", "bodily harm"])
+    },
+    trial_delay: {
+      tests: [
+        /\b(delay|delayed|adjourned|adjournment|postponed|backlog|waited)\b/,
+        /\b(trial|crown|court|hearing|charter|11\(b\))\b/
+      ],
+      primary: "trial_delay",
+      subIssues: new Set([
+        "charter",
+        "s. 11(b)",
+        "trial delay",
+        "crown delay",
+        "jordan",
+        "cody",
+        "reasonable time",
+      ])
     }
   };
 
@@ -407,6 +424,7 @@ function detectCoreIssue(scenario) {
     "robbery",
     "theft",
     "domestic_assault",
+    "trial_delay",
   ];
 
   for (const key of orderedKeys) {
@@ -633,6 +651,14 @@ function curatedTermsFromScenario(scenario) {
 
   if (ride && alcohol) {
     push("R v Grant reasonable suspicion", "motor vehicle stop Charter", "checkstop Charter section 9");
+  }
+  if (/\b(delay|delayed|adjourned|adjournment|postponed|backlog|crown\s+delay)\b/.test(s)) {
+    push(
+      "R v Jordan 2016 SCC 27",
+      "R v Cody 2017 SCC 31",
+      "Charter section 11(b) trial within reasonable time",
+      "unreasonable trial delay Crown"
+    );
   }
   if (refusal && (alcohol || /\bbreath\b/.test(s))) {
     push("refusal breath sample Criminal Code", "reasonable grounds breath demand");
@@ -1090,6 +1116,17 @@ export async function retrieveVerifiedCaseLaw({
     }
   }
 
+  // Add deterministic landmark seeds from scenario + extracted terms.
+  // This covers common high-signal flows like Jordan/Cody delay scenarios.
+  const landmarkSeeds = findLandmarkSeeds({
+    scenario,
+    terms,
+    limit: Math.max(1, Math.min(3, maxResults)),
+  });
+  if (landmarkSeeds.length > 0) {
+    aiCitationCandidates.push(...landmarkSeeds);
+  }
+
   if (aiCitationCandidates.length === 0) {
     const fallbackCandidates = buildLocalFallbackCandidates({ scenario, maxResults });
     if (fallbackCandidates.length > 0) {
@@ -1243,6 +1280,22 @@ export async function retrieveVerifiedCaseLaw({
     ? "semantic_filter_fallback"
     : null;
 
+  const selectedIdentityKeys = new Set(
+    selectedCandidates.map((item) => buildCitationIdentityKey(item?.citation || ""))
+  );
+  const hasLandmarkSeedResult = scoredCandidates.some(
+    (item) =>
+      item?.landmarkSeed === true &&
+      selectedIdentityKeys.has(buildCitationIdentityKey(item?.citation || ""))
+  );
+  const retrievalPass = hasLandmarkSeedResult
+    ? "landmark_seed"
+    : localFallbackUsed || postVerificationFallbackUsed
+    ? "local_fallback"
+    : semanticFilter.fallbackUsed
+    ? "semantic_fallback"
+    : "semantic_primary";
+
   const cases = selectedCandidates
     .slice(0, maxResults)
     .map((item) => {
@@ -1264,6 +1317,7 @@ export async function retrieveVerifiedCaseLaw({
       relevanceScoreAvg,
       fallbackPathUsed: Boolean(fallbackReason),
       fallbackReason,
+      retrievalPass,
       semanticFilterDropCount: semanticFilter.dropCount,
       candidateSourceMix,
       reason: cases.length > 0 ? "verified_results" : "no_verified",

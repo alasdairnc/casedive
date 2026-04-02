@@ -22,7 +22,7 @@ import {
 } from "./_logging.js";
 
 function logRetrievalMetricsAsync(payload) {
-  logRetrievalMetrics(payload).catch(() => {});
+  Promise.resolve(logRetrievalMetrics(payload)).catch(() => {});
 }
 
 // Strip XML-like tags from user input to prevent delimiter escape.

@@ -86,6 +86,7 @@ async function run() {
   const alerts = Array.isArray(body?.alerts) ? body.alerts : [];
   const thresholds = body?.thresholds || {};
   const failures = Array.isArray(body?.recentFailures) ? body.recentFailures : [];
+  const improvements = Array.isArray(body?.improvements) ? body.improvements : [];
 
   if (outputFormat !== "json") {
     console.log("[perf-monitor] Retrieval health snapshot");
@@ -111,6 +112,17 @@ async function run() {
     }
   }
 
+  const topImprovements = improvements.slice(0, 3);
+  if (outputFormat !== "json" && topImprovements.length > 0) {
+    console.log("[perf-monitor] Suggested retrieval improvements (top 3):");
+    for (const item of topImprovements) {
+      const scenario = (item?.scenarioSnippet || "(missing scenario)").replace(/\s+/g, " ").slice(0, 120);
+      const terms = Array.isArray(item?.suggestedTerms) ? item.suggestedTerms.slice(0, 3).join(" | ") : "";
+      console.log(`- ${item?.classId || "general"} | ${item?.failureCount || 0}x | ${scenario}`);
+      if (terms) console.log(`  terms: ${terms}`);
+    }
+  }
+
   const localBreaches = evaluateLocalBreaches(oneHour, thresholds);
   const hasIssues = alerts.length > 0 || localBreaches.length > 0;
 
@@ -128,6 +140,7 @@ async function run() {
     alerts,
     thresholds,
     recentFailures: failures,
+    improvements,
     localBreaches,
     hasIssues,
   };

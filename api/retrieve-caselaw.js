@@ -18,7 +18,7 @@ import {
 } from "./_logging.js";
 
 function logRetrievalMetricsAsync(payload) {
-  logRetrievalMetrics(payload).catch(() => {});
+  Promise.resolve(logRetrievalMetrics(payload)).catch(() => {});
 }
 
 function sanitizeUserInput(input) {
