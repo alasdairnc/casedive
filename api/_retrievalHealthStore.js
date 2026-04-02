@@ -111,11 +111,12 @@ function getRecentFailureScenarios(events = [], limit = 20) {
     "retrieval_error",
     "missing_api_key",
     "retrieval_timeout",
+    "unknown_cached",
   ]);
 
   const failed = events.filter((event) => {
     const isOperational =
-      event.source === "retrieval" &&
+      (event.source === "retrieval" || event.source === "cache") &&
       event.caseLawFilterEnabled &&
       event.reason !== "filter_disabled";
     if (!isOperational) return false;

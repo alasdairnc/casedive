@@ -409,7 +409,7 @@ export default async function handler(req, res) {
                   ? cachedCaseLawMeta.reason
                   : cachedCaseLaw.length > 0
                   ? "verified_results"
-                  : "unknown_cached",
+                  : "no_verified",
               retrievalLatencyMs: 0,
               finalCaseLawCount: cachedCaseLaw.length,
               retrievalMeta: {
