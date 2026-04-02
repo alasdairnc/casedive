@@ -5,6 +5,7 @@ import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import { applyCorsHeaders } from "./_cors.js";
 import { getRetrievalHealthSnapshot, getTrendlineSnapshots } from "./_retrievalHealthStore.js";
 import { evaluateRetrievalAlerts, RETRIEVAL_ALERT_THRESHOLDS } from "./_retrievalThresholds.js";
+import { buildRetrievalImprovements } from "./_retrievalImprovements.js";
 import {
   logRequestStart,
   logRateLimitCheck,
@@ -58,6 +59,7 @@ export default async function handler(req, res) {
       getTrendlineSnapshots(),
     ]);
     const alerts = evaluateRetrievalAlerts(snapshot);
+    const improvements = buildRetrievalImprovements(snapshot?.recentFailures || []);
 
     const response = {
       generatedAt: snapshot.generatedAt,
@@ -67,6 +69,7 @@ export default async function handler(req, res) {
       windows: snapshot.windows,
       alltime: snapshot.alltime,
       recentFailures: snapshot.recentFailures,
+      improvements,
       trendline,
       thresholds: RETRIEVAL_ALERT_THRESHOLDS,
       alerts,

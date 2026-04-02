@@ -179,6 +179,7 @@ describe("retrieval-health handler", () => {
         highNoVerifiedRate: 0.7,
       },
     });
+    expect(Array.isArray(res.body.improvements)).toBe(true);
     expect(res.headers["X-RateLimit-Limit"]).toBe("60");
     expect(res.headers["X-Content-Type-Options"]).toBe("nosniff");
     expect(res.headers["X-Frame-Options"]).toBe("DENY");

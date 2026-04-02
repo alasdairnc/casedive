@@ -388,6 +388,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const noVerifiedBadge = severityForMetric(oneHour?.rates?.noVerifiedRate, thresholds?.noVerifiedRate1h, "above_is_bad");
   const p95Badge = severityForMetric(oneHour?.latencyMs?.p95, thresholds?.p95LatencyMs1h, "above_is_bad");
   const recentFailures = Array.isArray(data?.recentFailures) ? data.recentFailures : [];
+  const improvements = Array.isArray(data?.improvements) ? data.improvements : [];
 
   const copyFixPrompt = async (sample, index) => {
     const prompt = buildAgentFixPrompt(sample);
@@ -683,6 +684,26 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               )}
             </div>
             <div style={{ border: `1px solid ${t.borderLight}`, padding: 16 }}>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 12 }}>
+                Suggested Improvements
+              </div>
+              {improvements.length > 0 ? (
+                <div style={{ display: "grid", gap: 8, marginBottom: 14 }}>
+                  {improvements.slice(0, 5).map((item) => (
+                    <div key={item.id} style={{ border: `1px solid ${t.borderLight}`, padding: 10, background: t.bg }}>
+                      <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary, marginBottom: 6 }}>
+                        <strong style={{ color: t.text }}>{item.classId}</strong> · {item.failureCount} similar failure(s)
+                      </div>
+                      <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary, marginBottom: 4 }}>
+                        Scenario: {clip(item.scenarioSnippet, 180)}
+                      </div>
+                      <div style={{ fontFamily: "'Courier New', monospace", fontSize: 11, color: t.textTertiary }}>
+                        terms: {Array.isArray(item.suggestedTerms) ? item.suggestedTerms.slice(0, 4).join(" | ") : "n/a"}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
               <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 12 }}>
                 Active alerts (thresholds)
               </div>

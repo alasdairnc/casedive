@@ -611,6 +611,7 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
   const events = await getRetrievalEvents({ nowMs });
   const windows = {};
   let snapshotSource = "primary";
+  let backupLastEvent = null;
 
   for (const [label, windowMs] of Object.entries(RETRIEVAL_WINDOWS)) {
     windows[label] = computeWindowStats(events, nowMs, windowMs);
@@ -626,9 +627,10 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
       if (backupCount > 0 || (lastEvent && lastEvent.ts >= nowMs - MAX_RETENTION_MS)) {
         totalStoredEvents = Math.max(backupCount, 1);
         snapshotSource = "backup_last_event";
+        backupLastEvent = lastEvent;
 
         for (const [label, windowMs] of Object.entries(RETRIEVAL_WINDOWS)) {
-          if (lastEvent.ts >= nowMs - windowMs) {
+          if (lastEvent && lastEvent.ts >= nowMs - windowMs) {
             const stats = windows[label];
             stats.samples.total = Math.max(1, stats.samples.total);
             if (lastEvent.source === "cache") {
@@ -651,7 +653,56 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
   }
 
   const alltime = await getAlltimeSnapshot(events);
-  const recentFailures = getRecentFailureScenarios(events);
+  let recentFailures = getRecentFailureScenarios(events);
+
+  // If the primary event list is unavailable but backup keys indicate activity,
+  // surface the latest failure so the dashboard can still show actionable data.
+  if (recentFailures.length === 0 && backupLastEvent && snapshotSource === "backup_last_event") {
+    const isOperational =
+      (backupLastEvent.source === "retrieval" || backupLastEvent.source === "cache") &&
+      backupLastEvent.caseLawFilterEnabled &&
+      backupLastEvent.reason !== "filter_disabled";
+
+    if (isOperational) {
+      const explicitFailureReasons = new Set([
+        "no_verified",
+        "retrieval_error",
+        "missing_api_key",
+        "retrieval_timeout",
+        "unknown_cached",
+      ]);
+      const effectiveFinalCount = Math.max(
+        toNonNegativeInt(backupLastEvent.finalCaseLawCount),
+        toNonNegativeInt(backupLastEvent.verifiedCount)
+      );
+      const hasNoResults =
+        effectiveFinalCount === 0 && backupLastEvent.reason !== "verified_results";
+      const isFailure =
+        backupLastEvent.retrievalError ||
+        explicitFailureReasons.has(backupLastEvent.reason) ||
+        hasNoResults;
+
+      if (isFailure) {
+        recentFailures = [
+          {
+            ts: new Date(backupLastEvent.ts).toISOString(),
+            endpoint: backupLastEvent.endpoint || "unknown",
+            reason: backupLastEvent.reason || "unknown",
+            retrievalError: Boolean(backupLastEvent.retrievalError),
+            finalCaseLawCount: effectiveFinalCount,
+            verifiedCount: toNonNegativeInt(backupLastEvent.verifiedCount),
+            fallbackPathUsed: backupLastEvent.fallbackPathUsed === true,
+            latencyMs: Number.isFinite(backupLastEvent.retrievalLatencyMs)
+              ? backupLastEvent.retrievalLatencyMs
+              : null,
+            semanticFilterDropCount: toNonNegativeInt(backupLastEvent.semanticFilterDropCount),
+            scenarioSnippet: backupLastEvent.scenarioSnippet || null,
+            errorMessage: backupLastEvent.errorMessage || null,
+          },
+        ];
+      }
+    }
+  }
 
   return {
     generatedAt: new Date(nowMs).toISOString(),
