@@ -113,6 +113,22 @@ describe("retrieveVerifiedCaseLaw landmark URL handling", () => {
     expect(meta.retrievalPass).toBe("landmark_seed");
   });
 
+  it("seeds search-and-seizure landmarks for warrant scenarios without explicit AI citations", async () => {
+    const { cases, meta } = await retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario: "police searched my phone without a warrant",
+      aiCaseLaw: [],
+      landmarkMatches: [],
+      maxResults: 3,
+    });
+
+    expect(cases.length).toBeGreaterThan(0);
+    expect(
+      cases.some((c) => /Hunter|Grant|Marakah|Vu/.test(String(c.citation || "")))
+    ).toBe(true);
+    expect(meta.retrievalPass).toBe("landmark_seed");
+  });
+
   it("returns retrievalPass metadata for observability", async () => {
     const { meta } = await retrieveVerifiedCaseLaw({
       apiKey: "test-key",

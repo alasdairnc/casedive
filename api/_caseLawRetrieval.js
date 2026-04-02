@@ -181,13 +181,51 @@ function dedupeStrings(values) {
 }
 
 function tokenizeScenario(text) {
-  return new Set(
-    String(text || "")
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, " ")
-      .split(/\s+/)
-      .filter((w) => w.length >= 3 && !SIMPLE_STOP_WORDS.has(w))
-  );
+  const rawTokens = String(text || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .map((w) => w.trim())
+    .filter((w) => w.length >= 3 && !SIMPLE_STOP_WORDS.has(w));
+
+  const expanded = new Set();
+  for (const token of rawTokens) {
+    expanded.add(token);
+    if (token.endsWith("ies") && token.length > 4) {
+      expanded.add(`${token.slice(0, -3)}y`);
+    }
+    if (token.endsWith("ied") && token.length > 4) {
+      expanded.add(`${token.slice(0, -3)}y`);
+    }
+    if (token.endsWith("ed") && token.length > 4) {
+      expanded.add(token.slice(0, -2));
+    }
+    if (token.endsWith("ing") && token.length > 5) {
+      expanded.add(token.slice(0, -3));
+    }
+    if (token.endsWith("es") && token.length > 4) {
+      expanded.add(token.slice(0, -2));
+    }
+    if (token.endsWith("s") && token.length > 4) {
+      expanded.add(token.slice(0, -1));
+    }
+    if (token === "searched" || token === "searching" || token === "searches") {
+      expanded.add("search");
+    }
+    if (token === "seized" || token === "seizing" || token === "seizes" || token === "seizure") {
+      expanded.add("seize");
+      expanded.add("seizure");
+    }
+    if (token === "detained" || token === "detaining" || token === "detains") {
+      expanded.add("detain");
+      expanded.add("detention");
+    }
+    if (token === "warrants" || token === "warranted") {
+      expanded.add("warrant");
+    }
+  }
+
+  return expanded;
 }
 
 function pickHelpfulScenarioTerms(scenarioTokens, limit = 2) {
@@ -220,6 +258,9 @@ function inferFallbackIssueSignals(scenarioTokens) {
   }
   if (hasAny(["lawyer", "counsel"])) {
     add("s. 10", "right to counsel", "informational", "detention", "waiver");
+  }
+  if (hasAny(["search", "searched", "searching", "seizure", "seized", "warrant", "warrantless", "privacy", "phone", "device", "records", "text", "computer", "digital"])) {
+    add("charter", "s. 8", "search", "seizure", "warrant", "privacy");
   }
   if (hasAny(["weapon", "knife", "stabbed", "stab", "gun", "firearm"])) {
     add("weapon", "s. 267", "intent", "dangerous", "self-defence");
@@ -331,6 +372,14 @@ function detectCoreIssue(scenario) {
   const s = (scenario || "").toLowerCase();
   
   const patterns = {
+    search_seizure: {
+      tests: [
+        /\b(search|searched|searching|seiz\w*|warrant|warrantless|privacy|phone|device|records|text|computer|digital)\b/,
+        /\b(charter|police|officer|lawful|unreasonable|state|without\s+warrant|no\s+warrant)\b/,
+      ],
+      primary: "charter_search_seizure",
+      subIssues: new Set(["charter", "s. 8", "search", "seizure", "warrant", "privacy", "phone", "digital", "grant", "hunter", "marakah", "vu"]),
+    },
     impaired_motor: {
       tests: [
         /\b(impaired|ride|drunk|over\s*80|breathalyzer|breath\s+sample|breath\s+demand|refus\w*)\b/,
@@ -414,6 +463,7 @@ function detectCoreIssue(scenario) {
   };
 
   const orderedKeys = [
+    "search_seizure",
     "impaired_motor",
     "assault_harm",
     "assault_weapon",
@@ -607,15 +657,20 @@ function selectFinalCandidates({ candidates = [], issuePrimary = "general_crimin
 
   if (sorted.length === 0) return [];
 
+  const broadIssue = new Set(["general_criminal", "charter_search_seizure"]);
+  const strictScoreThreshold = broadIssue.has(issuePrimary) ? 12 : 14;
+  const strictSemanticThreshold = broadIssue.has(issuePrimary) ? 1 : 2;
+  const moderateScoreThreshold = broadIssue.has(issuePrimary) ? 9 : 10;
+
   const strict = sorted.filter((item) => {
     const score = Number(item?.retrievalScore) || 0;
     const semanticCount = Array.isArray(item?.semanticMatches) ? item.semanticMatches.length : 0;
-    return score >= 14 || semanticCount >= 2;
+    return score >= strictScoreThreshold || semanticCount >= strictSemanticThreshold;
   });
 
   const moderate = sorted.filter((item) => {
     const score = Number(item?.retrievalScore) || 0;
-    return score >= 10;
+    return score >= moderateScoreThreshold;
   });
 
   const selected = strict.length > 0 ? strict : moderate.length > 0 ? moderate : sorted.slice(0, 1);
@@ -666,8 +721,15 @@ function curatedTermsFromScenario(scenario) {
   if (blood) {
     push("blood sample Charter section 8", "seizure blood sample warrantless");
   }
-  if (/\bcharter\b/.test(s) && (searchSeizure || /\bsearch\b/.test(s))) {
-    push("Charter section 8 search seizure");
+  if (searchSeizure || /\bsearch\b/.test(s) || /\bwarrant\w*\b/.test(s) || /\bprivacy\b/.test(s)) {
+    push(
+      "Charter section 8 search seizure",
+      "unreasonable search warrant",
+      "R v Grant",
+      "Hunter v Southam Inc",
+      "R v Marakah",
+      "R v Vu"
+    );
   }
 
   // ── Assault ─────────────────────────────────────────────────────────────────
