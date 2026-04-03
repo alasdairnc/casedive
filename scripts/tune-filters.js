@@ -20,6 +20,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_DIR = path.join(__dirname, "..");
 
 let cachedCanliiKey = null;
+const retrievalCache = new Map();
 
 function readEnvFileKey(filePath, keyName) {
   if (!fs.existsSync(filePath)) return "";
@@ -136,15 +137,25 @@ function buildLandmarkMatches(scenario, limit = 3) {
 
 async function realRetrievalFn(scenario, testCase = {}) {
   const apiKey = getCanliiApiKey();
+  const cacheKey = JSON.stringify({
+    scenario,
+    maxResults: testCase?.maxResults || 3,
+    filters: testCase?.filters || {},
+  });
+  if (retrievalCache.has(cacheKey)) {
+    return retrievalCache.get(cacheKey);
+  }
   const landmarkMatches = buildLandmarkMatches(scenario, testCase.maxResults || 3);
   const aiCaseLaw = [];
 
   if (!apiKey) {
-    return {
+    const skipped = {
       cases: [],
       skip: true,
       skipReason: "missing_canlii_api_key",
     };
+    retrievalCache.set(cacheKey, skipped);
+    return skipped;
   }
 
   const { cases } = await retrieveVerifiedCaseLaw({
@@ -157,7 +168,64 @@ async function realRetrievalFn(scenario, testCase = {}) {
     apiKey,
     maxResults: testCase.maxResults || 3,
   });
-  return Array.isArray(cases) ? { cases } : { cases: [] };
+  const result = Array.isArray(cases) ? { cases } : { cases: [] };
+  retrievalCache.set(cacheKey, result);
+  return result;
+}
+
+async function calibrateRelevanceThresholds({ TEST_SCENARIOS, runTestSuite }) {
+  const baselineEnv = {
+    FILTER_RELEVANCE_MIN_SCORE: process.env.FILTER_RELEVANCE_MIN_SCORE,
+    FILTER_RELEVANCE_MIN_TOKEN_OVERLAP: process.env.FILTER_RELEVANCE_MIN_TOKEN_OVERLAP,
+    FILTER_RELEVANCE_MIN_CONCEPT_OVERLAP: process.env.FILTER_RELEVANCE_MIN_CONCEPT_OVERLAP,
+  };
+
+  const grid = [];
+  const minScores = [5, 4];
+  const minTokenOverlaps = [2, 1];
+  const minConceptOverlaps = [2, 1];
+
+  for (const minScore of minScores) {
+    for (const minTokenOverlap of minTokenOverlaps) {
+      for (const minConceptOverlap of minConceptOverlaps) {
+        process.env.FILTER_RELEVANCE_MIN_SCORE = String(minScore);
+        process.env.FILTER_RELEVANCE_MIN_TOKEN_OVERLAP = String(minTokenOverlap);
+        process.env.FILTER_RELEVANCE_MIN_CONCEPT_OVERLAP = String(minConceptOverlap);
+        const result = await runTestSuite(TEST_SCENARIOS, realRetrievalFn);
+        grid.push({
+          minScore,
+          minTokenOverlap,
+          minConceptOverlap,
+          passRate: result.pass_rate,
+          passed: result.passed,
+          evaluated: result.evaluated_tests,
+          avgPrecision: result.avg_precision_global,
+          avgRelevance: result.avg_relevance_global,
+        });
+      }
+    }
+  }
+
+  process.env.FILTER_RELEVANCE_MIN_SCORE = baselineEnv.FILTER_RELEVANCE_MIN_SCORE;
+  process.env.FILTER_RELEVANCE_MIN_TOKEN_OVERLAP = baselineEnv.FILTER_RELEVANCE_MIN_TOKEN_OVERLAP;
+  process.env.FILTER_RELEVANCE_MIN_CONCEPT_OVERLAP = baselineEnv.FILTER_RELEVANCE_MIN_CONCEPT_OVERLAP;
+
+  const ranked = [...grid].sort((a, b) => {
+    if (b.passRate !== a.passRate) return b.passRate - a.passRate;
+    if (b.avgPrecision !== a.avgPrecision) return b.avgPrecision - a.avgPrecision;
+    return b.avgRelevance - a.avgRelevance;
+  });
+
+  const best = ranked[0] || null;
+  const calibration = {
+    generatedAt: new Date().toISOString(),
+    best,
+    topCandidates: ranked.slice(0, 5),
+    totalCandidates: ranked.length,
+  };
+  const outPath = path.join(BASE_DIR, ".filter-calibration.json");
+  fs.writeFileSync(outPath, JSON.stringify(calibration, null, 2), "utf-8");
+  return { best, outPath, ranked };
 }
 
 // Load and prepare scoring utilities
@@ -404,6 +472,7 @@ async function main() {
   const doCompare = args.includes("--compare");
   const doReport = args.includes("--report") || !args.length;
   const requireKey = args.includes("--require-key");
+  const doCalibrate = args.includes("--calibrate");
 
   console.log("CaseDive Filter Tuning System\n");
 
@@ -461,6 +530,16 @@ async function main() {
 
     if (doReport) {
       generateHtmlReport(testResults, suggestions, "filter-quality-report.html", modeLabel);
+    }
+
+    if (doCalibrate) {
+      console.log("\nRunning threshold calibration grid...");
+      const calibration = await calibrateRelevanceThresholds({ TEST_SCENARIOS, runTestSuite });
+      if (calibration?.best) {
+        console.log(`Best calibration: pass ${calibration.best.passRate.toFixed(1)}% (${calibration.best.passed}/${calibration.best.evaluated}), precision ${calibration.best.avgPrecision.toFixed(2)}, relevance ${calibration.best.avgRelevance.toFixed(2)}`);
+        console.log(`Recommended env: FILTER_RELEVANCE_MIN_SCORE=${calibration.best.minScore} FILTER_RELEVANCE_MIN_TOKEN_OVERLAP=${calibration.best.minTokenOverlap} FILTER_RELEVANCE_MIN_CONCEPT_OVERLAP=${calibration.best.minConceptOverlap}`);
+        console.log(`Calibration written to: ${calibration.outPath}`);
+      }
     }
   } catch (error) {
     console.error("Error:", error.message);

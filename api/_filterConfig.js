@@ -97,6 +97,93 @@ export const FILTER_CONFIG = {
   
   // ── Max results to return ────────────────────────────────────────────────
   max_results_default: 3,
+
+  // ── Relevance scoring defaults (override via env for calibration) ───────
+  relevance_min_score: 5,
+  relevance_min_token_overlap: 2,
+  relevance_min_concept_overlap: 1,
+};
+
+export const FALLBACK_ISSUE_SIGNAL_RULES = [
+  {
+    tokens: ["drug", "cocaine", "fentanyl", "trafficking", "possession", "narcotic"],
+    signals: ["cdsa", "s. 5", "trafficking", "possession", "intent"],
+  },
+  {
+    tokens: ["charter", "arrest", "arrested", "detained", "detention", "warrant", "police"],
+    signals: ["charter", "s. 9", "detention", "arbitrary", "reasonable"],
+  },
+  {
+    tokens: ["lawyer", "counsel"],
+    signals: ["s. 10", "s. 10(b)", "right to counsel", "informational", "detention", "waiver", "woods"],
+  },
+  {
+    tokens: ["search", "searched", "searching", "seizure", "seized", "warrant", "warrantless", "privacy", "phone", "device", "records", "text", "computer", "digital"],
+    signals: ["charter", "s. 8", "search", "seizure", "warrant", "privacy"],
+  },
+  {
+    tokens: ["weapon", "knife", "stabbed", "stab", "gun", "firearm"],
+    signals: ["weapon", "s. 267", "intent", "dangerous", "self-defence"],
+  },
+  {
+    tokens: ["spouse", "domestic", "partner", "family"],
+    signals: ["domestic", "intimate partner", "assault", "s. 266", "s. 267"],
+  },
+  {
+    tokens: ["threat", "threats", "uttering", "harass", "harassment", "stalk", "stalking", "message", "messages", "text"],
+    signals: ["uttering threats", "criminal harassment", "s. 264", "s. 264.1", "repeated communication"],
+  },
+  {
+    tokens: ["dangerous", "careless", "speed", "racing", "stunt", "driving", "drive"],
+    signals: ["dangerous driving", "s. 320.13", "criminal negligence", "motor vehicle"],
+  },
+  {
+    tokens: ["peace", "bond", "recognizance", "810"],
+    signals: ["peace bond", "recognizance", "s. 810"],
+  },
+  {
+    tokens: ["break", "enter", "broke", "burglar", "house", "dwelling", "home"],
+    signals: ["break and enter", "s. 348", "dwelling house", "intent"],
+  },
+  {
+    tokens: ["robbery", "robbed", "mugged", "mugging", "theft", "stolen", "steal", "shoplift", "shoplifting"],
+    signals: ["robbery", "theft", "s. 343", "s. 322", "dishonesty", "without consent", "force", "threat", "stolen"],
+  },
+];
+
+export const ISSUE_DOMAIN_RULES = {
+  charter_detention: {
+    requiredConceptBuckets: [["detention", "s9"]],
+    discouragedConcepts: ["impaired"],
+    allowDiscouragedWhenScenarioHas: ["impaired"],
+  },
+  impaired_driving: {
+    requiredConceptBuckets: [["impaired", "trafficStop", "detention", "s9"]],
+    discouragedConcepts: ["counsel", "s10b"],
+    allowDiscouragedWhenScenarioHas: ["counsel", "s10b"],
+    allowDiscouragedWhenCandidateHasAny: ["detention", "s9", "search", "s8"],
+  },
+  charter_counsel: {
+    requiredConceptBuckets: [["counsel", "s10b"]],
+  },
+  charter_search_seizure: {
+    requiredConceptBuckets: [["search", "s8"]],
+  },
+  robbery: {
+    requiredConceptBuckets: [["robbery", "theft"]],
+  },
+  theft: {
+    requiredConceptBuckets: [["theft", "robbery"]],
+  },
+  drug_trafficking: {
+    requiredConceptBuckets: [["drug"]],
+  },
+  sexual_assault: {
+    requiredConceptBuckets: [["sexualAssault"]],
+  },
+  trial_delay: {
+    requiredConceptBuckets: [["trialDelay"]],
+  },
 };
 
 /**

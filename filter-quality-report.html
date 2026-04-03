@@ -31,25 +31,25 @@
 <body>
   <div class="header">
     <h1>CaseDive Filter Quality Report</h1>
-    <div class="timestamp">Generated 2026-04-03T03:42:12.097Z</div>
+    <div class="timestamp">Generated 2026-04-03T03:52:00.041Z</div>
     <div class="timestamp">Mode: keyed-canlii</div>
   </div>
 
   <div class="metrics">
     <div class="metric">
-      <div class="metric-value">85.7%</div>
+      <div class="metric-value">100.0%</div>
       <div class="metric-label">Pass Rate</div>
     </div>
     <div class="metric">
-      <div class="metric-value">12/14</div>
+      <div class="metric-value">14/14</div>
       <div class="metric-label">Tests Passed</div>
     </div>
     <div class="metric">
-      <div class="metric-value">6.40</div>
+      <div class="metric-value">7.14</div>
       <div class="metric-label">Avg Relevance (0-10)</div>
     </div>
     <div class="metric">
-      <div class="metric-value">0.86</div>
+      <div class="metric-value">0.93</div>
       <div class="metric-label">Avg Precision</div>
     </div>
   </div>
@@ -67,18 +67,18 @@
     </thead>
     <tbody>
       
-    <tr class="fail">
+    <tr class="pass">
       <td>I was pulled over at a RIDE checkpoint and asked to provide a breath sample. Wha</td>
-      <td>0.50</td>
-      <td>5.00</td>
+      <td>1.00</td>
+      <td>7.00</td>
       <td>2</td>
-      <td>✗ FAIL</td>
+      <td>✓ PASS</td>
     </tr>
   
     <tr class="pass">
       <td>Drunk driving conviction. I refused the breathalyzer. What defences exist?</td>
       <td>1.00</td>
-      <td>6.00</td>
+      <td>7.00</td>
       <td>2</td>
       <td>✓ PASS</td>
     </tr>
@@ -94,7 +94,7 @@
     <tr class="pass">
       <td>I was in a fight at a bar and broke someone's arm. Self-defence is my claim.</td>
       <td>1.00</td>
-      <td>8.00</td>
+      <td>9.00</td>
       <td>2</td>
       <td>✓ PASS</td>
     </tr>
@@ -110,7 +110,7 @@
     <tr class="pass">
       <td>I'm accused of sexual assault. The complainant says consent wasn't given. What's</td>
       <td>1.00</td>
-      <td>9.67</td>
+      <td>10.00</td>
       <td>3</td>
       <td>✓ PASS</td>
     </tr>
@@ -118,7 +118,7 @@
     <tr class="pass">
       <td>Police found 50 grams of cocaine in my car. They're charging me with trafficking</td>
       <td>1.00</td>
-      <td>6.00</td>
+      <td>7.00</td>
       <td>1</td>
       <td>✓ PASS</td>
     </tr>
@@ -126,17 +126,17 @@
     <tr class="pass">
       <td>Found with fentanyl pills. Police say it's for trafficking. What's the legal sta</td>
       <td>1.00</td>
-      <td>6.00</td>
+      <td>7.00</td>
       <td>1</td>
       <td>✓ PASS</td>
     </tr>
   
-    <tr class="fail">
+    <tr class="pass">
       <td>Police arrested me without a warrant and without explaining why. Is this a Chart</td>
-      <td>0.50</td>
-      <td>7.50</td>
-      <td>2</td>
-      <td>✗ FAIL</td>
+      <td>1.00</td>
+      <td>10.00</td>
+      <td>1</td>
+      <td>✓ PASS</td>
     </tr>
   
     <tr class="pass">
@@ -150,7 +150,7 @@
     <tr class="pass">
       <td>I was involved in a store robbery. I didn't use a weapon, but I was there and th</td>
       <td>1.00</td>
-      <td>7.50</td>
+      <td>9.00</td>
       <td>2</td>
       <td>✓ PASS</td>
     </tr>
@@ -183,19 +183,7 @@
   </table>
 
   <h2 style="margin-top: 30px;">Improvement Suggestions</h2>
-  
-    <div class="suggestion high">
-      <h4>HIGH: 2 test scenarios failing</h4>
-      <p><strong>Details:</strong> I was pulled over at a RIDE checkpoint and asked to provide a breath sample. Wha<br>Police arrested me without a warrant and without explaining why. Is this a Chart</p>
-      <p><strong>Recommendation:</strong> Review issue detection patterns or ranking thresholds</p>
-    </div>
-  
-    <div class="suggestion high">
-      <h4>HIGH: Low precision across multiple scenarios</h4>
-      <p><strong>Details:</strong> 3 cases with precision < 0.6</p>
-      <p><strong>Recommendation:</strong> Increase min_token_overlap threshold or expand stop_words list to filter noise</p>
-    </div>
-  
+  <p style="color: #666;">✓ All tests passing – no improvements needed at this time.</p>
 
   <div style="margin-top: 30px; padding: 15px; background: #f0f0f0; border-radius: 8px; font-size: 12px; color: #666;">
     This report evaluates filter effectiveness across 14 test scenarios.

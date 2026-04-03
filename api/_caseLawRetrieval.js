@@ -18,6 +18,13 @@ import {
   normalizeForMatch,
   tokenizeWithExpansion,
 } from "./_textUtils.js";
+import { FALLBACK_ISSUE_SIGNAL_RULES, ISSUE_DOMAIN_RULES } from "./_filterConfig.js";
+import {
+  extractLegalConcepts,
+  countConceptOverlap,
+  hasAnyConcept,
+  missingRequiredConceptBuckets,
+} from "./_legalConcepts.js";
 
 // SECURITY TESTING: Set CANLII_API_BASE_URL env var to redirect to a mock server.
 // Also update the matching constant in src/lib/canlii.js (where HTTP calls originate).
@@ -174,44 +181,13 @@ function pickHelpfulScenarioTerms(scenarioTokens, limit = 2) {
 function inferFallbackIssueSignals(scenarioTokens) {
   const tokens = new Set(Array.from(scenarioTokens || []).map((t) => String(t || "").toLowerCase()));
   const out = [];
-  const add = (...items) => {
-    for (const item of items) out.push(item);
-  };
+  const hasAny = (arr = []) => arr.some((x) => tokens.has(x));
 
-  const hasAny = (arr) => arr.some((x) => tokens.has(x));
-
-  if (hasAny(["drug", "cocaine", "fentanyl", "trafficking", "possession", "narcotic"])) {
-    add("cdsa", "s. 5", "trafficking", "possession", "intent");
-  }
-  if (hasAny(["charter", "arrest", "arrested", "detained", "detention", "warrant", "police"])) {
-    add("charter", "s. 9", "detention", "arbitrary", "reasonable");
-  }
-  if (hasAny(["lawyer", "counsel"])) {
-    add("s. 10", "s. 10(b)", "right to counsel", "informational", "detention", "waiver", "woods");
-  }
-  if (hasAny(["search", "searched", "searching", "seizure", "seized", "warrant", "warrantless", "privacy", "phone", "device", "records", "text", "computer", "digital"])) {
-    add("charter", "s. 8", "search", "seizure", "warrant", "privacy");
-  }
-  if (hasAny(["weapon", "knife", "stabbed", "stab", "gun", "firearm"])) {
-    add("weapon", "s. 267", "intent", "dangerous", "self-defence");
-  }
-  if (hasAny(["spouse", "domestic", "partner", "family"])) {
-    add("domestic", "intimate partner", "assault", "s. 266", "s. 267");
-  }
-  if (hasAny(["threat", "threats", "uttering", "harass", "harassment", "stalk", "stalking", "message", "messages", "text"])) {
-    add("uttering threats", "criminal harassment", "s. 264", "s. 264.1", "repeated communication");
-  }
-  if (hasAny(["dangerous", "careless", "speed", "racing", "stunt", "driving", "drive"])) {
-    add("dangerous driving", "s. 320.13", "criminal negligence", "motor vehicle");
-  }
-  if (hasAny(["peace", "bond", "recognizance", "810"])) {
-    add("peace bond", "recognizance", "s. 810");
-  }
-  if (hasAny(["break", "enter", "broke", "burglar", "house", "dwelling", "home"])) {
-    add("break and enter", "s. 348", "dwelling house", "intent");
-  }
-  if (hasAny(["robbery", "robbed", "mugged", "mugging", "theft", "stolen", "steal", "shoplift", "shoplifting"])) {
-    add("robbery", "theft", "s. 343", "s. 322", "dishonesty", "without consent", "force", "threat", "stolen");
+  for (const rule of FALLBACK_ISSUE_SIGNAL_RULES) {
+    if (!hasAny(rule?.tokens)) continue;
+    for (const signal of rule?.signals || []) {
+      out.push(signal);
+    }
   }
 
   return dedupeStrings(out);
@@ -234,9 +210,8 @@ function candidateDbId(candidate) {
 }
 
 function scoreCandidateForScenario({ candidate, scenarioTokens, issue, filters = {} }) {
-  const text = normalizeForMatch(
-    `${candidate?.title || ""} ${candidate?.summary || ""} ${candidate?.matchedTerm || ""}`
-  );
+  const rawCandidateText = `${candidate?.title || ""} ${candidate?.summary || ""} ${candidate?.matchedTerm || ""}`;
+  const text = normalizeForMatch(rawCandidateText);
   let overlap = 0;
   const overlapTokens = [];
   for (const token of scenarioTokens) {
@@ -270,6 +245,7 @@ function scoreCandidateForScenario({ candidate, scenarioTokens, issue, filters =
   const scenarioHasImpairedSignal = /\b(impaired|drunk|breath|breathalyzer|ride|checkstop|roadside|over\s*80|refus\w*)\b/.test(
     scenarioTokenText
   );
+  const scenarioHasCounselSignal = /\b(counsel|lawyer|10\(b\)|10\s*b|right\s+to\s+counsel)\b/.test(scenarioTokenText);
   if (issuePrimary !== "general_criminal") {
     if (issuePrimary === "charter_detention") {
       if (/\b(detention|detained|arbitrary|grant|s\.?\s*9|section\s*9)\b/.test(text)) score += 6;
@@ -296,6 +272,25 @@ function scoreCandidateForScenario({ candidate, scenarioTokens, issue, filters =
       if (/\b(theft|stolen|steal|shoplift|s\.?\s*322|dishonesty|without\s+consent)\b/.test(text)) score += 5;
       else score -= 4;
     }
+    if (issuePrimary === "impaired_driving" && !scenarioHasCounselSignal) {
+      if (/\b(counsel|lawyer|10\(b\)|10\s*b|informational\s+duty)\b/.test(text) && !/\b(reasonable\s+suspicion|s\.?\s*9|grant|checkpoint|checkstop)\b/.test(text)) {
+        score -= 5;
+      }
+    }
+  }
+
+  const scenarioConcepts = extractLegalConcepts(scenarioTokenText);
+  const candidateConcepts = extractLegalConcepts(rawCandidateText);
+  const conceptOverlap = countConceptOverlap(scenarioConcepts, candidateConcepts);
+  if (conceptOverlap >= 3) {
+    score += 6;
+    reasons.push(`concept_overlap:${conceptOverlap}`);
+  } else if (conceptOverlap >= 2) {
+    score += 4;
+    reasons.push(`concept_overlap:${conceptOverlap}`);
+  } else if (conceptOverlap >= 1) {
+    score += 1;
+    reasons.push("concept_overlap:1");
   }
 
   const issueSignals =
@@ -679,6 +674,7 @@ function issueExpansionHints(issuePrimary) {
 function filterBySemanticRelevance(scenario, candidates) {
   const issue = detectCoreIssue(scenario);
   const scenarioTokens = tokenizeScenario(scenario);
+  const scenarioConcepts = extractLegalConcepts(scenario);
   const scenarioDelaySignal = /\b(delay|delayed|adjourned|adjournment|postponed|backlog|waited|11\(b\)|reasonable\s+time|crown\s+delay)\b/i.test(
     String(scenario || "")
   );
@@ -704,6 +700,49 @@ function filterBySemanticRelevance(scenario, candidates) {
 
   const issueStrictFiltered = compatibilityFiltered.filter((candidate) => {
     const summary = normalizeForMatch(`${candidate?.title || ""} ${candidate?.summary || ""}`);
+    const scenarioNorm = normalizeForMatch(scenario || "");
+    const candidateConcepts = extractLegalConcepts(summary);
+    const scenarioHasImpairedSignal = /\b(impaired|drunk|breath|breathalyzer|ride|checkstop|roadside|over\s*80|refus\w*)\b/.test(scenarioNorm);
+    const scenarioHasCounselSignal = /\b(counsel|lawyer|10\(b\)|10\s*b|right\s+to\s+counsel)\b/.test(scenarioNorm);
+
+    const domainRule = ISSUE_DOMAIN_RULES[issue.primary];
+    if (domainRule) {
+      if (missingRequiredConceptBuckets(candidateConcepts, domainRule.requiredConceptBuckets || [])) {
+        return false;
+      }
+
+      if (Array.isArray(domainRule.discouragedConcepts) && domainRule.discouragedConcepts.length > 0) {
+        const candidateHasDiscouraged = hasAnyConcept(candidateConcepts, domainRule.discouragedConcepts);
+        if (candidateHasDiscouraged) {
+          const scenarioAllows = hasAnyConcept(
+            scenarioConcepts,
+            domainRule.allowDiscouragedWhenScenarioHas || []
+          );
+          const candidateHasAllowingConcept = hasAnyConcept(
+            candidateConcepts,
+            domainRule.allowDiscouragedWhenCandidateHasAny || []
+          );
+          if (!scenarioAllows && !candidateHasAllowingConcept) return false;
+        }
+      }
+    }
+
+    if (issue.primary === "charter_detention") {
+      const hasDetentionCore = /\b(detention|detained|arbitrary|grant|s\.?\s*9|section\s*9|arrest\w*)\b/.test(summary);
+      const hasImpairedOnly = /\b(impaired|breath|breathalyzer|drunk\s*driving|over\s*80|checkstop|roadside)\b/.test(summary);
+      if (!hasDetentionCore) return false;
+      if (!scenarioHasImpairedSignal && hasImpairedOnly && !/\b(s\.?\s*9|arbitrary|grant)\b/.test(summary)) return false;
+    }
+
+    if (issue.primary === "impaired_driving") {
+      const hasImpairedCore = /\b(impaired|breath|breathalyzer|drunk\s*driving|over\s*80|checkstop|roadside|refus\w*)\b/.test(summary);
+      const hasTrafficDetentionCore = /\b(detention|detained|s\.?\s*9|grant|reasonable\s+suspicion|motor\s+vehicle\s+stop|checkpoint|checkstop)\b/.test(summary);
+      const hasCounselCore = /\b(counsel|lawyer|10\(b\)|10\s*b|informational\s+duty)\b/.test(summary);
+      const hasDetentionOrSearchCore = /\b(detention|detained|s\.?\s*9|grant|search|seizure|warrant|reasonable)\b/.test(summary);
+      if (!hasImpairedCore && !hasTrafficDetentionCore) return false;
+      if (!scenarioHasCounselSignal && hasCounselCore && !hasDetentionOrSearchCore) return false;
+    }
+
     if (issue.primary === "charter_counsel") {
       return /\b(counsel|lawyer|10\(b\)|10\s*b|woods|suberu)\b/.test(summary);
     }

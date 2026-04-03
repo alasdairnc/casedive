@@ -5,6 +5,14 @@
  */
 
 import { FILTER_CONFIG } from "./_filterConfig.js";
+import { extractLegalConcepts, countConceptOverlap } from "./_legalConcepts.js";
+
+function getNumericEnv(name, fallback) {
+  const raw = process.env[name];
+  if (raw === undefined || raw === null || raw === "") return fallback;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
 
 /**
  * Score a single result against a testing dataset.
@@ -30,6 +38,10 @@ export function scoreResultRelevance(scenario, caseResult, expectedKeywords = []
     if (caseText.includes(token)) tokenOverlap++;
   }
 
+  const scenarioConcepts = extractLegalConcepts(scenario || "");
+  const caseConcepts = extractLegalConcepts(caseText);
+  const conceptOverlap = countConceptOverlap(scenarioConcepts, caseConcepts);
+
   // Check expected keyword coverage
   let keywordMatch = 0;
   for (const keyword of expectedKeywords) {
@@ -44,6 +56,11 @@ export function scoreResultRelevance(scenario, caseResult, expectedKeywords = []
   if (tokenOverlap >= 5) score += 6;
   else if (tokenOverlap >= 3) score += 4;
   else if (tokenOverlap >= 1) score += 1;
+
+  // Concept overlap adds semantic resilience for paraphrases and legal synonyms.
+  if (conceptOverlap >= 4) score += 4;
+  else if (conceptOverlap >= 2) score += 2;
+  else if (conceptOverlap >= 1) score += 1;
 
   // Expected keyword coverage
   const keywordRatio = expectedKeywords.length > 0 ? keywordMatch / expectedKeywords.length : 1;
@@ -61,13 +78,26 @@ export function scoreResultRelevance(scenario, caseResult, expectedKeywords = []
     reason = "landmark_match";
   }
 
-  const relevant = score >= 5 && tokenOverlap >= 2;
+  const minScore = getNumericEnv("FILTER_RELEVANCE_MIN_SCORE", FILTER_CONFIG.relevance_min_score ?? 5);
+  const minTokenOverlap = getNumericEnv(
+    "FILTER_RELEVANCE_MIN_TOKEN_OVERLAP",
+    FILTER_CONFIG.relevance_min_token_overlap ?? 2
+  );
+  const minConceptOverlap = getNumericEnv(
+    "FILTER_RELEVANCE_MIN_CONCEPT_OVERLAP",
+    FILTER_CONFIG.relevance_min_concept_overlap ?? 2
+  );
+
+  const relevant =
+    score >= minScore &&
+    (tokenOverlap >= minTokenOverlap || conceptOverlap >= minConceptOverlap);
 
   return {
     relevant,
     score: Math.min(10, score),
     reason,
     tokenOverlap,
+    conceptOverlap,
     keywordMatch,
   };
 }
