@@ -6,6 +6,7 @@ const mockRateLimitHeaders = vi.fn(() => ({ "X-RateLimit-Limit": "60" }));
 const mockApplyCorsHeaders = vi.fn();
 const mockGetRetrievalHealthSnapshot = vi.fn();
 const mockGetTrendlineSnapshots = vi.fn();
+const mockGetFailureScenarioPage = vi.fn();
 const mockEvaluateRetrievalAlerts = vi.fn(() => []);
 
 vi.mock("../../api/_rateLimit.js", () => ({
@@ -21,6 +22,7 @@ vi.mock("../../api/_cors.js", () => ({
 vi.mock("../../api/_retrievalHealthStore.js", () => ({
   getRetrievalHealthSnapshot: mockGetRetrievalHealthSnapshot,
   getTrendlineSnapshots: mockGetTrendlineSnapshots,
+  getFailureScenarioPage: mockGetFailureScenarioPage,
 }));
 
 vi.mock("../../api/_retrievalThresholds.js", () => ({
@@ -74,6 +76,8 @@ describe("retrieval-health handler", () => {
     mockGetRetrievalHealthSnapshot.mockResolvedValue({
       generatedAt: new Date(0).toISOString(),
       retentionMs: 86_400_000,
+      historyMode: "all_time_capped",
+      historyMaxEvents: 10_000,
       totalStoredEvents: 10,
       windows: { fiveMinutes: {}, oneHour: {} },
       recentFailures: [
@@ -86,6 +90,22 @@ describe("retrieval-health handler", () => {
       ],
     });
     mockGetTrendlineSnapshots.mockResolvedValue([{ ts: 1, errorRate: null, noVerifiedRate: null, avgLatencyMs: null }]);
+    mockGetFailureScenarioPage.mockResolvedValue({
+      items: [
+        {
+          ts: new Date(1).toISOString(),
+          endpoint: "analyze",
+          reason: "no_verified",
+          scenarioSnippet: "sample scenario",
+        },
+      ],
+      hasMore: false,
+      nextOffset: null,
+      nextBeforeTs: null,
+      totalFailures: 1,
+      limit: 20,
+      offset: 0,
+    });
     process.env.RETRIEVAL_HEALTH_TOKEN = "test-token";
   });
 
@@ -163,6 +183,8 @@ describe("retrieval-health handler", () => {
     expect(res.body).toMatchObject({
       generatedAt: new Date(0).toISOString(),
       retentionMs: 86_400_000,
+      historyMode: "all_time_capped",
+      historyMaxEvents: 10_000,
       totalStoredEvents: 10,
       recentFailures: [
         {
@@ -172,6 +194,22 @@ describe("retrieval-health handler", () => {
           scenarioSnippet: "sample scenario",
         },
       ],
+      failureArchive: {
+        items: [
+          {
+            ts: new Date(1).toISOString(),
+            endpoint: "analyze",
+            reason: "no_verified",
+            scenarioSnippet: "sample scenario",
+          },
+        ],
+        hasMore: false,
+        nextOffset: null,
+        nextBeforeTs: null,
+        totalFailures: 1,
+        limit: 20,
+        offset: 0,
+      },
       trendline: [{ ts: 1, errorRate: null, noVerifiedRate: null, avgLatencyMs: null }],
       alerts: [{ code: "high_error_rate" }],
       thresholds: {

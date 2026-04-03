@@ -67,28 +67,76 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [copiedFailureKey, setCopiedFailureKey] = useState("");
   const [issueSortMode, setIssueSortMode] = useState("risk");
+  const [failureArchive, setFailureArchive] = useState([]);
+  const [failureArchiveOffset, setFailureArchiveOffset] = useState(0);
+  const [failureArchiveHasMore, setFailureArchiveHasMore] = useState(false);
+  const [loadingMoreFailures, setLoadingMoreFailures] = useState(false);
+
+  const authHeaders = useCallback(() => {
+    const headers = {};
+    if (token.trim()) {
+      headers.Authorization = `Bearer ${token.trim()}`;
+    }
+    return headers;
+  }, [token]);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const headers = {};
-      if (token.trim()) {
-        headers.Authorization = `Bearer ${token.trim()}`;
-      }
-      const res = await fetch("/api/retrieval-health", { headers });
+      const res = await fetch("/api/retrieval-health?failureLimit=20", { headers: authHeaders() });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(body.error || `HTTP ${res.status}`);
       }
       setData(body);
+      const initialArchive = Array.isArray(body?.failureArchive?.items)
+        ? body.failureArchive.items
+        : Array.isArray(body?.recentFailures)
+        ? body.recentFailures
+        : [];
+      setFailureArchive(initialArchive);
+      setFailureArchiveOffset(
+        typeof body?.failureArchive?.nextOffset === "number" ? body.failureArchive.nextOffset : initialArchive.length
+      );
+      setFailureArchiveHasMore(body?.failureArchive?.hasMore === true);
     } catch (e) {
       setData(null);
       setError(e.message || "Request failed");
+      setFailureArchive([]);
+      setFailureArchiveOffset(0);
+      setFailureArchiveHasMore(false);
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [authHeaders]);
+
+  const loadMoreFailures = useCallback(async () => {
+    if (!failureArchiveHasMore || !Number.isFinite(failureArchiveOffset)) return;
+    setLoadingMoreFailures(true);
+    try {
+      const res = await fetch(
+        `/api/retrieval-health?failureLimit=20&failuresOffset=${Math.floor(failureArchiveOffset)}`,
+        { headers: authHeaders() }
+      );
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(body.error || `HTTP ${res.status}`);
+      }
+      const items = Array.isArray(body?.failureArchive?.items) ? body.failureArchive.items : [];
+      setFailureArchive((prev) => [...prev, ...items]);
+      setFailureArchiveOffset(
+        typeof body?.failureArchive?.nextOffset === "number"
+          ? body.failureArchive.nextOffset
+          : failureArchiveOffset + items.length
+      );
+      setFailureArchiveHasMore(body?.failureArchive?.hasMore === true);
+    } catch (e) {
+      setError(e.message || "Failed to load older failures");
+    } finally {
+      setLoadingMoreFailures(false);
+    }
+  }, [authHeaders, failureArchiveHasMore, failureArchiveOffset]);
 
   useEffect(() => {
     load();
@@ -122,7 +170,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const errorBadge = severityForMetric(oneHour?.rates?.errorRate, thresholds?.errorRate1h, "above_is_bad");
   const noVerifiedBadge = severityForMetric(oneHour?.rates?.noVerifiedRate, thresholds?.noVerifiedRate1h, "above_is_bad");
   const p95Badge = severityForMetric(oneHour?.latencyMs?.p95, thresholds?.p95LatencyMs1h, "above_is_bad");
-  const recentFailures = Array.isArray(data?.recentFailures) ? data.recentFailures : [];
+  const recentFailures = failureArchive;
   const improvements = Array.isArray(data?.improvements) ? data.improvements : [];
   const oneHourChecks = [
     {
@@ -182,6 +230,10 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             a.id.startsWith("retrieval_issue_error_rate_1h_"))
       )
     : [];
+  const storedEventsHint =
+    data?.historyMode === "all_time_capped"
+      ? `All-time history (capped at ${num(data?.historyMaxEvents)} events)`
+      : "2h rolling retention (memory fallback)";
 
   const copyFixPrompt = async (sample, index) => {
     const prompt = buildAgentFixPrompt(sample);
@@ -320,7 +372,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
 
         {data && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 20 }}>
-            <MetricCard label="Stored Events" value={num(data.totalStoredEvents)} hint="2h rolling retention" t={t} />
+            <MetricCard label="Stored Events" value={num(data.totalStoredEvents)} hint={storedEventsHint} t={t} />
             <MetricCard label="5m Operational" value={num(fiveMin?.samples?.operational)} hint="Requests eligible for quality checks" t={t} />
             <MetricCard label="1h Error Rate" value={pct(oneHour?.rates?.errorRate)} hint="Operational retrieval failures" badge={errorBadge} t={t} />
             <MetricCard label="1h No-Verified" value={pct(oneHour?.rates?.noVerifiedRate)} hint="Quality requests with 0 verified" badge={noVerifiedBadge} t={t} />
@@ -626,6 +678,35 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                       </div>
                     );
                   })}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                    <span style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textTertiary }}>
+                      Showing {num(recentFailures.length)} failed scenarios
+                    </span>
+                    {failureArchiveHasMore ? (
+                      <button
+                        type="button"
+                        onClick={loadMoreFailures}
+                        disabled={loadingMoreFailures}
+                        style={{
+                          padding: "7px 11px",
+                          border: `1px solid ${t.borderLight}`,
+                          background: "transparent",
+                          color: loadingMoreFailures ? t.textTertiary : t.textSecondary,
+                          cursor: loadingMoreFailures ? "default" : "pointer",
+                          fontFamily: "'Helvetica Neue', sans-serif",
+                          fontSize: 10,
+                          letterSpacing: 1.2,
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {loadingMoreFailures ? "Loading..." : "Load older failures"}
+                      </button>
+                    ) : (
+                      <span style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textTertiary }}>
+                        End of failure history
+                      </span>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <p style={{ margin: 0, fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textTertiary }}>

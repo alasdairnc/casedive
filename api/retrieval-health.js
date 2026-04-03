@@ -2,7 +2,11 @@
 
 import { randomUUID } from "crypto";
 import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
-import { getRetrievalHealthSnapshot, getTrendlineSnapshots } from "./_retrievalHealthStore.js";
+import {
+  getFailureScenarioPage,
+  getRetrievalHealthSnapshot,
+  getTrendlineSnapshots,
+} from "./_retrievalHealthStore.js";
 import { evaluateRetrievalAlerts, RETRIEVAL_ALERT_THRESHOLDS } from "./_retrievalThresholds.js";
 import { buildRetrievalImprovements } from "./_retrievalImprovements.js";
 import { applyStandardApiHeaders, handleOptionsAndMethod } from "./_apiCommon.js";
@@ -46,9 +50,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const [snapshot, trendline] = await Promise.all([
+    const url = new URL(req.url || "http://localhost/api/retrieval-health", "http://localhost");
+    const failureLimit = Number(url.searchParams.get("failureLimit") || 20);
+    const failuresBeforeTs = Number(url.searchParams.get("failuresBeforeTs") || 0);
+    const failuresOffset = Number(url.searchParams.get("failuresOffset") || 0);
+
+    const [snapshot, trendline, failureArchive] = await Promise.all([
       getRetrievalHealthSnapshot(),
       getTrendlineSnapshots(),
+      getFailureScenarioPage({
+        limit: failureLimit,
+        beforeTs: failuresBeforeTs > 0 ? failuresBeforeTs : null,
+        offset: failuresOffset > 0 ? failuresOffset : 0,
+      }),
     ]);
     const alerts = evaluateRetrievalAlerts(snapshot);
     const improvements = buildRetrievalImprovements(snapshot?.recentFailures || []);
@@ -57,10 +71,13 @@ export default async function handler(req, res) {
       generatedAt: snapshot.generatedAt,
       snapshotSource: snapshot.snapshotSource,
       retentionMs: snapshot.retentionMs,
+      historyMode: snapshot.historyMode,
+      historyMaxEvents: snapshot.historyMaxEvents,
       totalStoredEvents: snapshot.totalStoredEvents,
       windows: snapshot.windows,
       alltime: snapshot.alltime,
       recentFailures: snapshot.recentFailures,
+      failureArchive,
       improvements,
       trendline,
       thresholds: RETRIEVAL_ALERT_THRESHOLDS,

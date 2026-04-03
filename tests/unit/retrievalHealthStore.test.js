@@ -101,4 +101,55 @@ describe("retrieval health store recent failures", () => {
       avgVerifiedPerRequest: 0,
     });
   });
+
+  it("returns paginated failure archive pages", async () => {
+    const { recordRetrievalMetricsEvent, getFailureScenarioPage } = await loadStore();
+    const now = Date.now();
+
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "no_verified",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 0,
+      verifiedCount: 0,
+      scenarioSnippet: "first scenario",
+    });
+
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "no_verified",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 0,
+      verifiedCount: 0,
+      scenarioSnippet: "second scenario",
+    });
+
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "retrieval_error",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 0,
+      verifiedCount: 0,
+      scenarioSnippet: "third scenario",
+    });
+
+    const firstPage = await getFailureScenarioPage({ nowMs: now + 60_000, limit: 2 });
+    expect(firstPage.items).toHaveLength(2);
+    expect(firstPage.hasMore).toBe(true);
+    expect(firstPage.nextOffset).toBe(2);
+    expect(firstPage.totalFailures).toBe(3);
+
+    const secondPage = await getFailureScenarioPage({
+      nowMs: now + 60_000,
+      limit: 2,
+      offset: firstPage.nextOffset,
+    });
+    expect(secondPage.items).toHaveLength(1);
+    expect(secondPage.hasMore).toBe(false);
+    expect(secondPage.nextOffset).toBe(null);
+    expect(secondPage.totalFailures).toBe(3);
+  });
 });

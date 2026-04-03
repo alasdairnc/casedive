@@ -9,8 +9,9 @@ const LAST_EVENT_KEY = "metrics:retrieval:last-event:v1";
 const EVENT_COUNT_KEY = "metrics:retrieval:event-count:v1";
 const ALLTIME_KEY = "metrics:retrieval:alltime:v1";
 const REDIS_TIMEOUT_MS = RETRIEVAL_HEALTH_STORE_REDIS_TIMEOUT_MS;
-const MAX_EVENTS = 2500;
-const MAX_RETENTION_MS = 2 * 60 * 60 * 1000;
+const MAX_MEMORY_EVENTS = 2500;
+const MAX_PERSISTED_EVENTS = 10_000;
+const MEMORY_RETENTION_MS = 2 * 60 * 60 * 1000;
 
 export const RETRIEVAL_WINDOWS = {
   "5m": 5 * 60 * 1000,
@@ -121,7 +122,7 @@ function buildStoredEvent(metricsPayload = {}) {
   });
 }
 
-function getRecentFailureScenarios(events = [], limit = 20) {
+function getFailureEvents(events = []) {
   if (!Array.isArray(events) || events.length === 0) return [];
 
   const explicitFailureReasons = new Set([
@@ -132,7 +133,7 @@ function getRecentFailureScenarios(events = [], limit = 20) {
     "unknown_cached",
   ]);
 
-  const failed = events.filter((event) => {
+  return events.filter((event) => {
     const isOperational =
       (event.source === "retrieval" || event.source === "cache") &&
       event.caseLawFilterEnabled &&
@@ -154,32 +155,68 @@ function getRecentFailureScenarios(events = [], limit = 20) {
     );
   });
 
-  return failed
+}
+
+function toFailureSample(event) {
+  return {
+    ts: new Date(event.ts).toISOString(),
+    endpoint: event.endpoint || "unknown",
+    reason: event.reason || "unknown",
+    retrievalError: Boolean(event.retrievalError),
+    finalCaseLawCount: toNonNegativeInt(event.finalCaseLawCount),
+    verifiedCount: toNonNegativeInt(event.verifiedCount),
+    fallbackPathUsed: event.fallbackPathUsed === true,
+    latencyMs: Number.isFinite(event.retrievalLatencyMs) ? event.retrievalLatencyMs : null,
+    semanticFilterDropCount: toNonNegativeInt(event.semanticFilterDropCount),
+    scenarioSnippet: event.scenarioSnippet || null,
+    errorMessage: event.errorMessage || null,
+  };
+}
+
+function clampFailurePageLimit(value, fallback = 20) {
+  const num = Number(value);
+  if (!Number.isFinite(num) || num <= 0) return fallback;
+  return Math.min(100, Math.floor(num));
+}
+
+function getFailureScenarioPageFromEvents(events = [], { beforeTs = null, offset = 0, limit = 20 } = {}) {
+  const safeLimit = clampFailurePageLimit(limit, 20);
+  const safeOffset = Math.max(0, Math.floor(Number(offset) || 0));
+  const beforeTsMs = Number(beforeTs);
+  const hasCursor = Number.isFinite(beforeTsMs) && beforeTsMs > 0;
+
+  const sortedFailures = getFailureEvents(events)
     .slice()
-    .sort((a, b) => b.ts - a.ts)
-    .slice(0, limit)
-    .map((event) => ({
-      ts: new Date(event.ts).toISOString(),
-      endpoint: event.endpoint || "unknown",
-      reason: event.reason || "unknown",
-      retrievalError: Boolean(event.retrievalError),
-      finalCaseLawCount: toNonNegativeInt(event.finalCaseLawCount),
-      verifiedCount: toNonNegativeInt(event.verifiedCount),
-      fallbackPathUsed: event.fallbackPathUsed === true,
-      latencyMs: Number.isFinite(event.retrievalLatencyMs) ? event.retrievalLatencyMs : null,
-      semanticFilterDropCount: toNonNegativeInt(event.semanticFilterDropCount),
-      scenarioSnippet: event.scenarioSnippet || null,
-      errorMessage: event.errorMessage || null,
-    }));
+    .sort((a, b) => b.ts - a.ts);
+
+  const filtered = hasCursor
+    ? sortedFailures.filter((event) => event.ts < beforeTsMs)
+    : sortedFailures;
+  const page = filtered.slice(safeOffset, safeOffset + safeLimit);
+  const nextOffset = safeOffset + page.length;
+
+  return {
+    items: page.map((event) => toFailureSample(event)),
+    hasMore: filtered.length > nextOffset,
+    nextOffset: filtered.length > nextOffset ? nextOffset : null,
+    nextBeforeTs: page.length > 0 ? Math.max(0, page[page.length - 1].ts - 1) : null,
+    totalFailures: sortedFailures.length,
+    limit: safeLimit,
+    offset: safeOffset,
+  };
+}
+
+function getRecentFailureScenarios(events = [], limit = 20) {
+  return getFailureScenarioPageFromEvents(events, { limit }).items;
 }
 
 function pruneMemory(nowMs = Date.now()) {
-  const cutoff = nowMs - MAX_RETENTION_MS;
+  const cutoff = nowMs - MEMORY_RETENTION_MS;
   while (memoryEvents.length > 0 && memoryEvents[0].ts < cutoff) {
     memoryEvents.shift();
   }
-  if (memoryEvents.length > MAX_EVENTS) {
-    memoryEvents.splice(0, memoryEvents.length - MAX_EVENTS);
+  if (memoryEvents.length > MAX_MEMORY_EVENTS) {
+    memoryEvents.splice(0, memoryEvents.length - MAX_MEMORY_EVENTS);
   }
 }
 
@@ -204,7 +241,8 @@ async function readRedisEvents() {
     const normalized = normalizeEvent(row);
     if (normalized) out.push(normalized);
   }
-  return out;
+  if (out.length <= MAX_PERSISTED_EVENTS) return out;
+  return out.slice(out.length - MAX_PERSISTED_EVENTS);
 }
 
 async function readRedisLastEvent() {
@@ -219,10 +257,7 @@ async function writeRedisLastEvent(event) {
   const timeout = new Promise((_, reject) =>
     setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS)
   );
-  await Promise.race([
-    redis.setex(LAST_EVENT_KEY, Math.ceil(MAX_RETENTION_MS / 1000), JSON.stringify(event)),
-    timeout,
-  ]);
+  await Promise.race([redis.set(LAST_EVENT_KEY, JSON.stringify(event)), timeout]);
 }
 
 async function incrementRedisEventCount() {
@@ -230,10 +265,6 @@ async function incrementRedisEventCount() {
     setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS)
   );
   const count = await Promise.race([redis.incr(EVENT_COUNT_KEY), timeout]);
-  await Promise.race([
-    redis.expire(EVENT_COUNT_KEY, Math.ceil(MAX_RETENTION_MS / 1000)),
-    timeout,
-  ]);
   const num = Number(count);
   return Number.isFinite(num) ? num : null;
 }
@@ -631,14 +662,12 @@ export async function recordRetrievalMetricsEvent(metricsPayload = {}) {
         );
       const existing = await Promise.race([readRedisEvents(), timeout()]);
       const merged = [...existing, event];
-      const cutoff = Date.now() - MAX_RETENTION_MS;
-      const pruned = merged.filter((e) => e.ts >= cutoff);
-      const capped = pruned.length > MAX_EVENTS ? pruned.slice(pruned.length - MAX_EVENTS) : pruned;
+      const capped =
+        merged.length > MAX_PERSISTED_EVENTS
+          ? merged.slice(merged.length - MAX_PERSISTED_EVENTS)
+          : merged;
 
-      await Promise.race([
-        redis.setex(EVENT_LIST_KEY, Math.ceil(MAX_RETENTION_MS / 1000), JSON.stringify(capped)),
-        timeout(),
-      ]);
+      await Promise.race([redis.set(EVENT_LIST_KEY, JSON.stringify(capped)), timeout()]);
 
       // Backup channel: keep at least the latest event available for health checks.
       try {
@@ -674,16 +703,26 @@ export async function getRetrievalEvents({ nowMs = Date.now() } = {}) {
     events = [...memoryEvents];
   }
 
-  const cutoff = nowMs - MAX_RETENTION_MS;
-  const recent = events.filter((event) => event.ts >= cutoff).sort((a, b) => a.ts - b.ts);
+  const sorted = [...events].sort((a, b) => a.ts - b.ts);
 
-  if (!redis) {
-    memoryEvents.length = 0;
-    memoryEvents.push(...recent);
-    pruneMemory(nowMs);
+  if (redis) {
+    if (sorted.length <= MAX_PERSISTED_EVENTS) return sorted;
+    return sorted.slice(sorted.length - MAX_PERSISTED_EVENTS);
   }
 
+  const cutoff = nowMs - MEMORY_RETENTION_MS;
+  const recent = sorted.filter((event) => event.ts >= cutoff);
+
+  memoryEvents.length = 0;
+  memoryEvents.push(...recent);
+  pruneMemory(nowMs);
+
   return recent;
+}
+
+export async function getFailureScenarioPage({ beforeTs = null, offset = 0, limit = 20, nowMs = Date.now() } = {}) {
+  const events = await getRetrievalEvents({ nowMs });
+  return getFailureScenarioPageFromEvents(events, { beforeTs, offset, limit });
 }
 
 export async function getTrendlineSnapshots({ nowMs = Date.now(), buckets = 15, bucketMs = 5 * 60 * 1000 } = {}) {
@@ -718,6 +757,14 @@ export async function getTrendlineSnapshots({ nowMs = Date.now(), buckets = 15, 
   return result;
 }
 
+function getHistoryMode() {
+  return redis ? "all_time_capped" : "memory_rolling";
+}
+
+function getHistoryMaxEvents() {
+  return redis ? MAX_PERSISTED_EVENTS : MAX_MEMORY_EVENTS;
+}
+
 export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
   const events = await getRetrievalEvents({ nowMs });
   const windows = {};
@@ -735,7 +782,7 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
     try {
       const backupCount = await readRedisEventCount();
       const lastEvent = await readRedisLastEvent();
-      if (backupCount > 0 || (lastEvent && lastEvent.ts >= nowMs - MAX_RETENTION_MS)) {
+      if (backupCount > 0 || (lastEvent && lastEvent.ts >= nowMs - MEMORY_RETENTION_MS)) {
         totalStoredEvents = Math.max(backupCount, 1);
         snapshotSource = "backup_last_event";
         backupLastEvent = lastEvent;
@@ -820,7 +867,9 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
   return {
     generatedAt: new Date(nowMs).toISOString(),
     snapshotSource,
-    retentionMs: MAX_RETENTION_MS,
+    retentionMs: MEMORY_RETENTION_MS,
+    historyMode: getHistoryMode(),
+    historyMaxEvents: getHistoryMaxEvents(),
     totalStoredEvents,
     windows,
     alltime,
