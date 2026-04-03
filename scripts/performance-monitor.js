@@ -30,16 +30,29 @@ function evaluateLocalBreaches(oneHour, thresholds) {
   const breaches = [];
   if (!oneHour || !thresholds) return breaches;
 
+  const minSampleSize = Number.isFinite(Number(thresholds.minSampleSize1h))
+    ? Number(thresholds.minSampleSize1h)
+    : 0;
+  const operationalSamples = toNumber(oneHour?.samples?.operational) ?? 0;
+  const qualitySamples = toNumber(oneHour?.samples?.quality) ?? 0;
+  const latencySamples = toNumber(oneHour?.samples?.latency) ?? 0;
+
   const errorRate = toNumber(oneHour?.rates?.errorRate);
   const noVerifiedRate = toNumber(oneHour?.rates?.noVerifiedRate);
   const fallbackRate = toNumber(oneHour?.rates?.fallbackPathRate);
   const avgRelevance = toNumber(oneHour?.rates?.avgRelevanceScore);
   const p95Latency = toNumber(oneHour?.latencyMs?.p95);
 
-  if (errorRate != null && thresholds.errorRate1h != null && errorRate > thresholds.errorRate1h) {
+  if (
+    operationalSamples >= minSampleSize &&
+    errorRate != null &&
+    thresholds.errorRate1h != null &&
+    errorRate > thresholds.errorRate1h
+  ) {
     breaches.push(`errorRate1h ${pct(errorRate)} > ${pct(thresholds.errorRate1h)}`);
   }
   if (
+    qualitySamples >= minSampleSize &&
     noVerifiedRate != null &&
     thresholds.noVerifiedRate1h != null &&
     noVerifiedRate > thresholds.noVerifiedRate1h
@@ -47,6 +60,7 @@ function evaluateLocalBreaches(oneHour, thresholds) {
     breaches.push(`noVerifiedRate1h ${pct(noVerifiedRate)} > ${pct(thresholds.noVerifiedRate1h)}`);
   }
   if (
+    operationalSamples >= minSampleSize &&
     fallbackRate != null &&
     thresholds.fallbackPathRate1h != null &&
     fallbackRate > thresholds.fallbackPathRate1h
@@ -54,6 +68,7 @@ function evaluateLocalBreaches(oneHour, thresholds) {
     breaches.push(`fallbackPathRate1h ${pct(fallbackRate)} > ${pct(thresholds.fallbackPathRate1h)}`);
   }
   if (
+    qualitySamples >= minSampleSize &&
     avgRelevance != null &&
     thresholds.avgRelevanceScoreMin1h != null &&
     avgRelevance < thresholds.avgRelevanceScoreMin1h
@@ -61,6 +76,7 @@ function evaluateLocalBreaches(oneHour, thresholds) {
     breaches.push(`avgRelevanceScore1h ${num(avgRelevance)} < ${num(thresholds.avgRelevanceScoreMin1h)}`);
   }
   if (
+    latencySamples >= minSampleSize &&
     p95Latency != null &&
     thresholds.p95LatencyMs1h != null &&
     p95Latency > thresholds.p95LatencyMs1h
