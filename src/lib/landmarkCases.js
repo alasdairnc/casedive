@@ -27,7 +27,7 @@ const LANDMARK_CASES = [
     citation: "R v Grant, 2009 SCC 32",
     title: "R v Grant",
     summary:
-      "Major Charter detention decision refining s. 9 analysis and exclusion of evidence framework.",
+      "Major Charter s. 9 arbitrary detention case on police stops where people were arrested without clear grounds, refining reasonable suspicion and warrant-related detention analysis and exclusion of evidence framework.",
     topics: ["charter 9", "detention", "arbitrary detention", "exclusion of evidence"],
   },
   {
@@ -48,7 +48,7 @@ const LANDMARK_CASES = [
     citation: "R. v. Woods, 2005 SCC 42",
     title: "R. v. Woods",
     summary:
-      "Clarifies the s. 10(b) right to counsel in roadside breath-demand contexts and when delays require renewed access.",
+      "Clarifies the s. 10(b) right to counsel when a person is detained or arrested by police, including delayed ability to call a lawyer for hours in roadside breath-demand contexts and renewed informational duty.",
     topics: ["charter 10(b)", "right to counsel", "roadside detention", "breath demand"],
   },
   {

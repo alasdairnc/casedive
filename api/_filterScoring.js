@@ -139,6 +139,17 @@ export function evaluateResultSet(
     metrics.excluded_found.length === 0 && // No excluded patterns found
     metrics.within_bounds;                // Result count in acceptable range
 
+  // Edge scenario: allow intentionally empty outputs when requested and no explicit includes are required.
+  if (
+    minResults === 0 &&
+    results.length === 0 &&
+    shouldIncude.length === 0 &&
+    metrics.excluded_found.length === 0 &&
+    metrics.within_bounds
+  ) {
+    metrics.is_acceptable = true;
+  }
+
   return metrics;
 }
 

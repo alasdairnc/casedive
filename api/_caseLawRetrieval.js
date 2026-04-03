@@ -261,6 +261,43 @@ function scoreCandidateForScenario({ candidate, scenarioTokens, issue, filters =
     reasons.push(`semantic_match:${semanticMatches.slice(0, 3).join(",")}`);
   }
 
+  const issuePrimary = issue?.primary || "general_criminal";
+  const scenarioTokenText = Array.isArray(scenarioTokens)
+    ? scenarioTokens.join(" ")
+    : scenarioTokens instanceof Set
+    ? [...scenarioTokens].join(" ")
+    : String(scenarioTokens || "");
+  const scenarioHasImpairedSignal = /\b(impaired|drunk|breath|breathalyzer|ride|checkstop|roadside|over\s*80|refus\w*)\b/.test(
+    scenarioTokenText
+  );
+  if (issuePrimary !== "general_criminal") {
+    if (issuePrimary === "charter_detention") {
+      if (/\b(detention|detained|arbitrary|grant|s\.?\s*9|section\s*9)\b/.test(text)) score += 6;
+      if (/\b(search|seizure|warrant|privacy)\b/.test(text) && !/\b(detention|detained|arbitrary|grant)\b/.test(text)) score -= 4;
+      if (!scenarioHasImpairedSignal && /\b(impaired|breath|breathalyzer|drunk\s*driving|over\s*80)\b/.test(text)) score -= 5;
+    }
+    if (issuePrimary === "charter_counsel") {
+      if (/\b(counsel|lawyer|10\(b\)|10\s*b|woods|informational\s+duty)\b/.test(text)) score += 6;
+      if (!/\b(counsel|lawyer|10\(b\)|10\s*b)\b/.test(text)) score -= 4;
+    }
+    if (issuePrimary === "drug_trafficking") {
+      if (/\b(cdsa|traffick|drug|fentanyl|cocaine|possession|s\.?\s*5)\b/.test(text)) score += 6;
+      else score -= 4;
+    }
+    if (issuePrimary === "assault_bodily_harm" || issuePrimary === "assault_weapon") {
+      if (/\b(bodily\s+harm|weapon|self\s*defence|self-defence|s\.?\s*267|assault)\b/.test(text)) score += 4;
+      if (/\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/.test(text)) score -= 6;
+    }
+    if (issuePrimary === "robbery") {
+      if (/\b(robbery|robbed|mugging|mugged|s\.?\s*343|force|threat)\b/.test(text)) score += 5;
+      else score -= 4;
+    }
+    if (issuePrimary === "theft") {
+      if (/\b(theft|stolen|steal|shoplift|s\.?\s*322|dishonesty|without\s+consent)\b/.test(text)) score += 5;
+      else score -= 4;
+    }
+  }
+
   const issueSignals =
     issue?.allowed?.size > 0
       ? [...issue.allowed].slice(0, 8)
@@ -349,7 +386,7 @@ function detectCoreIssue(scenario) {
         /\b(motor|vehicle|drive|driving|stopped|checkpoint|checkstop|pulled\s+over)\b/
       ],
       primary: "impaired_driving",
-      subIssues: new Set(["charter", "s. 9", "s. 8", "detention", "search", "stop", "breath", "roadside", "grant", "reasonable suspicion"])
+      subIssues: new Set(["s. 9", "detention", "stop", "breath", "roadside", "grant", "reasonable suspicion", "breath demand", "impaired"])
     },
     assault_harm: {
       tests: [
@@ -357,7 +394,7 @@ function detectCoreIssue(scenario) {
         /\b(bodily|harm|injur\w*|wound\w*|broke|fracture\w*|minor\s+injur\w*)\b/
       ],
       primary: "assault_bodily_harm",
-      subIssues: new Set(["bodily harm", "s. 267", "intent", "recklessness", "consent", "self-defence"])
+      subIssues: new Set(["bodily harm", "s. 267", "recklessness", "consent", "self-defence", "punch", "injury"])
     },
     assault_weapon: {
       tests: [
@@ -365,7 +402,7 @@ function detectCoreIssue(scenario) {
         /\b(weapon|knife|gun|firearm|club|stab\w*)\b/
       ],
       primary: "assault_weapon",
-      subIssues: new Set(["weapon", "s. 267", "intent", "self-defence", "dangerous"])
+      subIssues: new Set(["weapon", "s. 267", "self-defence", "dangerous", "knife", "firearm"])
     },
     sexual_assault: {
       tests: [/\bsexual\b/, /\b(assault|attack|touch|intercourse|coerce|consent)\b/],
@@ -380,12 +417,12 @@ function detectCoreIssue(scenario) {
     charter_detention: {
       tests: [/\bcharter\b/, /\b(detain\w*|arrest\w*|arbitrary)\b/],
       primary: "charter_detention",
-      subIssues: new Set(["s. 9", "detention", "arbitrary", "grant", "reasonable"])
+      subIssues: new Set(["s. 9", "detention", "arbitrary", "grant", "psychological detention"])
     },
     charter_counsel: {
       tests: [/\b(right\s+to)?\s*counsel\b|\blawyer\b/, /\b(detain\w*|arrest\w*)\b/],
       primary: "charter_counsel",
-      subIssues: new Set(["s. 10", "right to counsel", "informational", "detention", "waiver"])
+      subIssues: new Set(["s. 10", "s. 10(b)", "right to counsel", "informational", "detention", "waiver", "woods", "suberu"])
     },
     minor_traffic_stop: {
       tests: [
@@ -467,23 +504,23 @@ function detectCoreIssue(scenario) {
   };
 
   const orderedKeys = [
-    "search_seizure",
     "impaired_motor",
+    "charter_detention",
+    "search_seizure",
     "assault_harm",
     "assault_weapon",
     "sexual_assault",
     "drug_trafficking",
     "charter_counsel",
     "minor_traffic_stop",
-    "charter_detention",
     "break_and_enter",
     "robbery",
     "theft",
+    "domestic_assault",
     "uttering_threats",
     "criminal_harassment",
     "dangerous_driving",
     "peace_bond",
-    "domestic_assault",
     "trial_delay",
   ];
 
@@ -505,6 +542,8 @@ function detectCandidateDomains(candidate) {
   );
   const out = new Set();
 
+  const hasSexualAssaultSignal = /\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/.test(haystack);
+
   if (/\b(jordan|cody|11\s*b|11\(b\)|trial\s+delay|reasonable\s+time|crown\s+delay|adjournment)\b/.test(haystack)) out.add("trial_delay");
   if (/\b(oakes|section\s+1|s\.?\s*1|proportionality|minimal\s+impairment|reasonable\s+limits)\b/.test(haystack)) out.add("charter_section1");
   if (/\b(counsel|lawyer|10\s*b|10\(b\)|informational\s+duty|woods)\b/.test(haystack)) out.add("charter_counsel");
@@ -513,16 +552,17 @@ function detectCandidateDomains(candidate) {
   if (/\b(impaired|breath|breathalyzer|over\s*80|roadside|checkstop|drunk\s+driving)\b/.test(haystack)) out.add("impaired_driving");
   if (/\b(robbery|robbed|mugging|mugged|s\.?\s*343)\b/.test(haystack)) out.add("robbery");
   if (/\b(theft|stolen|steal|shoplift|s\.?\s*322)\b/.test(haystack)) out.add("theft");
-  if (/\b(assault|bodily\s+harm|weapon|self\s*defence|self-defence|s\.?\s*267)\b/.test(haystack)) out.add("assault");
+  if (/\b(assault|bodily\s+harm|weapon|self\s*defence|self-defence|s\.?\s*267)\b/.test(haystack) && !hasSexualAssaultSignal) out.add("assault");
   if (/\b(cdsa|trafficking|drug|narcotic|possession|s\.?\s*5)\b/.test(haystack)) out.add("drug");
   if (/\b(domestic|intimate\s+partner|family\s+violence|spouse)\b/.test(haystack)) out.add("domestic");
-  if (/\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/.test(haystack)) out.add("sexual_assault");
+  if (hasSexualAssaultSignal) out.add("sexual_assault");
   if (/\b(peace\s+bond|recognizance|s\.?\s*810)\b/.test(haystack)) out.add("peace_bond");
   if (/\b(break\s+and\s+enter|break-in|s\.?\s*348|dwelling\s+house)\b/.test(haystack)) out.add("break_and_enter");
   if (/\b(criminal\s+harassment|stalk|s\.?\s*264)\b/.test(haystack)) out.add("criminal_harassment");
   if (/\b(uttering\s+threats|threatening|s\.?\s*264\.1)\b/.test(haystack)) out.add("uttering_threats");
+
   if (/\b(copyright|royalt(?:y|ies)|socan|intellectual\s+property|making\s+a\s+work\s+available|digital\s+copyright)\b/.test(haystack)) out.add("ip_copyright");
-  if (/\b(constitution|federalism|secession|senate\s+reform|amending\s+formula|same-sex\s+marriage|impact\s+assessment|trade\s+and\s+commerce)\b/.test(haystack)) out.add("constitutional_general");
+  if (/\b(constitution|federalism|secession|senate\s+reform|amending\s+formula|same-sex\s+marriage|impact\s+assessment|trade\s+and\s+commerce|freedom\s+of\s+religion|assisted\s+dying|security\s+of\s+the\s+person|cruel\s+and\s+unusual|section\s+12|s\.?\s*12|section\s+7|s\.?\s*7|fundamental\s+justice)\b/.test(haystack)) out.add("constitutional_general");
   if (/\b(administrative\s+law|judicial\s+review|procedural\s+fairness|standard\s+of\s+review|tribunal\s+decision)\b/.test(haystack)) out.add("administrative_general");
   if (/\b(indigenous|aboriginal\s+title|treaty\s+rights|duty\s+to\s+consult|first\s+nation)\b/.test(haystack)) out.add("indigenous_general");
 
@@ -583,7 +623,7 @@ function isCandidateCompatibleWithIssue(issuePrimary, candidateDomains) {
   const compatibility = {
     charter_search_seizure: new Set(["charter_search_seizure", "charter_detention", "impaired_driving"]),
     impaired_driving: new Set(["impaired_driving", "charter_search_seizure", "charter_detention", "charter_counsel"]),
-    charter_detention: new Set(["charter_detention", "charter_search_seizure", "charter_counsel", "impaired_driving"]),
+    charter_detention: new Set(["charter_detention", "charter_search_seizure", "charter_counsel"]),
     charter_counsel: new Set(["charter_counsel", "charter_detention", "impaired_driving"]),
     minor_traffic_stop: new Set(["minor_traffic_stop", "impaired_driving"]),
     trial_delay: new Set(["trial_delay"]),
@@ -615,9 +655,9 @@ function issueExpansionHints(issuePrimary) {
   const map = {
     robbery: ["robbery", "s. 343", "violence", "threat", "force", "stolen"],
     theft: ["theft", "s. 322", "dishonesty", "without consent", "stolen", "taking"],
-    charter_search_seizure: ["charter", "s. 8", "search", "seizure", "warrant", "privacy"],
-    charter_counsel: ["charter", "s. 10", "right to counsel", "lawyer", "detention"],
-    charter_detention: ["charter", "s. 9", "detention", "arbitrary"],
+    charter_search_seizure: ["s. 8", "search", "seizure", "warrant", "privacy", "phone"],
+    charter_counsel: ["s. 10", "s. 10(b)", "right to counsel", "lawyer", "informational duty", "woods", "suberu"],
+    charter_detention: ["s. 9", "detention", "arbitrary", "grant", "psychological detention"],
     trial_delay: ["charter", "s. 11(b)", "trial delay", "reasonable time", "jordan", "cody"],
     impaired_driving: ["impaired", "breath", "roadside", "detention", "reasonable suspicion"],
     break_and_enter: ["break and enter", "s. 348", "dwelling", "intent"],
@@ -662,16 +702,30 @@ function filterBySemanticRelevance(scenario, candidates) {
     return isCandidateCompatibleWithIssue(issue.primary, domains);
   });
 
+  const issueStrictFiltered = compatibilityFiltered.filter((candidate) => {
+    const summary = normalizeForMatch(`${candidate?.title || ""} ${candidate?.summary || ""}`);
+    if (issue.primary === "charter_counsel") {
+      return /\b(counsel|lawyer|10\(b\)|10\s*b|woods|suberu)\b/.test(summary);
+    }
+    if (issue.primary === "assault_weapon") {
+      return /\b(weapon|knife|firearm|stab|s\.?\s*267|assault)\b/.test(summary) && !/\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/.test(summary);
+    }
+    if (issue.primary === "domestic_assault") {
+      return /\b(domestic|spouse|partner|family|intimate|assault|violence)\b/.test(summary);
+    }
+    return true;
+  });
+
   if (issue.allowed.size === 0) {
     return {
-      candidates: compatibilityFiltered,
-      dropCount: Math.max(0, (candidates || []).length - compatibilityFiltered.length),
+      candidates: issueStrictFiltered,
+      dropCount: Math.max(0, (candidates || []).length - issueStrictFiltered.length),
       fallbackUsed: false,
       issue,
     };
   }
 
-  const filtered = compatibilityFiltered.map((c) => {
+  const filtered = issueStrictFiltered.map((c) => {
     const summary = normalizeForMatch(`${c.title || ""} ${c.summary || ""}`);
     const semanticMatches = [...issue.allowed].filter((sub) => termMatchesText(sub, summary));
     if (semanticMatches.length === 0) return null;
@@ -693,7 +747,7 @@ function filterBySemanticRelevance(scenario, candidates) {
   if (filtered.length > 0) {
     return {
       candidates: filtered,
-      dropCount: Math.max(0, compatibilityFiltered.length - filtered.length) + Math.max(0, (candidates || []).length - compatibilityFiltered.length),
+      dropCount: Math.max(0, issueStrictFiltered.length - filtered.length) + Math.max(0, (candidates || []).length - issueStrictFiltered.length),
       fallbackUsed: false,
       issue,
     };
@@ -707,7 +761,7 @@ function filterBySemanticRelevance(scenario, candidates) {
   ]);
 
   const expandedTerms = [...expandedTermSet].filter(Boolean);
-  const expanded = compatibilityFiltered
+  const expanded = issueStrictFiltered
     .map((candidate) => {
       const summary = normalizeForMatch(`${candidate.title || ""} ${candidate.summary || ""}`);
       const semanticMatches = expandedTerms.filter((sub) => termMatchesText(sub, summary));
@@ -736,7 +790,7 @@ function filterBySemanticRelevance(scenario, candidates) {
   if (expanded.length > 0) {
     return {
       candidates: expanded,
-      dropCount: Math.max(0, compatibilityFiltered.length - expanded.length) + Math.max(0, (candidates || []).length - compatibilityFiltered.length),
+      dropCount: Math.max(0, issueStrictFiltered.length - expanded.length) + Math.max(0, (candidates || []).length - issueStrictFiltered.length),
       fallbackUsed: true,
       issue,
     };
@@ -794,6 +848,9 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
     }
 
     let score = overlap * 3 + issueHits * 5;
+
+    // For specific issues, require at least one issue-term hit; token overlap alone is too noisy.
+    if (issue.primary !== "general_criminal" && issueHits === 0) continue;
 
     // Keep Oakes focused on section 1/proportionality contexts, not as a broad Charter fallback.
     const isOakes = /\boakes\b/i.test(String(entry?.title || "")) || /\boakes\b/i.test(String(entry?.citation || ""));
@@ -937,7 +994,13 @@ function curatedTermsFromScenario(scenario) {
   const searchSeizure = /\bsearch\b/.test(s) && /\bseiz\w*\b/.test(s);
 
   if (ride && alcohol) {
-    push("R v Grant reasonable suspicion", "motor vehicle stop Charter", "checkstop Charter section 9");
+    push(
+      "R v Grant reasonable suspicion",
+      "motor vehicle stop Charter",
+      "checkstop Charter section 9",
+      "R. v. Woods 2005 SCC 42 right to counsel breath demand",
+      "roadside detention right to call lawyer"
+    );
   }
   if (/\b(delay|delayed|adjourned|adjournment|postponed|backlog|crown\s+delay)\b/.test(s)) {
     push(

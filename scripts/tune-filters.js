@@ -243,7 +243,7 @@ function suggestImprovements(testResults) {
 /**
  * Generate HTML report
  */
-function generateHtmlReport(testResults, suggestions, filename = "filter-quality-report.html") {
+function generateHtmlReport(testResults, suggestions, filename = "filter-quality-report.html", modeLabel = "unknown") {
   const timestamp = new Date().toISOString();
   const passRate = testResults.pass_rate.toFixed(1);
   const avgRelevance = testResults.avg_relevance_global.toFixed(2);
@@ -309,6 +309,7 @@ function generateHtmlReport(testResults, suggestions, filename = "filter-quality
   <div class="header">
     <h1>CaseDive Filter Quality Report</h1>
     <div class="timestamp">Generated ${timestamp}</div>
+    <div class="timestamp">Mode: ${modeLabel}</div>
   </div>
 
   <div class="metrics">
@@ -402,15 +403,23 @@ async function main() {
   const doBaseline = args.includes("--baseline");
   const doCompare = args.includes("--compare");
   const doReport = args.includes("--report") || !args.length;
+  const requireKey = args.includes("--require-key");
 
   console.log("CaseDive Filter Tuning System\n");
 
   try {
     const { TEST_SCENARIOS, runTestSuite } = await loadScoringTools();
+    const canliiKey = getCanliiApiKey();
+    const modeLabel = canliiKey ? "keyed-canlii" : "no-key-skipped";
     console.log(`Loaded ${TEST_SCENARIOS.length} test scenarios`);
     console.log("Using shared retrieval helper: api/_caseLawRetrieval.js");
-    if (!getCanliiApiKey()) {
-      console.log("Warning: CANLII_API_KEY is not set; using local landmark fallback mode.");
+    console.log(`Evaluation mode: ${modeLabel}`);
+    if (!canliiKey) {
+      if (requireKey) {
+        console.log("Error: CANLII_API_KEY is required for keyed filter mode (--require-key).");
+        process.exit(1);
+      }
+      console.log("Warning: CANLII_API_KEY is not set; scenarios will be skipped.");
     }
 
     // Run test suite with the real retrieval endpoint
@@ -451,7 +460,7 @@ async function main() {
     }
 
     if (doReport) {
-      generateHtmlReport(testResults, suggestions);
+      generateHtmlReport(testResults, suggestions, "filter-quality-report.html", modeLabel);
     }
   } catch (error) {
     console.error("Error:", error.message);

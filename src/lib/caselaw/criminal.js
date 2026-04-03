@@ -22,6 +22,26 @@ export const criminalCases = [
     facts: "A young Black man was stopped by three police officers while walking down the street. The Supreme Court found he was psychologically detained without reasonable suspicion, leading to the discovery of a firearm.",
     ratio: "Establishes the three-part 'Grant test' for excluding evidence under s. 24(2): (1) the seriousness of the Charter-infringing state conduct, (2) the impact of the breach on the Charter-protected interests of the accused, and (3) society's interest in the adjudication of the case on its merits."
   },
+  {
+    citation: "2004 SCC 52",
+    title: "R. v. Mann",
+    year: 2004,
+    court: "SCC",
+    topics: ["Charter", "s. 9", "Investigative Detention", "Search and Seizure"],
+    tags: ["investigative detention", "reasonable suspicion", "pat down", "s. 9", "s. 8"],
+    facts: "Police detained a suspect for investigation and conducted a protective pat-down search, finding evidence linked to a break and enter.",
+    ratio: "Recognizes a limited common-law power of investigative detention based on reasonable suspicion, with a narrowly tailored protective search for officer safety where justified."
+  },
+  {
+    citation: "2009 SCC 33",
+    title: "R. v. Suberu",
+    year: 2009,
+    court: "SCC",
+    topics: ["Charter", "s. 10(b)", "Right to Counsel", "Detention"],
+    tags: ["right to counsel", "immediate advice", "detention", "s. 10(b)"],
+    facts: "Police stopped and detained the accused during a fraud investigation and delayed providing Charter right-to-counsel advice.",
+    ratio: "Section 10(b) rights are triggered immediately on detention, and police must provide access to counsel without delay subject only to narrow operational safety limits."
+  },
 
   // ── CHARTER: SECTION 8 (SEARCH & SEIZURE) ─────────────────
   {
@@ -76,6 +96,26 @@ export const criminalCases = [
     facts: "An Indigenous woman was found dead in a motel room. The accused claimed her death was the result of an accidental injury during consensual sexual activity. The trial was characterized by prejudiced stereotyping regarding the victim's sex work.",
     ratio: "Evidence of a complainant's sexual history (including sex work) is strictly governed by the s. 276 rape shield provisions. Judges must explicitly instruct juries to dispel myths and stereotypes regarding Indigenous women and sex workers to ensure a fair trial."
   },
+  {
+    citation: "1991 SCC 45",
+    title: "R. v. Jobidon",
+    year: 1991,
+    court: "SCC",
+    topics: ["Assault", "Consent", "Bodily Harm"],
+    tags: ["assault", "consent to fight", "bodily harm", "public policy"],
+    facts: "The accused participated in a consensual fistfight that resulted in serious bodily harm to the other participant.",
+    ratio: "As a matter of public policy, there is generally no valid consent defence to assaults causing serious hurt in street-fight contexts, especially where bodily harm is intended or likely."
+  },
+  {
+    citation: "2021 SCC 37",
+    title: "R. v. Khill",
+    year: 2021,
+    court: "SCC",
+    topics: ["Assault", "Self-Defence", "Reasonableness"],
+    tags: ["self-defence", "reasonableness", "proportionality", "use of force"],
+    facts: "The accused shot and killed a person he believed was stealing from his truck in his driveway, raising self-defence.",
+    ratio: "Self-defence under s. 34 requires a contextual reasonableness assessment of the accused's perception of threat and proportionality of the force used."
+  },
 
   // ── SENTENCING & GLADUE RIGHTS ────────────────────────────
   {
@@ -116,9 +156,19 @@ export const criminalCases = [
     year: 2012,
     court: "SCC",
     topics: ["Impaired Driving", "Evidence", "Over 80"],
-    tags: ["breathalyzer accuracy", "presumption", "Carter defence", "evidence to the contrary"],
+    tags: ["breathalyzer accuracy", "presumption", "Carter defence", "evidence to the contrary", "charter", "detention", "reasonable grounds"],
     facts: "Parliament severely restricted the 'evidence to the contrary' defence (the Carter defence) for impaired driving, making it exceptionally difficult to challenge breathalyzer results.",
     ratio: "Upheld most legislative limits restricting challenges to breathalyzer accuracy, reaffirming that the state's interest in preventing drunk driving justifies stringent evidentiary presumptions against the accused, provided the machine is properly maintained and operated."
+  },
+  {
+    citation: "2015 SCC 34",
+    title: "R. v. Smith",
+    year: 2015,
+    court: "SCC",
+    topics: ["Drug Trafficking", "CDSA", "Sentencing"],
+    tags: ["cdsa", "trafficking", "mandatory minimum", "section 5", "possession", "intent", "fentanyl", "cocaine"],
+    facts: "The accused challenged mandatory minimum sentences attached to drug trafficking offences under the CDSA.",
+    ratio: "Mandatory minimum punishments in drug-trafficking contexts under CDSA s. 5 can violate constitutional protections where they are grossly disproportionate in reasonably foreseeable applications; trafficking analysis still turns on possession and intent evidence."
   },
 
   // ── DISCLOSURE & EVIDENCE ─────────────────────────────────
@@ -143,6 +193,36 @@ export const criminalCases = [
     tags: ["oakes test", "justification", "proportionality", "narcotics", "reverse onus"],
     facts: "The accused was found with narcotics. A provision in the law required him to prove he was not trafficking, reversing the presumption of innocence under s. 11(d).",
     ratio: "Establishes the 'Oakes test' for justifying Charter infringements under Section 1: The law must have a pressing and substantial objective, and the means must be proportional (rationally connected, minimally impairing, and balancing salutary/deleterious effects). The reverse onus provision failed the minimal impairment test."
+  },
+  {
+    citation: "1980 SCC 77",
+    title: "R. v. McLaughlin",
+    year: 1980,
+    court: "SCC",
+    topics: ["Robbery", "Weapons", "Criminal Code"],
+    tags: ["robbery", "s. 343", "weapon", "threat", "force"],
+    facts: "The accused committed a robbery while using what appeared to be a firearm.",
+    ratio: "In robbery law, objects used to intimidate victims can qualify as weapons where they are employed to threaten force and facilitate property taking."
+  },
+  {
+    citation: "1988 SCC 97",
+    title: "R. v. Stewart",
+    year: 1988,
+    court: "SCC",
+    topics: ["Theft", "Property", "Criminal Code"],
+    tags: ["theft", "s. 322", "property", "dishonesty", "without consent"],
+    facts: "The case considered the boundaries of what can constitute 'property' for theft purposes under the Criminal Code.",
+    ratio: "Clarifies limits of theft under s. 322 and reinforces that theft analysis focuses on dishonest taking or conversion of legally recognized property without consent."
+  },
+  {
+    citation: "1990 SCC 1",
+    title: "R. v. Lavallee",
+    year: 1990,
+    court: "SCC",
+    topics: ["Domestic Assault", "Self-Defence", "Battered Woman Syndrome"],
+    tags: ["domestic violence", "intimate partner", "self-defence", "spouse", "assault"],
+    facts: "The accused shot her abusive partner after prolonged domestic violence and raised self-defence supported by expert evidence.",
+    ratio: "Confirms that self-defence reasonableness must be assessed contextually, including the reality of intimate-partner violence and power dynamics over time."
   },
   // ── CRIMINAL LIABILITY & FAULT ────────────────────────────
   {
