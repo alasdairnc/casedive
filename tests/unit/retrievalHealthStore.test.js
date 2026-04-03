@@ -2,10 +2,14 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("../../api/_rateLimit.js", () => ({ redis: null }));
 
-const { recordRetrievalMetricsEvent, getRetrievalHealthSnapshot } = await import("../../api/_retrievalHealthStore.js");
+async function loadStore() {
+  vi.resetModules();
+  return import("../../api/_retrievalHealthStore.js");
+}
 
 describe("retrieval health store recent failures", () => {
   it("includes cache-backed zero-result events in recent failures", async () => {
+    const { recordRetrievalMetricsEvent, getRetrievalHealthSnapshot } = await loadStore();
     const futureNow = Date.now() + 60_000;
 
     await recordRetrievalMetricsEvent({
@@ -26,6 +30,75 @@ describe("retrieval health store recent failures", () => {
       reason: "no_verified",
       scenarioSnippet: "neighbor built fence onto my property",
       finalCaseLawCount: 0,
+    });
+  });
+
+  it("aggregates by-issue rates and concept rescues in window snapshots", async () => {
+    const { recordRetrievalMetricsEvent, getRetrievalHealthSnapshot } = await loadStore();
+    const futureNow = Date.now() + 60_000;
+
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "verified_results",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 2,
+      verifiedCount: 2,
+      issuePrimary: "robbery",
+      fallbackPathUsed: false,
+      retrievalError: false,
+      prefilterConceptRescueCount: 2,
+      semanticFilterDropCount: 1,
+    });
+
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "no_verified",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 0,
+      verifiedCount: 0,
+      issuePrimary: "robbery",
+      fallbackPathUsed: true,
+      retrievalError: false,
+      prefilterConceptRescueCount: 0,
+      semanticFilterDropCount: 3,
+    });
+
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "retrieval_error",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 0,
+      verifiedCount: 0,
+      issuePrimary: "charter_counsel",
+      fallbackPathUsed: true,
+      retrievalError: true,
+      prefilterConceptRescueCount: 1,
+      semanticFilterDropCount: 2,
+    });
+
+    const snapshot = await getRetrievalHealthSnapshot({ nowMs: futureNow });
+    const oneHour = snapshot.windows["1h"];
+
+    expect(oneHour.rates.avgConceptRescues).toBeCloseTo(1);
+    expect(Array.isArray(oneHour.breakdowns.byIssue)).toBe(true);
+    expect(oneHour.breakdowns.byIssue[0]).toMatchObject({
+      issuePrimary: "robbery",
+      requests: 2,
+      fallbackPathRate: 0.5,
+      noVerifiedRate: 0.5,
+      errorRate: 0,
+      avgVerifiedPerRequest: 1,
+    });
+    expect(oneHour.breakdowns.byIssue[1]).toMatchObject({
+      issuePrimary: "charter_counsel",
+      requests: 1,
+      fallbackPathRate: 1,
+      noVerifiedRate: 1,
+      errorRate: 1,
+      avgVerifiedPerRequest: 0,
     });
   });
 });
