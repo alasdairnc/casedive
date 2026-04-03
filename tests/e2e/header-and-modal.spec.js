@@ -281,4 +281,123 @@ test.describe("RetrievalHealthDashboard", () => {
     // Should be back on the main page with the CaseDive wordmark
     await expect(page.getByAltText(/casedive/i)).toBeVisible({ timeout: 5000 });
   });
+
+  test("loads older failed scenarios when pagination has more", async ({ page }) => {
+    await page.route("/api/retrieval-health**", async (route) => {
+      const url = new URL(route.request().url());
+      const offset = Number(url.searchParams.get("failuresOffset") || "0");
+
+      const pageOne = {
+        ...MOCK_HEALTH_SNAPSHOT,
+        historyMode: "all_time_capped",
+        historyMaxEvents: 10000,
+        recentFailures: [
+          {
+            ts: "2026-03-25T16:58:00.000Z",
+            endpoint: "analyze",
+            reason: "no_verified",
+            retrievalError: false,
+            finalCaseLawCount: 0,
+            verifiedCount: 0,
+            fallbackPathUsed: false,
+            latencyMs: 210,
+            semanticFilterDropCount: 1,
+            scenarioSnippet: "scenario one",
+          },
+          {
+            ts: "2026-03-25T16:57:00.000Z",
+            endpoint: "analyze",
+            reason: "retrieval_error",
+            retrievalError: true,
+            finalCaseLawCount: 0,
+            verifiedCount: 0,
+            fallbackPathUsed: true,
+            latencyMs: 300,
+            semanticFilterDropCount: 0,
+            scenarioSnippet: "scenario two",
+          },
+        ],
+        failureArchive: {
+          items: [
+            {
+              ts: "2026-03-25T16:58:00.000Z",
+              endpoint: "analyze",
+              reason: "no_verified",
+              retrievalError: false,
+              finalCaseLawCount: 0,
+              verifiedCount: 0,
+              fallbackPathUsed: false,
+              latencyMs: 210,
+              semanticFilterDropCount: 1,
+              scenarioSnippet: "scenario one",
+            },
+            {
+              ts: "2026-03-25T16:57:00.000Z",
+              endpoint: "analyze",
+              reason: "retrieval_error",
+              retrievalError: true,
+              finalCaseLawCount: 0,
+              verifiedCount: 0,
+              fallbackPathUsed: true,
+              latencyMs: 300,
+              semanticFilterDropCount: 0,
+              scenarioSnippet: "scenario two",
+            },
+          ],
+          hasMore: true,
+          nextOffset: 2,
+          nextBeforeTs: 0,
+          totalFailures: 3,
+          limit: 20,
+          offset: 0,
+        },
+      };
+
+      const pageTwo = {
+        ...MOCK_HEALTH_SNAPSHOT,
+        historyMode: "all_time_capped",
+        historyMaxEvents: 10000,
+        recentFailures: pageOne.recentFailures,
+        failureArchive: {
+          items: [
+            {
+              ts: "2026-03-25T16:56:00.000Z",
+              endpoint: "analyze",
+              reason: "no_verified",
+              retrievalError: false,
+              finalCaseLawCount: 0,
+              verifiedCount: 0,
+              fallbackPathUsed: false,
+              latencyMs: 180,
+              semanticFilterDropCount: 2,
+              scenarioSnippet: "scenario three",
+            },
+          ],
+          hasMore: false,
+          nextOffset: null,
+          nextBeforeTs: 0,
+          totalFailures: 3,
+          limit: 20,
+          offset: 2,
+        },
+      };
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(offset >= 2 ? pageTwo : pageOne),
+      });
+    });
+
+    await page.goto("/internal/retrieval-health");
+
+    await expect(page.getByText("scenario one")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("scenario two")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/Total failures tracked:\s*3/i)).toBeVisible({ timeout: 5000 });
+
+    await page.getByRole("button", { name: /load older failures/i }).click();
+
+    await expect(page.getByText("scenario three")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/End of failure history/i)).toBeVisible({ timeout: 5000 });
+  });
 });

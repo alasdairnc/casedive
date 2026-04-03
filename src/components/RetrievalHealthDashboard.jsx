@@ -234,6 +234,9 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
     data?.historyMode === "all_time_capped"
       ? `All-time history (capped at ${num(data?.historyMaxEvents)} events)`
       : "2h rolling retention (memory fallback)";
+  const totalFailuresTracked = Number.isFinite(Number(data?.failureArchive?.totalFailures))
+    ? Number(data.failureArchive.totalFailures)
+    : recentFailures.length;
 
   const copyFixPrompt = async (sample, index) => {
     const prompt = buildAgentFixPrompt(sample);
@@ -631,6 +634,9 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               </div>
               <p style={{ margin: "0 0 12px 0", fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary }}>
                 Operational retrieval failures (errors or 0 verified case-law). Use Copy prompt to hand a concrete case to an agent.
+              </p>
+              <p style={{ margin: "0 0 12px 0", fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textTertiary }}>
+                Total failures tracked: {num(totalFailuresTracked)}
               </p>
               {recentFailures.length > 0 ? (
                 <div style={{ display: "grid", gap: 10 }}>
