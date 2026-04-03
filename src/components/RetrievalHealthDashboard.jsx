@@ -16,6 +16,7 @@ import {
 } from "./retrievalHealthPanels.jsx";
 
 const TOKEN_STORAGE_KEY = "casediveRetrievalHealthToken";
+const ISSUE_TREND_MIN_REQUESTS = 3;
 
 function healthSummaryFromState({ data, status, oneHourChecks }) {
   if (!data) {
@@ -65,6 +66,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const [loading, setLoading] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [copiedFailureKey, setCopiedFailureKey] = useState("");
+  const [issueSortMode, setIssueSortMode] = useState("risk");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -149,6 +151,29 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
     },
   ];
   const healthSummary = healthSummaryFromState({ data, status, oneHourChecks });
+  const alltimeIssueRowsRaw = Array.isArray(data?.alltime?.breakdowns?.byIssue)
+    ? data.alltime.breakdowns.byIssue
+    : [];
+  const alltimeIssueRowsFiltered = alltimeIssueRowsRaw.filter(
+    (row) => Number(row?.requests || 0) >= ISSUE_TREND_MIN_REQUESTS
+  );
+  const alltimeIssueRowsBase =
+    alltimeIssueRowsFiltered.length > 0 ? alltimeIssueRowsFiltered : alltimeIssueRowsRaw;
+  const alltimeIssueRows = [...alltimeIssueRowsBase].sort((a, b) => {
+    if (issueSortMode === "volume") {
+      return (
+        Number(b?.requests || 0) - Number(a?.requests || 0) ||
+        Number(b?.noVerifiedRate || 0) - Number(a?.noVerifiedRate || 0) ||
+        Number(b?.errorRate || 0) - Number(a?.errorRate || 0)
+      );
+    }
+    return (
+      Number(b?.noVerifiedRate || 0) - Number(a?.noVerifiedRate || 0) ||
+      Number(b?.errorRate || 0) - Number(a?.errorRate || 0) ||
+      Number(b?.fallbackPathRate || 0) - Number(a?.fallbackPathRate || 0) ||
+      Number(b?.requests || 0) - Number(a?.requests || 0)
+    );
+  });
 
   const copyFixPrompt = async (sample, index) => {
     const prompt = buildAgentFixPrompt(sample);
@@ -451,6 +476,74 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 <span style={{ color: t.textSecondary }}>- -</span> no-verified rate
               </div>
               <TrendlineChart trendline={data.trendline} t={t} />
+            </div>
+            <div style={{ border: `1px solid ${t.borderLight}`, padding: 16, marginBottom: 16 }}>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 8 }}>
+                All-time by issue trend
+              </div>
+              <p style={{ margin: "0 0 12px 0", fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary }}>
+                Longitudinal view of top issue classes by volume and retrieval quality.
+              </p>
+              <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10, flexWrap: "wrap" }}>
+                <button
+                  type="button"
+                  onClick={() => setIssueSortMode("risk")}
+                  style={{
+                    padding: "6px 10px",
+                    border: `1px solid ${issueSortMode === "risk" ? t.accent : t.borderLight}`,
+                    background: "transparent",
+                    color: issueSortMode === "risk" ? t.accent : t.textSecondary,
+                    cursor: "pointer",
+                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: 1.2,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Sort: Highest risk
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIssueSortMode("volume")}
+                  style={{
+                    padding: "6px 10px",
+                    border: `1px solid ${issueSortMode === "volume" ? t.accent : t.borderLight}`,
+                    background: "transparent",
+                    color: issueSortMode === "volume" ? t.accent : t.textSecondary,
+                    cursor: "pointer",
+                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontSize: 10,
+                    letterSpacing: 1.2,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Sort: Volume
+                </button>
+                <span style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textTertiary }}>
+                  Showing issues with {ISSUE_TREND_MIN_REQUESTS}+ requests when available.
+                </span>
+              </div>
+              {alltimeIssueRows.length > 0 ? (
+                <div style={{ display: "grid", gap: 8 }}>
+                  {alltimeIssueRows.map((row) => (
+                    <div key={row.issuePrimary} style={{ border: `1px solid ${t.borderLight}`, padding: 10, background: t.bg }}>
+                      <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.text, marginBottom: 6 }}>
+                        <strong>{row.issuePrimary}</strong> · {num(row.requests)} requests
+                      </div>
+                      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textSecondary }}>
+                        <span>fallback {pct(row.fallbackPathRate)}</span>
+                        <span>no-verified {pct(row.noVerifiedRate)}</span>
+                        <span>error {pct(row.errorRate)}</span>
+                        <span>avg verified {num(row.avgVerifiedPerRequest)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p style={{ margin: 0, fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textTertiary }}>
+                  No issue-level aggregate data yet.
+                </p>
+              )}
             </div>
             <div style={{ border: `1px solid ${t.borderLight}`, padding: 16, marginBottom: 16 }}>
               <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 8 }}>

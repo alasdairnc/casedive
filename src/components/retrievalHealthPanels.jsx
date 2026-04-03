@@ -209,6 +209,9 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary, marginTop: 4 }}>
         Avg semantic drops / request: {num(rates.avgSemanticFilterDrops)}
       </div>
+      <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary, marginTop: 4 }}>
+        Avg concept rescues / request: {num(rates.avgConceptRescues)}
+      </div>
       {rates.candidateSourceMix && (
         <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.textSecondary, marginTop: 4 }}>
           Source mix (AI/Landmark/Local): {pct(rates.candidateSourceMix.ai)} / {pct(rates.candidateSourceMix.landmark)} / {pct(rates.candidateSourceMix.localFallback)}
@@ -219,6 +222,18 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
           ? `Latency avg / p95: ${num(latency.avg)} ms / ${num(latency.p95)} ms`
           : `Latency avg: ${num(latency.avg)} ms`}
       </div>
+      {Array.isArray(windowStats?.breakdowns?.byIssue) && windowStats.breakdowns.byIssue.length > 0 && (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 2.4, textTransform: "uppercase", color: t.textTertiary, marginBottom: 6 }}>
+            Top Issue Breakdown
+          </div>
+          {windowStats.breakdowns.byIssue.map((row) => (
+            <div key={row.issuePrimary} style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textSecondary, marginBottom: 4 }}>
+              {row.issuePrimary}: req {num(row.requests)} | fallback {pct(row.fallbackPathRate)} | no-verified {pct(row.noVerifiedRate)}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

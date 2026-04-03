@@ -53,6 +53,13 @@ function toScenarioSnippet(value, maxLen = 280) {
   return cleaned.slice(0, maxLen);
 }
 
+function toLabel(value, maxLen = 60) {
+  if (typeof value !== "string") return null;
+  const cleaned = value.trim();
+  if (!cleaned) return null;
+  return cleaned.slice(0, maxLen);
+}
+
 function inferReason({ reason, finalCaseLawCount, retrievalError }) {
   const explicit = toReason(reason);
   if (explicit) return explicit;
@@ -116,6 +123,10 @@ export function buildRetrievalMetrics(input = {}) {
     relevanceScoreAvg: toNullableFloat(retrievalMeta?.relevanceScoreAvg),
     fallbackPathUsed: retrievalMeta?.fallbackPathUsed === true,
     fallbackReason: toReason(retrievalMeta?.fallbackReason) || null,
+    fallbackTriggerReason: toReason(retrievalMeta?.fallbackDiagnostics?.fallbackTriggerReason) || null,
+    issuePrimary: toLabel(retrievalMeta?.issuePrimary, 40) || "general_criminal",
+    retrievalPass: toLabel(retrievalMeta?.retrievalPass, 40) || null,
+    prefilterConceptRescueCount: toNonNegativeInt(retrievalMeta?.prefilterDiagnostics?.passedByConceptRescue),
     semanticFilterDropCount: metrics.semanticFilterDropCount,
     candidateSourceMix: sourceMix,
     caseLawFilterEnabled: filters?.lawTypes?.case_law !== false,

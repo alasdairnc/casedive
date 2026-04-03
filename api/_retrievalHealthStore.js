@@ -63,6 +63,19 @@ function normalizeEvent(raw) {
       return Number(score.toFixed(3));
     })(),
     fallbackPathUsed: event.fallbackPathUsed === true,
+    fallbackTriggerReason:
+      typeof event.fallbackTriggerReason === "string" && event.fallbackTriggerReason.trim().length > 0
+        ? event.fallbackTriggerReason.trim().slice(0, 80)
+        : null,
+    issuePrimary:
+      typeof event.issuePrimary === "string" && event.issuePrimary.trim().length > 0
+        ? event.issuePrimary.trim().slice(0, 40)
+        : "general_criminal",
+    retrievalPass:
+      typeof event.retrievalPass === "string" && event.retrievalPass.trim().length > 0
+        ? event.retrievalPass.trim().slice(0, 40)
+        : null,
+    prefilterConceptRescueCount: toNonNegativeInt(event.prefilterConceptRescueCount),
     semanticFilterDropCount: toNonNegativeInt(event.semanticFilterDropCount),
     candidateSourceMix: {
       ai: toNonNegativeInt(event?.candidateSourceMix?.ai),
@@ -97,6 +110,10 @@ function buildStoredEvent(metricsPayload = {}) {
     verifiedCount: metricsPayload.verifiedCount,
     relevanceScoreAvg: metricsPayload.relevanceScoreAvg,
     fallbackPathUsed: metricsPayload.fallbackPathUsed === true,
+    fallbackTriggerReason: metricsPayload.fallbackTriggerReason,
+    issuePrimary: metricsPayload.issuePrimary,
+    retrievalPass: metricsPayload.retrievalPass,
+    prefilterConceptRescueCount: metricsPayload.prefilterConceptRescueCount,
     semanticFilterDropCount: metricsPayload.semanticFilterDropCount,
     candidateSourceMix: metricsPayload.candidateSourceMix,
     scenarioSnippet: metricsPayload.scenarioSnippet,
@@ -288,6 +305,44 @@ function computeWindowStats(events, nowMs, windowMs) {
     (sum, event) => sum + toNonNegativeInt(event.semanticFilterDropCount),
     0
   );
+  const conceptRescueCount = operationalEvents.reduce(
+    (sum, event) => sum + toNonNegativeInt(event.prefilterConceptRescueCount),
+    0
+  );
+
+  const issueMap = new Map();
+  for (const event of operationalEvents) {
+    const key = event.issuePrimary || "general_criminal";
+    if (!issueMap.has(key)) {
+      issueMap.set(key, {
+        issuePrimary: key,
+        requests: 0,
+        fallbackPath: 0,
+        noVerified: 0,
+        errors: 0,
+        verifiedTotal: 0,
+      });
+    }
+    const row = issueMap.get(key);
+    row.requests += 1;
+    row.fallbackPath += event.fallbackPathUsed ? 1 : 0;
+    row.noVerified += event.finalCaseLawCount === 0 ? 1 : 0;
+    row.errors += event.retrievalError ? 1 : 0;
+    row.verifiedTotal += toNonNegativeInt(event.finalCaseLawCount);
+  }
+  const byIssue = [...issueMap.values()]
+    .sort((a, b) => b.requests - a.requests)
+    .slice(0, 6)
+    .map((row) => ({
+      issuePrimary: row.issuePrimary,
+      requests: row.requests,
+      fallbackPathRate: ratio(row.fallbackPath, row.requests),
+      noVerifiedRate: ratio(row.noVerified, row.requests),
+      errorRate: ratio(row.errors, row.requests),
+      avgVerifiedPerRequest: row.requests
+        ? Number((row.verifiedTotal / row.requests).toFixed(4))
+        : null,
+    }));
   const sourceMixTotals = operationalEvents.reduce(
     (acc, event) => {
       acc.ai += toNonNegativeInt(event?.candidateSourceMix?.ai);
@@ -331,6 +386,9 @@ function computeWindowStats(events, nowMs, windowMs) {
       avgSemanticFilterDrops: operationalEvents.length
         ? Number((semanticFilterDrops / operationalEvents.length).toFixed(4))
         : null,
+      avgConceptRescues: operationalEvents.length
+        ? Number((conceptRescueCount / operationalEvents.length).toFixed(4))
+        : null,
       candidateSourceMix: sourceTotal > 0
         ? {
             ai: Number((sourceMixTotals.ai / sourceTotal).toFixed(4)),
@@ -342,6 +400,9 @@ function computeWindowStats(events, nowMs, windowMs) {
     latencyMs: {
       avg: average(latencyValues),
       p95: percentile(latencyValues, 0.95),
+    },
+    breakdowns: {
+      byIssue,
     },
     lastEventAt: lastEvent ? new Date(lastEvent.ts).toISOString() : null,
   };
@@ -398,6 +459,8 @@ async function updateAlltimeAccumulator(event) {
   acc.fallbackPath = (acc.fallbackPath || 0) + (isOperational && event.fallbackPathUsed ? 1 : 0);
   acc.semanticFilterDrops =
     (acc.semanticFilterDrops || 0) + (isOperational ? toNonNegativeInt(event.semanticFilterDropCount) : 0);
+  acc.prefilterConceptRescues =
+    (acc.prefilterConceptRescues || 0) + (isOperational ? toNonNegativeInt(event.prefilterConceptRescueCount) : 0);
   acc.relevanceScoreCount =
     (acc.relevanceScoreCount || 0) + (isQuality && Number.isFinite(event.relevanceScoreAvg) ? 1 : 0);
   acc.relevanceScoreSum =
@@ -408,6 +471,26 @@ async function updateAlltimeAccumulator(event) {
     (acc.sourceLandmark || 0) + (isOperational ? toNonNegativeInt(event?.candidateSourceMix?.landmark) : 0);
   acc.sourceLocalFallback =
     (acc.sourceLocalFallback || 0) + (isOperational ? toNonNegativeInt(event?.candidateSourceMix?.localFallback) : 0);
+
+  const issuePrimary = event.issuePrimary || "general_criminal";
+  if (!acc.byIssue || typeof acc.byIssue !== "object") acc.byIssue = {};
+  if (!acc.byIssue[issuePrimary]) {
+    acc.byIssue[issuePrimary] = {
+      requests: 0,
+      fallbackPath: 0,
+      noVerified: 0,
+      errors: 0,
+      verifiedTotal: 0,
+    };
+  }
+  const issueAcc = acc.byIssue[issuePrimary];
+  if (isOperational) {
+    issueAcc.requests += 1;
+    issueAcc.fallbackPath += event.fallbackPathUsed ? 1 : 0;
+    issueAcc.noVerified += event.finalCaseLawCount === 0 ? 1 : 0;
+    issueAcc.errors += event.retrievalError ? 1 : 0;
+    issueAcc.verifiedTotal += toNonNegativeInt(event.finalCaseLawCount);
+  }
 
   await Promise.race([redis.set(ALLTIME_KEY, JSON.stringify(acc)), timeout()]);
 }
@@ -438,13 +521,37 @@ async function getAlltimeSnapshot(events) {
             latencySum = 0,
             fallbackPath = 0,
             semanticFilterDrops = 0,
+            prefilterConceptRescues = 0,
             relevanceScoreCount = 0,
             relevanceScoreSum = 0,
             sourceAi = 0,
             sourceLandmark = 0,
             sourceLocalFallback = 0,
+            byIssue = {},
           } = acc;
           const sourceTotal = sourceAi + sourceLandmark + sourceLocalFallback;
+          const byIssueRows = Object.entries(byIssue || {})
+            .map(([issuePrimary, row]) => ({
+              issuePrimary,
+              requests: toNonNegativeInt(row?.requests),
+              fallbackPath: toNonNegativeInt(row?.fallbackPath),
+              noVerified: toNonNegativeInt(row?.noVerified),
+              errors: toNonNegativeInt(row?.errors),
+              verifiedTotal: toNonNegativeInt(row?.verifiedTotal),
+            }))
+            .filter((row) => row.requests > 0)
+            .sort((a, b) => b.requests - a.requests)
+            .slice(0, 6)
+            .map((row) => ({
+              issuePrimary: row.issuePrimary,
+              requests: row.requests,
+              fallbackPathRate: ratio(row.fallbackPath, row.requests),
+              noVerifiedRate: ratio(row.noVerified, row.requests),
+              errorRate: ratio(row.errors, row.requests),
+              avgVerifiedPerRequest: row.requests
+                ? Number((row.verifiedTotal / row.requests).toFixed(4))
+                : null,
+            }));
           return {
             firstEventAt: acc.firstTs ? new Date(acc.firstTs).toISOString() : null,
             samples: { total, retrieval, cache, operational, quality, latency: latencyCount },
@@ -470,6 +577,9 @@ async function getAlltimeSnapshot(events) {
               avgSemanticFilterDrops: operational
                 ? Number((semanticFilterDrops / operational).toFixed(4))
                 : null,
+              avgConceptRescues: operational
+                ? Number((prefilterConceptRescues / operational).toFixed(4))
+                : null,
               candidateSourceMix: sourceTotal > 0
                 ? {
                     ai: Number((sourceAi / sourceTotal).toFixed(4)),
@@ -481,6 +591,9 @@ async function getAlltimeSnapshot(events) {
             latencyMs: {
               avg: latencyCount > 0 ? Math.round(latencySum / latencyCount) : null,
               p95: null,
+            },
+            breakdowns: {
+              byIssue: byIssueRows,
             },
             lastEventAt: acc.lastTs ? new Date(acc.lastTs).toISOString() : null,
           };
@@ -697,6 +810,8 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
               ? backupLastEvent.retrievalLatencyMs
               : null,
             semanticFilterDropCount: toNonNegativeInt(backupLastEvent.semanticFilterDropCount),
+            issuePrimary: backupLastEvent.issuePrimary || "general_criminal",
+            fallbackTriggerReason: backupLastEvent.fallbackTriggerReason || null,
             scenarioSnippet: backupLastEvent.scenarioSnippet || null,
             errorMessage: backupLastEvent.errorMessage || null,
           },
