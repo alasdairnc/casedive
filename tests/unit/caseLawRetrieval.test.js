@@ -206,6 +206,139 @@ describe("retrieveVerifiedCaseLaw landmark URL handling", () => {
     expect(cases.some((c) => /Oakes/.test(String(c.citation || "")))).toBe(false);
   });
 
+  it("rescues AI citations via concept overlap when token overlap is zero", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      status: 200,
+      ok: true,
+      json: async () => ({ title: "R v Suberu" }),
+    });
+
+    const { cases, meta } = await retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario: "I was arrested and could not call my lawyer",
+      aiCaseLaw: [
+        {
+          citation: "2009 SCC 33",
+          summary: "Informational duty after detention under section 10(b).",
+        },
+      ],
+      landmarkMatches: [],
+      maxResults: 3,
+    });
+
+    expect(cases.length).toBeGreaterThan(0);
+    expect(meta.prefilterDiagnostics.passedByConceptRescue).toBeGreaterThan(0);
+    expect(meta.prefilterDiagnostics.reasonCounts.token_overlap_failed).toBeGreaterThan(0);
+  });
+
+  it("reports no_ai_citations fallback trigger reason", async () => {
+    const { meta } = await retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario: "A person broke into a home and stole electronics at night.",
+      aiCaseLaw: [],
+      landmarkMatches: [],
+      maxResults: 3,
+    });
+
+    expect(meta.fallbackPathUsed).toBe(true);
+    expect(meta.fallbackDiagnostics.fallbackTriggerReason).toBe("no_ai_citations");
+  });
+
+  it("captures semantic-filter drop diagnostics when candidates are incompatible", async () => {
+    const { MASTER_CASE_LAW_DB } = await import("../../src/lib/caselaw/index.js");
+    const originalCases = [...MASTER_CASE_LAW_DB];
+    MASTER_CASE_LAW_DB.length = 0;
+
+    try {
+      const { meta } = await retrieveVerifiedCaseLaw({
+        apiKey: "test-key",
+        scenario: "I was pulled over for going 1 km/h over the speed limit",
+        aiCaseLaw: [
+          {
+            citation: "2016 SCC 27",
+            summary: "Copyright royalties and digital distribution rights",
+          },
+        ],
+        landmarkMatches: [],
+        maxResults: 3,
+      });
+
+      expect(meta.prefilterDiagnostics.totalAiCandidatesParsed).toBeGreaterThan(0);
+      expect(meta.prefilterDiagnostics.rejected).toBeGreaterThan(0);
+      expect(meta.fallbackDiagnostics.semanticFilteredCount).toBe(0);
+    } finally {
+      MASTER_CASE_LAW_DB.splice(0, MASTER_CASE_LAW_DB.length, ...originalCases);
+    }
+  });
+
+  it("reports verification_failed_all fallback trigger reason", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      status: 404,
+      ok: false,
+      json: async () => ({}),
+    });
+
+    const { meta } = await retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario: "Someone repeatedly texted me threats and said they would hurt me",
+      aiCaseLaw: [
+        {
+          citation: "2016 SCC 27",
+          summary: "Uttering threats analysis under section 264.1",
+        },
+      ],
+      landmarkMatches: [],
+      maxResults: 3,
+    });
+
+    expect(meta.fallbackPathUsed).toBe(true);
+    expect(meta.fallbackDiagnostics.fallbackTriggerReason).toBe("verification_failed_all");
+  });
+
+  it("classifies breath-demand roadside scenario as impaired_driving", async () => {
+    const { meta } = await retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario: "I was pulled over at a checkpoint and given a breathalyzer demand",
+      aiCaseLaw: [],
+      landmarkMatches: [],
+      maxResults: 3,
+    });
+
+    expect(meta.issuePrimary).toBe("impaired_driving");
+  });
+
+  it("classifies peace bond scenarios using s. 810 signal", async () => {
+    const { meta } = await retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario: "I was served with a peace bond under s. 810 and told to sign recognizance terms",
+      aiCaseLaw: [],
+      landmarkMatches: [],
+      maxResults: 3,
+    });
+
+    expect(meta.issuePrimary).toBe("peace_bond");
+  });
+
+  it("separates counsel and detention issue classification", async () => {
+    const counselResult = await retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario: "I was arrested and repeatedly denied access to my lawyer",
+      aiCaseLaw: [],
+      landmarkMatches: [],
+      maxResults: 3,
+    });
+    expect(counselResult.meta.issuePrimary).toBe("charter_counsel");
+
+    const detentionResult = await retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario: "I was arbitrarily detained without clear grounds under Charter rights",
+      aiCaseLaw: [],
+      landmarkMatches: [],
+      maxResults: 3,
+    });
+    expect(detentionResult.meta.issuePrimary).toBe("charter_detention");
+  });
+
   it("retrieves break-and-enter cases for break-in with theft scenario", async () => {
     const { cases, meta } = await retrieveVerifiedCaseLaw({
       apiKey: "test-key",

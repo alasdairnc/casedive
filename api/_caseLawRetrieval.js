@@ -225,6 +225,12 @@ function scoreCandidateForScenario({ candidate, scenarioTokens, issue, filters =
   let score = Math.min(10, overlap * 2);
   if (overlap > 0) reasons.push(`token_overlap:${overlap}`);
 
+  const compatibilityAdjustment = Number(candidate?.compatibilityAdjustment) || 0;
+  if (compatibilityAdjustment !== 0) {
+    score += compatibilityAdjustment;
+    reasons.push(`compat:${compatibilityAdjustment}`);
+  }
+
   let semanticMatches = Array.isArray(candidate?.semanticMatches)
     ? candidate.semanticMatches
     : [];
@@ -389,7 +395,7 @@ function detectCoreIssue(scenario) {
         /\b(bodily|harm|injur\w*|wound\w*|broke|fracture\w*|minor\s+injur\w*)\b/
       ],
       primary: "assault_bodily_harm",
-      subIssues: new Set(["bodily harm", "s. 267", "recklessness", "consent", "self-defence", "punch", "injury"])
+      subIssues: new Set(["bodily harm", "s. 267", "recklessness", "self-defence", "punch"])
     },
     assault_weapon: {
       tests: [
@@ -428,12 +434,18 @@ function detectCoreIssue(scenario) {
       subIssues: new Set(["speed limit", "speeding ticket", "traffic stop", "roadside stop", "motor vehicle"]),
     },
     uttering_threats: {
-      tests: [/\b(threat\w*|uttering)\b/],
+      tests: [
+        /\b(threat\w*|uttering)\b/,
+        /\b(text|message|call|phone|email|voicemail|said|told|communicat\w*)\b/,
+      ],
       primary: "uttering_threats",
       subIssues: new Set(["uttering threats", "s. 264.1", "threatening", "communication"])
     },
     criminal_harassment: {
-      tests: [/\b(harass\w*|stalk\w*)\b/],
+      tests: [
+        /\b(harass\w*|stalk\w*)\b/,
+        /\b(repeat\w*|follow\w*|fear|safety|communicat\w*)\b/,
+      ],
       primary: "criminal_harassment",
       subIssues: new Set(["criminal harassment", "s. 264", "repeated communication", "fear for safety"])
     },
@@ -499,24 +511,25 @@ function detectCoreIssue(scenario) {
   };
 
   const orderedKeys = [
+    // Specificity-first ordering: narrow/high-signal classes before broad Charter buckets.
+    "minor_traffic_stop",
+    "peace_bond",
+    "trial_delay",
+    "charter_counsel",
+    "search_seizure",
     "impaired_motor",
     "charter_detention",
-    "search_seizure",
-    "assault_harm",
-    "assault_weapon",
-    "sexual_assault",
-    "drug_trafficking",
-    "charter_counsel",
-    "minor_traffic_stop",
     "break_and_enter",
     "robbery",
     "theft",
+    "drug_trafficking",
+    "sexual_assault",
+    "assault_weapon",
     "domestic_assault",
+    "assault_harm",
     "uttering_threats",
     "criminal_harassment",
     "dangerous_driving",
-    "peace_bond",
-    "trial_delay",
   ];
 
   for (const key of orderedKeys) {
@@ -524,7 +537,11 @@ function detectCoreIssue(scenario) {
     if (!config) continue;
     const allMatch = config.tests.every(regex => regex.test(s));
     if (allMatch) {
-      return { primary: config.primary, allowed: config.subIssues };
+      const allowed = new Set(config.subIssues || []);
+      if (config.primary === "assault_bodily_harm" && !/\b(self\s*-?defence|self defense)\b/.test(s)) {
+        allowed.delete("self-defence");
+      }
+      return { primary: config.primary, allowed };
     }
   }
   
@@ -677,6 +694,31 @@ function isCandidateCompatibleWithIssue(issuePrimary, candidateDomains) {
   return false;
 }
 
+function hasOnlyClearlyNonCriminalDomains(candidateDomains) {
+  if (!(candidateDomains instanceof Set) || candidateDomains.size === 0) return false;
+  const clearlyNonCriminal = new Set([
+    "ip_copyright",
+    "constitutional_general",
+    "administrative_general",
+    "indigenous_general",
+  ]);
+  let sawNonCriminal = false;
+  for (const domain of candidateDomains) {
+    if (!clearlyNonCriminal.has(domain)) return false;
+    sawNonCriminal = true;
+  }
+  return sawNonCriminal;
+}
+
+function compatibilityAdjustmentForIssue(issuePrimary, candidateDomains) {
+  if (issuePrimary === "general_criminal") {
+    return hasOnlyClearlyNonCriminalDomains(candidateDomains) ? -6 : 0;
+  }
+  if (!(candidateDomains instanceof Set) || candidateDomains.size === 0) return -1;
+  if (hasOnlyClearlyNonCriminalDomains(candidateDomains)) return -8;
+  return isCandidateCompatibleWithIssue(issuePrimary, candidateDomains) ? 0 : -4;
+}
+
 function issueExpansionHints(issuePrimary) {
   const map = {
     robbery: ["robbery", "s. 343", "violence", "threat", "force", "stolen"],
@@ -732,12 +774,17 @@ function filterBySemanticRelevance(scenario, candidates) {
       })
     : [];
 
-  const compatibilityFiltered = withoutDelayLeaks.filter((candidate) => {
+  // Phase 2: demote incompatible domains instead of hard-dropping them.
+  const compatibilityRanked = withoutDelayLeaks.map((candidate) => {
     const domains = detectCandidateDomains(candidate);
-    return isCandidateCompatibleWithIssue(issue.primary, domains);
+    return {
+      ...candidate,
+      compatibilityAdjustment: compatibilityAdjustmentForIssue(issue.primary, domains),
+      candidateDomains: Array.from(domains),
+    };
   });
 
-  const issueStrictFiltered = compatibilityFiltered.filter((candidate) => {
+  const issueStrictFiltered = compatibilityRanked.filter((candidate) => {
     const summary = normalizeForMatch(`${candidate?.title || ""} ${candidate?.summary || ""}`);
     const scenarioNorm = normalizeForMatch(scenario || "");
     const candidateConcepts = extractLegalConcepts(summary);
@@ -785,6 +832,15 @@ function filterBySemanticRelevance(scenario, candidates) {
     if (issue.primary === "charter_counsel") {
       return /\b(counsel|lawyer|10\(b\)|10\s*b|woods|suberu)\b/.test(summary);
     }
+    if (issue.primary === "assault_bodily_harm") {
+      const scenarioHasSelfDefenceSignal = /\b(self\s*-?defence|self defense)\b/.test(scenarioNorm);
+      const hasAssaultCore = /\bassault\b/.test(summary);
+      const hasBodilyHarmSignal = /\b(bodily\s+harm|injur\w*|wound\w*|s\.?\s*267)\b/.test(summary);
+      const hasSelfDefenceOnlySignal = /\b(self\s*-?defence|self defense)\b/.test(summary) && !hasBodilyHarmSignal;
+      if (!hasAssaultCore) return false;
+      if (hasSelfDefenceOnlySignal && !scenarioHasSelfDefenceSignal) return false;
+      return (hasBodilyHarmSignal || (scenarioHasSelfDefenceSignal && hasSelfDefenceOnlySignal)) && !/\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/.test(summary);
+    }
     if (issue.primary === "assault_weapon") {
       return /\b(weapon|knife|firearm|stab|s\.?\s*267|assault)\b/.test(summary) && !/\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/.test(summary);
     }
@@ -818,6 +874,7 @@ function filterBySemanticRelevance(scenario, candidates) {
       ...c,
       semanticMatches: dedupedMatches,
       matchedTerm: mergedMatchedTerm,
+      compatibilityAdjustment: Number(c?.compatibilityAdjustment) || 0,
     };
   }).filter(Boolean);
 
@@ -861,6 +918,7 @@ function filterBySemanticRelevance(scenario, candidates) {
         ...candidate,
         semanticMatches: dedupedMatches,
         matchedTerm: mergedMatchedTerm,
+        compatibilityAdjustment: Number(candidate?.compatibilityAdjustment) || 0,
       };
     })
     .filter(Boolean);
@@ -929,6 +987,14 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
 
     let score = overlap * 3 + issueHits * 5;
 
+    const candidateDomains = detectCandidateDomains({
+      citation: entry.citation,
+      title: entry.title,
+      summary: `${entry.ratio || ""} ${(entry.tags || []).join(" ")} ${(entry.topics || []).join(" ")}`,
+    });
+    const compatibilityAdjustment = compatibilityAdjustmentForIssue(issue.primary, candidateDomains);
+    score += compatibilityAdjustment;
+
     // For specific issues, require at least one issue-term hit; token overlap alone is too noisy.
     if (issue.primary !== "general_criminal" && issueHits === 0) continue;
 
@@ -956,7 +1022,12 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
       retrievalScore: score,
       issueSignals: issueTerms.slice(0, 8),
       overlapTokens: Array.from(scenarioTokens).slice(0, 4),
-      retrievalReasons: ["local_fallback", `overlap:${overlap}`, `issue_hits:${issueHits}`],
+      retrievalReasons: [
+        "local_fallback",
+        `overlap:${overlap}`,
+        `issue_hits:${issueHits}`,
+        `compat:${compatibilityAdjustment}`,
+      ],
     });
   }
 
@@ -1047,6 +1118,23 @@ function selectFinalCandidates({ candidates = [], issuePrimary = "general_crimin
   // Keep a slightly wider set for broad/general scenarios.
   const cap = issuePrimary === "general_criminal" ? maxResults : Math.min(maxResults, 3);
   return selected.slice(0, cap);
+}
+
+function determineFallbackTriggerReason({
+  aiCandidatesParsed = 0,
+  semanticFilteredCount = 0,
+  verificationRequested = 0,
+  verificationSucceeded = 0,
+  landmarkDirectMatches = 0,
+  selectedBeforeFallback = 0,
+}) {
+  if (aiCandidatesParsed === 0) return "no_ai_citations";
+  if (semanticFilteredCount === 0) return "semantic_filter_dropped_all";
+  if (verificationRequested > 0 && verificationSucceeded === 0 && landmarkDirectMatches === 0) {
+    return "verification_failed_all";
+  }
+  if (selectedBeforeFallback === 0) return "unknown";
+  return null;
 }
 
 /**
@@ -1491,6 +1579,19 @@ export async function retrieveVerifiedCaseLaw({
   const dbTargets = pickDatabaseTargets(filters);
   const detectedIssue = detectCoreIssue(scenario);
   let localFallbackUsed = false;
+  const prefilterDiagnostics = {
+    totalAiCandidatesParsed: 0,
+    passed: 0,
+    passedByTokenOverlap: 0,
+    passedByConceptOverlap: 0,
+    passedByConceptRescue: 0,
+    rejected: 0,
+    reasonCounts: {
+      token_overlap_failed: 0,
+      concept_overlap_failed: 0,
+      both_failed: 0,
+    },
+  };
 
   // Build candidates from AI-generated case citations
   const aiCitationCandidates = [];
@@ -1509,16 +1610,20 @@ export async function retrieveVerifiedCaseLaw({
         court: parsed.courtCode,
         year: parsed.year,
       });
+      prefilterDiagnostics.totalAiCandidatesParsed += 1;
     }
     
     // Apply pre-verify semantic gate: filter AI citations by scenario relevance
-    // Tokenize scenario and require minimum overlap with candidate summaries
+    // Candidate passes when there is either lexical or concept overlap.
     const scenarioTokens = tokenizeScenario(scenario);
+    const scenarioConcepts = extractLegalConcepts(scenario);
     
     const filtered = [];
     for (const candidate of aiCitationCandidates) {
       if (scenarioTokens.size === 0) {
         filtered.push(candidate);
+        prefilterDiagnostics.passed += 1;
+        prefilterDiagnostics.passedByTokenOverlap += 1;
         continue;
       }
 
@@ -1528,10 +1633,29 @@ export async function retrieveVerifiedCaseLaw({
         if (candSummary.includes(token)) overlapCount++;
       }
 
-      // Require minimum 2 scenario tokens in candidate (tunable threshold)
-      const meetsThreshold = overlapCount >= 2;
-      if (meetsThreshold) {
-        filtered.push(candidate);
+      const candidateConcepts = extractLegalConcepts(candSummary);
+      const conceptOverlap = countConceptOverlap(scenarioConcepts, candidateConcepts);
+
+      const meetsTokenThreshold = overlapCount >= 1;
+      const meetsConceptThreshold = conceptOverlap >= 2;
+
+      if (!meetsTokenThreshold) prefilterDiagnostics.reasonCounts.token_overlap_failed += 1;
+      if (!meetsConceptThreshold) prefilterDiagnostics.reasonCounts.concept_overlap_failed += 1;
+
+      if (meetsTokenThreshold || meetsConceptThreshold) {
+        prefilterDiagnostics.passed += 1;
+        if (meetsTokenThreshold) prefilterDiagnostics.passedByTokenOverlap += 1;
+        if (meetsConceptThreshold) prefilterDiagnostics.passedByConceptOverlap += 1;
+        if (!meetsTokenThreshold && meetsConceptThreshold) {
+          prefilterDiagnostics.passedByConceptRescue += 1;
+        }
+        filtered.push({
+          ...candidate,
+          prefilterSignal: meetsTokenThreshold ? "token_overlap" : "concept_overlap",
+        });
+      } else {
+        prefilterDiagnostics.rejected += 1;
+        prefilterDiagnostics.reasonCounts.both_failed += 1;
       }
     }
     
@@ -1593,6 +1717,17 @@ export async function retrieveVerifiedCaseLaw({
         relevanceScoreAvg: null,
         fallbackPathUsed: localFallbackUsed,
         fallbackReason: localFallbackUsed ? "local_fallback" : null,
+        prefilterDiagnostics,
+        fallbackDiagnostics: {
+          aiCandidatesParsed: prefilterDiagnostics.totalAiCandidatesParsed,
+          semanticFilteredCount: 0,
+          verificationRequested: 0,
+          verificationSucceeded: 0,
+          landmarkDirectMatches: 0,
+          selectedBeforeFallback: 0,
+          fallbackRequired: localFallbackUsed,
+          fallbackTriggerReason: localFallbackUsed ? "no_ai_citations" : null,
+        },
         semanticFilterDropCount: 0,
         candidateSourceMix: {
           ai: 0,
@@ -1681,6 +1816,7 @@ export async function retrieveVerifiedCaseLaw({
       issuePrimary: issue?.primary || "general_criminal",
       maxResults,
     });
+  const selectedBeforeFallbackCount = selectedCandidates.length;
 
   let postVerificationFallbackUsed = false;
   if (selectedCandidates.length === 0) {
@@ -1724,6 +1860,17 @@ export async function retrieveVerifiedCaseLaw({
     ? "semantic_filter_fallback"
     : null;
 
+  const fallbackTriggerReason = fallbackReason
+    ? determineFallbackTriggerReason({
+        aiCandidatesParsed: prefilterDiagnostics.totalAiCandidatesParsed,
+        semanticFilteredCount: semanticFiltered.length,
+        verificationRequested: toVerify.length,
+        verificationSucceeded: verifiedCases.length,
+        landmarkDirectMatches: landmarkResults.length,
+        selectedBeforeFallback: selectedBeforeFallbackCount,
+      })
+    : null;
+
   const selectedIdentityKeys = new Set(
     selectedCandidates.map((item) => buildCitationIdentityKey(item?.citation || ""))
   );
@@ -1762,6 +1909,17 @@ export async function retrieveVerifiedCaseLaw({
       relevanceScoreAvg,
       fallbackPathUsed: Boolean(fallbackReason),
       fallbackReason,
+      prefilterDiagnostics,
+      fallbackDiagnostics: {
+        aiCandidatesParsed: prefilterDiagnostics.totalAiCandidatesParsed,
+        semanticFilteredCount: semanticFiltered.length,
+        verificationRequested: toVerify.length,
+        verificationSucceeded: verifiedCases.length,
+        landmarkDirectMatches: landmarkResults.length,
+        selectedBeforeFallback: selectedBeforeFallbackCount,
+        fallbackRequired: Boolean(fallbackReason),
+        fallbackTriggerReason,
+      },
       retrievalPass,
       semanticFilterDropCount: semanticFilter.dropCount,
       candidateSourceMix,

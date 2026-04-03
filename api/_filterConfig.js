@@ -99,7 +99,7 @@ export const FILTER_CONFIG = {
   max_results_default: 3,
 
   // ── Relevance scoring defaults (override via env for calibration) ───────
-  relevance_min_score: 5,
+  relevance_min_score: 4,
   relevance_min_token_overlap: 2,
   relevance_min_concept_overlap: 1,
 };

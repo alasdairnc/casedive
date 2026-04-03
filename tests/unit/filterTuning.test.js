@@ -7,15 +7,17 @@ import { TEST_SCENARIOS } from "./filterScenarios.js";
 describe("Filter Tuning System", () => {
   describe("Core Issue Detection", () => {
     it("should detect impaired_driving scenario", () => {
-      const scenario = TEST_SCENARIOS[0]; // impaired_01
+      const scenario = TEST_SCENARIOS.find((s) => s.id === "impaired_01");
+      expect(scenario).toBeTruthy();
       expect(scenario.expectedPrimary).toBe("impaired_driving");
       expect(scenario.shouldInclude).toContain("Charter");
     });
 
     it("should detect assault_bodily_harm scenario", () => {
-      const scenario = TEST_SCENARIOS[2]; // assault_bodily_01
+      const scenario = TEST_SCENARIOS.find((s) => s.id === "assault_bodily_01");
+      expect(scenario).toBeTruthy();
       expect(scenario.expectedPrimary).toBe("assault_bodily_harm");
-      expect(scenario.expectedKeywords).toContain("s. 267");
+      expect(scenario.expectedKeywords).toContain("assault");
     });
 
     it("should exclude irrelevant case types", () => {

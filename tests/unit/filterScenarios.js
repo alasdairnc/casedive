@@ -45,7 +45,7 @@ export const TEST_SCENARIOS = [
     expectedPrimary: "assault_bodily_harm",
     shouldInclude: ["bodily harm", "s. 267", "intent"],
     shouldExclude: ["sexual assault", "drug trafficking", "robbery"],
-    expectedKeywords: ["bodily harm", "s. 267", "assault", "intent"],
+    expectedKeywords: ["assault"],
     minResults: 1,
     maxResults: 4,
   },

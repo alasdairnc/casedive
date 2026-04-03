@@ -12,7 +12,7 @@ const CONCEPT_PATTERNS = {
   trafficStop: /\b(traffic\s+stop|pulled\s+over|motor\s+vehicle|checkpoint|checkstop|roadside)\b/,
   robbery: /\b(robbery|robbed|mugging|mugged|s\.?\s*343|threat|force)\b/,
   theft: /\b(theft|stolen|steal\w*|shoplift\w*|s\.?\s*322|dishonesty)\b/,
-  assault: /\b(assault|bodily\s+harm|weapon|s\.?\s*267|self\s*-?defence)\b/,
+  assault: /\b(assault|bodily\s+harm|weapon|s\.?\s*267|self\s*-?defence|punch\w*|hit|struck|fight|injur\w*|wound\w*)\b/,
   sexualAssault: /\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/,
   drug: /\b(cdsa|drug|traffick\w*|fentanyl|cocaine|possession|s\.?\s*5)\b/,
   trialDelay: /\b(jordan|cody|11\(b\)|s\.?\s*11\(b\)|trial\s+delay|reasonable\s+time|adjourn\w*)\b/,

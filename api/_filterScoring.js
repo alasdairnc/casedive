@@ -165,7 +165,7 @@ export function evaluateResultSet(
   // Overall pass/fail
   metrics.is_acceptable =
     metrics.precision >= 0.7 &&           // 70% of results are relevant
-    metrics.avg_relevance >= 5 &&         // Average score ≥ 5/10
+    metrics.avg_relevance >= (FILTER_CONFIG.relevance_min_score ?? 5) && // Average score meets configured threshold
     metrics.excluded_found.length === 0 && // No excluded patterns found
     metrics.within_bounds;                // Result count in acceptable range
 

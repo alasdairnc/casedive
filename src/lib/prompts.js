@@ -118,6 +118,11 @@ RULES:
   - Charter counsel: "charter" AND "s. 10" AND counsel AND "informational duty" AND detention
   - Drug trafficking: trafficking AND "CDSA s. 5" AND possession AND intent
   - Assault with weapon: assault AND weapon AND "s. 267" AND intent AND "self-defence"
+  - Peace bond: "peace bond" AND "s. 810" AND recognizance AND "fear of injury"
+  - Uttering threats: "uttering threats" AND "s. 264.1" AND threat AND "reasonable fear"
+  - Dangerous driving: "dangerous driving" AND "s. 320.13" AND "marked departure" AND vehicle
+  - Minor traffic stop: "traffic stop" AND "highway traffic" AND speeding AND ticket
+- For low-detail routine traffic-stop facts with no detention/search/counsel issue, prefer narrow traffic-stop queries and avoid broad Charter landmark templates.
 - Criminal Code sections are verified against a full local Criminal Code database. Use real section numbers only (e.g., "s. 348(1)(b)").
 - For civil_law: cite specific statutes with section numbers.
 - For charter: use section number format like "s. 7", "s. 8", "s. 11(b)", "s. 24(2)".

@@ -32,7 +32,10 @@ describe("retrieval failure set", () => {
           maxResults: testCase.maxResults,
         });
 
-        if ((testCase.maxResults || 0) === 0) {
+        const expectedResult =
+          testCase.expectedResult || ((testCase.maxResults || 0) === 0 ? "zero_expected" : "nonzero_required");
+
+        if (expectedResult === "zero_expected") {
           expect(cases).toEqual([]);
           expect(meta.reason).toBe("no_verified");
         } else {
@@ -45,6 +48,12 @@ describe("retrieval failure set", () => {
 
         for (const excluded of testCase.shouldExclude || []) {
           expect(JSON.stringify(cases)).not.toContain(excluded);
+        }
+
+        if (meta.fallbackPathUsed) {
+          expect(meta.fallbackDiagnostics).toBeTruthy();
+          expect(typeof meta.fallbackDiagnostics.fallbackTriggerReason).toBe("string");
+          expect(meta.fallbackDiagnostics.fallbackTriggerReason.length).toBeGreaterThan(0);
         }
 
         
