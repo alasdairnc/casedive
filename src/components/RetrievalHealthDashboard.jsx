@@ -17,6 +17,44 @@ import {
 
 const TOKEN_STORAGE_KEY = "casediveRetrievalHealthToken";
 
+function healthSummaryFromState({ data, status, oneHourChecks }) {
+  if (!data) {
+    return {
+      headline: "Waiting for telemetry",
+      detail: "Connect to /api/retrieval-health to calculate health checks.",
+    };
+  }
+
+  const critical = oneHourChecks.filter((check) => check.badge.level === "critical").length;
+  const warning = oneHourChecks.filter((check) => check.badge.level === "warning").length;
+
+  if (critical > 0) {
+    return {
+      headline: "Needs immediate attention",
+      detail: `${critical} critical signal(s) exceeded thresholds in the last hour.`,
+    };
+  }
+
+  if (warning > 0 || status.label === "Warning") {
+    return {
+      headline: "Watch closely",
+      detail: `${warning || 1} signal(s) are approaching threshold limits.`,
+    };
+  }
+
+  if ((data?.totalStoredEvents || 0) === 0) {
+    return {
+      headline: "No recent events",
+      detail: "Health cannot be assessed until retrieval traffic is observed.",
+    };
+  }
+
+  return {
+    headline: "System looks healthy",
+    detail: "Key failure and latency signals are currently within target ranges.",
+  };
+}
+
 export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const t = useTheme();
   const { isDark, toggleTheme } = useThemeActions();
@@ -84,6 +122,33 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const p95Badge = severityForMetric(oneHour?.latencyMs?.p95, thresholds?.p95LatencyMs1h, "above_is_bad");
   const recentFailures = Array.isArray(data?.recentFailures) ? data.recentFailures : [];
   const improvements = Array.isArray(data?.improvements) ? data.improvements : [];
+  const oneHourChecks = [
+    {
+      id: "error-rate",
+      label: "Error rate (1h)",
+      valueLabel: pct(oneHour?.rates?.errorRate),
+      thresholdLabel: pct(thresholds?.errorRate1h),
+      badge: errorBadge,
+      whyItMatters: "High values indicate retrieval requests are failing.",
+    },
+    {
+      id: "no-verified-rate",
+      label: "No-verified rate (1h)",
+      valueLabel: pct(oneHour?.rates?.noVerifiedRate),
+      thresholdLabel: pct(thresholds?.noVerifiedRate1h),
+      badge: noVerifiedBadge,
+      whyItMatters: "High values mean users get no verified case law despite a response.",
+    },
+    {
+      id: "p95-latency",
+      label: "p95 latency (1h)",
+      valueLabel: `${num(oneHour?.latencyMs?.p95)} ms`,
+      thresholdLabel: `${num(thresholds?.p95LatencyMs1h)} ms`,
+      badge: p95Badge,
+      whyItMatters: "Tail latency captures the slowest user experiences.",
+    },
+  ];
+  const healthSummary = healthSummaryFromState({ data, status, oneHourChecks });
 
   const copyFixPrompt = async (sample, index) => {
     const prompt = buildAgentFixPrompt(sample);
@@ -174,6 +239,49 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             >
               Live Internal Telemetry
             </div>
+          </div>
+        </div>
+
+        <div style={{ border: `1px solid ${t.borderLight}`, padding: 16, marginBottom: 20, background: t.bg }}>
+          <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 10 }}>
+            Health Overview
+          </div>
+          <div style={{ fontFamily: "'Times New Roman', serif", fontSize: 26, color: status.color, marginBottom: 8, lineHeight: 1.2 }}>
+            {healthSummary.headline}
+          </div>
+          <p style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 13, color: t.textSecondary, margin: "0 0 14px 0", lineHeight: 1.5 }}>
+            {healthSummary.detail}
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10 }}>
+            {oneHourChecks.map((check) => (
+              <div key={check.id} style={{ border: `1px solid ${t.borderLight}`, padding: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+                  <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12, color: t.text }}>{check.label}</div>
+                  <span
+                    style={{
+                      border: `1px solid ${check.badge.border}`,
+                      color: check.badge.color,
+                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontSize: 10,
+                      letterSpacing: 1.2,
+                      textTransform: "uppercase",
+                      padding: "2px 6px",
+                    }}
+                  >
+                    {check.badge.label}
+                  </span>
+                </div>
+                <div style={{ fontFamily: "'Courier New', monospace", fontSize: 18, color: t.text, marginBottom: 4 }}>
+                  {check.valueLabel}
+                </div>
+                <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textSecondary, marginBottom: 6 }}>
+                  Threshold: {check.thresholdLabel}
+                </div>
+                <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textTertiary, lineHeight: 1.45 }}>
+                  {check.whyItMatters}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -290,6 +398,32 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               Token on file ({token.length} chars)
             </p>
           )}
+        </div>
+
+        <div style={{ border: `1px solid ${t.borderLight}`, padding: 16, marginBottom: 20, background: t.bg }}>
+          <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase", color: t.textTertiary, marginBottom: 10 }}>
+            How To Read This
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+            <div style={{ border: `1px solid ${t.borderLight}`, padding: 10 }}>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.text, marginBottom: 6 }}>1h checks drive health status</div>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textSecondary, lineHeight: 1.4 }}>
+                The top status focuses on the last hour because it best reflects current user impact.
+              </div>
+            </div>
+            <div style={{ border: `1px solid ${t.borderLight}`, padding: 10 }}>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.text, marginBottom: 6 }}>Start with critical failures</div>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textSecondary, lineHeight: 1.4 }}>
+                If any check is critical, review Recent Failed Scenarios before tuning thresholds.
+              </div>
+            </div>
+            <div style={{ border: `1px solid ${t.borderLight}`, padding: 10 }}>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.text, marginBottom: 6 }}>Use 5m vs 1h for diagnosis</div>
+              <div style={{ fontFamily: "'Helvetica Neue', sans-serif", fontSize: 11, color: t.textSecondary, lineHeight: 1.4 }}>
+                A bad 5m with healthy 1h usually means a short spike, not a sustained degradation.
+              </div>
+            </div>
+          </div>
         </div>
 
         {error && (
