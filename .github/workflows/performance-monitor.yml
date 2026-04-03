@@ -8,8 +8,9 @@ on:
         required: false
         type: string
       perf_health_url:
-        description: Optional override for retrieval health endpoint URL
+        description: Retrieval health endpoint URL
         required: false
+        default: https://www.casedive.ca/api/retrieval-health
         type: string
   schedule:
     - cron: "*/30 * * * *"
@@ -27,7 +28,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci

@@ -24,7 +24,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -60,14 +59,8 @@ jobs:
             const fs = require('fs');
             const payload = JSON.parse(fs.readFileSync('perf-monitor.json', 'utf8'));
             const failures = Array.isArray(payload.recentFailures) ? payload.recentFailures : [];
-            const topFailures = failures.slice(0, 5);
+            const top = failures.slice(0, 5);
             const improvements = Array.isArray(payload.improvements) ? payload.improvements.slice(0, 5) : [];
-            const topImprovement = improvements[0] || null;
-            const autofixClass = topImprovement?.classId || 'general_criminal';
-            const issueTitle = topImprovement
-              ? `Retrieval autofix: ${autofixClass} (${payload.oneHour?.noVerifiedRate ?? 'n/a'} no-verified)`
-              : `Retrieval health regression detected (${payload.oneHour?.noVerifiedRate ?? 'n/a'} no-verified)`;
-
             const issueBody = [
               'Automated retrieval-health triage',
               '',
@@ -82,68 +75,27 @@ jobs:
               `- avgRelevance: ${payload.oneHour?.avgRelevance ?? 'n/a'}`,
               `- p95LatencyMs: ${payload.oneHour?.p95LatencyMs ?? 'n/a'}`,
               '',
-              `Autofix target: ${autofixClass}`,
-              topImprovement ? `Failure count: ${topImprovement.failureCount || 0}` : 'Failure count: n/a',
-              topImprovement
-                ? `Suggested terms: ${(topImprovement.suggestedTerms || []).slice(0, 6).join(' | ') || 'none'}`
-                : 'Suggested terms: none',
-              '',
               'Top failed scenarios:',
-              ...topFailures.map(
-                (failure) =>
-                  `- ${failure.ts || 'n/a'} | ${failure.endpoint || 'unknown'} | ${failure.reason || 'unknown'} | ${failure.scenarioSnippet || '(missing scenario)'} `
-              ),
+              ...top.map((f, i) => `1. ${f.ts || 'n/a'} | ${f.endpoint || 'unknown'} | ${f.reason || 'unknown'} | ${f.scenarioSnippet || '(missing scenario)'}`),
               '',
-              'Recommended fix path:',
-              '- Start in api/_caseLawRetrieval.js if the query needs broader search terms or better fallback ordering.',
-              '- Update api/_retrievalImprovements.js if the scenario class needs better classification or term hints.',
-              '- Keep analyze latency flat; do not add a second network hop unless it is narrowly scoped.',
-              '- Add or update regression tests in tests/unit/retrievalImprovements.test.js and any touched retrieval tests.',
-              '',
-              'Relevant files:',
-              '- api/_caseLawRetrieval.js',
-              '- api/_retrievalImprovements.js',
-              '- api/analyze.js',
-              '- api/retrieve-caselaw.js',
-              '- tests/unit/retrievalImprovements.test.js',
+              'Top suggested improvements:',
+              ...(improvements.length > 0
+                ? improvements.map((item) => `1. ${item.classId || 'general'} | ${item.failureCount || 0}x | ${item.scenarioSnippet || '(missing scenario)'} | ${(item.suggestedTerms || []).slice(0, 3).join(' | ') || 'no suggested terms'}`)
+                : ['1. none']),
               '',
               'Specialized agent to use: CaseDive Retrieval Health (.github/agents/retrieval-health.agent.md)',
               '',
               'Agent prompt:',
-              'Investigate and fix no-case-law retrieval failures for the listed scenario class. Prioritize the smallest safe patch that improves verified case-law return rate without regressing latency, add or update tests that fail before the patch and pass after, and report the monitor metric change after validation.',
+              'Investigate and fix no-case-law retrieval failures from the listed scenarios. Prioritize the smallest safe patch in retrieval telemetry or case-law retrieval logic, add/extend regressions for each fixed scenario class, run relevant tests, and report before/after monitor metrics.',
             ].join('\n');
 
-            const labels = ['retrieval-health', 'performance', 'triage', 'autofix'];
-            const search = await github.rest.issues.listForRepo({
+            const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'open',
-              labels: labels.join(','),
-              per_page: 100,
+              title: `Retrieval health regression detected (${payload.oneHour?.noVerifiedRate ?? 'n/a'} no-verified)`,
+              body: issueBody,
+              labels: ['retrieval-health', 'performance', 'triage'],
             });
-
-            const existing = search.data.find((issue) => issue.title === issueTitle);
-            let issue;
-
-            if (existing) {
-              issue = await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: existing.number,
-                title: issueTitle,
-                body: issueBody,
-                labels,
-              });
-            } else {
-              issue = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: issueTitle,
-                body: issueBody,
-                labels,
-              });
-            }
-
             return String(issue.data.number);
 
       - name: Assign Copilot
