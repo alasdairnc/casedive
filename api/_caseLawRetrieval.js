@@ -426,9 +426,9 @@ function detectCoreIssue(scenario) {
       ])
     },
     robbery: {
-      tests: [/\brobbery\b/],
+      tests: [/\b(robbery|robbed|mugg(?:ed|ing)?)\b/],
       primary: "robbery",
-      subIssues: new Set(["robbery", "s. 343", "violence", "threat", "force"])
+      subIssues: new Set(["robbery", "robbed", "mugging", "s. 343", "violence", "threat", "force"])
     },
     theft: {
       tests: [
@@ -501,16 +501,34 @@ function detectCoreIssue(scenario) {
  */
 function filterBySemanticRelevance(scenario, candidates) {
   const issue = detectCoreIssue(scenario);
+  const scenarioDelaySignal = /\b(delay|delayed|adjourned|adjournment|postponed|backlog|waited|11\(b\)|reasonable\s+time|crown\s+delay)\b/i.test(
+    String(scenario || "")
+  );
+  const isTrialDelayCandidate = (candidate) => {
+    const haystack = normalizeForMatch(
+      `${candidate?.citation || ""} ${candidate?.title || ""} ${candidate?.summary || ""} ${candidate?.matchedTerm || ""}`
+    );
+    return /\b(jordan|cody|11\s*b|11\(b\)|trial\s+delay|reasonable\s+time|crown\s+delay)\b/i.test(haystack);
+  };
+
+  const withoutDelayLeaks = Array.isArray(candidates)
+    ? candidates.filter((candidate) => {
+        if (!candidate) return false;
+        if (issue.primary === "trial_delay" || scenarioDelaySignal) return true;
+        return !isTrialDelayCandidate(candidate);
+      })
+    : [];
+
   if (issue.allowed.size === 0) {
     return {
-      candidates,
-      dropCount: 0,
+      candidates: withoutDelayLeaks,
+      dropCount: Math.max(0, (candidates || []).length - withoutDelayLeaks.length),
       fallbackUsed: false,
       issue,
     };
   }
 
-  const filtered = candidates.map((c) => {
+  const filtered = withoutDelayLeaks.map((c) => {
     const summary = normalizeForMatch(`${c.title || ""} ${c.summary || ""}`);
     const semanticMatches = [...issue.allowed].filter((sub) => termMatchesText(sub, summary));
     if (semanticMatches.length === 0) return null;
@@ -532,15 +550,15 @@ function filterBySemanticRelevance(scenario, candidates) {
   if (filtered.length > 0) {
     return {
       candidates: filtered,
-      dropCount: Math.max(0, candidates.length - filtered.length),
+      dropCount: Math.max(0, withoutDelayLeaks.length - filtered.length) + Math.max(0, (candidates || []).length - withoutDelayLeaks.length),
       fallbackUsed: false,
       issue,
     };
   }
 
   return {
-    candidates,
-    dropCount: candidates.length,
+    candidates: withoutDelayLeaks,
+    dropCount: Math.max(0, (candidates || []).length - withoutDelayLeaks.length),
     fallbackUsed: true,
     issue,
   };
@@ -620,6 +638,9 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
   }
 
   if (scored.length === 0) {
+    // Prefer no case-law result over an unrelated broad landmark when there is no strong issue signal.
+    if (issue.primary === "general_criminal") return [];
+
     const genericFallback = Array.isArray(MASTER_CASE_LAW_DB) ? MASTER_CASE_LAW_DB[0] : null;
     if (!genericFallback?.citation) return [];
 

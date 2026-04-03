@@ -1,5 +1,25 @@
 export const RETRIEVAL_FAILURE_SET = [
   {
+    id: "mugging_not_jordan",
+    scenario: "I was mugged for $50 while walking home.",
+    expectedPrimary: "robbery",
+    shouldInclude: [],
+    shouldExclude: ["R v Jordan", "R. v. Jordan", "R v Cody", "11(b)", "trial delay"],
+    expectedKeywords: [],
+    minResults: 0,
+    maxResults: 0,
+    landmarkMatches: [
+      {
+        citation: "R v Jordan, 2016 SCC 27",
+        title: "R v Jordan",
+        ratio: "Sets trial delay ceilings under Charter section 11(b)",
+        tags: ["charter", "11(b)", "trial delay"],
+        topics: ["trial delay", "reasonable time"],
+        year: 2016,
+      },
+    ],
+  },
+  {
     id: "traffic_minor_hape",
     scenario: "I was pulled over for going 1 km/h over the speed limit. What case law applies?",
     expectedPrimary: "minor_traffic_stop",
