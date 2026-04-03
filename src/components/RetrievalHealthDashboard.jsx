@@ -322,7 +322,7 @@ function WindowPanel({ label, windowStats, thresholds, t }) {
   );
 }
 
-export default function RetrievalHealthDashboard({ onNavigateHome, onNavigateRecommendations }) {
+export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const t = useTheme();
   const { isDark, toggleTheme } = useThemeActions();
   const [token, setToken] = useState(() => sessionStorage.getItem(TOKEN_STORAGE_KEY) || "");
@@ -430,25 +430,6 @@ export default function RetrievalHealthDashboard({ onNavigateHome, onNavigateRec
           >
             Back to app
           </button>
-          {typeof onNavigateRecommendations === "function" && (
-            <button
-              type="button"
-              onClick={onNavigateRecommendations}
-              style={{
-                background: "none",
-                border: `1px solid ${t.borderLight}`,
-                padding: "8px 14px",
-                cursor: "pointer",
-                fontFamily: "'Helvetica Neue', sans-serif",
-                fontSize: 11,
-                letterSpacing: 1.5,
-                textTransform: "uppercase",
-                color: t.textSecondary,
-              }}
-            >
-              Recommendations
-            </button>
-          )}
           <button
             type="button"
             onClick={toggleTheme}
