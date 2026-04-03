@@ -1,0 +1,66 @@
+{
+  "generatedAt": "2026-04-03T03:51:47.593Z",
+  "best": {
+    "minScore": 5,
+    "minTokenOverlap": 2,
+    "minConceptOverlap": 1,
+    "passRate": 100,
+    "passed": 14,
+    "evaluated": 14,
+    "avgPrecision": 0.9285714285714286,
+    "avgRelevance": 7.142857142857143
+  },
+  "topCandidates": [
+    {
+      "minScore": 5,
+      "minTokenOverlap": 2,
+      "minConceptOverlap": 1,
+      "passRate": 100,
+      "passed": 14,
+      "evaluated": 14,
+      "avgPrecision": 0.9285714285714286,
+      "avgRelevance": 7.142857142857143
+    },
+    {
+      "minScore": 5,
+      "minTokenOverlap": 1,
+      "minConceptOverlap": 2,
+      "passRate": 100,
+      "passed": 14,
+      "evaluated": 14,
+      "avgPrecision": 0.9285714285714286,
+      "avgRelevance": 7.142857142857143
+    },
+    {
+      "minScore": 5,
+      "minTokenOverlap": 1,
+      "minConceptOverlap": 1,
+      "passRate": 100,
+      "passed": 14,
+      "evaluated": 14,
+      "avgPrecision": 0.9285714285714286,
+      "avgRelevance": 7.142857142857143
+    },
+    {
+      "minScore": 4,
+      "minTokenOverlap": 2,
+      "minConceptOverlap": 1,
+      "passRate": 100,
+      "passed": 14,
+      "evaluated": 14,
+      "avgPrecision": 0.9285714285714286,
+      "avgRelevance": 7.142857142857143
+    },
+    {
+      "minScore": 4,
+      "minTokenOverlap": 1,
+      "minConceptOverlap": 2,
+      "passRate": 100,
+      "passed": 14,
+      "evaluated": 14,
+      "avgPrecision": 0.9285714285714286,
+      "avgRelevance": 7.142857142857143
+    }
+  ],
+  "totalCandidates": 8
+}
