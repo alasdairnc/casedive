@@ -58,7 +58,7 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
             right: 0,
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 10,
-            color: atLimit ? t.accentRed : t.textFaint,
+            color: atLimit ? t.accentRed : t.textTertiary,
             pointerEvents: "none",
             letterSpacing: "0.04em",
           }}>
@@ -80,23 +80,33 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
           disabled={loading || !query.trim() || atLimit}
           style={{
             background: "none",
-            border: `1px solid ${loading || !query.trim() || atLimit ? t.border : t.accent}`,
-            color: loading || !query.trim() || atLimit ? t.textTertiary : t.accent,
+            border: `1px solid ${loading || !query.trim() || atLimit ? t.border : t.accentOlive}`,
+            color: loading || !query.trim() || atLimit ? t.textFaint : t.accentOlive,
             padding: "9px 28px",
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 11,
             letterSpacing: "0.22em",
             textTransform: "uppercase",
-            cursor: loading ? "wait" : "pointer",
+            cursor: loading ? "wait" : (!query.trim() || atLimit ? "default" : "pointer"),
             opacity: !query.trim() || atLimit ? 0.4 : 1,
             transition: "border-color 0.2s, color 0.2s, opacity 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            if (loading || !query.trim() || atLimit) return;
+            e.currentTarget.style.borderColor = t.text;
+            e.currentTarget.style.color = t.text;
+          }}
+          onMouseLeave={(e) => {
+            if (loading || !query.trim() || atLimit) return;
+            e.currentTarget.style.borderColor = t.accentOlive;
+            e.currentTarget.style.color = t.accentOlive;
           }}
         >
           {loading ? "Analyzing\u2026" : "Research"}
         </button>
         <span style={{
           fontSize: 11,
-          color: t.textFaint,
+          color: t.textTertiary,
           fontFamily: "'Helvetica Neue', sans-serif",
           letterSpacing: "0.02em",
         }}>

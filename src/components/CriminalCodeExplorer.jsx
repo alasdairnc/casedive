@@ -77,7 +77,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 fontFamily: "'Courier New', monospace",
                 fontSize: 13,
                 fontWeight: 700,
-                color: t.accent,
+                color: t.accentOlive,
                 whiteSpace: "nowrap",
               }}
             >
@@ -301,7 +301,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                     style={{
                       fontFamily: "'Courier New', monospace",
                       fontSize: 11,
-                      color: t.accent,
+                      color: t.accentOlive,
                       background: t.bg,
                       padding: "2px 6px",
                       border: `1px solid ${t.borderLight}`,
@@ -329,7 +329,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 style={{
                   fontFamily: "'Helvetica Neue', sans-serif",
                   fontSize: 10,
-                  color: t.textFaint,
+                  color: t.textTertiary,
                   letterSpacing: 0.5,
                 }}
               >

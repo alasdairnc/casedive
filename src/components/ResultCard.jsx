@@ -260,14 +260,14 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
               border: "none",
               cursor: "pointer",
               padding: 4,
-              color: bookmarked ? t.accent : t.textFaint,
+              color: bookmarked ? t.accentOlive : t.textTertiary,
               transition: "color 0.15s",
               flexShrink: 0,
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = t.accent; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = bookmarked ? t.accent : t.textFaint; }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = t.accentOlive; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = bookmarked ? t.accentOlive : t.textTertiary; }}
           >
-            <BookmarkIcon filled={bookmarked} color={bookmarked ? t.accent : "currentColor"} />
+            <BookmarkIcon filled={bookmarked} color={bookmarked ? t.accentOlive : "currentColor"} />
           </button>
         )}
       </div>
@@ -293,7 +293,7 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
             fontSize: 9,
             letterSpacing: "0.32em",
             textTransform: "uppercase",
-            color: t.textFaint,
+            color: t.textTertiary,
             marginBottom: 5,
           }}>
             Why it matched
@@ -301,7 +301,7 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
           <div style={{
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 12,
-            color: t.textTertiary,
+            color: t.textSecondary,
             lineHeight: 1.65,
             borderLeft: `1px solid ${t.border}`,
             paddingLeft: 12,
@@ -322,10 +322,10 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
         }}>
           <span style={{ color: t.text }}>{verification.title}</span>
           {verification.severity && verification.severity !== "N/A" && (
-            <span style={{ color: t.textFaint }}> &middot; {verification.severity}</span>
+            <span style={{ color: t.textTertiary }}> &middot; {verification.severity}</span>
           )}
           {verification.maxPenalty && verification.maxPenalty !== "N/A" && (
-            <span style={{ color: t.textFaint }}> &middot; Max: {verification.maxPenalty}</span>
+            <span style={{ color: t.textTertiary }}> &middot; Max: {verification.maxPenalty}</span>
           )}
         </div>
       )}

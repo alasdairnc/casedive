@@ -56,7 +56,7 @@ export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeE
               >
                 Saved
                 {bookmarkCount > 0 && (
-                  <span style={{ color: t.accent }}>
+                  <span style={{ color: t.accentOlive }}>
                     &thinsp;({bookmarkCount})
                   </span>
                 )}

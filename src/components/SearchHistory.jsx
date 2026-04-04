@@ -124,7 +124,7 @@ export default function SearchHistory({ history, onSelect, onClose, clearHistory
                   </div>
                   <div style={{
                     fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
-                    color: t.textFaint, marginTop: 3, letterSpacing: 0.5,
+                    color: t.textTertiary, marginTop: 3, letterSpacing: 0.5,
                   }}>
                     {formatDate(entry.timestamp)} · {formatTime(entry.timestamp)}
                     {(() => {

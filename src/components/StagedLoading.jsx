@@ -28,9 +28,9 @@ export default function StagedLoading() {
             <div key={i} style={{
               fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
               letterSpacing: 2, textTransform: "uppercase",
-              color: i <= stage ? t.textSecondary : t.textFaint,
+              color: i <= stage ? t.textSecondary : t.textTertiary,
               transition: "color 0.4s, opacity 0.4s",
-              opacity: i <= stage ? 1 : 0.3,
+              opacity: i <= stage ? 1 : 0.45,
               display: "flex", alignItems: "center", gap: 12,
             }}>
               <span style={{

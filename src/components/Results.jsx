@@ -25,7 +25,7 @@ function SectionBreak({ label, count, t }) {
               fontFamily: "'Helvetica Neue', sans-serif",
               fontSize: 9,
               letterSpacing: "0.2em",
-              color: t.textFaint,
+              color: t.textTertiary,
             }}>
               {count}
             </div>
@@ -220,14 +220,14 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
             textTransform: "uppercase",
             border: "none",
             background: "none",
-            color: pdfState === "error" ? t.accentRed : t.textFaint,
+            color: pdfState === "error" ? t.accentRed : t.textTertiary,
             padding: 0,
             cursor: pdfState === "loading" ? "default" : "pointer",
             opacity: pdfState === "loading" ? 0.5 : 1,
             transition: "color 0.15s",
           }}
           onMouseEnter={(e) => { if (pdfState !== "loading") e.currentTarget.style.color = t.textSecondary; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = pdfState === "error" ? t.accentRed : t.textFaint; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = pdfState === "error" ? t.accentRed : t.textTertiary; }}
         >
           {pdfState === "loading" ? "Generating\u2026" : pdfState === "error" ? "Export failed" : "\u2193 Export PDF"}
         </button>
@@ -412,7 +412,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
                   fontFamily: "'Helvetica Neue', sans-serif",
                   fontSize: 11,
                   letterSpacing: "0.08em",
-                  color: t.accent,
+                  color: t.accentOlive,
                   textDecoration: "none",
                   marginTop: 14,
                 }}
@@ -427,7 +427,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
               <div style={{
                 fontFamily: "'Helvetica Neue', sans-serif",
                 fontSize: 10,
-                color: t.textFaint,
+                color: t.textTertiary,
                 marginTop: 10,
                 letterSpacing: "0.04em",
               }}>
@@ -472,7 +472,7 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
         <p style={{
           fontFamily: "'Helvetica Neue', sans-serif",
           fontSize: 11,
-          color: t.textFaint,
+          color: t.textSecondary,
           lineHeight: 1.65,
           margin: 0,
           letterSpacing: "0.02em",

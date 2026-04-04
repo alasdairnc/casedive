@@ -8,7 +8,7 @@ export default function FiltersPanel({ filters, setFilters }) {
   const selectStyle = {
     background: "none",
     border: "none",
-    borderBottom: `1px solid ${t.borderLight}`,
+    borderBottom: `1px solid ${t.border}`,
     color: t.textTertiary,
     fontFamily: "'Helvetica Neue', sans-serif",
     fontSize: 11,
@@ -18,7 +18,7 @@ export default function FiltersPanel({ filters, setFilters }) {
     outline: "none",
     appearance: "none",
     WebkitAppearance: "none",
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4'%3E%3Cpath fill='%23666' d='M0 0l3.5 4L7 0z'/%3E%3C/svg%3E")`,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4'%3E%3Cpath fill='${encodeURIComponent(t.textTertiary)}' d='M0 0l3.5 4L7 0z'/%3E%3C/svg%3E")`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "right 2px center",
     backgroundSize: "6px",
@@ -94,7 +94,7 @@ export default function FiltersPanel({ filters, setFilters }) {
               fontFamily: "'Helvetica Neue', sans-serif",
               fontSize: 11,
               letterSpacing: "0.06em",
-              color: active ? t.textSecondary : t.textFaint,
+              color: active ? t.textSecondary : t.textTertiary,
               transition: "color 0.15s",
               textDecoration: active ? "none" : "line-through",
             }}
@@ -119,7 +119,7 @@ export default function FiltersPanel({ filters, setFilters }) {
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 10,
             letterSpacing: "0.14em",
-            color: t.textFaint,
+            color: t.textTertiary,
             padding: 0,
             textTransform: "uppercase",
           }}

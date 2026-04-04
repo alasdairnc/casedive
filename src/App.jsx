@@ -46,7 +46,7 @@ function EmptyState({ setQuery, t }) {
       <p style={{
         fontFamily: "'Helvetica Neue', sans-serif",
         fontSize: "clamp(12px, 1.8vw, 13px)",
-        color: t.textTertiary,
+        color: t.textSecondary,
         lineHeight: 1.75,
         margin: "0 0 28px 0",
         maxWidth: 480,
@@ -62,7 +62,7 @@ function EmptyState({ setQuery, t }) {
           fontSize: 9,
           letterSpacing: "0.38em",
           textTransform: "uppercase",
-          color: t.textFaint,
+          color: t.textTertiary,
           marginBottom: 10,
         }}>
           Try an example
@@ -237,7 +237,7 @@ function AppInner() {
           animation: cdFadeSlideIn 0.28s ease-out forwards;
         }
         ::placeholder {
-          color: ${t.textFaint};
+          color: ${t.textTertiary};
           opacity: 1;
         }
         select option {
@@ -267,7 +267,7 @@ function AppInner() {
           fontFamily: "'Helvetica Neue', sans-serif",
           fontSize: 10,
           lineHeight: 1.5,
-          color: t.textFaint,
+          color: t.textSecondary,
           letterSpacing: "0.02em",
           margin: 0,
         }}>
@@ -288,12 +288,12 @@ function AppInner() {
               fontSize: 10,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
-              color: t.textFaint,
+              color: t.textTertiary,
               padding: 0,
               transition: "color 0.15s",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.color = t.textSecondary; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = t.textFaint; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = t.textTertiary; }}
           >
             History ({Math.min(history.length, 10)})
           </button>
@@ -396,7 +396,7 @@ function AppInner() {
           <p style={{
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 10,
-            color: t.textFaint,
+            color: t.textTertiary,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
             margin: "0 0 10px 0",
@@ -406,7 +406,7 @@ function AppInner() {
           <p style={{
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 10,
-            color: t.textFaint,
+            color: t.textSecondary,
             lineHeight: 1.6,
             margin: "0 0 14px 0",
           }}>
@@ -416,14 +416,14 @@ function AppInner() {
           <p style={{
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 10,
-            color: t.textFaint,
+            color: t.textTertiary,
             margin: 0,
           }}>
-            <a href="/about.html" style={{ color: t.textFaint, textDecoration: "none" }}>About</a>
+            <a href="/about.html" style={{ color: t.textTertiary, textDecoration: "none" }}>About</a>
             {" \u00B7 "}
-            <a href="/privacy.html" style={{ color: t.textFaint, textDecoration: "none" }}>Privacy</a>
+            <a href="/privacy.html" style={{ color: t.textTertiary, textDecoration: "none" }}>Privacy</a>
             {" \u00B7 "}
-            <a href="/terms.html" style={{ color: t.textFaint, textDecoration: "none" }}>Terms</a>
+            <a href="/terms.html" style={{ color: t.textTertiary, textDecoration: "none" }}>Terms</a>
           </p>
         </div>
       </footer>

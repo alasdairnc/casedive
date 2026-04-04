@@ -129,7 +129,7 @@ export default function BookmarksPanel({ bookmarks, removeBookmark, clearBookmar
                     </span>
                     <span style={{
                       fontFamily: "'Helvetica Neue', sans-serif", fontSize: 10,
-                      color: t.textFaint, letterSpacing: 0.5,
+                      color: t.textTertiary, letterSpacing: 0.5,
                     }}>
                       {formatDate(entry.bookmarkedAt)}
                     </span>
