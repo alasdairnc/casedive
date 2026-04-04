@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest run --exclude tests/unit/**/*.test.jsx",
-    "test:component": "vitest run tests/unit/**/*.test.jsx",
+    "test:component": "vitest run tests/unit/*.test.jsx",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:report": "playwright show-report",

@@ -107,7 +107,7 @@ test.describe("CaseSummaryModal", () => {
     await setupAndSearch(page);
 
     // Case law cards are clickable divs — click the card containing the citation
-    const caseLawCitation = page.getByText("R v Briscoe, 2010 SCC 13").first();
+    const caseLawCitation = page.getByTestId("results-section").getByText("R v Briscoe, 2010 SCC 13").first();
     await expect(caseLawCitation).toBeVisible({ timeout: 5000 });
     await caseLawCitation.click();
 
@@ -168,7 +168,7 @@ test.describe("RetrievalHealthDashboard", () => {
   };
 
   test("renders the dashboard when navigating to /internal/retrieval-health", async ({ page }) => {
-    await page.route("/api/retrieval-health", async (route) => {
+    await page.route("/api/retrieval-health**", async (route) => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
@@ -182,7 +182,7 @@ test.describe("RetrievalHealthDashboard", () => {
   });
 
   test("displays window panel labels after data loads", async ({ page }) => {
-    await page.route("/api/retrieval-health", async (route) => {
+    await page.route("/api/retrieval-health**", async (route) => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
@@ -198,7 +198,7 @@ test.describe("RetrievalHealthDashboard", () => {
   });
 
   test("shows unauthorized state first, then renders dashboard after token is saved", async ({ page }) => {
-    await page.route("/api/retrieval-health", async (route) => {
+    await page.route("/api/retrieval-health**", async (route) => {
       const auth = route.request().headers()["authorization"];
       if (auth === "Bearer good-token") {
         await route.fulfill({
@@ -229,7 +229,7 @@ test.describe("RetrievalHealthDashboard", () => {
   });
 
   test("persists retrieval health token across reload", async ({ page }) => {
-    await page.route("/api/retrieval-health", async (route) => {
+    await page.route("/api/retrieval-health**", async (route) => {
       const auth = route.request().headers()["authorization"];
       if (auth === "Bearer persist-token") {
         await route.fulfill({

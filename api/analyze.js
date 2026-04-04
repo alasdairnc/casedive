@@ -111,6 +111,10 @@ function detectScenarioIssueForRanking(scenarioTokens) {
   const has = (token) => scenarioTokens.has(token);
   const hasAny = (tokens) => tokens.some((t) => has(t));
 
+  if (
+    (has("km/h") || (hasAny(["pulled", "roadside", "traffic"]) && hasAny(["speed", "speeding"]))) &&
+    hasAny(["limit", "speed", "speeding", "ticket", "citation", "fine", "over"])
+  ) return "minor_traffic_stop";
   if (hasAny(["delay", "adjourned", "adjournment", "backlog", "11b", "jordan", "cody"])) return "trial_delay";
   if (hasAny(["counsel", "lawyer"]) && hasAny(["detained", "detention", "arrested", "arrest"])) return "charter_counsel";
   if (hasAny(["search", "seizure", "warrant", "privacy", "phone", "device"])) return "charter_search_seizure";
@@ -144,7 +148,10 @@ function detectCaseDomainsForRanking(item) {
 
 function caseCompatibleWithScenarioIssue(issue, caseDomains) {
   if (issue === "general_criminal") return true;
-  if (!(caseDomains instanceof Set) || caseDomains.size === 0) return true;
+  if (!(caseDomains instanceof Set) || caseDomains.size === 0) {
+    const strictUnknownDomainIssues = new Set(["theft", "robbery", "trial_delay", "minor_traffic_stop", "charter_counsel"]);
+    return !strictUnknownDomainIssues.has(issue);
+  }
 
   const compatibility = {
     trial_delay: new Set(["trial_delay"]),
@@ -275,9 +282,15 @@ function selectTopRetrievedCases(scenario, retrievedCases, limit = 3) {
   const scenarioTokens = new Set(tokenizeForRanking(scenario));
   const scenarioIssue = detectScenarioIssueForRanking(scenarioTokens);
   const minOverlap = scenarioTokens.size >= 8 ? 3 : scenarioTokens.size >= 4 ? 2 : 1;
+  const strictNoFallbackIssues = new Set(["minor_traffic_stop", "charter_counsel"]);
+
+  const compatibleCases = cases.filter((c) => {
+    const candidateDomains = detectCaseDomainsForRanking(c);
+    return caseCompatibleWithScenarioIssue(scenarioIssue, candidateDomains);
+  });
 
   // Filter: allow a dynamic overlap threshold or strong ranked score to avoid overly strict misses.
-  const filtered = cases.filter(c => {
+  const filtered = compatibleCases.filter((c) => {
     const haystack = `${c?.citation || ""} ${c?.summary || ""}`.toLowerCase();
     let overlapCount = 0;
     for (const token of scenarioTokens) {
@@ -287,7 +300,11 @@ function selectTopRetrievedCases(scenario, retrievedCases, limit = 3) {
     return overlapCount >= minOverlap || strongScore;
   });
 
-  const pool = filtered.length > 0 ? filtered : cases;
+  if (filtered.length === 0 && strictNoFallbackIssues.has(scenarioIssue)) {
+    return [];
+  }
+
+  const pool = filtered.length > 0 ? filtered : compatibleCases.length > 0 ? compatibleCases : cases;
 
   pool.sort((a, b) => {
     const scoreDiff = scoreRetrievedCase(scenarioTokens, scenarioIssue, b) - scoreRetrievedCase(scenarioTokens, scenarioIssue, a);
