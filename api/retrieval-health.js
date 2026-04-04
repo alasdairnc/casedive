@@ -18,6 +18,17 @@ import {
   logError,
 } from "./_logging.js";
 
+const MAX_FAILURE_ARCHIVE_LIMIT = 100;
+const MAX_FAILURE_ARCHIVE_OFFSET = 1000;
+
+function parseBoundedInt(value, fallback, min, max) {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return fallback;
+  const int = Math.floor(num);
+  if (int < min) return fallback;
+  return Math.min(max, int);
+}
+
 function isAuthorized(req) {
   const expectedToken = process.env.RETRIEVAL_HEALTH_TOKEN || "";
   if (!expectedToken) {
@@ -51,17 +62,17 @@ export default async function handler(req, res) {
 
   try {
     const url = new URL(req.url || "http://localhost/api/retrieval-health", "http://localhost");
-    const failureLimit = Number(url.searchParams.get("failureLimit") || 20);
-    const failuresBeforeTs = Number(url.searchParams.get("failuresBeforeTs") || 0);
-    const failuresOffset = Number(url.searchParams.get("failuresOffset") || 0);
+    const failureLimit = parseBoundedInt(url.searchParams.get("failureLimit"), 20, 1, MAX_FAILURE_ARCHIVE_LIMIT);
+    const failuresBeforeTs = parseBoundedInt(url.searchParams.get("failuresBeforeTs"), null, 1, Number.MAX_SAFE_INTEGER);
+    const failuresOffset = parseBoundedInt(url.searchParams.get("failuresOffset"), 0, 0, MAX_FAILURE_ARCHIVE_OFFSET);
 
     const [snapshot, trendline, failureArchive] = await Promise.all([
       getRetrievalHealthSnapshot(),
       getTrendlineSnapshots(),
       getFailureScenarioPage({
         limit: failureLimit,
-        beforeTs: failuresBeforeTs > 0 ? failuresBeforeTs : null,
-        offset: failuresOffset > 0 ? failuresOffset : 0,
+        beforeTs: failuresBeforeTs,
+        offset: failuresOffset,
       }),
     ]);
     const alerts = evaluateRetrievalAlerts(snapshot);

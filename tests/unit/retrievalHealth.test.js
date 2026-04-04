@@ -225,6 +225,23 @@ describe("retrieval-health handler", () => {
     expect(res.headers["Content-Security-Policy"]).toBe("default-src 'none'");
   });
 
+  it("clamps archive pagination query params before reading failures", async () => {
+    const req = {
+      method: "GET",
+      url: "/api/retrieval-health?failureLimit=999&failuresBeforeTs=Infinity&failuresOffset=5000",
+      headers: { authorization: "Bearer test-token" },
+    };
+    const res = createRes();
+
+    await handler(req, res);
+
+    expect(mockGetFailureScenarioPage).toHaveBeenCalledWith({
+      limit: 100,
+      beforeTs: null,
+      offset: 1000,
+    });
+  });
+
   it("passes through upstream 4xx errors unchanged", async () => {
     const upstreamError = new Error("bad request");
     upstreamError.status = 400;

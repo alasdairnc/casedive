@@ -6,20 +6,42 @@
  * Shows current filter configuration, test success rate, and tuning status.
  */
 
+import { randomUUID } from "crypto";
 import { FILTER_CONFIG } from "./_filterConfig.js";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import { applyStandardApiHeaders, handleOptionsAndMethod } from "./_apiCommon.js";
+import {
+  logRequestStart,
+  logRateLimitCheck,
+  logValidationError,
+  logSuccess,
+  logError,
+} from "./_logging.js";
 
 export default async function handler(req, res) {
+  const requestId = req.headers["x-vercel-id"] || randomUUID();
+  const startMs = Date.now();
+  logRequestStart(req, "filter-quality", requestId);
+
   applyStandardApiHeaders(req, res, "GET, OPTIONS", "Content-Type");
   if (handleOptionsAndMethod(req, res, "GET")) {
     return;
+  }
+
+  const rlResult = await checkRateLimit(getClientIp(req), "filter-quality");
+  logRateLimitCheck(requestId, "filter-quality", rlResult, getClientIp(req));
+  const rlHeaders = rateLimitHeaders(rlResult);
+  Object.entries(rlHeaders).forEach(([key, value]) => res.setHeader(key, value));
+  if (!rlResult.allowed) {
+    return res.status(429).json({ error: "Rate limit exceeded. Please try again later." });
   }
 
   // Check auth token (same as retrieval-health)
   const token = req.headers.authorization?.replace(/^Bearer\s+/, "");
   const expectedToken = process.env.RETRIEVAL_HEALTH_TOKEN;
 
-  if (expectedToken && (!token || token !== expectedToken)) {
+  if (!expectedToken || !token || token !== expectedToken) {
+    logValidationError(requestId, "filter-quality", "Unauthorized filter quality request", "authorization");
     return res.status(401).json({ error: "Unauthorized" });
   }
 
@@ -94,9 +116,13 @@ export default async function handler(req, res) {
       },
     };
 
+    logSuccess(requestId, "filter-quality", 200, Date.now() - startMs, rlResult, {
+      issuePatterns: issuePatternsSummary.length,
+    });
     return res.status(200).json(response);
   } catch (error) {
     console.error("Filter quality endpoint error:", error);
+    logError(requestId, "filter-quality", error, 500, Date.now() - startMs);
     return res.status(500).json({ error: "Internal server error" });
   }
 }

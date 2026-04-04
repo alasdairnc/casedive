@@ -105,3 +105,34 @@ Append-only. Each run adds a dated section. Never overwrite previous entries.
 ### Still open
 
 - None
+
+## Audit — 2026-04-03
+
+### Fixed since last run
+
+- None
+
+### New findings
+
+- Local `.env` contains live API and Redis credentials, even though it is gitignored | High | .env:1,7
+- `api/filter-quality.js` has no rate limit check before serving the internal dashboard | Medium | api/filter-quality.js:10-17
+- `api/filter-quality.js` is missing a `vercel.json` functions entry, so it falls back to platform defaults | Medium | vercel.json:9-15
+- `api/retrieval-health.js` accepts unbounded `failureLimit`, `failuresBeforeTs`, and `failuresOffset` query values without validation | Medium | api/retrieval-health.js:48-56
+
+### Still open
+
+- None
+
+## Audit — 2026-04-03 (full sweep rerun)
+
+### Fixed since last run
+
+- None
+
+### New findings
+
+- None (full sweep clean: npm audit, full test matrix, prompt-injection probe, security probe, and RAG poison simulation all passed with no HIGH findings)
+
+### Still open
+
+- None
