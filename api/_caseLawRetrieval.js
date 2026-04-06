@@ -586,6 +586,8 @@ function detectCandidateDomains(candidate) {
   if (/\b(constitution|federalism|secession|senate\s+reform|amending\s+formula|same-sex\s+marriage|impact\s+assessment|trade\s+and\s+commerce|freedom\s+of\s+religion|assisted\s+dying|security\s+of\s+the\s+person|cruel\s+and\s+unusual|section\s+12|s\.?\s*12|section\s+7|s\.?\s*7|fundamental\s+justice)\b/.test(haystack)) out.add("constitutional_general");
   if (/\b(administrative\s+law|judicial\s+review|procedural\s+fairness|standard\s+of\s+review|tribunal\s+decision)\b/.test(haystack)) out.add("administrative_general");
   if (/\b(indigenous|aboriginal\s+title|treaty\s+rights|duty\s+to\s+consult|first\s+nation)\b/.test(haystack)) out.add("indigenous_general");
+  // Sentencing is a criminal-law context; explicit check prevents misclassification as non-criminal.
+  if (/\b(sentencing|sentence\w*|gladue|ipeelee|s\.?\s*718|718\.2|mitigating|aggravating|indigenous\s+offender)\b/.test(haystack)) out.add("sentencing");
 
   return out;
 }
@@ -615,6 +617,7 @@ function isClearlyNonCriminalScenario(scenario) {
     "break_and_enter",
     "criminal_harassment",
     "uttering_threats",
+    "sentencing",
   ];
   const scenarioHasNonCriminalDomain = nonCriminalScenarioDomains.some((d) => scenarioDomainHints.has(d));
   const scenarioHasCriminalDomain = criminalScenarioDomains.some((d) => scenarioDomainHints.has(d));
@@ -1245,7 +1248,7 @@ function curatedTermsFromScenario(scenario) {
   }
 
   // ── Break and enter ───────────────────────────────────────────────────────────
-  if (/\bbreak\s+and\s+enter\b|\bbreaking\s+and\s+enter\w*\b|\bbreaking\s+enter\w*\b|\bbroke\s+into\b|\bburglar\w*\b/.test(s)) {
+  if (/\bbreak\s+and\s+enter\b|\bbreaking\s+and\s+enter\w*\b|\bbreaking\s+enter\w*\b|\bbroke\s+into\b|\bburglar\w*\b|\bbreak-in\b|\bbreaking\s+in\b/.test(s)) {
     push("break and enter dwelling house Criminal Code section 348", "B&E intent commit offence");
   }
 
@@ -1319,6 +1322,11 @@ function curatedTermsFromScenario(scenario) {
   // ── Child exploitation / luring ────────────────────────────────────────────────
   if (/\bchild\s+pornograph\w*\b|\bluring\b|\bchild\s+exploit\w*\b|\bchild\s+sexual\b/.test(s)) {
     push("child luring Criminal Code section 172.1", "child exploitation sexual offence Criminal Code");
+  }
+
+  // ── Indigenous sentencing / Gladue rights ─────────────────────────────────────
+  if (/\bgladue\b/.test(s) || (/\bindigenous\b|\bfirst\s+nation\b|\baboriginal\b/.test(s) && /\bsentencing\b|\bsentence\b|\bmitigating\b/.test(s))) {
+    push("R v Gladue indigenous sentencing principles s. 718.2(e)", "R v Ipeelee Gladue analysis sentencing");
   }
 
   // ── Peace bond ────────────────────────────────────────────────────────────────
