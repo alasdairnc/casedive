@@ -25,7 +25,10 @@
     "test:retrieval-failures:baseline": "node scripts/evaluate-retrieval-failures.js --baseline",
     "test:retrieval-failures:compare": "node scripts/evaluate-retrieval-failures.js --compare",
     "test:guardrails": "vitest run tests/unit/resultCardSanitizer.test.js && npm run test:retrieval-failures && npm run test:filter",
-    "perf:monitor": "node scripts/performance-monitor.js"
+    "perf:monitor": "node scripts/performance-monitor.js",
+    "security:scan": "gitleaks git . --log-opts='--branches --tags' --redact --no-banner",
+    "security:scan:all": "gitleaks git . --log-opts='--all' --redact --no-banner",
+    "security:hooks": "bash scripts/setup-git-hooks.sh"
   },
   "dependencies": {
     "@sentry/node": "^10.46.0",
