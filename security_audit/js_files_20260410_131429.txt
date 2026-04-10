@@ -1,0 +1,4 @@
+https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5931276184603899
+https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516
+https://www.casedive.ca/assets/index-DRmYQNgC.js
+https://www.casedive.ca/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js
