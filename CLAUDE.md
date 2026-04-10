@@ -9,11 +9,9 @@ Live at [casedive.ca](https://casedive.ca) - Repo: `alasdairnc/casefinder`
 ## What This Is
 AI-powered Canadian legal research tool. User describes a legal scenario in plain language and gets Criminal Code sections, case law, civil law statutes, Charter rights analysis, and CanLII/Justice Laws-linked citations.
 
-## Roadmap Status (Current)
-Next priorities:
-- Expand retrieval failure corpus with production-derived misses/false-positives (target 25+ labeled scenarios)
-- Optional: retrieval health trendlines over time (dashboard shows 5m/1h snapshots today)
-- Continue case-law retrieval quality tuning (query shaping, fallback calibration, and empty-state UX)
+## Active Development Context
+
+Current focus: case-law retrieval quality — query shaping, fallback calibration, and empty-state UX. Retrieval failure corpus is the active test target (`npm run test:retrieval-failures`).
 
 ## Commands
 
@@ -230,6 +228,7 @@ SENTRY_DSN=...                           # Optional; error tracking via _sentry.
 - **Model ID comes from `_constants.js`**: Both `analyze.js` and `case-summary.js` use `ANTHROPIC_MODEL_ID` (env-overridable, defaults to `claude-haiku-4-5-20251001`). Change the model in one place.
 - **Sentry is optional**: `_sentry.js` no-ops if `SENTRY_DSN` is not set. Don't assume it's active in dev.
 - **`criminalCodeData.js` is 316KB**: Import `criminalCodeParts.js` instead when you only need the parts list (e.g., for UI dropdowns).
+- **`_constants.js` is the single source for tunable thresholds**: `ANTHROPIC_MODEL_ID` env var overrides the default there. New endpoints should import constants from `_constants.js`, not hardcode values.
 
 ## Security
 - API keys are server-side only.
@@ -255,7 +254,3 @@ SENTRY_DSN=...                           # Optional; error tracking via _sentry.
 - If something is ambiguous, ask one clarifying question only.
 - No time estimates.
 - Never commit or push to git without being explicitly told to.
-
-## Current Focus
-- CanLII case law retrieval semi-working — some cases not found, some summaries inaccurate, actively improving
-- Next major focus: retrieval quality tuning and incremental test hardening
