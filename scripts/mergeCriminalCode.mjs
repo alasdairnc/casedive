@@ -14,13 +14,13 @@ const ROOT = resolve(__dirname, "..");
 
 // Read extracted sections from JSON
 const xmlSections = JSON.parse(
-  readFileSync(resolve(__dirname, "criminal-code-sections.json"), "utf-8")
+  readFileSync(resolve(__dirname, "criminal-code-sections.json"), "utf-8"),
 );
 
 // Read existing criminalCodeData.js to extract enriched entries
 const existingSource = readFileSync(
   resolve(ROOT, "src/lib/criminalCodeData.js"),
-  "utf-8"
+  "utf-8",
 );
 
 // Parse existing entries from the JS source
@@ -50,7 +50,7 @@ function parseExistingEntries(source) {
 const existingEntries = parseExistingEntries(existingSource);
 console.log(`Existing entries: ${existingEntries.size}`);
 console.log(
-  `Enriched entries: ${[...existingEntries.values()].filter((e) => e.isEnriched).length}`
+  `Enriched entries: ${[...existingEntries.values()].filter((e) => e.isEnriched).length}`,
 );
 
 // Criminal Code Part definitions for export
@@ -188,14 +188,16 @@ const xmlSectionNums = new Set(xmlSections.map((s) => s.section));
 let missingFromXml = 0;
 for (const [key, existing] of existingEntries) {
   if (!xmlSectionNums.has(key)) {
-    console.warn(`Warning: existing section ${key} not found in XML — preserving it`);
+    console.warn(
+      `Warning: existing section ${key} not found in XML — preserving it`,
+    );
     lines.push(`  ${existing.raw},`);
     missingFromXml++;
   }
 }
 
 console.log(
-  `\nMerge result: ${sortedSections.length + missingFromXml} total entries`
+  `\nMerge result: ${sortedSections.length + missingFromXml} total entries`,
 );
 console.log(`  Preserved from existing: ${preservedCount}`);
 console.log(`  New from XML: ${newCount}`);

@@ -14,6 +14,7 @@ This skill performs a comprehensive audit of the CaseDive codebase across five d
 ## When to Use This Skill
 
 Activate this skill when:
+
 - Running a periodic health check of the CaseDive codebase
 - Preparing for a deploy and wanting a pre-flight audit
 - Checking whether previously logged issues have been resolved
@@ -52,6 +53,8 @@ Launch an Explore subagent at **very thorough** level. Run the following checks 
 - **Security headers**: Verify every `api/*.js` file sets all three security headers: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and a `Content-Security-Policy` header.
 - **vercel.json coverage**: Verify `vercel.json` has a `functions` config entry for every `.js` file in the `api/` directory (excluding `_`-prefixed internal modules).
 - **Fetch timeouts**: Verify no `api/*.js` file makes an external `fetch()` call without `AbortSignal.timeout()` or an equivalent abort controller with a timeout.
+- **Model ID source**: Verify every `api/*.js` file that calls the Anthropic API imports the model ID from `api/_constants.js` — flag any file where the model string is hardcoded inline.
+- **Component env reads**: Verify no `src/components/*.jsx` file reads `process.env` directly — all model/API calls must be server-side only.
 
 #### Testing
 
@@ -92,21 +95,21 @@ Compare every finding from Phase 2 against the history loaded in Phase 1:
 
 Group all findings by severity using this rubric:
 
-| Severity | Criteria |
-|----------|----------|
+| Severity     | Criteria                                         |
+| ------------ | ------------------------------------------------ |
 | **Critical** | Security vulnerability or production outage risk |
-| **High** | Correctness bug or missing test for a core flow |
-| **Medium** | Maintainability issue or operational risk |
-| **Low** | Cleanup, docs, or tooling improvement |
+| **High**     | Correctness bug or missing test for a core flow  |
+| **Medium**   | Maintainability issue or operational risk        |
+| **Low**      | Cleanup, docs, or tooling improvement            |
 
 Output a single markdown table with all findings:
 
-| # | Status | Issue | File:Line | Severity |
-|---|--------|-------|-----------|----------|
-| 1 | [NEW] | Missing rate limit bucket name in export-pdf.js | api/export-pdf.js:14 | Critical |
-| 2 | [STILL OPEN] | No E2E test for CaseSummaryModal | src/components/CaseSummaryModal.jsx | High |
+| #   | Status       | Issue                                           | File:Line                           | Severity |
+| --- | ------------ | ----------------------------------------------- | ----------------------------------- | -------- |
+| 1   | [NEW]        | Missing rate limit bucket name in export-pdf.js | api/export-pdf.js:14                | Critical |
+| 2   | [STILL OPEN] | No E2E test for CaseSummaryModal                | src/components/CaseSummaryModal.jsx | High     |
 
-*(The above are examples only — use actual findings.)*
+_(The above are examples only — use actual findings.)_
 
 ### Phase 5 — Append to AUDIT_LOG.md
 
@@ -114,11 +117,17 @@ Open `.claude/skills/casedive-audit/AUDIT_LOG.md` and **append** (never overwrit
 
 ```markdown
 ## Audit — YYYY-MM-DD
+
 ### Fixed since last run
+
 - [item description]
+
 ### New findings
+
 - [item description] | severity | file:line
+
 ### Still open
+
 - [item description] | severity | file:line
 ```
 
@@ -142,4 +151,4 @@ Use today's date. If there are no items in a subsection, write `- None`.
 
 ---
 
-*This skill was created for the CaseDive project (casedive.ca). Maintained by Alasdair NC.*
+_This skill was created for the CaseDive project (casedive.ca). Maintained by Alasdair NC._

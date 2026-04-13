@@ -6,1828 +6,2628 @@
 import { createCivilLawRegistry } from "./civilLawRegistry.js";
 
 // ── Base URLs ─────────────────────────────────────────────────────────────────
-const CDSA_BASE    = "https://laws-lois.justice.gc.ca/eng/acts/c-38.8";
-const YCJA_BASE    = "https://laws-lois.justice.gc.ca/eng/acts/y-1.5";
-const CHRA_BASE    = "https://laws-lois.justice.gc.ca/eng/acts/h-6";
-const CC_BASE      = "https://laws-lois.justice.gc.ca/eng/acts/c-46";
-const CCRA_BASE    = "https://laws-lois.justice.gc.ca/eng/acts/c-44.6";
+const CDSA_BASE = "https://laws-lois.justice.gc.ca/eng/acts/c-38.8";
+const YCJA_BASE = "https://laws-lois.justice.gc.ca/eng/acts/y-1.5";
+const CHRA_BASE = "https://laws-lois.justice.gc.ca/eng/acts/h-6";
+const CC_BASE = "https://laws-lois.justice.gc.ca/eng/acts/c-46";
+const CCRA_BASE = "https://laws-lois.justice.gc.ca/eng/acts/c-44.6";
 const EVIDENCE_BASE = "https://laws-lois.justice.gc.ca/eng/acts/c-5";
-const ON_HTA_BASE   = "https://www.ontario.ca/laws/statute/90h08";
-const ON_RTA_BASE   = "https://www.ontario.ca/laws/statute/06r17";
-const ON_HRC_BASE   = "https://www.ontario.ca/laws/statute/90h19";
-const BC_MVA_BASE   = "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96318_00";
-const BC_RTA_BASE   = "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/02078_01";
-const BC_HRC_BASE   = "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96210_01";
-const AB_TSA_BASE   = "https://www.alberta.ca/traffic-safety-act";
-const AB_RTA_BASE   = "https://www.alberta.ca/residential-tenancies-act";
-const AB_HRA_BASE   = "https://www.alberta.ca/alberta-human-rights-act";
+const ON_HTA_BASE = "https://www.ontario.ca/laws/statute/90h08";
+const ON_RTA_BASE = "https://www.ontario.ca/laws/statute/06r17";
+const ON_HRC_BASE = "https://www.ontario.ca/laws/statute/90h19";
+const BC_MVA_BASE =
+  "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96318_00";
+const BC_RTA_BASE =
+  "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/02078_01";
+const BC_HRC_BASE =
+  "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96210_01";
+const AB_TSA_BASE = "https://www.alberta.ca/traffic-safety-act";
+const AB_RTA_BASE = "https://www.alberta.ca/residential-tenancies-act";
+const AB_HRA_BASE = "https://www.alberta.ca/alberta-human-rights-act";
 
 // ── Federal: CDSA ─────────────────────────────────────────────────────────────
 const CDSA_SECTIONS = new Map([
-  ["2", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Definitions",
-    summary: "Definitions for the purposes of this Act, including 'substance', 'traffic', 'produce', and the Schedule classifications.",
-    relevance: "drug charges, substance classification, Schedule I-V, trafficking definition",
-    url: `${CDSA_BASE}/section-2.html`,
-  }],
-  ["4", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Possession of substance",
-    summary: "Except as authorized under the regulations, no person shall possess a substance included in Schedule I, II or III.",
-    relevance: "drug possession, constructive possession, knowledge, Schedule I-III substances, cannabis, cocaine, heroin, fentanyl",
-    url: `${CDSA_BASE}/section-4.html`,
-  }],
-  ["5", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Trafficking in substance",
-    summary: "No person shall traffic in a substance included in Schedule I, II, III, IV or V or in any substance represented or held out by that person to be such a substance.",
-    relevance: "drug trafficking, selling drugs, distributing controlled substances, Schedule I penalties",
-    url: `${CDSA_BASE}/section-5.html`,
-  }],
-  ["6", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Importing and exporting",
-    summary: "Except as authorized under the regulations, no person shall import into Canada or export from Canada a substance included in Schedule I, II, III, IV, V or VI.",
-    relevance: "drug importation, drug exportation, border smuggling, Schedule I-VI",
-    url: `${CDSA_BASE}/section-6.html`,
-  }],
-  ["7", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Production of substance",
-    summary: "Except as authorized under the regulations, no person shall produce a substance included in Schedule I, II, III, IV or V.",
-    relevance: "drug production, grow op, manufacturing narcotics, lab, methamphetamine production",
-    url: `${CDSA_BASE}/section-7.html`,
-  }],
-  ["10", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Purpose of sentencing",
-    summary: "Without restricting the generality of the Criminal Code, the fundamental purpose of any sentence for an offence under this Part is to contribute to the respect for the law and the maintenance of a just, peaceful and safe society while encouraging rehabilitation, and treatment in appropriate circumstances, of offenders and acknowledging the harm done to victims and to the community.",
-    relevance: "CDSA sentencing principles, aggravating factors, rehabilitation, drug treatment court",
-    url: `${CDSA_BASE}/section-10.html`,
-  }],
+  [
+    "2",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Definitions",
+      summary:
+        "Definitions for the purposes of this Act, including 'substance', 'traffic', 'produce', and the Schedule classifications.",
+      relevance:
+        "drug charges, substance classification, Schedule I-V, trafficking definition",
+      url: `${CDSA_BASE}/section-2.html`,
+    },
+  ],
+  [
+    "4",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Possession of substance",
+      summary:
+        "Except as authorized under the regulations, no person shall possess a substance included in Schedule I, II or III.",
+      relevance:
+        "drug possession, constructive possession, knowledge, Schedule I-III substances, cannabis, cocaine, heroin, fentanyl",
+      url: `${CDSA_BASE}/section-4.html`,
+    },
+  ],
+  [
+    "5",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Trafficking in substance",
+      summary:
+        "No person shall traffic in a substance included in Schedule I, II, III, IV or V or in any substance represented or held out by that person to be such a substance.",
+      relevance:
+        "drug trafficking, selling drugs, distributing controlled substances, Schedule I penalties",
+      url: `${CDSA_BASE}/section-5.html`,
+    },
+  ],
+  [
+    "6",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Importing and exporting",
+      summary:
+        "Except as authorized under the regulations, no person shall import into Canada or export from Canada a substance included in Schedule I, II, III, IV, V or VI.",
+      relevance:
+        "drug importation, drug exportation, border smuggling, Schedule I-VI",
+      url: `${CDSA_BASE}/section-6.html`,
+    },
+  ],
+  [
+    "7",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Production of substance",
+      summary:
+        "Except as authorized under the regulations, no person shall produce a substance included in Schedule I, II, III, IV or V.",
+      relevance:
+        "drug production, grow op, manufacturing narcotics, lab, methamphetamine production",
+      url: `${CDSA_BASE}/section-7.html`,
+    },
+  ],
+  [
+    "10",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Purpose of sentencing",
+      summary:
+        "Without restricting the generality of the Criminal Code, the fundamental purpose of any sentence for an offence under this Part is to contribute to the respect for the law and the maintenance of a just, peaceful and safe society while encouraging rehabilitation, and treatment in appropriate circumstances, of offenders and acknowledging the harm done to victims and to the community.",
+      relevance:
+        "CDSA sentencing principles, aggravating factors, rehabilitation, drug treatment court",
+      url: `${CDSA_BASE}/section-10.html`,
+    },
+  ],
 
-  ["1", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Short Title",
-    summary: "This Act may be cited as the Controlled Drugs and Substances Act.",
-    relevance: "federal drug statute, short title",
-    url: `${CDSA_BASE}/section-1.html`,
-  }],
-  ["10.1", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Principles",
-    summary: "Problematic substance use should be addressed primarily as a health and social issue; interventions should aim to protect the health, dignity and human rights of individuals who use drugs and to reduce harm.",
-    relevance: "drug diversion, treatment, alternatives to prosecution",
-    url: `${CDSA_BASE}/section-10.1.html`,
-  }],
-  ["10.2", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Warnings and Referrals",
-    summary: "A peace officer shall, instead of laying an information against an individual alleged to have committed an offence under subsection 4(1), consider whether it would be preferable to take no further action, to warn the individual or to refer the individual to a program or agency.",
-    relevance: "drug diversion, police warnings, referral programs",
-    url: `${CDSA_BASE}/section-10.2.html`,
-  }],
-  ["10.7", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Exception for Service Providers",
-    summary: "No person who provides health or social services to an individual is guilty of aiding or abetting an offence under subsection 4(1) by reason only that the person offers or provides those services.",
-    relevance: "health service providers, harm reduction, diversion exceptions",
-    url: `${CDSA_BASE}/section-10.7.html`,
-  }],
-  ["11", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Enforcement",
-    summary: "A justice who is satisfied by information on oath that there are reasonable grounds to believe that a controlled substance or precursor in respect of which this Act has been contravened is in a place may issue a warrant authorizing a peace officer to search the place and to seize it.",
-    relevance: "drug investigations, search and seizure, enforcement powers",
-    url: `${CDSA_BASE}/section-11.html`,
-  }],
-  ["13", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Disposition",
-    summary: "Sections 489.1 and 490 of the Criminal Code apply to any thing seized under this Act, subject to provisions regarding non-chemical offence-related property and controlled substances or precursors.",
-    relevance: "seizure, forfeiture, offence-related property",
-    url: `${CDSA_BASE}/section-13.html`,
-  }],
-  ["14", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Restraint Orders",
-    summary: "A judge may issue a restraint order prohibiting any person from disposing of or otherwise dealing with any interest in offence-related property specified in the order, on application by the Attorney General.",
-    relevance: "restraint orders, property seizure, proceeds-related property",
-    url: `${CDSA_BASE}/section-14.html`,
-  }],
-  ["15.1", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Management Orders",
-    summary: "A judge may appoint a person to take control of and manage or otherwise deal with all or part of property that is subject to a restraint order or that has been seized under this Act.",
-    relevance: "property management, seizure, forfeiture process",
-    url: `${CDSA_BASE}/section-15.1.html`,
-  }],
-  ["16", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Forfeiture",
-    summary: "Subject to sections 18 to 19.1, if a person is convicted of a designated substance offence and the court is satisfied on a balance of probabilities that offence-related property is related to the commission of the offence, the court shall order that the property be forfeited to Her Majesty.",
-    relevance: "forfeiture, seizure, drug proceeds",
-    url: `${CDSA_BASE}/section-16.html`,
-  }],
-  ["23", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Controlled Substances, Precursors and Chemical Offence-related Property",
-    summary: "Every controlled substance, precursor or chemical offence-related property that is the subject of a seizure, a finding by a court or a forfeiture under this Act shall be dealt with and disposed of as the Minister directs.",
-    relevance: "controlled substances, precursors, chemical property, forfeiture",
-    url: `${CDSA_BASE}/section-23.html`,
-  }],
-  ["30", {
-    jurisdiction: "Federal",
-    statute: "Controlled Drugs and Substances Act",
-    shortName: "CDSA",
-    title: "Inspectors",
-    summary: "The Minister may designate any person as an inspector for the purposes of this Act and the regulations. An inspector may, at any reasonable time, enter any place where the inspector believes on reasonable grounds a licensed dealer or any person authorized under this Act carries on activities.",
-    relevance: "inspection powers, compliance, regulatory enforcement",
-    url: `${CDSA_BASE}/section-30.html`,
-  }],
-
+  [
+    "1",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Short Title",
+      summary:
+        "This Act may be cited as the Controlled Drugs and Substances Act.",
+      relevance: "federal drug statute, short title",
+      url: `${CDSA_BASE}/section-1.html`,
+    },
+  ],
+  [
+    "10.1",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Principles",
+      summary:
+        "Problematic substance use should be addressed primarily as a health and social issue; interventions should aim to protect the health, dignity and human rights of individuals who use drugs and to reduce harm.",
+      relevance: "drug diversion, treatment, alternatives to prosecution",
+      url: `${CDSA_BASE}/section-10.1.html`,
+    },
+  ],
+  [
+    "10.2",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Warnings and Referrals",
+      summary:
+        "A peace officer shall, instead of laying an information against an individual alleged to have committed an offence under subsection 4(1), consider whether it would be preferable to take no further action, to warn the individual or to refer the individual to a program or agency.",
+      relevance: "drug diversion, police warnings, referral programs",
+      url: `${CDSA_BASE}/section-10.2.html`,
+    },
+  ],
+  [
+    "10.7",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Exception for Service Providers",
+      summary:
+        "No person who provides health or social services to an individual is guilty of aiding or abetting an offence under subsection 4(1) by reason only that the person offers or provides those services.",
+      relevance:
+        "health service providers, harm reduction, diversion exceptions",
+      url: `${CDSA_BASE}/section-10.7.html`,
+    },
+  ],
+  [
+    "11",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Enforcement",
+      summary:
+        "A justice who is satisfied by information on oath that there are reasonable grounds to believe that a controlled substance or precursor in respect of which this Act has been contravened is in a place may issue a warrant authorizing a peace officer to search the place and to seize it.",
+      relevance: "drug investigations, search and seizure, enforcement powers",
+      url: `${CDSA_BASE}/section-11.html`,
+    },
+  ],
+  [
+    "13",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Disposition",
+      summary:
+        "Sections 489.1 and 490 of the Criminal Code apply to any thing seized under this Act, subject to provisions regarding non-chemical offence-related property and controlled substances or precursors.",
+      relevance: "seizure, forfeiture, offence-related property",
+      url: `${CDSA_BASE}/section-13.html`,
+    },
+  ],
+  [
+    "14",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Restraint Orders",
+      summary:
+        "A judge may issue a restraint order prohibiting any person from disposing of or otherwise dealing with any interest in offence-related property specified in the order, on application by the Attorney General.",
+      relevance:
+        "restraint orders, property seizure, proceeds-related property",
+      url: `${CDSA_BASE}/section-14.html`,
+    },
+  ],
+  [
+    "15.1",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Management Orders",
+      summary:
+        "A judge may appoint a person to take control of and manage or otherwise deal with all or part of property that is subject to a restraint order or that has been seized under this Act.",
+      relevance: "property management, seizure, forfeiture process",
+      url: `${CDSA_BASE}/section-15.1.html`,
+    },
+  ],
+  [
+    "16",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Forfeiture",
+      summary:
+        "Subject to sections 18 to 19.1, if a person is convicted of a designated substance offence and the court is satisfied on a balance of probabilities that offence-related property is related to the commission of the offence, the court shall order that the property be forfeited to Her Majesty.",
+      relevance: "forfeiture, seizure, drug proceeds",
+      url: `${CDSA_BASE}/section-16.html`,
+    },
+  ],
+  [
+    "23",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title:
+        "Controlled Substances, Precursors and Chemical Offence-related Property",
+      summary:
+        "Every controlled substance, precursor or chemical offence-related property that is the subject of a seizure, a finding by a court or a forfeiture under this Act shall be dealt with and disposed of as the Minister directs.",
+      relevance:
+        "controlled substances, precursors, chemical property, forfeiture",
+      url: `${CDSA_BASE}/section-23.html`,
+    },
+  ],
+  [
+    "30",
+    {
+      jurisdiction: "Federal",
+      statute: "Controlled Drugs and Substances Act",
+      shortName: "CDSA",
+      title: "Inspectors",
+      summary:
+        "The Minister may designate any person as an inspector for the purposes of this Act and the regulations. An inspector may, at any reasonable time, enter any place where the inspector believes on reasonable grounds a licensed dealer or any person authorized under this Act carries on activities.",
+      relevance: "inspection powers, compliance, regulatory enforcement",
+      url: `${CDSA_BASE}/section-30.html`,
+    },
+  ],
 ]);
 
 // ── Federal: YCJA ─────────────────────────────────────────────────────────────
 const YCJA_SECTIONS = new Map([
-  ["2", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Definitions — young person",
-    summary: "Definitions including 'young person' (a person aged 12 or over and under 18 years at the time of the alleged offence), 'youth justice court', 'adult sentence', and 'youth sentence'.",
-    relevance: "youth criminal liability, age of criminal responsibility, 12-17 years old, young person definition",
-    url: `${YCJA_BASE}/section-2.html`,
-  }],
-  ["3", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Declaration of principle",
-    summary: "The principles of the youth criminal justice system, including protecting the public, holding young persons accountable proportionately, and promoting rehabilitation and reintegration.",
-    relevance: "youth sentencing principles, rehabilitation, accountability, proportionality, Indigenous youth",
-    url: `${YCJA_BASE}/section-3.html`,
-  }],
-  ["38", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Purpose of sentencing",
-    summary: "The purpose of the youth sentencing provisions is to hold a young person accountable for an offence through the imposition of just sanctions that have meaningful consequences.",
-    relevance: "youth sentence purpose, rehabilitation, reintegration, just sanctions, meaningful consequences",
-    url: `${YCJA_BASE}/section-38.html`,
-  }],
-  ["39", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Committal to custody",
-    summary: "A youth justice court shall not commit a young person to custody under section 42 unless specific criteria are met, such as committing a violent offence or failing to comply with non-custodial sentences.",
-    relevance: "youth custody, youth incarceration, last resort principle, youth violent offence",
-    url: `${YCJA_BASE}/section-39.html`,
-  }],
-  ["40", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Pre-sentence report",
-    summary: "A youth justice court shall, before imposing a youth sentence, consider a pre-sentence report.",
-    relevance: "youth pre-sentence report, youth worker, mitigating factors, youth background",
-    url: `${YCJA_BASE}/section-40.html`,
-  }],
-  ["110", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Identity of offender not to be published",
-    summary: "Subject to this section, no person shall publish the name of a young person, or any other information related to a young person, if it would identify them as being dealt with under this Act.",
-    relevance: "youth publication ban, identity protection, media reporting, young offender privacy",
-    url: `${YCJA_BASE}/section-110.html`,
-  }],
+  [
+    "2",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Definitions — young person",
+      summary:
+        "Definitions including 'young person' (a person aged 12 or over and under 18 years at the time of the alleged offence), 'youth justice court', 'adult sentence', and 'youth sentence'.",
+      relevance:
+        "youth criminal liability, age of criminal responsibility, 12-17 years old, young person definition",
+      url: `${YCJA_BASE}/section-2.html`,
+    },
+  ],
+  [
+    "3",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Declaration of principle",
+      summary:
+        "The principles of the youth criminal justice system, including protecting the public, holding young persons accountable proportionately, and promoting rehabilitation and reintegration.",
+      relevance:
+        "youth sentencing principles, rehabilitation, accountability, proportionality, Indigenous youth",
+      url: `${YCJA_BASE}/section-3.html`,
+    },
+  ],
+  [
+    "38",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Purpose of sentencing",
+      summary:
+        "The purpose of the youth sentencing provisions is to hold a young person accountable for an offence through the imposition of just sanctions that have meaningful consequences.",
+      relevance:
+        "youth sentence purpose, rehabilitation, reintegration, just sanctions, meaningful consequences",
+      url: `${YCJA_BASE}/section-38.html`,
+    },
+  ],
+  [
+    "39",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Committal to custody",
+      summary:
+        "A youth justice court shall not commit a young person to custody under section 42 unless specific criteria are met, such as committing a violent offence or failing to comply with non-custodial sentences.",
+      relevance:
+        "youth custody, youth incarceration, last resort principle, youth violent offence",
+      url: `${YCJA_BASE}/section-39.html`,
+    },
+  ],
+  [
+    "40",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Pre-sentence report",
+      summary:
+        "A youth justice court shall, before imposing a youth sentence, consider a pre-sentence report.",
+      relevance:
+        "youth pre-sentence report, youth worker, mitigating factors, youth background",
+      url: `${YCJA_BASE}/section-40.html`,
+    },
+  ],
+  [
+    "110",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Identity of offender not to be published",
+      summary:
+        "Subject to this section, no person shall publish the name of a young person, or any other information related to a young person, if it would identify them as being dealt with under this Act.",
+      relevance:
+        "youth publication ban, identity protection, media reporting, young offender privacy",
+      url: `${YCJA_BASE}/section-110.html`,
+    },
+  ],
 
-  ["1", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Short Title",
-    summary: "This Act may be cited as the Youth Criminal Justice Act.",
-    relevance: "youth justice statute, short title",
-    url: `${YCJA_BASE}/section-1.html`,
-  }],
-  ["4", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Principles and Objectives",
-    summary: "Extrajudicial measures are often the most appropriate and effective way to address youth crime. They allow for effective and timely interventions focused on correcting offending behaviour.",
-    relevance: "extrajudicial measures, youth justice objectives",
-    url: `${YCJA_BASE}/section-4.html`,
-  }],
-  ["6", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Warnings, Cautions and Referrals",
-    summary: "A police officer shall, before starting judicial proceedings or taking any other measures, consider whether it would be sufficient to take no further action, warn the young person, administer a caution, or refer the young person to a program or community agency.",
-    relevance: "diversion, warnings, cautions, referrals, alternatives to charges",
-    url: `${YCJA_BASE}/section-6.html`,
-  }],
-  ["10", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Extrajudicial Sanctions",
-    summary: "An extrajudicial sanction may be used to deal with a young person alleged to have committed an offence only if the young person cannot be adequately dealt with by a warning, caution or referral because of the seriousness of the offence or the nature and number of previous offences.",
-    relevance: "youth diversion, restorative justice, community sanctions",
-    url: `${YCJA_BASE}/section-10.html`,
-  }],
-  ["13", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Youth Justice Court",
-    summary: "A youth justice court is any court that may be established or designated by or under an Act of the legislature of a province, or designated by the Governor in Council or the lieutenant governor in council of a province.",
-    relevance: "youth court, jurisdiction, youth proceedings",
-    url: `${YCJA_BASE}/section-13.html`,
-  }],
-  ["23", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Consent to Prosecute",
-    summary: "The Attorney General may establish a program authorizing prosecutors to administer cautions to young persons instead of, or in addition to, starting judicial proceedings.",
-    relevance: "youth prosecution, attorney general consent, charges review",
-    url: `${YCJA_BASE}/section-23.html`,
-  }],
-  ["25", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Right to Counsel",
-    summary: "A young person has the right to retain and instruct counsel without delay, and to exercise that right personally, at any stage of proceedings against the young person and before and during any consideration of whether to use an extrajudicial sanction.",
-    relevance: "youth right to counsel, arrest, detention, legal aid",
-    url: `${YCJA_BASE}/section-25.html`,
-  }],
-  ["26", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Notices to Parents",
-    summary: "If a young person is arrested and detained in custody, the officer in charge shall, as soon as possible, give or cause to be given to a parent of the young person, orally or in writing, notice of the arrest stating the place of detention and the reason for the arrest.",
-    relevance: "youth notice, parent notification, arrest, summons",
-    url: `${YCJA_BASE}/section-26.html`,
-  }],
-  ["28", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Detention and Release",
-    summary: "If a young person who has been arrested is detained in custody, a youth justice court judge or a justice shall, unless a responsible person undertakes in writing to exercise control over the young person, order that the young person be detained in a place of temporary detention.",
-    relevance: "youth bail, detention, release conditions",
-    url: `${YCJA_BASE}/section-28.html`,
-  }],
-  ["29", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Release order with conditions",
-    summary: "A youth justice court judge or justice may make a release order with conditions, including that the young person reside with a responsible person, abstain from drugs or alcohol, or comply with other reasonable conditions.",
-    relevance: "youth bail conditions, detention justification, public safety",
-    url: `${YCJA_BASE}/section-29.html`,
-  }],
-  ["32", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Appearance",
-    summary: "A young person against whom an information or indictment is laid must first be dealt with by a youth justice court judge, whether or not the young person is the holder of a ticket under the Provincial Offences Act.",
-    relevance: "youth appearance, summons, attendance",
-    url: `${YCJA_BASE}/section-32.html`,
-  }],
-  ["33", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Application for Release from or Detention in Custody",
-    summary: "A young person who has been denied release or detained in custody may apply to a youth justice court for release from custody or for a review of the decision to detain the young person.",
-    relevance: "youth detention review, bail hearing, release application",
-    url: `${YCJA_BASE}/section-33.html`,
-  }],
-  ["34", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Medical and Psychological Reports",
-    summary: "A youth justice court may, at any stage of proceedings, require that a young person be assessed by a qualified person who is to report the results in writing to the court, for the purpose of considering an appropriate sentence or condition.",
-    relevance: "youth reports, mental health, sentencing information",
-    url: `${YCJA_BASE}/section-34.html`,
-  }],
-  ["35", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Referral to Child Welfare Agency",
-    summary: "A youth justice court may, at any stage of proceedings, refer a young person to a child welfare agency for assessment to determine whether the young person is in need of child welfare services.",
-    relevance: "child welfare, youth supports, intervention",
-    url: `${YCJA_BASE}/section-35.html`,
-  }],
+  [
+    "1",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Short Title",
+      summary: "This Act may be cited as the Youth Criminal Justice Act.",
+      relevance: "youth justice statute, short title",
+      url: `${YCJA_BASE}/section-1.html`,
+    },
+  ],
+  [
+    "4",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Principles and Objectives",
+      summary:
+        "Extrajudicial measures are often the most appropriate and effective way to address youth crime. They allow for effective and timely interventions focused on correcting offending behaviour.",
+      relevance: "extrajudicial measures, youth justice objectives",
+      url: `${YCJA_BASE}/section-4.html`,
+    },
+  ],
+  [
+    "6",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Warnings, Cautions and Referrals",
+      summary:
+        "A police officer shall, before starting judicial proceedings or taking any other measures, consider whether it would be sufficient to take no further action, warn the young person, administer a caution, or refer the young person to a program or community agency.",
+      relevance:
+        "diversion, warnings, cautions, referrals, alternatives to charges",
+      url: `${YCJA_BASE}/section-6.html`,
+    },
+  ],
+  [
+    "10",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Extrajudicial Sanctions",
+      summary:
+        "An extrajudicial sanction may be used to deal with a young person alleged to have committed an offence only if the young person cannot be adequately dealt with by a warning, caution or referral because of the seriousness of the offence or the nature and number of previous offences.",
+      relevance: "youth diversion, restorative justice, community sanctions",
+      url: `${YCJA_BASE}/section-10.html`,
+    },
+  ],
+  [
+    "13",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Youth Justice Court",
+      summary:
+        "A youth justice court is any court that may be established or designated by or under an Act of the legislature of a province, or designated by the Governor in Council or the lieutenant governor in council of a province.",
+      relevance: "youth court, jurisdiction, youth proceedings",
+      url: `${YCJA_BASE}/section-13.html`,
+    },
+  ],
+  [
+    "23",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Consent to Prosecute",
+      summary:
+        "The Attorney General may establish a program authorizing prosecutors to administer cautions to young persons instead of, or in addition to, starting judicial proceedings.",
+      relevance: "youth prosecution, attorney general consent, charges review",
+      url: `${YCJA_BASE}/section-23.html`,
+    },
+  ],
+  [
+    "25",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Right to Counsel",
+      summary:
+        "A young person has the right to retain and instruct counsel without delay, and to exercise that right personally, at any stage of proceedings against the young person and before and during any consideration of whether to use an extrajudicial sanction.",
+      relevance: "youth right to counsel, arrest, detention, legal aid",
+      url: `${YCJA_BASE}/section-25.html`,
+    },
+  ],
+  [
+    "26",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Notices to Parents",
+      summary:
+        "If a young person is arrested and detained in custody, the officer in charge shall, as soon as possible, give or cause to be given to a parent of the young person, orally or in writing, notice of the arrest stating the place of detention and the reason for the arrest.",
+      relevance: "youth notice, parent notification, arrest, summons",
+      url: `${YCJA_BASE}/section-26.html`,
+    },
+  ],
+  [
+    "28",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Detention and Release",
+      summary:
+        "If a young person who has been arrested is detained in custody, a youth justice court judge or a justice shall, unless a responsible person undertakes in writing to exercise control over the young person, order that the young person be detained in a place of temporary detention.",
+      relevance: "youth bail, detention, release conditions",
+      url: `${YCJA_BASE}/section-28.html`,
+    },
+  ],
+  [
+    "29",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Release order with conditions",
+      summary:
+        "A youth justice court judge or justice may make a release order with conditions, including that the young person reside with a responsible person, abstain from drugs or alcohol, or comply with other reasonable conditions.",
+      relevance:
+        "youth bail conditions, detention justification, public safety",
+      url: `${YCJA_BASE}/section-29.html`,
+    },
+  ],
+  [
+    "32",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Appearance",
+      summary:
+        "A young person against whom an information or indictment is laid must first be dealt with by a youth justice court judge, whether or not the young person is the holder of a ticket under the Provincial Offences Act.",
+      relevance: "youth appearance, summons, attendance",
+      url: `${YCJA_BASE}/section-32.html`,
+    },
+  ],
+  [
+    "33",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Application for Release from or Detention in Custody",
+      summary:
+        "A young person who has been denied release or detained in custody may apply to a youth justice court for release from custody or for a review of the decision to detain the young person.",
+      relevance: "youth detention review, bail hearing, release application",
+      url: `${YCJA_BASE}/section-33.html`,
+    },
+  ],
+  [
+    "34",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Medical and Psychological Reports",
+      summary:
+        "A youth justice court may, at any stage of proceedings, require that a young person be assessed by a qualified person who is to report the results in writing to the court, for the purpose of considering an appropriate sentence or condition.",
+      relevance: "youth reports, mental health, sentencing information",
+      url: `${YCJA_BASE}/section-34.html`,
+    },
+  ],
+  [
+    "35",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Referral to Child Welfare Agency",
+      summary:
+        "A youth justice court may, at any stage of proceedings, refer a young person to a child welfare agency for assessment to determine whether the young person is in need of child welfare services.",
+      relevance: "child welfare, youth supports, intervention",
+      url: `${YCJA_BASE}/section-35.html`,
+    },
+  ],
 
-  ["41", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Youth Sentences",
-    summary: "When a young person is found guilty of an offence, the youth justice court shall impose one of the following youth sentences: reprimand, absolute discharge, conditional discharge, fine, community service order, probation, intensive support and supervision, attendance, custody and supervision, or deferred custody and supervision.",
-    relevance: "youth sentence, community supervision, custody",
-    url: `${YCJA_BASE}/section-41.html`,
-  }],
-  ["61", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Adult Sentence and Election",
-    summary: "The Attorney General may, before evidence is called, apply to the youth justice court for an order that a young person is liable to an adult sentence if the young person is or has been found guilty of an offence for which an adult could be sentenced to imprisonment for more than two years.",
-    relevance: "adult sentence, youth election, serious offences",
-    url: `${YCJA_BASE}/section-61.html`,
-  }],
+  [
+    "41",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Youth Sentences",
+      summary:
+        "When a young person is found guilty of an offence, the youth justice court shall impose one of the following youth sentences: reprimand, absolute discharge, conditional discharge, fine, community service order, probation, intensive support and supervision, attendance, custody and supervision, or deferred custody and supervision.",
+      relevance: "youth sentence, community supervision, custody",
+      url: `${YCJA_BASE}/section-41.html`,
+    },
+  ],
+  [
+    "61",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Adult Sentence and Election",
+      summary:
+        "The Attorney General may, before evidence is called, apply to the youth justice court for an order that a young person is liable to an adult sentence if the young person is or has been found guilty of an offence for which an adult could be sentenced to imprisonment for more than two years.",
+      relevance: "adult sentence, youth election, serious offences",
+      url: `${YCJA_BASE}/section-61.html`,
+    },
+  ],
 
-  ["113", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Fingerprints and Photographs",
-    summary: "No person shall publish the name or photograph of a young person, or any other information related to a young person, if it would identify the young person as having been charged with, found guilty of, or dealt with under this Act for an offence.",
-    relevance: "youth privacy, fingerprints, publication ban",
-    url: `${YCJA_BASE}/section-113.html`,
-  }],
-  ["117", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Access to Records",
-    summary: "Except as authorized or required by this Act, no person shall be given access to a record kept under sections 114 to 116, and no information contained in it may be given to any person.",
-    relevance: "youth records access, confidentiality, disclosure",
-    url: `${YCJA_BASE}/section-117.html`,
-  }],
-  ["125", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Disclosure of Information in a Record",
-    summary: "A youth justice court judge, the provincial director, a peace officer or the Attorney General may disclose information in a record kept under this Act in the circumstances specified in this section.",
-    relevance: "record disclosure, privacy, youth confidentiality",
-    url: `${YCJA_BASE}/section-125.html`,
-  }],
-  ["128", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Disposition or Destruction of Records and Prohibition on Use and Disclosure",
-    summary: "No record kept under this Act may be used after the applicable period set out in this section has expired, and the record shall be destroyed or transmitted to the Librarian and Archivist of Canada for archival purposes.",
-    relevance: "record destruction, privacy, sealing youth records",
-    url: `${YCJA_BASE}/section-128.html`,
-  }],
-  ["136", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Offences and Punishment",
-    summary: "Every person who contravenes a provision of this Act for which no other punishment is provided, including failing to comply with a youth sentence or a condition of release, is guilty of an offence punishable on summary conviction.",
-    relevance: "youth act offences, compliance, penalties",
-    url: `${YCJA_BASE}/section-136.html`,
-  }],
-  ["140", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Application of Criminal Code",
-    summary: "Except to the extent that it is inconsistent with or excluded by this Act, the provisions of the Criminal Code apply, with any modifications that the circumstances require, in respect of offences alleged to have been committed by young persons.",
-    relevance: "youth procedure, criminal code application, ancillary powers",
-    url: `${YCJA_BASE}/section-140.html`,
-  }],
-  ["146", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Evidence",
-    summary: "A statement made by a young person to a peace officer or other person in authority is not admissible in evidence against the young person unless the young person was clearly informed of the right to silence, the right to counsel, and the statement was voluntary.",
-    relevance: "youth evidence, admissibility, procedure",
-    url: `${YCJA_BASE}/section-146.html`,
-  }],
-  ["154", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Forms, Regulations and Rules of Court",
-    summary: "The Governor in Council may make regulations prescribing forms for notices, orders, subpoenas and other documents used in proceedings under this Act, and establishing rules of court not inconsistent with this Act.",
-    relevance: "court forms, rules, youth procedure",
-    url: `${YCJA_BASE}/section-154.html`,
-  }],
-  ["156", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Agreements with Provinces",
-    summary: "The Minister may, with the approval of the Governor in Council, enter into an agreement with the government of any province providing for the payment by Canada to the province of contributions toward the costs of providing youth justice services.",
-    relevance: "provincial administration, youth justice systems",
-    url: `${YCJA_BASE}/section-156.html`,
-  }],
-  ["157", {
-    jurisdiction: "Federal",
-    statute: "Youth Criminal Justice Act",
-    shortName: "YCJA",
-    title: "Programs",
-    summary: "The Attorney General of Canada or a minister designated by the lieutenant governor in council of a province may establish community-based programs for young persons to provide alternatives to judicial proceedings and facilitate rehabilitation and reintegration.",
-    relevance: "youth programming, community supports, diversion",
-    url: `${YCJA_BASE}/section-157.html`,
-  }],
-
+  [
+    "113",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Fingerprints and Photographs",
+      summary:
+        "No person shall publish the name or photograph of a young person, or any other information related to a young person, if it would identify the young person as having been charged with, found guilty of, or dealt with under this Act for an offence.",
+      relevance: "youth privacy, fingerprints, publication ban",
+      url: `${YCJA_BASE}/section-113.html`,
+    },
+  ],
+  [
+    "117",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Access to Records",
+      summary:
+        "Except as authorized or required by this Act, no person shall be given access to a record kept under sections 114 to 116, and no information contained in it may be given to any person.",
+      relevance: "youth records access, confidentiality, disclosure",
+      url: `${YCJA_BASE}/section-117.html`,
+    },
+  ],
+  [
+    "125",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Disclosure of Information in a Record",
+      summary:
+        "A youth justice court judge, the provincial director, a peace officer or the Attorney General may disclose information in a record kept under this Act in the circumstances specified in this section.",
+      relevance: "record disclosure, privacy, youth confidentiality",
+      url: `${YCJA_BASE}/section-125.html`,
+    },
+  ],
+  [
+    "128",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title:
+        "Disposition or Destruction of Records and Prohibition on Use and Disclosure",
+      summary:
+        "No record kept under this Act may be used after the applicable period set out in this section has expired, and the record shall be destroyed or transmitted to the Librarian and Archivist of Canada for archival purposes.",
+      relevance: "record destruction, privacy, sealing youth records",
+      url: `${YCJA_BASE}/section-128.html`,
+    },
+  ],
+  [
+    "136",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Offences and Punishment",
+      summary:
+        "Every person who contravenes a provision of this Act for which no other punishment is provided, including failing to comply with a youth sentence or a condition of release, is guilty of an offence punishable on summary conviction.",
+      relevance: "youth act offences, compliance, penalties",
+      url: `${YCJA_BASE}/section-136.html`,
+    },
+  ],
+  [
+    "140",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Application of Criminal Code",
+      summary:
+        "Except to the extent that it is inconsistent with or excluded by this Act, the provisions of the Criminal Code apply, with any modifications that the circumstances require, in respect of offences alleged to have been committed by young persons.",
+      relevance: "youth procedure, criminal code application, ancillary powers",
+      url: `${YCJA_BASE}/section-140.html`,
+    },
+  ],
+  [
+    "146",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Evidence",
+      summary:
+        "A statement made by a young person to a peace officer or other person in authority is not admissible in evidence against the young person unless the young person was clearly informed of the right to silence, the right to counsel, and the statement was voluntary.",
+      relevance: "youth evidence, admissibility, procedure",
+      url: `${YCJA_BASE}/section-146.html`,
+    },
+  ],
+  [
+    "154",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Forms, Regulations and Rules of Court",
+      summary:
+        "The Governor in Council may make regulations prescribing forms for notices, orders, subpoenas and other documents used in proceedings under this Act, and establishing rules of court not inconsistent with this Act.",
+      relevance: "court forms, rules, youth procedure",
+      url: `${YCJA_BASE}/section-154.html`,
+    },
+  ],
+  [
+    "156",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Agreements with Provinces",
+      summary:
+        "The Minister may, with the approval of the Governor in Council, enter into an agreement with the government of any province providing for the payment by Canada to the province of contributions toward the costs of providing youth justice services.",
+      relevance: "provincial administration, youth justice systems",
+      url: `${YCJA_BASE}/section-156.html`,
+    },
+  ],
+  [
+    "157",
+    {
+      jurisdiction: "Federal",
+      statute: "Youth Criminal Justice Act",
+      shortName: "YCJA",
+      title: "Programs",
+      summary:
+        "The Attorney General of Canada or a minister designated by the lieutenant governor in council of a province may establish community-based programs for young persons to provide alternatives to judicial proceedings and facilitate rehabilitation and reintegration.",
+      relevance: "youth programming, community supports, diversion",
+      url: `${YCJA_BASE}/section-157.html`,
+    },
+  ],
 ]);
 
 // ── Federal: CHRA ─────────────────────────────────────────────────────────────
 const CHRA_SECTIONS = new Map([
-  ["2", {
-    jurisdiction: "Federal",
-    statute: "Canadian Human Rights Act",
-    shortName: "CHRA",
-    title: "Purpose",
-    summary: "The purpose of this Act is to give effect to the principle that all individuals should have an equal opportunity to make for themselves the lives that they are able and wish to have.",
-    relevance: "human rights purpose, equal opportunity, accommodation, federal jurisdiction",
-    url: `${CHRA_BASE}/section-2.html`,
-  }],
-  ["3", {
-    jurisdiction: "Federal",
-    statute: "Canadian Human Rights Act",
-    shortName: "CHRA",
-    title: "Prohibited grounds of discrimination",
-    summary: "The prohibited grounds of discrimination are race, national or ethnic origin, colour, religion, age, sex, sexual orientation, gender identity or expression, marital status, family status, genetic characteristics, disability and conviction for an offence for which a pardon has been granted.",
-    relevance: "discrimination grounds, race, sex, religion, disability, sexual orientation, gender identity, hate crimes",
-    url: `${CHRA_BASE}/section-3.html`,
-  }],
+  [
+    "2",
+    {
+      jurisdiction: "Federal",
+      statute: "Canadian Human Rights Act",
+      shortName: "CHRA",
+      title: "Purpose",
+      summary:
+        "The purpose of this Act is to give effect to the principle that all individuals should have an equal opportunity to make for themselves the lives that they are able and wish to have.",
+      relevance:
+        "human rights purpose, equal opportunity, accommodation, federal jurisdiction",
+      url: `${CHRA_BASE}/section-2.html`,
+    },
+  ],
+  [
+    "3",
+    {
+      jurisdiction: "Federal",
+      statute: "Canadian Human Rights Act",
+      shortName: "CHRA",
+      title: "Prohibited grounds of discrimination",
+      summary:
+        "The prohibited grounds of discrimination are race, national or ethnic origin, colour, religion, age, sex, sexual orientation, gender identity or expression, marital status, family status, genetic characteristics, disability and conviction for an offence for which a pardon has been granted.",
+      relevance:
+        "discrimination grounds, race, sex, religion, disability, sexual orientation, gender identity, hate crimes",
+      url: `${CHRA_BASE}/section-3.html`,
+    },
+  ],
 
-  ["5", {
-    jurisdiction: "Federal",
-    statute: "Canadian Human Rights Act",
-    shortName: "CHRA",
-    title: "Discriminatory Practices",
-    summary: "It is a discriminatory practice in the provision of goods, services, facilities or accommodation customarily available to the general public to deny, or to deny access to, any such good, service, facility or accommodation to any individual, or to differentiate adversely in relation to any individual, on a prohibited ground of discrimination.",
-    relevance: "human rights discrimination, federal services, employment, accommodation",
-    url: `${CHRA_BASE}/section-5.html`,
-  }],
-  ["6", {
-    jurisdiction: "Federal",
-    statute: "Canadian Human Rights Act",
-    shortName: "CHRA",
-    title: "Denial of commercial premises or residential accommodation",
-    summary: "It is a discriminatory practice in the provision of commercial premises or residential accommodation to deny occupancy of such premises or accommodation to any individual, or to differentiate adversely in relation to any individual, on a prohibited ground of discrimination.",
-    relevance: "housing discrimination, commercial premises, tenancy, accommodation",
-    url: `${CHRA_BASE}/section-6.html`,
-  }],
-  ["7", {
-    jurisdiction: "Federal",
-    statute: "Canadian Human Rights Act",
-    shortName: "CHRA",
-    title: "Employment",
-    summary: "It is a discriminatory practice, directly or indirectly, to refuse to employ or continue to employ any individual, or in the course of employment to differentiate adversely in relation to an employee, on a prohibited ground of discrimination.",
-    relevance: "employment discrimination, hiring, termination, promotion",
-    url: `${CHRA_BASE}/section-7.html`,
-  }],
-  ["10", {
-    jurisdiction: "Federal",
-    statute: "Canadian Human Rights Act",
-    shortName: "CHRA",
-    title: "Discriminatory policy or practice",
-    summary: "It is a discriminatory practice for an employer, employee organization or employer organization to establish or pursue a policy or practice, or to enter into an agreement affecting recruitment, referral, hiring, promotion, training, apprenticeship, transfer or any other matter relating to employment or prospective employment, that deprives or tends to deprive an individual or class of individuals of any employment opportunities on a prohibited ground of discrimination.",
-    relevance: "employment policy, systemic discrimination, job opportunities",
-    url: `${CHRA_BASE}/section-10.html`,
-  }],
-  ["14", {
-    jurisdiction: "Federal",
-    statute: "Canadian Human Rights Act",
-    shortName: "CHRA",
-    title: "Harassment",
-    summary: "It is a discriminatory practice to harass an individual on a prohibited ground of discrimination in matters related to the provision of goods, services, facilities or accommodation, or in matters related to employment.",
-    relevance: "harassment, sexual harassment, workplace harassment, public services",
-    url: `${CHRA_BASE}/section-14.html`,
-  }],
-
+  [
+    "5",
+    {
+      jurisdiction: "Federal",
+      statute: "Canadian Human Rights Act",
+      shortName: "CHRA",
+      title: "Discriminatory Practices",
+      summary:
+        "It is a discriminatory practice in the provision of goods, services, facilities or accommodation customarily available to the general public to deny, or to deny access to, any such good, service, facility or accommodation to any individual, or to differentiate adversely in relation to any individual, on a prohibited ground of discrimination.",
+      relevance:
+        "human rights discrimination, federal services, employment, accommodation",
+      url: `${CHRA_BASE}/section-5.html`,
+    },
+  ],
+  [
+    "6",
+    {
+      jurisdiction: "Federal",
+      statute: "Canadian Human Rights Act",
+      shortName: "CHRA",
+      title: "Denial of commercial premises or residential accommodation",
+      summary:
+        "It is a discriminatory practice in the provision of commercial premises or residential accommodation to deny occupancy of such premises or accommodation to any individual, or to differentiate adversely in relation to any individual, on a prohibited ground of discrimination.",
+      relevance:
+        "housing discrimination, commercial premises, tenancy, accommodation",
+      url: `${CHRA_BASE}/section-6.html`,
+    },
+  ],
+  [
+    "7",
+    {
+      jurisdiction: "Federal",
+      statute: "Canadian Human Rights Act",
+      shortName: "CHRA",
+      title: "Employment",
+      summary:
+        "It is a discriminatory practice, directly or indirectly, to refuse to employ or continue to employ any individual, or in the course of employment to differentiate adversely in relation to an employee, on a prohibited ground of discrimination.",
+      relevance: "employment discrimination, hiring, termination, promotion",
+      url: `${CHRA_BASE}/section-7.html`,
+    },
+  ],
+  [
+    "10",
+    {
+      jurisdiction: "Federal",
+      statute: "Canadian Human Rights Act",
+      shortName: "CHRA",
+      title: "Discriminatory policy or practice",
+      summary:
+        "It is a discriminatory practice for an employer, employee organization or employer organization to establish or pursue a policy or practice, or to enter into an agreement affecting recruitment, referral, hiring, promotion, training, apprenticeship, transfer or any other matter relating to employment or prospective employment, that deprives or tends to deprive an individual or class of individuals of any employment opportunities on a prohibited ground of discrimination.",
+      relevance:
+        "employment policy, systemic discrimination, job opportunities",
+      url: `${CHRA_BASE}/section-10.html`,
+    },
+  ],
+  [
+    "14",
+    {
+      jurisdiction: "Federal",
+      statute: "Canadian Human Rights Act",
+      shortName: "CHRA",
+      title: "Harassment",
+      summary:
+        "It is a discriminatory practice to harass an individual on a prohibited ground of discrimination in matters related to the provision of goods, services, facilities or accommodation, or in matters related to employment.",
+      relevance:
+        "harassment, sexual harassment, workplace harassment, public services",
+      url: `${CHRA_BASE}/section-14.html`,
+    },
+  ],
 ]);
 
 // ── Federal: Criminal Code (Sentencing) ──────────────────────────────────────
 const CC_SENTENCING = new Map([
-  ["718", {
-    jurisdiction: "Federal",
-    statute: "Criminal Code",
-    shortName: "CC",
-    title: "Purpose of sentencing",
-    summary: "The fundamental purpose of sentencing is to protect society and to contribute to respect for the law and the maintenance of a just, peaceful and safe society.",
-    relevance: "sentencing purpose, denunciation, deterrence, rehabilitation, reparation, sentencing principles",
-    url: `${CC_BASE}/section-718.html`,
-  }],
-  ["718.1", {
-    jurisdiction: "Federal",
-    statute: "Criminal Code",
-    shortName: "CC",
-    title: "Fundamental principle of sentencing",
-    summary: "A sentence must be proportionate to the gravity of the offence and the degree of responsibility of the offender.",
-    relevance: "proportionality in sentencing, gravity of offence, moral blameworthiness",
-    url: `${CC_BASE}/section-718.1.html`,
-  }],
-  ["718.2", {
-    jurisdiction: "Federal",
-    statute: "Criminal Code",
-    shortName: "CC",
-    title: "Other sentencing principles",
-    summary: "Aggravating and mitigating circumstances, parity, totality, restraint, and specific attention to Aboriginal offenders (Gladue principles).",
-    relevance: "aggravating factors, mitigating factors, hate crime sentencing, Gladue principles, Aboriginal offenders",
-    url: `${CC_BASE}/section-718.2.html`,
-  }],
-  ["719", {
-    jurisdiction: "Federal",
-    statute: "Criminal Code",
-    shortName: "CC",
-    title: "Commencement of sentence",
-    summary: "A sentence commences when it is imposed, except where a relevant enactment otherwise provides.",
-    relevance: "sentence start date, pre-sentence custody credit, remand credit, 1.5x credit",
-    url: `${CC_BASE}/section-719.html`,
-  }],
-  ["722", {
-    jurisdiction: "Federal",
-    statute: "Criminal Code",
-    shortName: "CC",
-    title: "Victim impact statement",
-    summary: "When determining the sentence, the court shall consider any statement of a victim describing the physical or emotional harm result of the offence.",
-    relevance: "victim impact statement, victim's rights, harm, loss, sentencing",
-    url: `${CC_BASE}/section-722.html`,
-  }],
-  ["730", {
-    jurisdiction: "Federal",
-    statute: "Criminal Code",
-    shortName: "CC",
-    title: "Absolute and conditional discharges",
-    summary: "Where an accused pleads guilty to or is found guilty of an offence, the court may direct that the accused be discharged absolutely or conditionally.",
-    relevance: "discharge, conditional discharge, absolute discharge, no conviction, first offence",
-    url: `${CC_BASE}/section-730.html`,
-  }],
-  ["731", {
-    jurisdiction: "Federal",
-    statute: "Criminal Code",
-    shortName: "CC",
-    title: "Probation",
-    summary: "Where a person is convicted of an offence, a court may suspend the passing of sentence and direct that the offender be released on probation.",
-    relevance: "probation order, suspended sentence, community supervision, conditions",
-    url: `${CC_BASE}/section-731.html`,
-  }],
+  [
+    "718",
+    {
+      jurisdiction: "Federal",
+      statute: "Criminal Code",
+      shortName: "CC",
+      title: "Purpose of sentencing",
+      summary:
+        "The fundamental purpose of sentencing is to protect society and to contribute to respect for the law and the maintenance of a just, peaceful and safe society.",
+      relevance:
+        "sentencing purpose, denunciation, deterrence, rehabilitation, reparation, sentencing principles",
+      url: `${CC_BASE}/section-718.html`,
+    },
+  ],
+  [
+    "718.1",
+    {
+      jurisdiction: "Federal",
+      statute: "Criminal Code",
+      shortName: "CC",
+      title: "Fundamental principle of sentencing",
+      summary:
+        "A sentence must be proportionate to the gravity of the offence and the degree of responsibility of the offender.",
+      relevance:
+        "proportionality in sentencing, gravity of offence, moral blameworthiness",
+      url: `${CC_BASE}/section-718.1.html`,
+    },
+  ],
+  [
+    "718.2",
+    {
+      jurisdiction: "Federal",
+      statute: "Criminal Code",
+      shortName: "CC",
+      title: "Other sentencing principles",
+      summary:
+        "Aggravating and mitigating circumstances, parity, totality, restraint, and specific attention to Aboriginal offenders (Gladue principles).",
+      relevance:
+        "aggravating factors, mitigating factors, hate crime sentencing, Gladue principles, Aboriginal offenders",
+      url: `${CC_BASE}/section-718.2.html`,
+    },
+  ],
+  [
+    "719",
+    {
+      jurisdiction: "Federal",
+      statute: "Criminal Code",
+      shortName: "CC",
+      title: "Commencement of sentence",
+      summary:
+        "A sentence commences when it is imposed, except where a relevant enactment otherwise provides.",
+      relevance:
+        "sentence start date, pre-sentence custody credit, remand credit, 1.5x credit",
+      url: `${CC_BASE}/section-719.html`,
+    },
+  ],
+  [
+    "722",
+    {
+      jurisdiction: "Federal",
+      statute: "Criminal Code",
+      shortName: "CC",
+      title: "Victim impact statement",
+      summary:
+        "When determining the sentence, the court shall consider any statement of a victim describing the physical or emotional harm result of the offence.",
+      relevance:
+        "victim impact statement, victim's rights, harm, loss, sentencing",
+      url: `${CC_BASE}/section-722.html`,
+    },
+  ],
+  [
+    "730",
+    {
+      jurisdiction: "Federal",
+      statute: "Criminal Code",
+      shortName: "CC",
+      title: "Absolute and conditional discharges",
+      summary:
+        "Where an accused pleads guilty to or is found guilty of an offence, the court may direct that the accused be discharged absolutely or conditionally.",
+      relevance:
+        "discharge, conditional discharge, absolute discharge, no conviction, first offence",
+      url: `${CC_BASE}/section-730.html`,
+    },
+  ],
+  [
+    "731",
+    {
+      jurisdiction: "Federal",
+      statute: "Criminal Code",
+      shortName: "CC",
+      title: "Probation",
+      summary:
+        "Where a person is convicted of an offence, a court may suspend the passing of sentence and direct that the offender be released on probation.",
+      relevance:
+        "probation order, suspended sentence, community supervision, conditions",
+      url: `${CC_BASE}/section-731.html`,
+    },
+  ],
 ]);
 
 // ── Federal: Canada Evidence Act ─────────────────────────────────────────────
 const EVIDENCE_SECTIONS = new Map([
-  ["16", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Witness whose capacity is in question",
-    summary: "Procedures for witnesses whose mental capacity is challenged, including the requirement to understand the nature of an oath.",
-    relevance: "competency of witness, mental disability, understanding oath, ability to communicate",
-    url: `${EVIDENCE_BASE}/section-16.html`,
-  }],
-  ["16.1", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Person under fourteen years of age",
-    summary: "A person under fourteen years of age is presumed to have the capacity to testify.",
-    relevance: "child witness, testimony of minors, promise to tell the truth, child evidence",
-    url: `${EVIDENCE_BASE}/section-16.1.html`,
-  }],
+  [
+    "16",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Witness whose capacity is in question",
+      summary:
+        "Procedures for witnesses whose mental capacity is challenged, including the requirement to understand the nature of an oath.",
+      relevance:
+        "competency of witness, mental disability, understanding oath, ability to communicate",
+      url: `${EVIDENCE_BASE}/section-16.html`,
+    },
+  ],
+  [
+    "16.1",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Person under fourteen years of age",
+      summary:
+        "A person under fourteen years of age is presumed to have the capacity to testify.",
+      relevance:
+        "child witness, testimony of minors, promise to tell the truth, child evidence",
+      url: `${EVIDENCE_BASE}/section-16.1.html`,
+    },
+  ],
 
-  ["2", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Application",
-    summary: "This Part applies to all criminal proceedings and to all civil proceedings and other matters whatever the nature of the proceeding under the control of Parliament.",
-    relevance: "evidence law, federal evidentiary rules",
-    url: `${EVIDENCE_BASE}/section-2.html`,
-  }],
-  ["3", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Witnesses",
-    summary: "A person is not incompetent to give evidence by reason of interest or crime. Every person is competent to give evidence in criminal proceedings.",
-    relevance: "competency, witness evidence, testimony",
-    url: `${EVIDENCE_BASE}/section-3.html`,
-  }],
-  ["13", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Oaths and Solemn Affirmations",
-    summary: "A witness who is examined in chief in respect of a fact is not protected from having the witness's prior inconsistent statements used to contradict the witness's testimony. No witness shall be excused from answering on the ground of self-incrimination.",
-    relevance: "oath, affirmation, witness evidence",
-    url: `${EVIDENCE_BASE}/section-13.html`,
-  }],
-  ["17", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Judicial Notice",
-    summary: "Judicial notice shall be taken of all Acts of the Imperial Parliament, of the Parliament of Canada and of the legislature of each province, and of all journals of the several legislatures.",
-    relevance: "judicial notice, proof, admissibility",
-    url: `${EVIDENCE_BASE}/section-17.html`,
-  }],
-  ["19", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Documentary Evidence",
-    summary: "Every document that purports to have been printed by the Queen's Printer or under the authority of the government of a province shall be admitted in evidence without proof that it was so printed.",
-    relevance: "documents, records, documentary proof",
-    url: `${EVIDENCE_BASE}/section-19.html`,
-  }],
-  ["36.1", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Interpretation",
-    summary: "In sections 37 to 38.16, 'judge' means the Chief Justice of the Federal Court or a judge of that Court designated by the Chief Justice to conduct hearings under those sections; 'participant' means a person who participates in a proceeding.",
-    relevance: "evidence statute interpretation, federal evidence",
-    url: `${EVIDENCE_BASE}/section-36.1.html`,
-  }],
-  ["37", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "Specified Public Interest",
-    summary: "A Minister of the Crown or other official may object to the disclosure of information before a court, person or body on the grounds of a specified public interest. The objection may be made during or in connection with any proceeding.",
-    relevance: "confidential information, public interest, disclosure disputes",
-    url: `${EVIDENCE_BASE}/section-37.html`,
-  }],
-  ["38", {
-    jurisdiction: "Federal",
-    statute: "Canada Evidence Act",
-    shortName: "CEA",
-    title: "International Relations and National Defence and National Security",
-    summary: "Every participant who is required to disclose or expects to disclose information in connection with a proceeding shall notify the Attorney General of Canada if the information relates to international relations, national defence or national security.",
-    relevance: "national security, international relations, sensitive evidence",
-    url: `${EVIDENCE_BASE}/section-38.html`,
-  }],
-
+  [
+    "2",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Application",
+      summary:
+        "This Part applies to all criminal proceedings and to all civil proceedings and other matters whatever the nature of the proceeding under the control of Parliament.",
+      relevance: "evidence law, federal evidentiary rules",
+      url: `${EVIDENCE_BASE}/section-2.html`,
+    },
+  ],
+  [
+    "3",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Witnesses",
+      summary:
+        "A person is not incompetent to give evidence by reason of interest or crime. Every person is competent to give evidence in criminal proceedings.",
+      relevance: "competency, witness evidence, testimony",
+      url: `${EVIDENCE_BASE}/section-3.html`,
+    },
+  ],
+  [
+    "13",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Oaths and Solemn Affirmations",
+      summary:
+        "A witness who is examined in chief in respect of a fact is not protected from having the witness's prior inconsistent statements used to contradict the witness's testimony. No witness shall be excused from answering on the ground of self-incrimination.",
+      relevance: "oath, affirmation, witness evidence",
+      url: `${EVIDENCE_BASE}/section-13.html`,
+    },
+  ],
+  [
+    "17",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Judicial Notice",
+      summary:
+        "Judicial notice shall be taken of all Acts of the Imperial Parliament, of the Parliament of Canada and of the legislature of each province, and of all journals of the several legislatures.",
+      relevance: "judicial notice, proof, admissibility",
+      url: `${EVIDENCE_BASE}/section-17.html`,
+    },
+  ],
+  [
+    "19",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Documentary Evidence",
+      summary:
+        "Every document that purports to have been printed by the Queen's Printer or under the authority of the government of a province shall be admitted in evidence without proof that it was so printed.",
+      relevance: "documents, records, documentary proof",
+      url: `${EVIDENCE_BASE}/section-19.html`,
+    },
+  ],
+  [
+    "36.1",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Interpretation",
+      summary:
+        "In sections 37 to 38.16, 'judge' means the Chief Justice of the Federal Court or a judge of that Court designated by the Chief Justice to conduct hearings under those sections; 'participant' means a person who participates in a proceeding.",
+      relevance: "evidence statute interpretation, federal evidence",
+      url: `${EVIDENCE_BASE}/section-36.1.html`,
+    },
+  ],
+  [
+    "37",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title: "Specified Public Interest",
+      summary:
+        "A Minister of the Crown or other official may object to the disclosure of information before a court, person or body on the grounds of a specified public interest. The objection may be made during or in connection with any proceeding.",
+      relevance:
+        "confidential information, public interest, disclosure disputes",
+      url: `${EVIDENCE_BASE}/section-37.html`,
+    },
+  ],
+  [
+    "38",
+    {
+      jurisdiction: "Federal",
+      statute: "Canada Evidence Act",
+      shortName: "CEA",
+      title:
+        "International Relations and National Defence and National Security",
+      summary:
+        "Every participant who is required to disclose or expects to disclose information in connection with a proceeding shall notify the Attorney General of Canada if the information relates to international relations, national defence or national security.",
+      relevance:
+        "national security, international relations, sensitive evidence",
+      url: `${EVIDENCE_BASE}/section-38.html`,
+    },
+  ],
 ]);
 
 // ── Federal: CCRA ─────────────────────────────────────────────────────────────
 const CCRA_SECTIONS = new Map([
-  ["100", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Purpose of conditional release",
-    summary: "Conditional release facilitates rehabilitation and reintegration into the community as law-abiding citizens.",
-    relevance: "parole, statutory release, conditional release purpose, rehabilitation, reintegration",
-    url: `${CCRA_BASE}/section-100.html`,
-  }],
-  ["101", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Principles guiding the Board",
-    summary: "The principles that shall guide the Board and the provincial parole boards in achieving the purpose of conditional release.",
-    relevance: "parole board principles, public protection, parole decision, risk assessment",
-    url: `${CCRA_BASE}/section-101.html`,
-  }],
+  [
+    "100",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Purpose of conditional release",
+      summary:
+        "Conditional release facilitates rehabilitation and reintegration into the community as law-abiding citizens.",
+      relevance:
+        "parole, statutory release, conditional release purpose, rehabilitation, reintegration",
+      url: `${CCRA_BASE}/section-100.html`,
+    },
+  ],
+  [
+    "101",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Principles guiding the Board",
+      summary:
+        "The principles that shall guide the Board and the provincial parole boards in achieving the purpose of conditional release.",
+      relevance:
+        "parole board principles, public protection, parole decision, risk assessment",
+      url: `${CCRA_BASE}/section-101.html`,
+    },
+  ],
 
-  ["2", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Interpretation",
-    summary: "In this Act, 'parole' means full parole or day parole; 'penitentiary' means a facility of any description, including all lands connected therewith, that is operated, permanently or temporarily, by the Service for the care and custody of inmates.",
-    relevance: "corrections, parole, statutory interpretation",
-    url: `${CCRA_BASE}/section-2.html`,
-  }],
-  ["3", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Purpose and Principles",
-    summary: "The purpose of the federal correctional system is to contribute to the maintenance of a just, peaceful and safe society by carrying out sentences imposed by courts through the safe and humane custody and supervision of offenders and by assisting the rehabilitation and reintegration of offenders into the community.",
-    relevance: "corrections purpose, rehabilitation, reintegration, public safety",
-    url: `${CCRA_BASE}/section-3.html`,
-  }],
-  ["5", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Correctional Service of Canada",
-    summary: "There shall continue to be a correctional service in and for Canada, to be known as the Correctional Service of Canada, which shall be responsible for the care and custody of inmates and the supervision of offenders.",
-    relevance: "CSC, correctional service, federal corrections",
-    url: `${CCRA_BASE}/section-5.html`,
-  }],
-  ["11", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Reception of Inmates",
-    summary: "Every person who is sentenced, committed or transferred to penitentiary shall be received therein, and a record shall be kept of every person received.",
-    relevance: "institutional intake, inmate reception, custody",
-    url: `${CCRA_BASE}/section-11.html`,
-  }],
-  ["15.1", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Correctional Plans",
-    summary: "The Service shall prepare a correctional plan for each offender that sets out the programs, the penitentiary in which the offender is to be confined, and the level of supervision needed for the offender's integration into the community.",
-    relevance: "correctional plan, reintegration, inmate programming",
-    url: `${CCRA_BASE}/section-15.1.html`,
-  }],
-  ["17", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Escorted Temporary Absences",
-    summary: "The institutional head may authorize a person to be absent from penitentiary, escorted by a staff member or other authorized person, for medical, administrative, community service, family contact, personal development or compassionate reasons.",
-    relevance: "temporary absence, release planning, custody management",
-    url: `${CCRA_BASE}/section-17.html`,
-  }],
-  ["18", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Work Releases",
-    summary: "The institutional head may authorize an offender to work in the community, under supervision, if the offender's participation in the work would contribute to the offender's reintegration into the community.",
-    relevance: "work release, temporary release, reintegration",
-    url: `${CCRA_BASE}/section-18.html`,
-  }],
-  ["23", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Information",
-    summary: "The Service shall take all reasonable steps to ensure that any information about an offender that it uses is as accurate, up to date and complete as possible, and shall give the offender access to the information used in making decisions about the offender.",
-    relevance: "offender information, correctional records, disclosure",
-    url: `${CCRA_BASE}/section-23.html`,
-  }],
-  ["28", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Placement and Transfer of Inmates",
-    summary: "The Service shall, taking into account the offender's security classification, ensure that the penitentiary in which the offender is confined is the least restrictive environment for that person, having regard to the protection of the public, staff and offenders.",
-    relevance: "transfer, classification, institutional placement",
-    url: `${CCRA_BASE}/section-28.html`,
-  }],
-  ["29.1", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Security Classification",
-    summary: "The Service shall assign a security classification of maximum, medium or minimum to each inmate, in accordance with the regulations, taking into consideration the probability of escape, the risk to the safety of the public, and the degree of supervision and control required.",
-    relevance: "security level, classification, custody placement",
-    url: `${CCRA_BASE}/section-29.1.html`,
-  }],
-  ["102", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Criteria for granting parole",
-    summary: "The Board or a provincial parole board may grant parole to an offender if the Board or provincial parole board is satisfied that the offender will not, by reoffending, present an undue risk to society before the expiration of the offender's sentence.",
-    relevance: "parole eligibility, risk, reintegration, public safety",
-    url: `${CCRA_BASE}/section-102.html`,
-  }],
-  ["103", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Constitution and Jurisdiction of Board",
-    summary: "The Parole Board of Canada shall consist of not more than 60 full-time members and a number of part-time members, appointed by the Governor in Council.",
-    relevance: "parole board, jurisdiction, decision-making",
-    url: `${CCRA_BASE}/section-103.html`,
-  }],
-  ["112", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Constitution and Jurisdiction of Provincial Boards",
-    summary: "The lieutenant governor in council of a province may appoint a provincial parole board to exercise jurisdiction in accordance with this Part in respect of the parole of offenders serving sentences in provincial correctional facilities.",
-    relevance: "provincial parole board, parole jurisdiction",
-    url: `${CCRA_BASE}/section-112.html`,
-  }],
-  ["115", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Unescorted Temporary Absence",
-    summary: "The Board may authorize an unescorted temporary absence for an offender if the Board is satisfied that a structured plan for the absence has been prepared and the offender will not, by reoffending, present an undue risk to society during the absence.",
-    relevance: "UTA, temporary release, parole planning",
-    url: `${CCRA_BASE}/section-115.html`,
-  }],
-  ["119", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Eligibility for Parole",
-    summary: "Subject to this Act, an offender serving a sentence of two years or more is eligible for full parole after serving one third of the sentence, and an offender serving a life sentence is eligible for full parole after serving the applicable period set by law.",
-    relevance: "parole eligibility, sentence length, review timing",
-    url: `${CCRA_BASE}/section-119.html`,
-  }],
-  ["122", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Parole Reviews",
-    summary: "The Board shall, at the times prescribed by the regulations, review the case of every offender who is serving a sentence of two years or more and has not been granted parole, for the purpose of deciding whether to grant parole.",
-    relevance: "parole hearing, review, release decision",
-    url: `${CCRA_BASE}/section-122.html`,
-  }],
-  ["127", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Statutory Release",
-    summary: "An offender sentenced to a term of imprisonment of two years or more shall be released on the date determined in accordance with this section, subject to the offender's not having been granted parole, on statutory release to serve the remainder of the sentence under supervision in the community.",
-    relevance: "statutory release, release date, custody",
-    url: `${CCRA_BASE}/section-127.html`,
-  }],
-  ["128", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Effect of Parole, Statutory Release or Unescorted Temporary Absence",
-    summary: "An offender on parole, statutory release or unescorted temporary absence continues, while entitled to be at large, to serve the sentence and is still subject to this Act.",
-    relevance: "parole effect, statutory release, sentence administration",
-    url: `${CCRA_BASE}/section-128.html`,
-  }],
-  ["133", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Conditions of Release",
-    summary: "Every offender released on parole, statutory release or unescorted temporary absence is subject to the conditions prescribed by the regulations, and the releasing authority may impose any additional conditions it considers reasonable and necessary to protect society.",
-    relevance: "release conditions, parole conditions, supervision",
-    url: `${CCRA_BASE}/section-133.html`,
-  }],
-  ["134.1", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Conditions for Long-Term Supervision",
-    summary: "The Board may establish conditions for the long-term supervision of an offender, including requirements regarding residence, employment, community activities, supervision contact and any other conditions the Board considers reasonable and necessary.",
-    relevance: "long-term supervision, parole-like conditions, release planning",
-    url: `${CCRA_BASE}/section-134.1.html`,
-  }],
-  ["135", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Suspension, Termination, Revocation and Inoperativeness of Parole, Statutory Release or Long-Term Supervision",
-    summary: "A member of the Board or a person designated by the chairperson of the Board may, by warrant, suspend the parole, statutory release or long-term supervision of an offender if the member or person is satisfied that it is necessary and reasonable to suspend it in order to prevent a breach of condition or to protect society.",
-    relevance: "revocation, suspension, supervision, parole breach",
-    url: `${CCRA_BASE}/section-135.html`,
-  }],
-  ["140", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Review Hearings",
-    summary: "The Board shall conduct a review of the case of every offender within the period prescribed by the regulations after the suspension, termination or revocation of parole or statutory release, to decide whether to cancel the suspension, terminate or revoke the parole or statutory release.",
-    relevance: "review hearing, supervision review, correctional procedure",
-    url: `${CCRA_BASE}/section-140.html`,
-  }],
-  ["141", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Disclosure of Information",
-    summary: "At a reasonable time before a review, the Board shall provide or cause to be provided to the offender, in writing, the information that is to be considered in the review or a summary of that information.",
-    relevance: "information disclosure, parole file, offender records",
-    url: `${CCRA_BASE}/section-141.html`,
-  }],
-  ["145", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Review and Evidence",
-    summary: "The Board may, in conducting a review, take into account any information presented to it by the offender, the Service, or any other person, and may hear any testimony it considers necessary.",
-    relevance: "parole evidence, review record, procedural fairness",
-    url: `${CCRA_BASE}/section-145.html`,
-  }],
-  ["146", {
-    jurisdiction: "Federal",
-    statute: "Corrections and Conditional Release Act",
-    shortName: "CCRA",
-    title: "Organization of the Board",
-    summary: "The Board shall consist of a chairperson, one or more vice-chairpersons, and not more than 60 full-time members, organized into regional divisions as the Governor in Council may determine.",
-    relevance: "parole board structure, appeal division, organization",
-    url: `${CCRA_BASE}/section-146.html`,
-  }],
-
+  [
+    "2",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Interpretation",
+      summary:
+        "In this Act, 'parole' means full parole or day parole; 'penitentiary' means a facility of any description, including all lands connected therewith, that is operated, permanently or temporarily, by the Service for the care and custody of inmates.",
+      relevance: "corrections, parole, statutory interpretation",
+      url: `${CCRA_BASE}/section-2.html`,
+    },
+  ],
+  [
+    "3",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Purpose and Principles",
+      summary:
+        "The purpose of the federal correctional system is to contribute to the maintenance of a just, peaceful and safe society by carrying out sentences imposed by courts through the safe and humane custody and supervision of offenders and by assisting the rehabilitation and reintegration of offenders into the community.",
+      relevance:
+        "corrections purpose, rehabilitation, reintegration, public safety",
+      url: `${CCRA_BASE}/section-3.html`,
+    },
+  ],
+  [
+    "5",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Correctional Service of Canada",
+      summary:
+        "There shall continue to be a correctional service in and for Canada, to be known as the Correctional Service of Canada, which shall be responsible for the care and custody of inmates and the supervision of offenders.",
+      relevance: "CSC, correctional service, federal corrections",
+      url: `${CCRA_BASE}/section-5.html`,
+    },
+  ],
+  [
+    "11",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Reception of Inmates",
+      summary:
+        "Every person who is sentenced, committed or transferred to penitentiary shall be received therein, and a record shall be kept of every person received.",
+      relevance: "institutional intake, inmate reception, custody",
+      url: `${CCRA_BASE}/section-11.html`,
+    },
+  ],
+  [
+    "15.1",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Correctional Plans",
+      summary:
+        "The Service shall prepare a correctional plan for each offender that sets out the programs, the penitentiary in which the offender is to be confined, and the level of supervision needed for the offender's integration into the community.",
+      relevance: "correctional plan, reintegration, inmate programming",
+      url: `${CCRA_BASE}/section-15.1.html`,
+    },
+  ],
+  [
+    "17",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Escorted Temporary Absences",
+      summary:
+        "The institutional head may authorize a person to be absent from penitentiary, escorted by a staff member or other authorized person, for medical, administrative, community service, family contact, personal development or compassionate reasons.",
+      relevance: "temporary absence, release planning, custody management",
+      url: `${CCRA_BASE}/section-17.html`,
+    },
+  ],
+  [
+    "18",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Work Releases",
+      summary:
+        "The institutional head may authorize an offender to work in the community, under supervision, if the offender's participation in the work would contribute to the offender's reintegration into the community.",
+      relevance: "work release, temporary release, reintegration",
+      url: `${CCRA_BASE}/section-18.html`,
+    },
+  ],
+  [
+    "23",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Information",
+      summary:
+        "The Service shall take all reasonable steps to ensure that any information about an offender that it uses is as accurate, up to date and complete as possible, and shall give the offender access to the information used in making decisions about the offender.",
+      relevance: "offender information, correctional records, disclosure",
+      url: `${CCRA_BASE}/section-23.html`,
+    },
+  ],
+  [
+    "28",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Placement and Transfer of Inmates",
+      summary:
+        "The Service shall, taking into account the offender's security classification, ensure that the penitentiary in which the offender is confined is the least restrictive environment for that person, having regard to the protection of the public, staff and offenders.",
+      relevance: "transfer, classification, institutional placement",
+      url: `${CCRA_BASE}/section-28.html`,
+    },
+  ],
+  [
+    "29.1",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Security Classification",
+      summary:
+        "The Service shall assign a security classification of maximum, medium or minimum to each inmate, in accordance with the regulations, taking into consideration the probability of escape, the risk to the safety of the public, and the degree of supervision and control required.",
+      relevance: "security level, classification, custody placement",
+      url: `${CCRA_BASE}/section-29.1.html`,
+    },
+  ],
+  [
+    "102",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Criteria for granting parole",
+      summary:
+        "The Board or a provincial parole board may grant parole to an offender if the Board or provincial parole board is satisfied that the offender will not, by reoffending, present an undue risk to society before the expiration of the offender's sentence.",
+      relevance: "parole eligibility, risk, reintegration, public safety",
+      url: `${CCRA_BASE}/section-102.html`,
+    },
+  ],
+  [
+    "103",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Constitution and Jurisdiction of Board",
+      summary:
+        "The Parole Board of Canada shall consist of not more than 60 full-time members and a number of part-time members, appointed by the Governor in Council.",
+      relevance: "parole board, jurisdiction, decision-making",
+      url: `${CCRA_BASE}/section-103.html`,
+    },
+  ],
+  [
+    "112",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Constitution and Jurisdiction of Provincial Boards",
+      summary:
+        "The lieutenant governor in council of a province may appoint a provincial parole board to exercise jurisdiction in accordance with this Part in respect of the parole of offenders serving sentences in provincial correctional facilities.",
+      relevance: "provincial parole board, parole jurisdiction",
+      url: `${CCRA_BASE}/section-112.html`,
+    },
+  ],
+  [
+    "115",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Unescorted Temporary Absence",
+      summary:
+        "The Board may authorize an unescorted temporary absence for an offender if the Board is satisfied that a structured plan for the absence has been prepared and the offender will not, by reoffending, present an undue risk to society during the absence.",
+      relevance: "UTA, temporary release, parole planning",
+      url: `${CCRA_BASE}/section-115.html`,
+    },
+  ],
+  [
+    "119",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Eligibility for Parole",
+      summary:
+        "Subject to this Act, an offender serving a sentence of two years or more is eligible for full parole after serving one third of the sentence, and an offender serving a life sentence is eligible for full parole after serving the applicable period set by law.",
+      relevance: "parole eligibility, sentence length, review timing",
+      url: `${CCRA_BASE}/section-119.html`,
+    },
+  ],
+  [
+    "122",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Parole Reviews",
+      summary:
+        "The Board shall, at the times prescribed by the regulations, review the case of every offender who is serving a sentence of two years or more and has not been granted parole, for the purpose of deciding whether to grant parole.",
+      relevance: "parole hearing, review, release decision",
+      url: `${CCRA_BASE}/section-122.html`,
+    },
+  ],
+  [
+    "127",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Statutory Release",
+      summary:
+        "An offender sentenced to a term of imprisonment of two years or more shall be released on the date determined in accordance with this section, subject to the offender's not having been granted parole, on statutory release to serve the remainder of the sentence under supervision in the community.",
+      relevance: "statutory release, release date, custody",
+      url: `${CCRA_BASE}/section-127.html`,
+    },
+  ],
+  [
+    "128",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title:
+        "Effect of Parole, Statutory Release or Unescorted Temporary Absence",
+      summary:
+        "An offender on parole, statutory release or unescorted temporary absence continues, while entitled to be at large, to serve the sentence and is still subject to this Act.",
+      relevance: "parole effect, statutory release, sentence administration",
+      url: `${CCRA_BASE}/section-128.html`,
+    },
+  ],
+  [
+    "133",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Conditions of Release",
+      summary:
+        "Every offender released on parole, statutory release or unescorted temporary absence is subject to the conditions prescribed by the regulations, and the releasing authority may impose any additional conditions it considers reasonable and necessary to protect society.",
+      relevance: "release conditions, parole conditions, supervision",
+      url: `${CCRA_BASE}/section-133.html`,
+    },
+  ],
+  [
+    "134.1",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Conditions for Long-Term Supervision",
+      summary:
+        "The Board may establish conditions for the long-term supervision of an offender, including requirements regarding residence, employment, community activities, supervision contact and any other conditions the Board considers reasonable and necessary.",
+      relevance:
+        "long-term supervision, parole-like conditions, release planning",
+      url: `${CCRA_BASE}/section-134.1.html`,
+    },
+  ],
+  [
+    "135",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title:
+        "Suspension, Termination, Revocation and Inoperativeness of Parole, Statutory Release or Long-Term Supervision",
+      summary:
+        "A member of the Board or a person designated by the chairperson of the Board may, by warrant, suspend the parole, statutory release or long-term supervision of an offender if the member or person is satisfied that it is necessary and reasonable to suspend it in order to prevent a breach of condition or to protect society.",
+      relevance: "revocation, suspension, supervision, parole breach",
+      url: `${CCRA_BASE}/section-135.html`,
+    },
+  ],
+  [
+    "140",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Review Hearings",
+      summary:
+        "The Board shall conduct a review of the case of every offender within the period prescribed by the regulations after the suspension, termination or revocation of parole or statutory release, to decide whether to cancel the suspension, terminate or revoke the parole or statutory release.",
+      relevance: "review hearing, supervision review, correctional procedure",
+      url: `${CCRA_BASE}/section-140.html`,
+    },
+  ],
+  [
+    "141",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Disclosure of Information",
+      summary:
+        "At a reasonable time before a review, the Board shall provide or cause to be provided to the offender, in writing, the information that is to be considered in the review or a summary of that information.",
+      relevance: "information disclosure, parole file, offender records",
+      url: `${CCRA_BASE}/section-141.html`,
+    },
+  ],
+  [
+    "145",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Review and Evidence",
+      summary:
+        "The Board may, in conducting a review, take into account any information presented to it by the offender, the Service, or any other person, and may hear any testimony it considers necessary.",
+      relevance: "parole evidence, review record, procedural fairness",
+      url: `${CCRA_BASE}/section-145.html`,
+    },
+  ],
+  [
+    "146",
+    {
+      jurisdiction: "Federal",
+      statute: "Corrections and Conditional Release Act",
+      shortName: "CCRA",
+      title: "Organization of the Board",
+      summary:
+        "The Board shall consist of a chairperson, one or more vice-chairpersons, and not more than 60 full-time members, organized into regional divisions as the Governor in Council may determine.",
+      relevance: "parole board structure, appeal division, organization",
+      url: `${CCRA_BASE}/section-146.html`,
+    },
+  ],
 ]);
 
 // ── Ontario: Highway Traffic Act ─────────────────────────────────────────────
 const ON_HTA_SECTIONS = new Map([
-  ["53", {
-    jurisdiction: "Ontario",
-    statute: "Highway Traffic Act",
-    shortName: "HTA",
-    title: "Driving while licence suspended",
-    summary: "Every person who drives a motor vehicle on a highway while his or her driver’s licence is suspended is guilty of an offence.",
-    relevance: "driving while suspended, provincial traffic offences",
-    url: `${ON_HTA_BASE}`,
-  }],
-  ["128", {
-    jurisdiction: "Ontario",
-    statute: "Highway Traffic Act",
-    shortName: "HTA",
-    title: "Rate of speed",
-    summary: "Statutory limits on speed for various highway types.",
-    relevance: "speeding, traffic safety",
-    url: `${ON_HTA_BASE}`,
-  }],
-  ["130", {
-    jurisdiction: "Ontario",
-    statute: "Highway Traffic Act",
-    shortName: "HTA",
-    title: "Careless driving",
-    summary: "Driving without due care and attention or without reasonable consideration for other persons.",
-    relevance: "careless driving, provincial driving offence",
-    url: `${ON_HTA_BASE}`,
-  }],
+  [
+    "53",
+    {
+      jurisdiction: "Ontario",
+      statute: "Highway Traffic Act",
+      shortName: "HTA",
+      title: "Driving while licence suspended",
+      summary:
+        "Every person who drives a motor vehicle on a highway while his or her driver’s licence is suspended is guilty of an offence.",
+      relevance: "driving while suspended, provincial traffic offences",
+      url: `${ON_HTA_BASE}`,
+    },
+  ],
+  [
+    "128",
+    {
+      jurisdiction: "Ontario",
+      statute: "Highway Traffic Act",
+      shortName: "HTA",
+      title: "Rate of speed",
+      summary: "Statutory limits on speed for various highway types.",
+      relevance: "speeding, traffic safety",
+      url: `${ON_HTA_BASE}`,
+    },
+  ],
+  [
+    "130",
+    {
+      jurisdiction: "Ontario",
+      statute: "Highway Traffic Act",
+      shortName: "HTA",
+      title: "Careless driving",
+      summary:
+        "Driving without due care and attention or without reasonable consideration for other persons.",
+      relevance: "careless driving, provincial driving offence",
+      url: `${ON_HTA_BASE}`,
+    },
+  ],
 ]);
 
 // ── Ontario: Residential Tenancies Act ───────────────────────────────────────
 const ON_RTA_SECTIONS = new Map([
-  ["20", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Landlord's responsibility to repair",
-    summary: "A landlord is responsible for providing and maintaining a residential complex and the rental units in a good state of repair.",
-    relevance: "tenancy disputes, maintenance, habitability",
-    url: `${ON_RTA_BASE}`,
-  }],
+  [
+    "20",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Landlord's responsibility to repair",
+      summary:
+        "A landlord is responsible for providing and maintaining a residential complex and the rental units in a good state of repair.",
+      relevance: "tenancy disputes, maintenance, habitability",
+      url: `${ON_RTA_BASE}`,
+    },
+  ],
 
-  ["1", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Interpretation",
-    summary: "This section sets out the definitions used throughout the Act, including 'landlord', 'tenant', 'rental unit', 'residential complex', 'tenancy agreement' and 'vital service'.",
-    relevance: "residential tenancies, landlord tenant terms, Ontario tenancy law",
-    url: ON_RTA_BASE,
-  }],
-  ["2", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Application",
-    summary: "This Act applies with respect to rental units in residential complexes, despite any other Act and despite any agreement or waiver to the contrary, subject to specified exclusions.",
-    relevance: "Ontario tenancy coverage, rental units, exclusions",
-    url: ON_RTA_BASE,
-  }],
-  ["3", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Act prevails",
-    summary: "If a provision of this Act conflicts with a provision of another Act, other than the Human Rights Code, the provision of this Act applies.",
-    relevance: "statutory priority, tenancy agreements, landlord obligations",
-    url: ON_RTA_BASE,
-  }],
-  ["4", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Crown is bound",
-    summary: "This Act binds the Crown.",
-    relevance: "provincial tenancy obligations, Crown landlord",
-    url: ON_RTA_BASE,
-  }],
-  ["21", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Assignment and sublease",
-    summary: "A tenant may not assign or sublet a rental unit without the consent of the landlord. A landlord shall not arbitrarily or unreasonably refuse consent to an assignment or sublet.",
-    relevance: "assignment, sublet, landlord consent",
-    url: ON_RTA_BASE,
-  }],
-  ["22", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Entry of premises",
-    summary: "A landlord may enter a rental unit only in accordance with this section, including with 24 hours' written notice for specified purposes, or without notice in cases of emergency or if the tenant consents at the time of entry.",
-    relevance: "landlord entry, access, notice",
-    url: ON_RTA_BASE,
-  }],
-  ["23", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Locks and security devices",
-    summary: "A tenant may install, at the tenant's expense, additional locks on the doors of the rental unit, but the tenant shall provide keys to the landlord. Neither the landlord nor the tenant shall alter the locking system without the other's consent.",
-    relevance: "tenant security, lock changes, landlord access",
-    url: ON_RTA_BASE,
-  }],
-  ["24", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Landlord's remedies",
-    summary: "A landlord may apply to the Board for an order for the payment of arrears of rent if the tenant has not paid rent lawfully required under a tenancy agreement.",
-    relevance: "landlord remedies, breach, tenancy enforcement",
-    url: ON_RTA_BASE,
-  }],
-  ["25", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Repudiation of tenancy",
-    summary: "A tenancy may be terminated by repudiation if the tenant abandons the rental unit or if the landlord's conduct constitutes repudiation of the tenancy agreement.",
-    relevance: "repudiation, abandonment, tenancy end",
-    url: ON_RTA_BASE,
-  }],
-  ["26", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Termination of tenancy for substantial breach",
-    summary: "A landlord may give a tenant notice of termination of the tenancy if the tenant has committed a substantial breach of a material covenant of the tenancy agreement.",
-    relevance: "breach, termination, landlord notice",
-    url: ON_RTA_BASE,
-  }],
-  ["27", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Termination of tenancy for damage or assault",
-    summary: "A landlord may give a tenant notice of termination of the tenancy if the tenant or a person whom the tenant permits in the residential complex has wilfully or negligently caused undue damage to the rental unit or the residential complex, or has used the rental unit in a manner inconsistent with its use as residential premises and this use has caused or can be expected to cause significant damage.",
-    relevance: "damage, assault, eviction, termination",
-    url: ON_RTA_BASE,
-  }],
-  ["29", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Recovery of damages",
-    summary: "A landlord or a tenant may recover damages against the other if the other party has failed to meet obligations under this Act or the tenancy agreement.",
-    relevance: "damages, tenancy losses, landlord claims",
-    url: ON_RTA_BASE,
-  }],
-  ["30", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Notice to vacate",
-    summary: "A landlord may give a tenant notice to vacate the rental unit in the form approved by the Board, setting out the reasons for the notice and the termination date, which shall be at least the number of days required by this Act.",
-    relevance: "notice to vacate, eviction notice, possession",
-    url: ON_RTA_BASE,
-  }],
-  ["31", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Order for recovery of possession",
-    summary: "The Board may make an order for the recovery of possession of a rental unit if the Board is satisfied that the landlord has met the requirements of this Act for termination of a tenancy.",
-    relevance: "possession order, eviction application",
-    url: ON_RTA_BASE,
-  }],
-  ["32", {
-    jurisdiction: "Ontario",
-    statute: "Residential Tenancies Act, 2006",
-    shortName: "RTA",
-    title: "Writ of possession",
-    summary: "An order of the Board for the recovery of possession of a rental unit may be filed with the Superior Court of Justice and enforced by the sheriff by way of a writ of possession.",
-    relevance: "writ of possession, enforcement, sheriff",
-    url: ON_RTA_BASE,
-  }],
-
+  [
+    "1",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Interpretation",
+      summary:
+        "This section sets out the definitions used throughout the Act, including 'landlord', 'tenant', 'rental unit', 'residential complex', 'tenancy agreement' and 'vital service'.",
+      relevance:
+        "residential tenancies, landlord tenant terms, Ontario tenancy law",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "2",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Application",
+      summary:
+        "This Act applies with respect to rental units in residential complexes, despite any other Act and despite any agreement or waiver to the contrary, subject to specified exclusions.",
+      relevance: "Ontario tenancy coverage, rental units, exclusions",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "3",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Act prevails",
+      summary:
+        "If a provision of this Act conflicts with a provision of another Act, other than the Human Rights Code, the provision of this Act applies.",
+      relevance: "statutory priority, tenancy agreements, landlord obligations",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "4",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Crown is bound",
+      summary: "This Act binds the Crown.",
+      relevance: "provincial tenancy obligations, Crown landlord",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "21",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Assignment and sublease",
+      summary:
+        "A tenant may not assign or sublet a rental unit without the consent of the landlord. A landlord shall not arbitrarily or unreasonably refuse consent to an assignment or sublet.",
+      relevance: "assignment, sublet, landlord consent",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "22",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Entry of premises",
+      summary:
+        "A landlord may enter a rental unit only in accordance with this section, including with 24 hours' written notice for specified purposes, or without notice in cases of emergency or if the tenant consents at the time of entry.",
+      relevance: "landlord entry, access, notice",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "23",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Locks and security devices",
+      summary:
+        "A tenant may install, at the tenant's expense, additional locks on the doors of the rental unit, but the tenant shall provide keys to the landlord. Neither the landlord nor the tenant shall alter the locking system without the other's consent.",
+      relevance: "tenant security, lock changes, landlord access",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "24",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Landlord's remedies",
+      summary:
+        "A landlord may apply to the Board for an order for the payment of arrears of rent if the tenant has not paid rent lawfully required under a tenancy agreement.",
+      relevance: "landlord remedies, breach, tenancy enforcement",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "25",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Repudiation of tenancy",
+      summary:
+        "A tenancy may be terminated by repudiation if the tenant abandons the rental unit or if the landlord's conduct constitutes repudiation of the tenancy agreement.",
+      relevance: "repudiation, abandonment, tenancy end",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "26",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Termination of tenancy for substantial breach",
+      summary:
+        "A landlord may give a tenant notice of termination of the tenancy if the tenant has committed a substantial breach of a material covenant of the tenancy agreement.",
+      relevance: "breach, termination, landlord notice",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "27",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Termination of tenancy for damage or assault",
+      summary:
+        "A landlord may give a tenant notice of termination of the tenancy if the tenant or a person whom the tenant permits in the residential complex has wilfully or negligently caused undue damage to the rental unit or the residential complex, or has used the rental unit in a manner inconsistent with its use as residential premises and this use has caused or can be expected to cause significant damage.",
+      relevance: "damage, assault, eviction, termination",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "29",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Recovery of damages",
+      summary:
+        "A landlord or a tenant may recover damages against the other if the other party has failed to meet obligations under this Act or the tenancy agreement.",
+      relevance: "damages, tenancy losses, landlord claims",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "30",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Notice to vacate",
+      summary:
+        "A landlord may give a tenant notice to vacate the rental unit in the form approved by the Board, setting out the reasons for the notice and the termination date, which shall be at least the number of days required by this Act.",
+      relevance: "notice to vacate, eviction notice, possession",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "31",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Order for recovery of possession",
+      summary:
+        "The Board may make an order for the recovery of possession of a rental unit if the Board is satisfied that the landlord has met the requirements of this Act for termination of a tenancy.",
+      relevance: "possession order, eviction application",
+      url: ON_RTA_BASE,
+    },
+  ],
+  [
+    "32",
+    {
+      jurisdiction: "Ontario",
+      statute: "Residential Tenancies Act, 2006",
+      shortName: "RTA",
+      title: "Writ of possession",
+      summary:
+        "An order of the Board for the recovery of possession of a rental unit may be filed with the Superior Court of Justice and enforced by the sheriff by way of a writ of possession.",
+      relevance: "writ of possession, enforcement, sheriff",
+      url: ON_RTA_BASE,
+    },
+  ],
 ]);
 
 // ── British Columbia: Motor Vehicle Act ──────────────────────────────────────
 const BC_MVA_SECTIONS = new Map([
-  ["144", {
-    jurisdiction: "British Columbia",
-    statute: "Motor Vehicle Act",
-    shortName: "MVA",
-    title: "Careless driving prohibited",
-    summary: "A person must not drive a motor vehicle on a highway without due care and attention or without reasonable consideration for other persons.",
-    relevance: "careless driving, BC traffic law",
-    url: `${BC_MVA_BASE}`,
-  }],
-  ["214.2", {
-    jurisdiction: "British Columbia",
-    statute: "Motor Vehicle Act",
-    shortName: "MVA",
-    title: "Use of electronic devices while driving",
-    summary: "A person must not use an electronic device while driving or operating a motor vehicle on a highway.",
-    relevance: "distracted driving, distracted driving BC",
-    url: `${BC_MVA_BASE}`,
-  }],
+  [
+    "144",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Motor Vehicle Act",
+      shortName: "MVA",
+      title: "Careless driving prohibited",
+      summary:
+        "A person must not drive a motor vehicle on a highway without due care and attention or without reasonable consideration for other persons.",
+      relevance: "careless driving, BC traffic law",
+      url: `${BC_MVA_BASE}`,
+    },
+  ],
+  [
+    "214.2",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Motor Vehicle Act",
+      shortName: "MVA",
+      title: "Use of electronic devices while driving",
+      summary:
+        "A person must not use an electronic device while driving or operating a motor vehicle on a highway.",
+      relevance: "distracted driving, distracted driving BC",
+      url: `${BC_MVA_BASE}`,
+    },
+  ],
 
-  ["98", {
-    jurisdiction: "British Columbia",
-    statute: "Motor Vehicle Act",
-    shortName: "MVA",
-    title: "Court prohibition against driving",
-    summary: "If a person is convicted of a driving offence, the court may prohibit the person from driving a motor vehicle for a period the court considers appropriate.",
-    relevance: "driving prohibition, court order, licence suspension",
-    url: BC_MVA_BASE,
-  }],
-  ["99", {
-    jurisdiction: "British Columbia",
-    statute: "Motor Vehicle Act",
-    shortName: "MVA",
-    title: "Automatic prohibition against driving on conviction",
-    summary: "A person who is convicted of an offence under section 95 is automatically prohibited from driving a motor vehicle for 12 months from the date of the conviction.",
-    relevance: "automatic driving ban, conviction consequences",
-    url: BC_MVA_BASE,
-  }],
-  ["100", {
-    jurisdiction: "British Columbia",
-    statute: "Motor Vehicle Act",
-    shortName: "MVA",
-    title: "Prohibition against driving for failing to stop",
-    summary: "A person who operates a motor vehicle knowing that the person is prohibited from driving under this Act or the Criminal Code is guilty of an offence.",
-    relevance: "fail to stop, driving ban, traffic offence",
-    url: BC_MVA_BASE,
-  }],
-  ["102", {
-    jurisdiction: "British Columbia",
-    statute: "Motor Vehicle Act",
-    shortName: "MVA",
-    title: "Driving while prohibited by court order or operation of law",
-    summary: "A person must not drive or operate a motor vehicle, or have the care or control of a motor vehicle, whether or not it is in motion, while the person is prohibited from driving under this Act or the Criminal Code.",
-    relevance: "driving while prohibited, court order, traffic offence",
-    url: BC_MVA_BASE,
-  }],
-  ["115.1", {
-    jurisdiction: "British Columbia",
-    statute: "Motor Vehicle Act",
-    shortName: "MVA",
-    title: "Prohibition against use of electronic device while driving",
-    summary: "A person must not use a hand-held electronic device while driving or operating a motor vehicle on a highway, whether or not the motor vehicle is in motion.",
-    relevance: "distracted driving, handheld device use, BC traffic law",
-    url: BC_MVA_BASE,
-  }],
-
-
+  [
+    "98",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Motor Vehicle Act",
+      shortName: "MVA",
+      title: "Court prohibition against driving",
+      summary:
+        "If a person is convicted of a driving offence, the court may prohibit the person from driving a motor vehicle for a period the court considers appropriate.",
+      relevance: "driving prohibition, court order, licence suspension",
+      url: BC_MVA_BASE,
+    },
+  ],
+  [
+    "99",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Motor Vehicle Act",
+      shortName: "MVA",
+      title: "Automatic prohibition against driving on conviction",
+      summary:
+        "A person who is convicted of an offence under section 95 is automatically prohibited from driving a motor vehicle for 12 months from the date of the conviction.",
+      relevance: "automatic driving ban, conviction consequences",
+      url: BC_MVA_BASE,
+    },
+  ],
+  [
+    "100",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Motor Vehicle Act",
+      shortName: "MVA",
+      title: "Prohibition against driving for failing to stop",
+      summary:
+        "A person who operates a motor vehicle knowing that the person is prohibited from driving under this Act or the Criminal Code is guilty of an offence.",
+      relevance: "fail to stop, driving ban, traffic offence",
+      url: BC_MVA_BASE,
+    },
+  ],
+  [
+    "102",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Motor Vehicle Act",
+      shortName: "MVA",
+      title: "Driving while prohibited by court order or operation of law",
+      summary:
+        "A person must not drive or operate a motor vehicle, or have the care or control of a motor vehicle, whether or not it is in motion, while the person is prohibited from driving under this Act or the Criminal Code.",
+      relevance: "driving while prohibited, court order, traffic offence",
+      url: BC_MVA_BASE,
+    },
+  ],
+  [
+    "115.1",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Motor Vehicle Act",
+      shortName: "MVA",
+      title: "Prohibition against use of electronic device while driving",
+      summary:
+        "A person must not use a hand-held electronic device while driving or operating a motor vehicle on a highway, whether or not the motor vehicle is in motion.",
+      relevance: "distracted driving, handheld device use, BC traffic law",
+      url: BC_MVA_BASE,
+    },
+  ],
 ]);
 
 // ── British Columbia: Residential Tenancy Act ────────────────────────────────
 const BC_RTA_SECTIONS = new Map([
-  ["32", {
-    jurisdiction: "British Columbia",
-    statute: "Residential Tenancy Act",
-    shortName: "RTA",
-    title: "Landlord and tenant obligations to repair and maintain",
-    summary: "A landlord must provide and maintain residential property in a state of decoration and repair that complies with health, safety and housing standards.",
-    relevance: "BC tenancy disputes, maintenance",
-    url: `${BC_RTA_BASE}`,
-  }],
+  [
+    "32",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Residential Tenancy Act",
+      shortName: "RTA",
+      title: "Landlord and tenant obligations to repair and maintain",
+      summary:
+        "A landlord must provide and maintain residential property in a state of decoration and repair that complies with health, safety and housing standards.",
+      relevance: "BC tenancy disputes, maintenance",
+      url: `${BC_RTA_BASE}`,
+    },
+  ],
 
-  ["30", {
-    jurisdiction: "British Columbia",
-    statute: "Residential Tenancy Act",
-    shortName: "RTA",
-    title: "Landlord and tenant obligations to repair and maintain",
-    summary: "A landlord and tenant must keep the residential property in a reasonable state of repair, complying with health, safety and housing standards required by law.",
-    relevance: "repairs, maintenance, habitability, BC tenancy",
-    url: BC_RTA_BASE,
-  }],
-  ["31", {
-    jurisdiction: "British Columbia",
-    statute: "Residential Tenancy Act",
-    shortName: "RTA",
-    title: "Emergency repairs",
-    summary: "If emergency repairs are needed to protect the health or safety of a tenant or to prevent significant damage to the residential property, the landlord must make the repairs within a reasonable time after receiving notice.",
-    relevance: "emergency repairs, landlord obligations, tenant remedies",
-    url: BC_RTA_BASE,
-  }],
+  [
+    "30",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Residential Tenancy Act",
+      shortName: "RTA",
+      title: "Landlord and tenant obligations to repair and maintain",
+      summary:
+        "A landlord and tenant must keep the residential property in a reasonable state of repair, complying with health, safety and housing standards required by law.",
+      relevance: "repairs, maintenance, habitability, BC tenancy",
+      url: BC_RTA_BASE,
+    },
+  ],
+  [
+    "31",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Residential Tenancy Act",
+      shortName: "RTA",
+      title: "Emergency repairs",
+      summary:
+        "If emergency repairs are needed to protect the health or safety of a tenant or to prevent significant damage to the residential property, the landlord must make the repairs within a reasonable time after receiving notice.",
+      relevance: "emergency repairs, landlord obligations, tenant remedies",
+      url: BC_RTA_BASE,
+    },
+  ],
 
-  ["33", {
-    jurisdiction: "British Columbia",
-    statute: "Residential Tenancy Act",
-    shortName: "RTA",
-    title: "Emergency repairs",
-    summary: "If the landlord does not make emergency repairs within a reasonable time, the tenant may have the repairs made and may deduct the cost from rent if the tenant complies with the conditions set out in this section.",
-    relevance: "urgent repairs, tenant reimbursement, landlord duty",
-    url: BC_RTA_BASE,
-  }],
-  ["47", {
-    jurisdiction: "British Columbia",
-    statute: "Residential Tenancy Act",
-    shortName: "RTA",
-    title: "Landlord's notice: end of tenancy",
-    summary: "A landlord may end a tenancy by giving the tenant notice to end the tenancy in the prescribed form, setting out the effective date of the notice and the grounds for ending the tenancy.",
-    relevance: "end of tenancy, notice to end, eviction",
-    url: BC_RTA_BASE,
-  }],
-  ["49", {
-    jurisdiction: "British Columbia",
-    statute: "Residential Tenancy Act",
-    shortName: "RTA",
-    title: "Landlord's use of property",
-    summary: "A landlord may end a tenancy if the landlord or a close family member of the landlord intends in good faith to occupy the rental unit, or if the landlord has entered into an agreement in good faith to sell the property and the purchaser requires vacant possession.",
-    relevance: "landlord use, termination, personal use",
-    url: BC_RTA_BASE,
-  }],
-  ["50", {
-    jurisdiction: "British Columbia",
-    statute: "Residential Tenancy Act",
-    shortName: "RTA",
-    title: "Tenant's notice: end of tenancy",
-    summary: "A tenant may end a tenancy by giving the landlord notice to end the tenancy effective on a date that is not earlier than one month after the date the tenant gives the notice and is the day before the rent is due.",
-    relevance: "tenant notice, termination, moving out",
-    url: BC_RTA_BASE,
-  }],
-  ["51", {
-    jurisdiction: "British Columbia",
-    statute: "Residential Tenancy Act",
-    shortName: "RTA",
-    title: "Tenant's compensation if notice to end tenancy for landlord's use of property",
-    summary: "If a landlord ends a tenancy under section 49 for the landlord's use of property, the landlord must pay the tenant the equivalent of one month's rent as compensation.",
-    relevance: "tenant compensation, notice to end tenancy, landlord use",
-    url: BC_RTA_BASE,
-  }],
-
+  [
+    "33",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Residential Tenancy Act",
+      shortName: "RTA",
+      title: "Emergency repairs",
+      summary:
+        "If the landlord does not make emergency repairs within a reasonable time, the tenant may have the repairs made and may deduct the cost from rent if the tenant complies with the conditions set out in this section.",
+      relevance: "urgent repairs, tenant reimbursement, landlord duty",
+      url: BC_RTA_BASE,
+    },
+  ],
+  [
+    "47",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Residential Tenancy Act",
+      shortName: "RTA",
+      title: "Landlord's notice: end of tenancy",
+      summary:
+        "A landlord may end a tenancy by giving the tenant notice to end the tenancy in the prescribed form, setting out the effective date of the notice and the grounds for ending the tenancy.",
+      relevance: "end of tenancy, notice to end, eviction",
+      url: BC_RTA_BASE,
+    },
+  ],
+  [
+    "49",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Residential Tenancy Act",
+      shortName: "RTA",
+      title: "Landlord's use of property",
+      summary:
+        "A landlord may end a tenancy if the landlord or a close family member of the landlord intends in good faith to occupy the rental unit, or if the landlord has entered into an agreement in good faith to sell the property and the purchaser requires vacant possession.",
+      relevance: "landlord use, termination, personal use",
+      url: BC_RTA_BASE,
+    },
+  ],
+  [
+    "50",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Residential Tenancy Act",
+      shortName: "RTA",
+      title: "Tenant's notice: end of tenancy",
+      summary:
+        "A tenant may end a tenancy by giving the landlord notice to end the tenancy effective on a date that is not earlier than one month after the date the tenant gives the notice and is the day before the rent is due.",
+      relevance: "tenant notice, termination, moving out",
+      url: BC_RTA_BASE,
+    },
+  ],
+  [
+    "51",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Residential Tenancy Act",
+      shortName: "RTA",
+      title:
+        "Tenant's compensation if notice to end tenancy for landlord's use of property",
+      summary:
+        "If a landlord ends a tenancy under section 49 for the landlord's use of property, the landlord must pay the tenant the equivalent of one month's rent as compensation.",
+      relevance: "tenant compensation, notice to end tenancy, landlord use",
+      url: BC_RTA_BASE,
+    },
+  ],
 ]);
 
 // ── Alberta: Traffic Safety Act ──────────────────────────────────────────────
 const AB_TSA_SECTIONS = new Map([
-  ["115", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Careless driving",
-    summary: "No person shall drive a vehicle on a highway in a careless manner or without reasonable consideration for others.",
-    relevance: "Alberta traffic safety, careless driving",
-    url: `${AB_TSA_BASE}`,
-  }],
-  ["94", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Driving while unauthorized",
-    summary: "Prohibits driving while a person's operator's license is suspended or cancelled.",
-    relevance: "driving while suspended, Alberta traffic law",
-    url: `${AB_TSA_BASE}`,
-  }],
+  [
+    "115",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Careless driving",
+      summary:
+        "No person shall drive a vehicle on a highway in a careless manner or without reasonable consideration for others.",
+      relevance: "Alberta traffic safety, careless driving",
+      url: `${AB_TSA_BASE}`,
+    },
+  ],
+  [
+    "94",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Driving while unauthorized",
+      summary:
+        "Prohibits driving while a person's operator's license is suspended or cancelled.",
+      relevance: "driving while suspended, Alberta traffic law",
+      url: `${AB_TSA_BASE}`,
+    },
+  ],
 
-  ["94.1", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Driving while disqualified",
-    summary: "No person shall drive a motor vehicle on a highway while the person is disqualified from driving.",
-    relevance: "disqualification, licence suspension, Alberta traffic law",
-    url: AB_TSA_BASE,
-  }],
-  ["95", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Driving while prohibited by an immediate roadside sanction",
-    summary: "No person shall drive a motor vehicle on a highway while the person is prohibited from driving by an immediate roadside sanction imposed under the provisions of the Act.",
-    relevance: "immediate roadside sanction, driving prohibition",
-    url: AB_TSA_BASE,
-  }],
-  ["115.1", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Cellular telephones, electronic devices, etc.",
-    summary: "No person shall use a cellular telephone or other electronic device capable of sending or receiving telephone communications, electronic data or electronic mail while driving a motor vehicle on a highway.",
-    relevance: "distracted driving, handheld device use, Alberta traffic law",
-    url: AB_TSA_BASE,
-  }],
-  ["115.2", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Display screen visible to driver prohibited",
-    summary: "No person shall drive a motor vehicle on a highway if a display screen is visible to the driver, unless the display screen is used for the purpose of a global positioning system or is otherwise prescribed.",
-    relevance: "distracted driving, display screen, Alberta traffic law",
-    url: AB_TSA_BASE,
-  }],
-  ["115.3", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Global positioning system",
-    summary: "A person may use a global positioning system while driving a motor vehicle on a highway if the system is not held by the person and is affixed to the motor vehicle.",
-    relevance: "GPS use, distracted driving, Alberta traffic law",
-    url: AB_TSA_BASE,
-  }],
-  ["115.4", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Prohibited activities",
-    summary: "No person shall engage in any activity that may interfere with the person's ability to operate a motor vehicle safely while driving on a highway, including reading, writing, personal grooming or any prescribed activity.",
-    relevance: "distracted driving, prohibited activities, Alberta traffic law",
-    url: AB_TSA_BASE,
-  }],
-  ["128.1", {
-    jurisdiction: "Alberta",
-    statute: "Traffic Safety Act",
-    shortName: "TSA",
-    title: "Safety helmets",
-    summary: "No person shall operate or ride on an off-highway vehicle on a highway without wearing a safety helmet of a type prescribed in the regulations.",
-    relevance: "helmet requirement, off-highway vehicle safety",
-    url: AB_TSA_BASE,
-  }],
-
+  [
+    "94.1",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Driving while disqualified",
+      summary:
+        "No person shall drive a motor vehicle on a highway while the person is disqualified from driving.",
+      relevance: "disqualification, licence suspension, Alberta traffic law",
+      url: AB_TSA_BASE,
+    },
+  ],
+  [
+    "95",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Driving while prohibited by an immediate roadside sanction",
+      summary:
+        "No person shall drive a motor vehicle on a highway while the person is prohibited from driving by an immediate roadside sanction imposed under the provisions of the Act.",
+      relevance: "immediate roadside sanction, driving prohibition",
+      url: AB_TSA_BASE,
+    },
+  ],
+  [
+    "115.1",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Cellular telephones, electronic devices, etc.",
+      summary:
+        "No person shall use a cellular telephone or other electronic device capable of sending or receiving telephone communications, electronic data or electronic mail while driving a motor vehicle on a highway.",
+      relevance: "distracted driving, handheld device use, Alberta traffic law",
+      url: AB_TSA_BASE,
+    },
+  ],
+  [
+    "115.2",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Display screen visible to driver prohibited",
+      summary:
+        "No person shall drive a motor vehicle on a highway if a display screen is visible to the driver, unless the display screen is used for the purpose of a global positioning system or is otherwise prescribed.",
+      relevance: "distracted driving, display screen, Alberta traffic law",
+      url: AB_TSA_BASE,
+    },
+  ],
+  [
+    "115.3",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Global positioning system",
+      summary:
+        "A person may use a global positioning system while driving a motor vehicle on a highway if the system is not held by the person and is affixed to the motor vehicle.",
+      relevance: "GPS use, distracted driving, Alberta traffic law",
+      url: AB_TSA_BASE,
+    },
+  ],
+  [
+    "115.4",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Prohibited activities",
+      summary:
+        "No person shall engage in any activity that may interfere with the person's ability to operate a motor vehicle safely while driving on a highway, including reading, writing, personal grooming or any prescribed activity.",
+      relevance:
+        "distracted driving, prohibited activities, Alberta traffic law",
+      url: AB_TSA_BASE,
+    },
+  ],
+  [
+    "128.1",
+    {
+      jurisdiction: "Alberta",
+      statute: "Traffic Safety Act",
+      shortName: "TSA",
+      title: "Safety helmets",
+      summary:
+        "No person shall operate or ride on an off-highway vehicle on a highway without wearing a safety helmet of a type prescribed in the regulations.",
+      relevance: "helmet requirement, off-highway vehicle safety",
+      url: AB_TSA_BASE,
+    },
+  ],
 ]);
 
 // ── Alberta: Residential Tenancies Act ───────────────────────────────────────
 const AB_RTA_SECTIONS = new Map([
-  ["16", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Landlord's covenants",
-    summary: "The landlord covenants that the premises will be available for occupation by the tenant at the beginning of the term.",
-    relevance: "Alberta tenancy law, landlord obligations",
-    url: `${AB_RTA_BASE}`,
-  }],
+  [
+    "16",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Landlord's covenants",
+      summary:
+        "The landlord covenants that the premises will be available for occupation by the tenant at the beginning of the term.",
+      relevance: "Alberta tenancy law, landlord obligations",
+      url: `${AB_RTA_BASE}`,
+    },
+  ],
 
-  ["1", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Interpretation",
-    summary: "This section sets out the definitions used throughout the Act, including 'landlord', 'tenant', 'residential premises', 'security deposit' and 'tenancy agreement'.",
-    relevance: "Alberta tenancy definitions, landlord tenant terms",
-    url: AB_RTA_BASE,
-  }],
-  ["2", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Application",
-    summary: "This Act applies to all residential premises in Alberta, subject to exclusions specified in the regulations.",
-    relevance: "Alberta tenancy coverage, residential premises, exclusions",
-    url: AB_RTA_BASE,
-  }],
-  ["3", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Act prevails",
-    summary: "If a provision of this Act conflicts with a provision of a tenancy agreement, the provision of this Act prevails.",
-    relevance: "statutory priority, tenancy agreement conflicts",
-    url: AB_RTA_BASE,
-  }],
-  ["4", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Crown is bound",
-    summary: "This Act binds the Crown in right of Alberta.",
-    relevance: "provincial tenancy obligations, Crown landlord",
-    url: AB_RTA_BASE,
-  }],
-  ["5", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Notice of termination of periodic tenancy",
-    summary: "Either the landlord or the tenant may terminate a periodic tenancy by giving the other party notice of termination in the form and within the time required by this Act.",
-    relevance: "termination notice, periodic tenancy, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["6", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Termination by landlord",
-    summary: "A landlord may terminate a periodic tenancy by giving the tenant notice of termination if the tenant has breached a substantial obligation of the tenancy agreement.",
-    relevance: "landlord termination, periodic tenancy, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["7", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Notice to terminate weekly tenancy",
-    summary: "A notice to terminate a weekly tenancy must be given at least one week before the termination date.",
-    relevance: "weekly tenancy, notice period, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["8", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Notice to terminate monthly tenancy",
-    summary: "A notice to terminate a monthly tenancy must be given at least one tenancy month before the termination date, effective on the last day of a tenancy month.",
-    relevance: "monthly tenancy, notice period, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["9", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Notice to terminate yearly tenancy",
-    summary: "A notice to terminate a yearly tenancy must be given at least 90 days before the termination date, effective on the last day of a tenancy year.",
-    relevance: "yearly tenancy, notice period, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["10", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Form of notice",
-    summary: "A notice of termination must be in writing, must identify the residential premises and the termination date, and must be signed by the landlord or tenant or their agent.",
-    relevance: "notice form, termination notice, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["15", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Landlord's covenants",
-    summary: "The landlord covenants to provide and maintain the residential premises in a condition that meets the minimum housing and health standards required by law, and to make all repairs necessary for the purpose.",
-    relevance: "landlord obligations, repairs, habitability",
-    url: AB_RTA_BASE,
-  }],
-  ["20", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Tenant's covenants",
-    summary: "The tenant covenants to keep the residential premises clean, to repair damage caused by the wilful or negligent act of the tenant, and to not endanger the safety of other persons.",
-    relevance: "tenant obligations, rent, property care",
-    url: AB_RTA_BASE,
-  }],
-  ["21", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Assignment and sublease",
-    summary: "A tenant must not assign the tenancy agreement or sublet the residential premises without the prior written consent of the landlord. The landlord must not unreasonably withhold consent.",
-    relevance: "assignment, sublease, landlord consent",
-    url: AB_RTA_BASE,
-  }],
-  ["22", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Entry of premises",
-    summary: "A landlord may enter the residential premises only at a reasonable time and after giving at least 24 hours' written notice to the tenant, except in cases of emergency or with the tenant's consent at the time of entry.",
-    relevance: "landlord entry, notice, access",
-    url: AB_RTA_BASE,
-  }],
-  ["23", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Locks and security devices",
-    summary: "A tenant may add additional locks to the residential premises but must provide the landlord with a key. Neither party shall alter the locking system without the other's consent.",
-    relevance: "tenant security, lock changes, landlord access",
-    url: AB_RTA_BASE,
-  }],
-  ["24", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Landlord's remedies",
-    summary: "A landlord may apply to the court for an order for the payment of arrears of rent, compensation for damage, or other relief available under this Act.",
-    relevance: "landlord remedies, breach, tenancy enforcement",
-    url: AB_RTA_BASE,
-  }],
-  ["25", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Repudiation of tenancy",
-    summary: "A tenancy is terminated by repudiation if the tenant abandons the residential premises or if the landlord's conduct constitutes a repudiation of the tenancy agreement.",
-    relevance: "repudiation, abandonment, tenancy end",
-    url: AB_RTA_BASE,
-  }],
-  ["26", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Termination of tenancy for substantial breach",
-    summary: "A landlord may give a tenant notice of termination if the tenant has committed a substantial breach of the tenancy agreement and the breach has not been remedied within the time specified in the notice.",
-    relevance: "breach, termination, landlord notice",
-    url: AB_RTA_BASE,
-  }],
-  ["27", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Termination of tenancy for damage or assault",
-    summary: "A landlord may give a tenant notice of termination effective immediately if the tenant or a guest has caused or is likely to cause physical harm to the landlord or other tenants, or has caused significant damage to the residential premises.",
-    relevance: "damage, assault, eviction, termination",
-    url: AB_RTA_BASE,
-  }],
-  ["30", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Notice to vacate",
-    summary: "A landlord may give a tenant notice to vacate the residential premises, setting out the reasons for the notice and the date by which the tenant must move out.",
-    relevance: "notice to vacate, eviction notice, possession",
-    url: AB_RTA_BASE,
-  }],
-  ["31", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Order for recovery of possession",
-    summary: "A court may make an order for the recovery of possession of residential premises if the court is satisfied that the landlord is entitled to possession under this Act.",
-    relevance: "possession order, eviction application",
-    url: AB_RTA_BASE,
-  }],
-  ["32", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Writ of possession",
-    summary: "An order for the recovery of possession may be enforced by a civil enforcement agency by way of a writ of possession.",
-    relevance: "writ of possession, enforcement, sheriff",
-    url: AB_RTA_BASE,
-  }],
-  ["33", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Notice to vacate",
-    summary: "Where a tenant fails to vacate premises after receiving a valid notice to vacate, the landlord may apply to the court for an order directing the tenant to vacate.",
-    relevance: "notice to vacate, eviction notice, possession",
-    url: AB_RTA_BASE,
-  }],
-  ["34", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Tenant's remedies",
-    summary: "A tenant may apply to the court for an order requiring the landlord to make repairs, comply with obligations under the tenancy agreement, or pay compensation for breach of the landlord's covenants.",
-    relevance: "tenant remedies, repair, landlord breach",
-    url: AB_RTA_BASE,
-  }],
-  ["36", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Compensation to tenant",
-    summary: "If a landlord terminates a tenancy for the landlord's own use of the premises or for demolition, the landlord must pay the tenant compensation in the amount prescribed by this Act.",
-    relevance: "tenant compensation, damages, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["37", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Frustration of tenancy agreement",
-    summary: "If the residential premises are rendered uninhabitable by fire, flood or other event not caused by the fault of the tenant, the tenancy agreement is frustrated and the tenant's obligation to pay rent is extinguished.",
-    relevance: "frustration, tenancy agreement, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["38", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Application for remedy to court",
-    summary: "A landlord or tenant may apply to the Provincial Court or the Court of King's Bench for a remedy under this Act, including an order for possession, damages or specific performance.",
-    relevance: "court application, tenancy remedy, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["45", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Amount of security deposit",
-    summary: "A landlord must not require or accept a security deposit that exceeds the equivalent of one month's rent for the residential premises.",
-    relevance: "security deposit limits, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["46", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Trust account",
-    summary: "A landlord who receives a security deposit must place it in a trust account at a financial institution within two banking days after receiving it.",
-    relevance: "security deposit trust account, landlord obligations",
-    url: AB_RTA_BASE,
-  }],
-  ["47", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Interest on deposits",
-    summary: "A landlord must pay to the tenant interest on the security deposit at the rate prescribed by the regulations for each year or part of a year that the landlord holds the deposit.",
-    relevance: "security deposit interest, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["48", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Return of security deposit",
-    summary: "Within 10 days after the tenancy ends, the landlord must either return the security deposit with accrued interest to the tenant, or provide the tenant with a statement of account and the balance of the deposit.",
-    relevance: "deposit return, damage claims, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-  ["49", {
-    jurisdiction: "Alberta",
-    statute: "Residential Tenancies Act",
-    shortName: "RTA",
-    title: "Obligations and rights of new landlord",
-    summary: "If the ownership of the residential premises is transferred, the new landlord assumes the obligations of the former landlord, including the obligation to return the security deposit.",
-    relevance: "new landlord, assignment of tenancy, Alberta tenancy",
-    url: AB_RTA_BASE,
-  }],
-
+  [
+    "1",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Interpretation",
+      summary:
+        "This section sets out the definitions used throughout the Act, including 'landlord', 'tenant', 'residential premises', 'security deposit' and 'tenancy agreement'.",
+      relevance: "Alberta tenancy definitions, landlord tenant terms",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "2",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Application",
+      summary:
+        "This Act applies to all residential premises in Alberta, subject to exclusions specified in the regulations.",
+      relevance: "Alberta tenancy coverage, residential premises, exclusions",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "3",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Act prevails",
+      summary:
+        "If a provision of this Act conflicts with a provision of a tenancy agreement, the provision of this Act prevails.",
+      relevance: "statutory priority, tenancy agreement conflicts",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "4",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Crown is bound",
+      summary: "This Act binds the Crown in right of Alberta.",
+      relevance: "provincial tenancy obligations, Crown landlord",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "5",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Notice of termination of periodic tenancy",
+      summary:
+        "Either the landlord or the tenant may terminate a periodic tenancy by giving the other party notice of termination in the form and within the time required by this Act.",
+      relevance: "termination notice, periodic tenancy, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "6",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Termination by landlord",
+      summary:
+        "A landlord may terminate a periodic tenancy by giving the tenant notice of termination if the tenant has breached a substantial obligation of the tenancy agreement.",
+      relevance: "landlord termination, periodic tenancy, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "7",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Notice to terminate weekly tenancy",
+      summary:
+        "A notice to terminate a weekly tenancy must be given at least one week before the termination date.",
+      relevance: "weekly tenancy, notice period, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "8",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Notice to terminate monthly tenancy",
+      summary:
+        "A notice to terminate a monthly tenancy must be given at least one tenancy month before the termination date, effective on the last day of a tenancy month.",
+      relevance: "monthly tenancy, notice period, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "9",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Notice to terminate yearly tenancy",
+      summary:
+        "A notice to terminate a yearly tenancy must be given at least 90 days before the termination date, effective on the last day of a tenancy year.",
+      relevance: "yearly tenancy, notice period, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "10",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Form of notice",
+      summary:
+        "A notice of termination must be in writing, must identify the residential premises and the termination date, and must be signed by the landlord or tenant or their agent.",
+      relevance: "notice form, termination notice, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "15",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Landlord's covenants",
+      summary:
+        "The landlord covenants to provide and maintain the residential premises in a condition that meets the minimum housing and health standards required by law, and to make all repairs necessary for the purpose.",
+      relevance: "landlord obligations, repairs, habitability",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "20",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Tenant's covenants",
+      summary:
+        "The tenant covenants to keep the residential premises clean, to repair damage caused by the wilful or negligent act of the tenant, and to not endanger the safety of other persons.",
+      relevance: "tenant obligations, rent, property care",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "21",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Assignment and sublease",
+      summary:
+        "A tenant must not assign the tenancy agreement or sublet the residential premises without the prior written consent of the landlord. The landlord must not unreasonably withhold consent.",
+      relevance: "assignment, sublease, landlord consent",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "22",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Entry of premises",
+      summary:
+        "A landlord may enter the residential premises only at a reasonable time and after giving at least 24 hours' written notice to the tenant, except in cases of emergency or with the tenant's consent at the time of entry.",
+      relevance: "landlord entry, notice, access",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "23",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Locks and security devices",
+      summary:
+        "A tenant may add additional locks to the residential premises but must provide the landlord with a key. Neither party shall alter the locking system without the other's consent.",
+      relevance: "tenant security, lock changes, landlord access",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "24",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Landlord's remedies",
+      summary:
+        "A landlord may apply to the court for an order for the payment of arrears of rent, compensation for damage, or other relief available under this Act.",
+      relevance: "landlord remedies, breach, tenancy enforcement",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "25",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Repudiation of tenancy",
+      summary:
+        "A tenancy is terminated by repudiation if the tenant abandons the residential premises or if the landlord's conduct constitutes a repudiation of the tenancy agreement.",
+      relevance: "repudiation, abandonment, tenancy end",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "26",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Termination of tenancy for substantial breach",
+      summary:
+        "A landlord may give a tenant notice of termination if the tenant has committed a substantial breach of the tenancy agreement and the breach has not been remedied within the time specified in the notice.",
+      relevance: "breach, termination, landlord notice",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "27",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Termination of tenancy for damage or assault",
+      summary:
+        "A landlord may give a tenant notice of termination effective immediately if the tenant or a guest has caused or is likely to cause physical harm to the landlord or other tenants, or has caused significant damage to the residential premises.",
+      relevance: "damage, assault, eviction, termination",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "30",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Notice to vacate",
+      summary:
+        "A landlord may give a tenant notice to vacate the residential premises, setting out the reasons for the notice and the date by which the tenant must move out.",
+      relevance: "notice to vacate, eviction notice, possession",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "31",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Order for recovery of possession",
+      summary:
+        "A court may make an order for the recovery of possession of residential premises if the court is satisfied that the landlord is entitled to possession under this Act.",
+      relevance: "possession order, eviction application",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "32",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Writ of possession",
+      summary:
+        "An order for the recovery of possession may be enforced by a civil enforcement agency by way of a writ of possession.",
+      relevance: "writ of possession, enforcement, sheriff",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "33",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Notice to vacate",
+      summary:
+        "Where a tenant fails to vacate premises after receiving a valid notice to vacate, the landlord may apply to the court for an order directing the tenant to vacate.",
+      relevance: "notice to vacate, eviction notice, possession",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "34",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Tenant's remedies",
+      summary:
+        "A tenant may apply to the court for an order requiring the landlord to make repairs, comply with obligations under the tenancy agreement, or pay compensation for breach of the landlord's covenants.",
+      relevance: "tenant remedies, repair, landlord breach",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "36",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Compensation to tenant",
+      summary:
+        "If a landlord terminates a tenancy for the landlord's own use of the premises or for demolition, the landlord must pay the tenant compensation in the amount prescribed by this Act.",
+      relevance: "tenant compensation, damages, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "37",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Frustration of tenancy agreement",
+      summary:
+        "If the residential premises are rendered uninhabitable by fire, flood or other event not caused by the fault of the tenant, the tenancy agreement is frustrated and the tenant's obligation to pay rent is extinguished.",
+      relevance: "frustration, tenancy agreement, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "38",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Application for remedy to court",
+      summary:
+        "A landlord or tenant may apply to the Provincial Court or the Court of King's Bench for a remedy under this Act, including an order for possession, damages or specific performance.",
+      relevance: "court application, tenancy remedy, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "45",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Amount of security deposit",
+      summary:
+        "A landlord must not require or accept a security deposit that exceeds the equivalent of one month's rent for the residential premises.",
+      relevance: "security deposit limits, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "46",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Trust account",
+      summary:
+        "A landlord who receives a security deposit must place it in a trust account at a financial institution within two banking days after receiving it.",
+      relevance: "security deposit trust account, landlord obligations",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "47",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Interest on deposits",
+      summary:
+        "A landlord must pay to the tenant interest on the security deposit at the rate prescribed by the regulations for each year or part of a year that the landlord holds the deposit.",
+      relevance: "security deposit interest, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "48",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Return of security deposit",
+      summary:
+        "Within 10 days after the tenancy ends, the landlord must either return the security deposit with accrued interest to the tenant, or provide the tenant with a statement of account and the balance of the deposit.",
+      relevance: "deposit return, damage claims, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
+  [
+    "49",
+    {
+      jurisdiction: "Alberta",
+      statute: "Residential Tenancies Act",
+      shortName: "RTA",
+      title: "Obligations and rights of new landlord",
+      summary:
+        "If the ownership of the residential premises is transferred, the new landlord assumes the obligations of the former landlord, including the obligation to return the security deposit.",
+      relevance: "new landlord, assignment of tenancy, Alberta tenancy",
+      url: AB_RTA_BASE,
+    },
+  ],
 ]);
 
 // ── Alberta: Human Rights Act ────────────────────────────────────────────────
 const AB_HRA_SECTIONS = new Map([
-  ["7", {
-    jurisdiction: "Alberta",
-    statute: "Alberta Human Rights Act",
-    shortName: "AHRA",
-    title: "Discrimination in employment",
-    summary: "Prohibits discrimination in employment based on protected grounds including race, religious beliefs, colour, gender, etc.",
-    relevance: "Alberta human rights, employment discrimination",
-    url: `${AB_HRA_BASE}`,
-  }],
+  [
+    "7",
+    {
+      jurisdiction: "Alberta",
+      statute: "Alberta Human Rights Act",
+      shortName: "AHRA",
+      title: "Discrimination in employment",
+      summary:
+        "Prohibits discrimination in employment based on protected grounds including race, religious beliefs, colour, gender, etc.",
+      relevance: "Alberta human rights, employment discrimination",
+      url: `${AB_HRA_BASE}`,
+    },
+  ],
 
-  ["3", {
-    jurisdiction: "Alberta",
-    statute: "Alberta Human Rights Act",
-    shortName: "AHRA",
-    title: "Notices, signs, statements and symbols",
-    summary: "No person shall publish, issue or display or cause to be published, issued or displayed any notice, sign, symbol, emblem or other representation that indicates discrimination or an intention to discriminate against a person or class of persons on the basis of a protected ground.",
-    relevance: "human rights notices, signs, statements, symbols",
-    url: AB_HRA_BASE,
-  }],
-  ["4", {
-    jurisdiction: "Alberta",
-    statute: "Alberta Human Rights Act",
-    shortName: "AHRA",
-    title: "Services customarily available to the public",
-    summary: "No person shall, on the basis of a protected ground, deny to any person or class of persons any goods, services, accommodation or facilities that are customarily available to the public.",
-    relevance: "service discrimination, public access, Alberta human rights",
-    url: AB_HRA_BASE,
-  }],
-  ["5", {
-    jurisdiction: "Alberta",
-    statute: "Alberta Human Rights Act",
-    shortName: "AHRA",
-    title: "Tenancy",
-    summary: "No person shall discriminate against any person with respect to tenancy on the basis of race, religious beliefs, colour, gender, gender identity, gender expression, physical disability, mental disability, age, ancestry, place of origin, marital status, source of income, family status or sexual orientation.",
-    relevance: "housing discrimination, tenancy, Alberta human rights",
-    url: AB_HRA_BASE,
-  }],
-
-
+  [
+    "3",
+    {
+      jurisdiction: "Alberta",
+      statute: "Alberta Human Rights Act",
+      shortName: "AHRA",
+      title: "Notices, signs, statements and symbols",
+      summary:
+        "No person shall publish, issue or display or cause to be published, issued or displayed any notice, sign, symbol, emblem or other representation that indicates discrimination or an intention to discriminate against a person or class of persons on the basis of a protected ground.",
+      relevance: "human rights notices, signs, statements, symbols",
+      url: AB_HRA_BASE,
+    },
+  ],
+  [
+    "4",
+    {
+      jurisdiction: "Alberta",
+      statute: "Alberta Human Rights Act",
+      shortName: "AHRA",
+      title: "Services customarily available to the public",
+      summary:
+        "No person shall, on the basis of a protected ground, deny to any person or class of persons any goods, services, accommodation or facilities that are customarily available to the public.",
+      relevance: "service discrimination, public access, Alberta human rights",
+      url: AB_HRA_BASE,
+    },
+  ],
+  [
+    "5",
+    {
+      jurisdiction: "Alberta",
+      statute: "Alberta Human Rights Act",
+      shortName: "AHRA",
+      title: "Tenancy",
+      summary:
+        "No person shall discriminate against any person with respect to tenancy on the basis of race, religious beliefs, colour, gender, gender identity, gender expression, physical disability, mental disability, age, ancestry, place of origin, marital status, source of income, family status or sexual orientation.",
+      relevance: "housing discrimination, tenancy, Alberta human rights",
+      url: AB_HRA_BASE,
+    },
+  ],
 ]);
 
 // ── Ontario: Human Rights Code ───────────────────────────────────────────────
 const ON_HR_SECTIONS = new Map([
-  ["1", {
-    jurisdiction: "Ontario",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Right to equal treatment with respect to services, goods and facilities",
-    summary: "Every person has a right to equal treatment with respect to services, goods and facilities, without discrimination because of race, ancestry, place of origin, colour, ethnic origin, citizenship, creed, sex, sexual orientation, gender identity, gender expression, age, marital status, family status or disability.",
-    relevance: "services discrimination, public access, Ontario human rights",
-    url: ON_HRC_BASE,
-  }],
-  ["3", {
-    jurisdiction: "Ontario",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Contracts",
-    summary: "Every person having legal capacity has a right to contract on equal terms without discrimination because of race, ancestry, place of origin, colour, ethnic origin, citizenship, creed, sex, sexual orientation, gender identity, gender expression, age, marital status, family status or disability.",
-    relevance: "contracts discrimination, equal treatment, Ontario human rights",
-    url: ON_HRC_BASE,
-  }],
-  ["4", {
-    jurisdiction: "Ontario",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Accommodation of person under eighteen",
-    summary: "Every sixteen or seventeen year old who has withdrawn from parental control has a right to equal treatment with respect to occupancy of and contracting for accommodation without discrimination because the person is less than eighteen years old.",
-    relevance: "youth accommodation, age discrimination, Ontario human rights",
-    url: ON_HRC_BASE,
-  }],
-  ["5", {
-    jurisdiction: "Ontario",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Employment",
-    summary: "Every person has a right to equal treatment with respect to employment without discrimination because of race, ancestry, place of origin, colour, ethnic origin, citizenship, creed, sex, sexual orientation, gender identity, gender expression, age, record of offences, marital status, family status or disability.",
-    relevance: "employment discrimination, hiring, firing, workplace rights",
-    url: ON_HRC_BASE,
-  }],
+  [
+    "1",
+    {
+      jurisdiction: "Ontario",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title:
+        "Right to equal treatment with respect to services, goods and facilities",
+      summary:
+        "Every person has a right to equal treatment with respect to services, goods and facilities, without discrimination because of race, ancestry, place of origin, colour, ethnic origin, citizenship, creed, sex, sexual orientation, gender identity, gender expression, age, marital status, family status or disability.",
+      relevance: "services discrimination, public access, Ontario human rights",
+      url: ON_HRC_BASE,
+    },
+  ],
+  [
+    "3",
+    {
+      jurisdiction: "Ontario",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Contracts",
+      summary:
+        "Every person having legal capacity has a right to contract on equal terms without discrimination because of race, ancestry, place of origin, colour, ethnic origin, citizenship, creed, sex, sexual orientation, gender identity, gender expression, age, marital status, family status or disability.",
+      relevance:
+        "contracts discrimination, equal treatment, Ontario human rights",
+      url: ON_HRC_BASE,
+    },
+  ],
+  [
+    "4",
+    {
+      jurisdiction: "Ontario",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Accommodation of person under eighteen",
+      summary:
+        "Every sixteen or seventeen year old who has withdrawn from parental control has a right to equal treatment with respect to occupancy of and contracting for accommodation without discrimination because the person is less than eighteen years old.",
+      relevance:
+        "youth accommodation, age discrimination, Ontario human rights",
+      url: ON_HRC_BASE,
+    },
+  ],
+  [
+    "5",
+    {
+      jurisdiction: "Ontario",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Employment",
+      summary:
+        "Every person has a right to equal treatment with respect to employment without discrimination because of race, ancestry, place of origin, colour, ethnic origin, citizenship, creed, sex, sexual orientation, gender identity, gender expression, age, record of offences, marital status, family status or disability.",
+      relevance: "employment discrimination, hiring, firing, workplace rights",
+      url: ON_HRC_BASE,
+    },
+  ],
 ]);
 
 // ── British Columbia: Human Rights Code ──────────────────────────────────────
 const BC_HR_SECTIONS = new Map([
-  ["8", {
-    jurisdiction: "British Columbia",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Discrimination in accommodation, service and facility",
-    summary: "A person must not, without a bona fide and reasonable justification, deny to a person or class of persons any accommodation, service or facility customarily available to the public, or discriminate against a person or class of persons regarding any accommodation, service or facility because of the race, colour, ancestry, place of origin, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or class of persons.",
-    relevance: "housing discrimination, services discrimination, BC human rights",
-    url: BC_HRC_BASE,
-  }],
-  ["9", {
-    jurisdiction: "British Columbia",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Discrimination in purchase of property",
-    summary: "A person must not, without a bona fide and reasonable justification, deny to a person or class of persons the right to purchase or otherwise acquire any commercial unit or dwelling unit that is offered for sale or to rent, because of the race, colour, ancestry, place of origin, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or class.",
-    relevance: "property purchase discrimination, BC human rights",
-    url: BC_HRC_BASE,
-  }],
-  ["10", {
-    jurisdiction: "British Columbia",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Discrimination in tenancy premises",
-    summary: "A person must not deny to a person or class of persons the right to occupy, as a tenant, space that is represented as being available for occupancy by a tenant, or discriminate against a person or class of persons regarding a term or condition of the tenancy, because of the race, colour, ancestry, place of origin, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or class.",
-    relevance: "tenancy discrimination, housing, BC human rights",
-    url: BC_HRC_BASE,
-  }],
-  ["11", {
-    jurisdiction: "British Columbia",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Discrimination in employment advertisements",
-    summary: "A person must not publish or cause to be published an advertisement in connection with employment or prospective employment that expresses a limitation, specification or preference as to race, colour, ancestry, place of origin, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age, unless the limitation, specification or preference is based on a bona fide occupational requirement.",
-    relevance: "job ads, employment discrimination, BC human rights",
-    url: BC_HRC_BASE,
-  }],
-  ["12", {
-    jurisdiction: "British Columbia",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Discrimination in wages",
-    summary: "An employer must not discriminate between employees by paying an employee of one sex at a rate of pay less than the rate of pay paid to an employee of the other sex employed by that employer for similar or substantially similar work.",
-    relevance: "pay equity, wage discrimination, BC human rights",
-    url: BC_HRC_BASE,
-  }],
-  ["13", {
-    jurisdiction: "British Columbia",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Discrimination in employment",
-    summary: "A person must not refuse to employ or refuse to continue to employ a person, or discriminate against a person regarding employment or any term or condition of employment, because of the race, colour, ancestry, place of origin, political belief, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or because that person has been convicted of a criminal or summary conviction offence that is unrelated to the employment.",
-    relevance: "employment discrimination, hiring, firing, BC human rights",
-    url: BC_HRC_BASE,
-  }],
-  ["14", {
-    jurisdiction: "British Columbia",
-    statute: "Human Rights Code",
-    shortName: "HRC",
-    title: "Discrimination by unions and associations",
-    summary: "A trade union, employers' organization or occupational association must not exclude any person from membership, expel or suspend any member, or discriminate against any person or member, because of the race, colour, ancestry, place of origin, political belief, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or member.",
-    relevance: "union discrimination, association discrimination, BC human rights",
-    url: BC_HRC_BASE,
-  }],
+  [
+    "8",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Discrimination in accommodation, service and facility",
+      summary:
+        "A person must not, without a bona fide and reasonable justification, deny to a person or class of persons any accommodation, service or facility customarily available to the public, or discriminate against a person or class of persons regarding any accommodation, service or facility because of the race, colour, ancestry, place of origin, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or class of persons.",
+      relevance:
+        "housing discrimination, services discrimination, BC human rights",
+      url: BC_HRC_BASE,
+    },
+  ],
+  [
+    "9",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Discrimination in purchase of property",
+      summary:
+        "A person must not, without a bona fide and reasonable justification, deny to a person or class of persons the right to purchase or otherwise acquire any commercial unit or dwelling unit that is offered for sale or to rent, because of the race, colour, ancestry, place of origin, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or class.",
+      relevance: "property purchase discrimination, BC human rights",
+      url: BC_HRC_BASE,
+    },
+  ],
+  [
+    "10",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Discrimination in tenancy premises",
+      summary:
+        "A person must not deny to a person or class of persons the right to occupy, as a tenant, space that is represented as being available for occupancy by a tenant, or discriminate against a person or class of persons regarding a term or condition of the tenancy, because of the race, colour, ancestry, place of origin, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or class.",
+      relevance: "tenancy discrimination, housing, BC human rights",
+      url: BC_HRC_BASE,
+    },
+  ],
+  [
+    "11",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Discrimination in employment advertisements",
+      summary:
+        "A person must not publish or cause to be published an advertisement in connection with employment or prospective employment that expresses a limitation, specification or preference as to race, colour, ancestry, place of origin, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age, unless the limitation, specification or preference is based on a bona fide occupational requirement.",
+      relevance: "job ads, employment discrimination, BC human rights",
+      url: BC_HRC_BASE,
+    },
+  ],
+  [
+    "12",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Discrimination in wages",
+      summary:
+        "An employer must not discriminate between employees by paying an employee of one sex at a rate of pay less than the rate of pay paid to an employee of the other sex employed by that employer for similar or substantially similar work.",
+      relevance: "pay equity, wage discrimination, BC human rights",
+      url: BC_HRC_BASE,
+    },
+  ],
+  [
+    "13",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Discrimination in employment",
+      summary:
+        "A person must not refuse to employ or refuse to continue to employ a person, or discriminate against a person regarding employment or any term or condition of employment, because of the race, colour, ancestry, place of origin, political belief, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or because that person has been convicted of a criminal or summary conviction offence that is unrelated to the employment.",
+      relevance: "employment discrimination, hiring, firing, BC human rights",
+      url: BC_HRC_BASE,
+    },
+  ],
+  [
+    "14",
+    {
+      jurisdiction: "British Columbia",
+      statute: "Human Rights Code",
+      shortName: "HRC",
+      title: "Discrimination by unions and associations",
+      summary:
+        "A trade union, employers' organization or occupational association must not exclude any person from membership, expel or suspend any member, or discriminate against any person or member, because of the race, colour, ancestry, place of origin, political belief, religion, marital status, family status, physical or mental disability, sex, sexual orientation, gender identity or expression, or age of that person or member.",
+      relevance:
+        "union discrimination, association discrimination, BC human rights",
+      url: BC_HRC_BASE,
+    },
+  ],
 ]);
-
 
 // ── Master index and lookup registry ─────────────────────────────────────────
 const CIVIL_LAW_INDEX_SOURCES = [
@@ -1848,38 +2648,103 @@ const CIVIL_LAW_INDEX_SOURCES = [
   { prefix: "HRC (BC)", map: BC_HR_SECTIONS },
 ];
 
-export { 
-  CDSA_SECTIONS, YCJA_SECTIONS, CHRA_SECTIONS, CC_SENTENCING, EVIDENCE_SECTIONS, CCRA_SECTIONS,
-  ON_HTA_SECTIONS, ON_RTA_SECTIONS, ON_HR_SECTIONS, BC_MVA_SECTIONS, BC_RTA_SECTIONS, BC_HR_SECTIONS,
-  AB_TSA_SECTIONS, AB_RTA_SECTIONS, AB_HRA_SECTIONS
+export {
+  CDSA_SECTIONS,
+  YCJA_SECTIONS,
+  CHRA_SECTIONS,
+  CC_SENTENCING,
+  EVIDENCE_SECTIONS,
+  CCRA_SECTIONS,
+  ON_HTA_SECTIONS,
+  ON_RTA_SECTIONS,
+  ON_HR_SECTIONS,
+  BC_MVA_SECTIONS,
+  BC_RTA_SECTIONS,
+  BC_HR_SECTIONS,
+  AB_TSA_SECTIONS,
+  AB_RTA_SECTIONS,
+  AB_HRA_SECTIONS,
 };
 
 const STATUTE_ALIASES = [
-  { pattern: /controlled drugs and substances act/i, prefix: "CDSA", map: CDSA_SECTIONS },
+  {
+    pattern: /controlled drugs and substances act/i,
+    prefix: "CDSA",
+    map: CDSA_SECTIONS,
+  },
   { pattern: /\bCDSA\b/i, prefix: "CDSA", map: CDSA_SECTIONS },
-  { pattern: /youth criminal justice act/i, prefix: "YCJA", map: YCJA_SECTIONS },
+  {
+    pattern: /youth criminal justice act/i,
+    prefix: "YCJA",
+    map: YCJA_SECTIONS,
+  },
   { pattern: /\bYCJA\b/i, prefix: "YCJA", map: YCJA_SECTIONS },
   { pattern: /canadian human rights act/i, prefix: "CHRA", map: CHRA_SECTIONS },
   { pattern: /\bCHRA\b/i, prefix: "CHRA", map: CHRA_SECTIONS },
   { pattern: /canada evidence act/i, prefix: "CEA", map: EVIDENCE_SECTIONS },
   { pattern: /\bCEA\b/i, prefix: "CEA", map: EVIDENCE_SECTIONS },
-  { pattern: /corrections and conditional release act/i, prefix: "CCRA", map: CCRA_SECTIONS },
+  {
+    pattern: /corrections and conditional release act/i,
+    prefix: "CCRA",
+    map: CCRA_SECTIONS,
+  },
   { pattern: /\bCCRA\b/i, prefix: "CCRA", map: CCRA_SECTIONS },
-  { pattern: /human rights code\s*\(bc\)|british columbia human rights code|\bHRC\s*\(BC\)/i, prefix: "BC HRC", map: BC_HR_SECTIONS },
-  { pattern: /human rights code\s*\(on\)|ontario human rights code|\bHRC\s*\(ON\)/i, prefix: "ON HRC", map: ON_HR_SECTIONS },
-  { pattern: /alberta human rights act|human rights act\s*\(ab\)|\bAHRA\b/i, prefix: "AHRA", map: AB_HRA_SECTIONS },
+  {
+    pattern:
+      /human rights code\s*\(bc\)|british columbia human rights code|\bHRC\s*\(BC\)/i,
+    prefix: "BC HRC",
+    map: BC_HR_SECTIONS,
+  },
+  {
+    pattern:
+      /human rights code\s*\(on\)|ontario human rights code|\bHRC\s*\(ON\)/i,
+    prefix: "ON HRC",
+    map: ON_HR_SECTIONS,
+  },
+  {
+    pattern: /alberta human rights act|human rights act\s*\(ab\)|\bAHRA\b/i,
+    prefix: "AHRA",
+    map: AB_HRA_SECTIONS,
+  },
   { pattern: /criminal code/i, prefix: "CC", map: CC_SENTENCING },
   { pattern: /\bCC\b/i, prefix: "CC", map: CC_SENTENCING },
-  { pattern: /highway traffic act\s*\(on\)|ontario highway traffic act/i, prefix: "HTA", map: ON_HTA_SECTIONS },
+  {
+    pattern: /highway traffic act\s*\(on\)|ontario highway traffic act/i,
+    prefix: "HTA",
+    map: ON_HTA_SECTIONS,
+  },
   { pattern: /\bHTA\b/i, prefix: "HTA", map: ON_HTA_SECTIONS },
-  { pattern: /residential tenancies act\s*,?\s*2006|residential tenancies act\s*\(on\)|ontario residential tenancies act/i, prefix: "ON RTA", map: ON_RTA_SECTIONS },
+  {
+    pattern:
+      /residential tenancies act\s*,?\s*2006|residential tenancies act\s*\(on\)|ontario residential tenancies act/i,
+    prefix: "ON RTA",
+    map: ON_RTA_SECTIONS,
+  },
   { pattern: /\bON RTA\b/i, prefix: "ON RTA", map: ON_RTA_SECTIONS },
-  { pattern: /motor vehicle act\s*\(bc\)|british columbia motor vehicle act/i, prefix: "MVA", map: BC_MVA_SECTIONS },
+  {
+    pattern: /motor vehicle act\s*\(bc\)|british columbia motor vehicle act/i,
+    prefix: "MVA",
+    map: BC_MVA_SECTIONS,
+  },
   { pattern: /\bMVA\b/i, prefix: "MVA", map: BC_MVA_SECTIONS },
-  { pattern: /residential tenancy act\s*\(bc\)|british columbia residential tenancy act/i, prefix: "BC RTA", map: BC_RTA_SECTIONS },
-  { pattern: /traffic safety act\s*\(ab\)|alberta traffic safety act/i, prefix: "TSA", map: AB_TSA_SECTIONS },
+  {
+    pattern:
+      /residential tenancy act\s*\(bc\)|british columbia residential tenancy act/i,
+    prefix: "BC RTA",
+    map: BC_RTA_SECTIONS,
+  },
+  {
+    pattern: /traffic safety act\s*\(ab\)|alberta traffic safety act/i,
+    prefix: "TSA",
+    map: AB_TSA_SECTIONS,
+  },
   { pattern: /\bTSA\b/i, prefix: "TSA", map: AB_TSA_SECTIONS },
-  { pattern: /residential tenancies act\s*\(ab\)|alberta residential tenancies act/i, prefix: "AB RTA", map: AB_RTA_SECTIONS },
+  {
+    pattern:
+      /residential tenancies act\s*\(ab\)|alberta residential tenancies act/i,
+    prefix: "AB RTA",
+    map: AB_RTA_SECTIONS,
+  },
   { pattern: /\bAB RTA\b/i, prefix: "AB RTA", map: AB_RTA_SECTIONS },
 ];
 

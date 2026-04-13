@@ -1,15 +1,19 @@
 function extractSectionNumber(citation) {
-  const m = citation.match(/s\.\s*([\d.]+(?:\(\w+\))?)/i)
-    || citation.match(/section\s+([\d.]+)/i)
-    || citation.match(/,\s*([\d.]+(?:\(\w+\))?)\s*$/);
+  const m =
+    citation.match(/s\.\s*([\d.]+(?:\(\w+\))?)/i) ||
+    citation.match(/section\s+([\d.]+)/i) ||
+    citation.match(/,\s*([\d.]+(?:\(\w+\))?)\s*$/);
   return m ? m[1].trim() : null;
 }
 
-export function createCivilLawRegistry({ indexSources = [], aliases = [] } = {}) {
+export function createCivilLawRegistry({
+  indexSources = [],
+  aliases = [],
+} = {}) {
   const index = new Map(
     indexSources.flatMap(({ prefix, map }) =>
-      Array.from(map.entries()).map(([k, v]) => [`${prefix} s. ${k}`, v])
-    )
+      Array.from(map.entries()).map(([k, v]) => [`${prefix} s. ${k}`, v]),
+    ),
   );
 
   function lookup(citation) {

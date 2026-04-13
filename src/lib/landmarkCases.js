@@ -14,7 +14,12 @@ const LANDMARK_CASES = [
     title: "R v Cody",
     summary:
       "Clarifies and applies Jordan, including treatment of defence conduct and institutional delay in s. 11(b) analysis.",
-    topics: ["trial delay", "charter 11(b)", "institutional delay", "jordan framework"],
+    topics: [
+      "trial delay",
+      "charter 11(b)",
+      "institutional delay",
+      "jordan framework",
+    ],
   },
   {
     citation: "R v Askov, [1990] 2 SCR 1199",
@@ -28,7 +33,12 @@ const LANDMARK_CASES = [
     title: "R v Grant",
     summary:
       "Major Charter s. 9 arbitrary detention case on police stops where people were arrested without clear grounds, refining reasonable suspicion and warrant-related detention analysis and exclusion of evidence framework.",
-    topics: ["charter 9", "detention", "arbitrary detention", "exclusion of evidence"],
+    topics: [
+      "charter 9",
+      "detention",
+      "arbitrary detention",
+      "exclusion of evidence",
+    ],
   },
   {
     citation: "Hunter v Southam Inc, [1984] 2 SCR 145",
@@ -40,8 +50,7 @@ const LANDMARK_CASES = [
   {
     citation: "R v Stinchcombe, [1991] 3 SCR 326",
     title: "R v Stinchcombe",
-    summary:
-      "Defines Crown disclosure obligations in criminal proceedings.",
+    summary: "Defines Crown disclosure obligations in criminal proceedings.",
     topics: ["disclosure", "crown", "criminal procedure"],
   },
   {
@@ -49,7 +58,12 @@ const LANDMARK_CASES = [
     title: "R. v. Woods",
     summary:
       "Clarifies the s. 10(b) right to counsel when a person is detained or arrested by police, including delayed ability to call a lawyer for hours in roadside breath-demand contexts and renewed informational duty.",
-    topics: ["charter 10(b)", "right to counsel", "roadside detention", "breath demand"],
+    topics: [
+      "charter 10(b)",
+      "right to counsel",
+      "roadside detention",
+      "breath demand",
+    ],
   },
   {
     citation: "R v Gladue, [1999] 1 SCR 688",
@@ -86,7 +100,14 @@ function norm(value) {
 }
 
 function scoreLandmark(caseItem, haystack) {
-  const text = norm([caseItem.title, caseItem.citation, caseItem.summary, ...(caseItem.topics || [])].join(" "));
+  const text = norm(
+    [
+      caseItem.title,
+      caseItem.citation,
+      caseItem.summary,
+      ...(caseItem.topics || []),
+    ].join(" "),
+  );
   if (!text) return 0;
 
   let score = 0;
@@ -114,7 +135,9 @@ function hasStrongLandmarkSignal(caseItem, haystack, score) {
     if (termTokens.length === 0) return false;
     if (termTokens.length === 1) return haystackTokens.has(termTokens[0]);
 
-    const escaped = termTokens.map((token) => token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const escaped = termTokens.map((token) =>
+      token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+    );
     const phrasePattern = new RegExp(`\\b${escaped.join("\\s+")}\\b`);
     if (phrasePattern.test(haystack)) return true;
 
@@ -124,7 +147,10 @@ function hasStrongLandmarkSignal(caseItem, haystack, score) {
   const requiredTerms = Array.isArray(caseItem.mustMatchAny)
     ? caseItem.mustMatchAny.map(norm).filter(Boolean)
     : [];
-  if (requiredTerms.length > 0 && !requiredTerms.some((term) => matchesRequiredTerm(term))) {
+  if (
+    requiredTerms.length > 0 &&
+    !requiredTerms.some((term) => matchesRequiredTerm(term))
+  ) {
     return false;
   }
 
@@ -140,13 +166,22 @@ function hasStrongLandmarkSignal(caseItem, haystack, score) {
   return score >= 6;
 }
 
-export function findLandmarkSeeds({ scenario = "", terms = [], limit = 3 } = {}) {
+export function findLandmarkSeeds({
+  scenario = "",
+  terms = [],
+  limit = 3,
+} = {}) {
   const haystack = norm([scenario, ...(terms || [])].join(" "));
   if (!haystack) return [];
 
-  const scored = LANDMARK_CASES.map((item) => ({ item, score: scoreLandmark(item, haystack) }))
+  const scored = LANDMARK_CASES.map((item) => ({
+    item,
+    score: scoreLandmark(item, haystack),
+  }))
     .filter((entry) => entry.score > 0)
-    .filter((entry) => hasStrongLandmarkSignal(entry.item, haystack, entry.score))
+    .filter((entry) =>
+      hasStrongLandmarkSignal(entry.item, haystack, entry.score),
+    )
     .sort((a, b) => b.score - a.score)
     .slice(0, Math.max(1, limit))
     .map((entry) => ({
