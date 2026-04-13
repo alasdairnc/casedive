@@ -98,21 +98,19 @@ SCC 30 1988                           ← Wrong order (use YYYY COURT #)
 ### Example 1: Self-Defence Scenario
 
 **User Input:**
+
 ```
-"I was arrested for hitting someone during an argument. 
+"I was arrested for hitting someone during an argument.
 Can I be charged even if I was protecting myself?"
 ```
 
 **Expected Output:**
+
 ```json
 {
   "summary": "User was arrested for assault but claims self-defence. Need to determine if self-defence is available.",
   "suggestedSections": ["s. 265", "s. 34", "s. 222"],
-  "suggestedCases": [
-    "2012 SCC 60",
-    "1994 SCC 74",
-    "1990 SCC 22"
-  ],
+  "suggestedCases": ["2012 SCC 60", "1994 SCC 74", "1990 SCC 22"],
   "analysis": "Self-defence is a complete defence under s. 34 of the Criminal Code. To establish self-defence, you must show: (1) a reasonable belief that force was necessary, (2) proportional response to the threat. The landmark case 2012 SCC 60 established the current test. If self-defence is proven, you are not guilty despite applying force.",
   "relatedTopics": ["self-defence", "assault", "proportionality"]
 }
@@ -121,20 +119,18 @@ Can I be charged even if I was protecting myself?"
 ### Example 2: Sexual Assault Scenario
 
 **User Input:**
+
 ```
 "What does consent mean in Canadian law for sexual assault?"
 ```
 
 **Expected Output:**
+
 ```json
 {
   "summary": "User asks about the legal definition of consent in sexual assault law.",
   "suggestedSections": ["s. 271", "s. 273", "s. 265"],
-  "suggestedCases": [
-    "1999 SCC 3",
-    "1992 SCC 38",
-    "1994 SCC 24"
-  ],
+  "suggestedCases": ["1999 SCC 3", "1992 SCC 38", "1994 SCC 24"],
   "analysis": "Consent is a complete defence to sexual assault under s. 271. The landmark case 1999 SCC 3 established that consent must be: (1) continuing (not assumed), (2) cannot be inferred from silence, (3) must be actual agreement, not just lack of resistance. The test focuses on the subjective perception of the complainant.",
   "relatedTopics": ["consent", "sexual assault", "communication"]
 }
@@ -219,6 +215,7 @@ Expected: Graceful handling (explain that input isn't clear)
 ### ❌ Mistake 1: Asking for Case Names
 
 **Wrong:**
+
 ```
 "Suggest relevant cases including the case name and citation"
 ```
@@ -226,8 +223,9 @@ Expected: Graceful handling (explain that input isn't clear)
 **Result:** Claude includes "R v. Morgentaler, 1988 SCC 30" (too long for API)
 
 **Fix:**
+
 ```
-"Suggest only neutral citations: YYYY COURT #. 
+"Suggest only neutral citations: YYYY COURT #.
 Do NOT include case names."
 ```
 
@@ -236,6 +234,7 @@ Do NOT include case names."
 ### ❌ Mistake 2: Inconsistent Format Specification
 
 **Wrong:**
+
 ```
 "Suggest cases in format: Name (Year) Court Number"
 ```
@@ -243,6 +242,7 @@ Do NOT include case names."
 **Result:** Claude sometimes uses [1988] 1 S.C.R. 30, sometimes 1988 SCC 30
 
 **Fix:**
+
 ```
 "Use ONLY neutral citation format: YYYY COURT #
 Examples: 1988 SCC 30, 1999 SCC 3, 2012 SCC 60
@@ -254,6 +254,7 @@ Never use bracket format or reporter format."
 ### ❌ Mistake 3: Allowing Too Many Cases
 
 **Wrong:**
+
 ```
 "Suggest all relevant cases"
 ```
@@ -261,6 +262,7 @@ Never use bracket format or reporter format."
 **Result:** Claude suggests 20+ cases, API verification becomes expensive
 
 **Fix:**
+
 ```
 "Suggest 3-5 most relevant cases maximum.
 Focus on landmark cases, not every tangential case."
@@ -271,6 +273,7 @@ Focus on landmark cases, not every tangential case."
 ### ❌ Mistake 4: Unclear JSON Requirements
 
 **Wrong:**
+
 ```
 "Return the results in JSON"
 ```
@@ -278,6 +281,7 @@ Focus on landmark cases, not every tangential case."
 **Result:** Claude might return JSON with extra explanation text before/after
 
 **Fix:**
+
 ```
 "Return ONLY valid JSON, no preamble or explanation.
 Start with { and end with }
@@ -365,8 +369,9 @@ Before deploying a new prompt, test all of these:
 ## Real Test Cases to Use
 
 ### Test 1: Self-Defence
+
 ```
-Input: "I was arrested for hitting someone who attacked me first. 
+Input: "I was arrested for hitting someone who attacked me first.
 Can I use self-defence as a defense?"
 
 Expected:
@@ -376,6 +381,7 @@ Expected:
 ```
 
 ### Test 2: Sexual Assault
+
 ```
 Input: "What does consent mean in sexual assault law?"
 
@@ -386,6 +392,7 @@ Expected:
 ```
 
 ### Test 3: Drug Possession
+
 ```
 Input: "I was found with drugs. What charges could I face?"
 
@@ -405,4 +412,3 @@ Expected:
 4. **Iterate** until all ✅ criteria met
 5. **Deploy** to production
 6. **Monitor** for hallucinations in production
-

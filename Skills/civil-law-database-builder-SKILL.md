@@ -21,27 +21,33 @@ description: Build civil law database with federal statutes and provincial struc
 These are the federal statutes relevant to criminal law scenarios. Add these to `civil-law.json`:
 
 ### Charter & Human Rights
+
 - [ ] Canadian Charter of Rights and Freedoms, s. 1-35 (all sections)
 - [ ] Canadian Human Rights Act, s. 1-15
 - [ ] Bill of Rights, 1960
 
 ### Criminal Procedure & Evidence
+
 - [ ] Criminal Code, Part I (General) — select sections
 - [ ] Evidence Act (Canada)
 
 ### Drug & Substance Law
+
 - [ ] Controlled Drugs and Substances Act (CDSA), s. 1-60
 - [ ] Food and Drug Act (relevant sections)
 
 ### Youth & Family
+
 - [ ] Youth Criminal Justice Act (YCJA), s. 1-150
 - [ ] Criminal Code — Part IV (Youth)
 
 ### Sentencing & Procedure
+
 - [ ] Criminal Code, Part XXIII (Sentencing)
 - [ ] Criminal Code, Part XXVIII (Miscellaneous)
 
 ### Other Federal Statutes
+
 - [ ] Privacy Act (federal)
 - [ ] Access to Information Act
 - [ ] Corrections and Conditional Release Act (CCRA)
@@ -104,13 +110,13 @@ Match the Criminal Code database structure:
 
 ### Required Fields
 
-| Field | Description | Example |
-|-------|-------------|---------|
-| `statute` | Full statute citation | `"Canadian Charter of Rights and Freedoms, s. 7"` |
-| `title` | Short title of the statute section | `"Life, liberty, security of person"` |
-| `relevance` | How this applies to criminal law scenarios | `"Self-defence, bodily autonomy"` |
-| `summary` | Text or summary of the statute section | `"Everyone has the right to..."` |
-| `section` | Section number | `"s. 7"` |
+| Field       | Description                                | Example                                           |
+| ----------- | ------------------------------------------ | ------------------------------------------------- |
+| `statute`   | Full statute citation                      | `"Canadian Charter of Rights and Freedoms, s. 7"` |
+| `title`     | Short title of the statute section         | `"Life, liberty, security of person"`             |
+| `relevance` | How this applies to criminal law scenarios | `"Self-defence, bodily autonomy"`                 |
+| `summary`   | Text or summary of the statute section     | `"Everyone has the right to..."`                  |
+| `section`   | Section number                             | `"s. 7"`                                          |
 
 ---
 
@@ -135,12 +141,12 @@ This is the template for future provincial expansion. Don't fill in values yet (
     },
     "BC": {
       "name": "British Columbia",
-      "statutes": []  // Empty until Phase 2
+      "statutes": [] // Empty until Phase 2
     },
     "AB": {
       "name": "Alberta",
       "statutes": []
-    },
+    }
     // ... other provinces
   }
 }
@@ -153,6 +159,7 @@ This is the template for future provincial expansion. Don't fill in values yet (
 ### 1. Canadian Charter of Rights and Freedoms
 
 **Sections to include:**
+
 - s. 1: Rights and freedoms in Canada
 - s. 2: Fundamental freedoms (conscience, expression, assembly)
 - s. 3-5: Democratic rights
@@ -169,6 +176,7 @@ This is the template for future provincial expansion. Don't fill in values yet (
 ### 2. Controlled Drugs and Substances Act (CDSA)
 
 **Sections to include:**
+
 - s. 2: Definitions
 - s. 4: Possession (KEY)
 - s. 5: Trafficking
@@ -181,6 +189,7 @@ This is the template for future provincial expansion. Don't fill in values yet (
 ### 3. Youth Criminal Justice Act (YCJA)
 
 **Sections to include:**
+
 - s. 1: Purpose (rehabilitation focus, different from adult)
 - s. 2: Key principles
 - s. 10-15: Age jurisdiction (applies to youth under 18)
@@ -191,6 +200,7 @@ This is the template for future provincial expansion. Don't fill in values yet (
 ### 4. Canadian Human Rights Act
 
 **Sections to include:**
+
 - s. 2: Purpose (freedom from discrimination)
 - s. 3: Prohibited grounds (race, sex, disability, etc.)
 - s. 5-14: Prohibited conduct
@@ -200,6 +210,7 @@ This is the template for future provincial expansion. Don't fill in values yet (
 ### 5. Criminal Code — Part XXIII (Sentencing)
 
 **Sections to include:**
+
 - s. 718: Principles of sentencing
 - s. 718.1: Fundamental purpose (denunciation, rehabilitation)
 - s. 718.2: Aggravating/mitigating factors
@@ -216,11 +227,13 @@ When you add a statute, explain HOW it applies to criminal scenarios:
 ### Example 1: Charter s. 7 (Life, liberty, security of person)
 
 **Applies to:**
+
 - Self-defence scenarios (protects bodily autonomy)
 - Sentencing (proportionality of punishment)
 - Arrest/detention (security of person)
 
 **Example usage:**
+
 ```
 User: "Can I be punished for defending myself?"
 Result: Suggest Charter s. 7 — explains that security of person is protected
@@ -229,11 +242,13 @@ Result: Suggest Charter s. 7 — explains that security of person is protected
 ### Example 2: CDSA s. 4 (Possession)
 
 **Applies to:**
+
 - Drug possession charges
 - Constructive possession (control without ownership)
 - Mens rea requirements (knowledge + intent)
 
 **Example usage:**
+
 ```
 User: "I was arrested with drugs in my bag. Am I guilty?"
 Result: Suggest CDSA s. 4 — explains elements: knowledge, intent, possession
@@ -242,11 +257,13 @@ Result: Suggest CDSA s. 4 — explains elements: knowledge, intent, possession
 ### Example 3: YCJA s. 38-40 (Youth sentencing)
 
 **Applies to:**
+
 - Scenarios involving youth (under 18)
 - Sentencing that differs from adult Criminal Code
 - Rehabilitation-focused approach
 
 **Example usage:**
+
 ```
 User: "My 16-year-old was arrested for assault. What sentence?"
 Result: Suggest YCJA s. 38-40 — different sentencing principles than adult
@@ -267,6 +284,7 @@ Pick from the checklist above (e.g., Charter s. 7)
 3. Copy the **exact text** of the statute
 
 Example for Charter s. 7:
+
 ```
 "Everyone has the right to life, liberty and security of the person."
 ```
@@ -276,6 +294,7 @@ Example for Charter s. 7:
 Ask: "How does this statute apply to criminal law scenarios?"
 
 Example for Charter s. 7:
+
 ```
 "Self-defence, bodily autonomy, proportionality of punishment"
 ```
@@ -307,11 +326,13 @@ Example for Charter s. 7:
 Before adding to `civil-law.json`:
 
 ### Structure
+
 - [ ] Statute citation format is correct (e.g., "Canadian Charter of Rights and Freedoms, s. 7")
 - [ ] All 5 required fields are present
 - [ ] `provincial` object structure is correct (even if empty)
 
 ### Content
+
 - [ ] Statute text is exact (not paraphrased)
 - [ ] Title is accurate and concise
 - [ ] Relevance explains how this applies to criminal scenarios
@@ -319,12 +340,14 @@ Before adding to `civil-law.json`:
 - [ ] Section number matches the statute
 
 ### JSON
+
 - [ ] All strings use double quotes `"`
 - [ ] No trailing commas
 - [ ] JSON is valid (test at jsonlint.com)
 - [ ] Array/object syntax is correct
 
 ### Completeness
+
 - [ ] Statute exists (verify on justice.gc.ca)
 - [ ] Text matches official version
 - [ ] No typos in statute names
@@ -337,11 +360,13 @@ Before adding to `civil-law.json`:
 ### ❌ Mistake 1: Paraphrased Text
 
 **Wrong:**
+
 ```json
 "summary": "You have the right to freedom and personal liberty"
 ```
 
 **Right:**
+
 ```json
 "summary": "Everyone has the right to life, liberty and security of the person."
 ```
@@ -349,11 +374,13 @@ Before adding to `civil-law.json`:
 ### ❌ Mistake 2: Wrong Citation Format
 
 **Wrong:**
+
 ```json
 "statute": "Charter Section 7"
 ```
 
 **Right:**
+
 ```json
 "statute": "Canadian Charter of Rights and Freedoms, s. 7"
 ```
@@ -361,11 +388,13 @@ Before adding to `civil-law.json`:
 ### ❌ Mistake 3: Unclear Relevance
 
 **Wrong:**
+
 ```json
 "relevance": "Important law"
 ```
 
 **Right:**
+
 ```json
 "relevance": "Self-defence, bodily autonomy, proportionality of punishment"
 ```
@@ -373,6 +402,7 @@ Before adding to `civil-law.json`:
 ### ❌ Mistake 4: Missing Provincial Structure
 
 **Wrong:**
+
 ```json
 {
   "federal": [...]
@@ -381,6 +411,7 @@ Before adding to `civil-law.json`:
 ```
 
 **Right:**
+
 ```json
 {
   "federal": [...],
@@ -397,6 +428,7 @@ Before adding to `civil-law.json`:
 ## Next Steps
 
 **Phase 1 (MVP):**
+
 1. Add 20-30 federal statutes from the checklist
 2. Focus on Charter sections (s. 1, 2, 7, 8, 9, 10, 12, 15)
 3. Add CDSA sections (s. 2, 4, 5, 6, 7)
@@ -404,12 +436,13 @@ Before adding to `civil-law.json`:
 5. Save to `src/lib/civil-law.json`
 
 **Phase 2 (Provincial Expansion):**
+
 1. Fill in Ontario, BC, Alberta statutes
 2. Add Human Rights Code sections per province
 3. Add provincial Evidence Acts
 4. Test with provincial scenarios
 
 **Phase 3+:**
+
 1. Add remaining provinces
 2. Add specialized statutes (Labour law, family law, etc.)
-

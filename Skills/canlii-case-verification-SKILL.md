@@ -20,12 +20,14 @@ description: Verify cases against CanLII API, handle rate limiting, manage cachi
 ## CanLII API Basics
 
 ### Your Setup
+
 - **API Key:** Stored in `.env` as `CANLII_API_KEY`
 - **Rate Limits:** 5,000 queries/day, 2 requests/second, 1 at a time
 - **Base URL:** `https://api.canlii.org/v1`
 - **Authentication:** Bearer token in Authorization header
 
 ### What You Can Get
+
 ✅ Case metadata (citation, parties, date, court)
 ✅ Case summary (abstract from CanLII)
 ❌ Full case text (NOT available via API)
@@ -45,10 +47,13 @@ description: Verify cases against CanLII API, handle rate limiting, manage cachi
    - Number: `30`
 
 2. **Build the API call:**
+
    ```
    GET https://api.canlii.org/v1/cases?db=csc-scc&keywords=Morgentaler%201988
    ```
+
    OR (if you have case ID):
+
    ```
    GET https://api.canlii.org/v1/cases/csc-scc/1988scc30
    ```
@@ -180,6 +185,7 @@ Territories:
 ## Rate Limiting Implementation
 
 ### The Problem
+
 - You have **2 requests/second** limit
 - If you verify 5 cases at once, you'll hit rate limit
 - Solution: **Queue them sequentially**
@@ -207,14 +213,14 @@ async function verifyMultipleCases(citations) {
         unverified.push({
           citation,
           verified: false,
-          reason: "Case not found on CanLII"
+          reason: "Case not found on CanLII",
         });
       }
     } catch (error) {
       unverified.push({
         citation,
         verified: false,
-        reason: `API error: ${error.message}`
+        reason: `API error: ${error.message}`,
       });
     }
   }
@@ -223,11 +229,12 @@ async function verifyMultipleCases(citations) {
 }
 
 function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 ```
 
 ### Key Points
+
 - **500ms delay between requests** = 2 requests per second (safe)
 - **Catch errors gracefully** — don't crash if one case fails
 - **Track unverified cases** — show user which ones failed
@@ -238,12 +245,14 @@ function delay(ms) {
 ## Caching Strategy
 
 ### Why Cache?
+
 - Avoid verifying the same case twice
 - Stay under 5,000 daily API quota
 - Reduce latency (local cache is instant)
 - Prevent redundant API calls
 
 ### Cache Key Format
+
 ```
 KEY: "case:{citation}"
 VALUE: { verified case data }
@@ -251,6 +260,7 @@ TTL: 24 hours
 ```
 
 ### Example Cache Entries
+
 ```
 cache["case:1988 SCC 30"] = {
   citation: "R v. Morgentaler, 1988 SCC 30",
@@ -279,18 +289,18 @@ const caseCache = new Map(); // citation -> { data, expiresAt }
 function getCachedCase(citation) {
   const cached = caseCache.get(citation);
   if (!cached) return null;
-  
+
   // Check if expired
   if (Date.now() > cached.expiresAt) {
     caseCache.delete(citation);
     return null;
   }
-  
+
   return cached.data;
 }
 
 function setCacheCase(citation, data) {
-  const expiresAt = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+  const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
   caseCache.set(citation, { data, expiresAt });
 }
 
@@ -301,38 +311,44 @@ async function verifyCase(citation) {
 
   // Not in cache, call API
   const result = await callCanLIIAPI(citation);
-  
+
   // Cache result (both verified and unverified)
   setCacheCase(citation, result);
-  
+
   return result;
 }
 ```
 
 ---
+
 ## Test Cases (Wide Variety)
 
 Use these to test your implementation across different jurisdictions and levels:
 
 ### ✅ Supreme Court of Canada (SCC)
+
 1. **R v. Morgentaler, 1988 SCC 30** (Abortion/Charter)
 2. **R v. Jordan, 2016 SCC 27** (Trial delay)
 3. **R v. Grant, 2009 SCC 32** (Section 24(2) Charter)
 
 ### ✅ Ontario (ONCA/ONSC/ONCJ)
+
 1. **R v. Sullivan, 2022 SCC 19** (Originated in ON, striking down s. 33.1)
 2. **R v. Sharma, 2022 SCC 39** (Sentencing, ON)
 3. **R v. McColman, 2023 SCC 9** (Random breath testing, ON)
 
 ### ✅ British Columbia (BCCA/BCSC)
+
 1. **R v. Ndhlovu, 2022 SCC 38** (SOIRA, BC)
 2. **R v. Samaniego, 2022 SCC 9** (Trial fairness, BC)
 
 ### ✅ Alberta (ABCA/ABQB)
+
 1. **R v. Hills, 2023 SCC 2** (Mandatory minimums, AB)
 2. **R v. Canfield, 2020 ABCA 383** (Cell phone search at border)
 
 ### ✅ Other Provinces & Territories
+
 1. **R v. Comeau, 2018 SCC 15** (Interprovincial trade, NB)
 2. **R v. Tessier, 2022 SCC 35** (Voluntary statements, NL)
 3. **R v. C.P., 2021 SCC 19** (Youth sentencing, SK)
@@ -344,7 +360,6 @@ Use these to test your implementation across different jurisdictions and levels:
 2. **R v. MadeUp, 1950 SCC 1** (Doesn't exist)
 3. **Invalid Citation Format** (Malformed)
 4. **R. v. Morgentaler, [1988] 1 S.C.R. 30** (Different format, might not match)
-
 
 ### How to Test
 
@@ -362,14 +377,14 @@ curl -H "Authorization: apikey YOUR_API_KEY" \
 
 ### Common API Errors
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `401 Unauthorized` | Bad/missing API key | Check `.env` file, verify key is correct |
+| Error                   | Cause               | Solution                                                        |
+| ----------------------- | ------------------- | --------------------------------------------------------------- |
+| `401 Unauthorized`      | Bad/missing API key | Check `.env` file, verify key is correct                        |
 | `429 Too Many Requests` | Rate limit exceeded | Add longer delay between requests (use 1000ms instead of 500ms) |
-| `404 Not Found` | Case doesn't exist | Mark as unverified, continue |
-| `500 Server Error` | CanLII API down | Retry after 5 seconds, mark as unverified if retries fail |
-| `400 Bad Request` | Malformed citation | Log the citation, skip it, continue |
-| `Network timeout` | Connection lost | Retry with exponential backoff |
+| `404 Not Found`         | Case doesn't exist  | Mark as unverified, continue                                    |
+| `500 Server Error`      | CanLII API down     | Retry after 5 seconds, mark as unverified if retries fail       |
+| `400 Bad Request`       | Malformed citation  | Log the citation, skip it, continue                             |
+| `Network timeout`       | Connection lost     | Retry with exponential backoff                                  |
 
 ### Implementation
 
@@ -383,9 +398,9 @@ async function verifyCaseWithErrorHandling(citation, apiKey) {
       const response = await fetch(
         `https://api.canlii.org/v1/cases?db=csc-scc&keywords=${encodeURIComponent(citation)}`,
         {
-          headers: { "Authorization": `apikey ${apiKey}` },
-          timeout: 10000 // 10 second timeout
-        }
+          headers: { Authorization: `apikey ${apiKey}` },
+          timeout: 10000, // 10 second timeout
+        },
       );
 
       // Handle status codes
@@ -395,7 +410,7 @@ async function verifyCaseWithErrorHandling(citation, apiKey) {
       if (response.status === 429) {
         // Rate limited — wait and retry
         console.log("Rate limited, waiting...");
-        await new Promise(r => setTimeout(r, delay));
+        await new Promise((r) => setTimeout(r, delay));
         delay *= 2; // Exponential backoff
         retries--;
         continue;
@@ -407,19 +422,18 @@ async function verifyCaseWithErrorHandling(citation, apiKey) {
       if (response.status >= 500) {
         // Server error — retry
         retries--;
-        await new Promise(r => setTimeout(r, delay));
+        await new Promise((r) => setTimeout(r, delay));
         delay *= 2;
         continue;
       }
 
       const data = await response.json();
       return parseCanLIIResponse(data);
-
     } catch (error) {
       console.error(`Error verifying ${citation}:`, error.message);
       retries--;
       if (retries > 0) {
-        await new Promise(r => setTimeout(r, delay));
+        await new Promise((r) => setTimeout(r, delay));
         delay *= 2;
       }
     }
@@ -458,10 +472,10 @@ function normalizeCitation(citation) {
 }
 
 // Test
-console.log(normalizecitation("R v. Morgentaler, 1988 SCC 30")); 
+console.log(normalizecitation("R v. Morgentaler, 1988 SCC 30"));
 // Output: "1988 SCC 30"
 
-console.log(normalizeCase("R v. Morgentaler, [1988] 1 S.C.R. 30")); 
+console.log(normalizeCase("R v. Morgentaler, [1988] 1 S.C.R. 30"));
 // Output: "1988 S.C.R. 30" (might not match if SCR != SCC)
 ```
 
@@ -493,4 +507,3 @@ Once you've implemented this:
 3. Monitor API quota usage (log each call)
 4. Cache verified cases for 24 hours
 5. Ready to integrate with Claude analysis results
-
