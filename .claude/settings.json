@@ -13,13 +13,24 @@
     ]
   },
   "hooks": {
-    "PreToolUse": [
+    "PreCompact": [
       {
-        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -c \"\nimport sys, json, re\ndata = json.load(sys.stdin)\npath = data.get('file_path', '')\nfilename = path.split('/')[-1]\nif re.match(r'^\\.env(\\.|$)', filename):\n    print('Blocked: .env files must not be edited via Claude. Edit manually or use \\\"vercel env\\\".', file=sys.stderr)\n    sys.exit(2)\nif filename == 'vercel.json':\n    print('Blocked: vercel.json controls CORS and routing. Edit manually and confirm changes.', file=sys.stderr)\n    sys.exit(2)\n\""
+            "command": "python3 -c \"\nimport subprocess, sys, json\n\ndef run(cmd):\n    r = subprocess.run(cmd, shell=True, capture_output=True, text=True)\n    return r.stdout.strip()\n\nbranch    = run('git branch --show-current')\ncommits   = run('git log --oneline -3')\nunstaged  = run('git diff --name-only')\nstaged    = run('git diff --cached --name-only')\nfocus     = ''\ntry:\n    with open('CLAUDE.md') as f:\n        for line in f:\n            if 'Current focus' in line or 'Active Development' in line:\n                focus = line.strip()\n                break\nexcept:\n    pass\n\nprint('--- COMPACTION CONTEXT ---')\nprint(f'Branch: {branch}')\nprint(f'Last 3 commits:\\n{commits}')\nif unstaged:\n    print(f'Unstaged changes: {unstaged}')\nif staged:\n    print(f'Staged changes: {staged}')\nif not unstaged and not staged:\n    print('Working tree: clean')\nif focus:\n    print(f'Active focus: {focus}')\nprint('--------------------------')\n\"",
+            "statusMessage": "Saving compaction context..."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"\nimport sys, json, re\ndata = json.load(sys.stdin)\npath = data.get('file_path', '')\nfilename = path.split('/')[-1]\nif 'node_modules' in path:\n    print('Blocked: do not write into node_modules.', file=sys.stderr)\n    sys.exit(2)\nif re.match(r'^\\.env(\\.|$)', filename):\n    print('Blocked: .env files must not be edited via Claude. Edit manually or use \\\"vercel env\\\".', file=sys.stderr)\n    sys.exit(2)\nif filename == 'vercel.json':\n    print('Blocked: vercel.json controls CORS and routing. Edit manually and confirm changes.', file=sys.stderr)\n    sys.exit(2)\nif filename == 'package-lock.json':\n    print('Blocked: package-lock.json is auto-generated. Run npm install instead.', file=sys.stderr)\n    sys.exit(2)\n\""
           }
         ]
       },
@@ -29,6 +40,18 @@
           {
             "type": "command",
             "command": "python3 -c \"\nimport sys, json, re\ndata = json.load(sys.stdin)\ncmd = data.get('command', '')\ndangerous = [r'rm\\s+-rf', r'git\\s+push\\s+--force', r'git\\s+reset\\s+--hard', r'chmod\\s+777', r'\\|\\s*bash', r'\\|\\s*sh']\nfor pattern in dangerous:\n    if re.search(pattern, cmd):\n        print(f'Blocked: dangerous command pattern detected: {cmd[:80]}', file=sys.stderr)\n        sys.exit(2)\n\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=\"$CLAUDE_TOOL_INPUT_FILE_PATH\"; if echo \"$FILE\" | grep -qE '\\.(js|jsx)$'; then npx eslint --fix \"$FILE\" 2>/dev/null || true; fi",
+            "statusMessage": "Linting..."
           }
         ]
       }

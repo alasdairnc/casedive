@@ -20,6 +20,7 @@ If the file is missing or empty, proceed without an Authorization header (endpoi
 ## Step 2: Fetch live health snapshot
 
 Fetch `https://casedive.ca/api/retrieval-health` with:
+
 - `Authorization: Bearer <token>` (if token found)
 - `Accept: application/json`
 
@@ -69,12 +70,12 @@ Flag any of the following as issues:
 
 If the user explicitly asks to fix issues, apply targeted fixes based on the diagnosis:
 
-| Issue | Where to look | Likely fix |
-|---|---|---|
-| Redis write failures | `api/_retrievalHealthStore.js` | Check timeout values, key TTLs, serialization |
-| High no-verified rate | `api/retrieve-caselaw.js` | Tune query shaping, expand fallback DB targets |
-| High error rate | `api/analyze.js`, `api/retrieve-caselaw.js` | Check CanLII API key config, error handling |
-| Slow latency | `api/retrieve-caselaw.js` | Check CanLII request timeouts, caching |
+| Issue                       | Where to look                                               | Likely fix                                        |
+| --------------------------- | ----------------------------------------------------------- | ------------------------------------------------- |
+| Redis write failures        | `api/_retrievalHealthStore.js`                              | Check timeout values, key TTLs, serialization     |
+| High no-verified rate       | `api/retrieve-caselaw.js`                                   | Tune query shaping, expand fallback DB targets    |
+| High error rate             | `api/analyze.js`, `api/retrieve-caselaw.js`                 | Check CanLII API key config, error handling       |
+| Slow latency                | `api/retrieve-caselaw.js`                                   | Check CanLII request timeouts, caching            |
 | Alltime accumulator missing | `api/_retrievalHealthStore.js` → `updateAlltimeAccumulator` | Verify it's being called and Redis key is written |
 
 Read the relevant files before making any edits. After fixing, tell the user to redeploy and re-run `/retrieval-health` to confirm.

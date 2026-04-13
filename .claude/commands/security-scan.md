@@ -19,11 +19,13 @@ npx ecc-agentshield scan
 ```
 
 For deep analysis with Opus:
+
 ```bash
 npx ecc-agentshield scan --opus --stream
 ```
 
 Auto-fix safe issues:
+
 ```bash
 npx ecc-agentshield scan --fix
 ```

@@ -55,11 +55,13 @@ export default async function handler(req, res) {
   const rlHeaders = rateLimitHeaders(rlResult);
   Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
   if (!rlResult.allowed) {
-    return res.status(429).json({ error: "Rate limit exceeded. Please try again later." });
+    return res
+      .status(429)
+      .json({ error: "Rate limit exceeded. Please try again later." });
   }
 
   // TODO: destructure and validate required body fields
-  const { } = req.body || {};
+  const {} = req.body || {};
 
   // TODO: validate required fields
   // if (!field || typeof field !== "string") {
@@ -70,12 +72,31 @@ export default async function handler(req, res) {
   try {
     // TODO: implement business logic
 
-    logSuccess(requestId, "<endpoint-name>", 200, Date.now() - startMs, rlResult);
+    logSuccess(
+      requestId,
+      "<endpoint-name>",
+      200,
+      Date.now() - startMs,
+      rlResult,
+    );
     return res.status(200).json({ ok: true });
   } catch (err) {
-    const statusCode = err.status ? (err.status >= 500 ? 502 : err.status) : 500;
-    logError(requestId, "<endpoint-name>", err, statusCode, Date.now() - startMs);
-    if (err.status) return res.status(statusCode).json({ error: "Service temporarily unavailable." });
+    const statusCode = err.status
+      ? err.status >= 500
+        ? 502
+        : err.status
+      : 500;
+    logError(
+      requestId,
+      "<endpoint-name>",
+      err,
+      statusCode,
+      Date.now() - startMs,
+    );
+    if (err.status)
+      return res
+        .status(statusCode)
+        .json({ error: "Service temporarily unavailable." });
     return res.status(500).json({ error: "Internal server error" });
   }
 }
