@@ -86,13 +86,17 @@ const summaryCache = new Map();
 
 export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
   const t = useTheme();
-  const [summary, setSummary] = useState(() => summaryCache.get(item.citation) || null);
+  const [summary, setSummary] = useState(
+    () => summaryCache.get(item.citation) || null,
+  );
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(!summaryCache.has(item.citation));
 
   // Close on Escape
   useEffect(() => {
-    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    const handler = (e) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
@@ -135,14 +139,16 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
         if (!cancelled) setLoading(false);
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [item.citation]);
 
   const viewUrl = isValidUrl(canliiUrl) ? canliiUrl : null;
 
   // Mobile: full-width bottom sheet; desktop: centered card
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== "undefined" && window.innerWidth < 640
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 640,
   );
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 639px)");
@@ -259,13 +265,23 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
           )}
           {summary && !loading && (
             <>
-              <SummarySection label="Facts" t={t}>{summary.facts}</SummarySection>
-              <SummarySection label="Held" t={t}>{summary.held}</SummarySection>
-              <SummarySection label="Ratio Decidendi" t={t}>{summary.ratio}</SummarySection>
+              <SummarySection label="Facts" t={t}>
+                {summary.facts}
+              </SummarySection>
+              <SummarySection label="Held" t={t}>
+                {summary.held}
+              </SummarySection>
+              <SummarySection label="Ratio Decidendi" t={t}>
+                {summary.ratio}
+              </SummarySection>
               {summary.keyQuote && (
-                <SummarySection label="Key Quote" t={t} isQuote>{summary.keyQuote}</SummarySection>
+                <SummarySection label="Key Quote" t={t} isQuote>
+                  {summary.keyQuote}
+                </SummarySection>
               )}
-              <SummarySection label="Significance" t={t}>{summary.significance}</SummarySection>
+              <SummarySection label="Significance" t={t}>
+                {summary.significance}
+              </SummarySection>
             </>
           )}
         </div>
@@ -318,6 +334,6 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

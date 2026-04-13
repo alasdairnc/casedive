@@ -15,7 +15,7 @@ export default function StagedLoading() {
 
   useEffect(() => {
     const timers = stages.map((_, i) =>
-      setTimeout(() => setStage(i), i * 1500)
+      setTimeout(() => setStage(i), i * 1500),
     );
     return () => timers.forEach(clearTimeout);
   }, []);
@@ -25,19 +25,36 @@ export default function StagedLoading() {
       <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 32 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {stages.map((s, i) => (
-            <div key={i} style={{
-              fontFamily: "'Helvetica Neue', sans-serif", fontSize: 12,
-              letterSpacing: 2, textTransform: "uppercase",
-              color: i <= stage ? t.textSecondary : t.textTertiary,
-              transition: "color 0.4s, opacity 0.4s",
-              opacity: i <= stage ? 1 : 0.45,
-              display: "flex", alignItems: "center", gap: 12,
-            }}>
-              <span style={{
-                display: "inline-block", width: 8, height: 8,
-                background: i < stage ? t.accentGreen : i === stage ? t.accent : t.border,
-                borderRadius: "50%", transition: "background 0.4s",
-              }} />
+            <div
+              key={i}
+              style={{
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 12,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+                color: i <= stage ? t.textSecondary : t.textTertiary,
+                transition: "color 0.4s, opacity 0.4s",
+                opacity: i <= stage ? 1 : 0.45,
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 8,
+                  height: 8,
+                  background:
+                    i < stage
+                      ? t.accentGreen
+                      : i === stage
+                        ? t.accent
+                        : t.border,
+                  borderRadius: "50%",
+                  transition: "background 0.4s",
+                }}
+              />
               {s}
             </div>
           ))}

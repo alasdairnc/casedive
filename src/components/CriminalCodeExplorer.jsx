@@ -17,8 +17,11 @@ const PART_OPTIONS = [
 ];
 
 function SectionRow({ section, isExpanded, onToggle, t }) {
-  const isEnriched =
-    !!(section.definition || section.maxPenalty || section.relatedSections?.length);
+  const isEnriched = !!(
+    section.definition ||
+    section.maxPenalty ||
+    section.relatedSections?.length
+  );
 
   return (
     <div
@@ -481,7 +484,13 @@ export default function CriminalCodeExplorer({ onClose }) {
         </div>
 
         {/* Search + Filters */}
-        <div style={{ padding: "16px 24px", borderBottom: `1px solid ${t.borderLight}`, background: t.bgAlt + "44" }}>
+        <div
+          style={{
+            padding: "16px 24px",
+            borderBottom: `1px solid ${t.borderLight}`,
+            background: t.bgAlt + "44",
+          }}
+        >
           <div style={{ position: "relative" }}>
             <input
               ref={inputRef}
@@ -604,7 +613,7 @@ export default function CriminalCodeExplorer({ onClose }) {
                 isExpanded={expandedSection === section.num}
                 onToggle={() =>
                   setExpandedSection(
-                    expandedSection === section.num ? null : section.num
+                    expandedSection === section.num ? null : section.num,
                   )
                 }
                 t={t}

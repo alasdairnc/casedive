@@ -9,14 +9,17 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
   const atLimit = remaining <= 0;
 
   return (
-    <section style={{ maxWidth: 760, margin: "0 auto", padding: "20px 24px 0" }}>
+    <section
+      style={{ maxWidth: 760, margin: "0 auto", padding: "20px 24px 0" }}
+    >
       <div style={{ position: "relative" }}>
         <textarea
           data-testid="scenario-input"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !loading) onSubmit();
+            if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !loading)
+              onSubmit();
           }}
           maxLength={MAX_CHARS}
           placeholder="Describe your legal scenario in plain language…"
@@ -52,28 +55,32 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
           }}
         />
         {nearLimit && (
-          <div style={{
-            position: "absolute",
-            bottom: 8,
-            right: 0,
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 10,
-            color: atLimit ? t.accentRed : t.textTertiary,
-            pointerEvents: "none",
-            letterSpacing: "0.04em",
-          }}>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 8,
+              right: 0,
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 10,
+              color: atLimit ? t.accentRed : t.textTertiary,
+              pointerEvents: "none",
+              letterSpacing: "0.04em",
+            }}
+          >
             {remaining.toLocaleString()}
           </div>
         )}
       </div>
 
-      <div style={{
-        display: "flex",
-        gap: 20,
-        marginTop: 14,
-        alignItems: "center",
-        flexWrap: "wrap",
-      }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 20,
+          marginTop: 14,
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
         <button
           data-testid="research-submit"
           onClick={onSubmit}
@@ -81,13 +88,18 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
           style={{
             background: "none",
             border: `1px solid ${loading || !query.trim() || atLimit ? t.border : t.accentOlive}`,
-            color: loading || !query.trim() || atLimit ? t.textFaint : t.accentOlive,
+            color:
+              loading || !query.trim() || atLimit ? t.textFaint : t.accentOlive,
             padding: "9px 28px",
             fontFamily: "'Helvetica Neue', sans-serif",
             fontSize: 11,
             letterSpacing: "0.22em",
             textTransform: "uppercase",
-            cursor: loading ? "wait" : (!query.trim() || atLimit ? "default" : "pointer"),
+            cursor: loading
+              ? "wait"
+              : !query.trim() || atLimit
+                ? "default"
+                : "pointer",
             opacity: !query.trim() || atLimit ? 0.4 : 1,
             transition: "border-color 0.2s, color 0.2s, opacity 0.2s",
           }}
@@ -104,12 +116,14 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
         >
           {loading ? "Analyzing\u2026" : "Research"}
         </button>
-        <span style={{
-          fontSize: 11,
-          color: t.textTertiary,
-          fontFamily: "'Helvetica Neue', sans-serif",
-          letterSpacing: "0.02em",
-        }}>
+        <span
+          style={{
+            fontSize: 11,
+            color: t.textTertiary,
+            fontFamily: "'Helvetica Neue', sans-serif",
+            letterSpacing: "0.02em",
+          }}
+        >
           {"\u2318"}/Ctrl + Enter
         </span>
       </div>

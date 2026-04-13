@@ -56,7 +56,10 @@ export function useCriminalCodeSearch() {
     if (!sections) return;
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
-      const q = query.toLowerCase().replace(/^s\.\s*/, "").trim();
+      const q = query
+        .toLowerCase()
+        .replace(/^s\.\s*/, "")
+        .trim();
       const filtered = [];
       let total = 0;
 
@@ -84,7 +87,7 @@ export function useCriminalCodeSearch() {
           const titleMatch = (section.title || "").toLowerCase().includes(q);
           const defMatch = (section.definition || "").toLowerCase().includes(q);
           const tagMatch = (section.topicsTagged || []).some((t) =>
-            t.toLowerCase().includes(q)
+            t.toLowerCase().includes(q),
           );
 
           if (!numMatch && !titleMatch && !defMatch && !tagMatch) continue;
@@ -92,7 +95,8 @@ export function useCriminalCodeSearch() {
           // Score for sorting: exact number > starts with number > title starts > title includes > definition/tags
           if (section.num === q) score = 1000;
           else if (numMatch) score = 800;
-          else if ((section.title || "").toLowerCase().startsWith(q)) score = 600;
+          else if ((section.title || "").toLowerCase().startsWith(q))
+            score = 600;
           else if (titleMatch) score = 400;
           else if (defMatch) score = 200;
           else score = 100;
@@ -112,7 +116,9 @@ export function useCriminalCodeSearch() {
         });
       }
 
-      setResults(q ? filtered.slice(0, MAX_RESULTS) : filtered.slice(0, MAX_RESULTS));
+      setResults(
+        q ? filtered.slice(0, MAX_RESULTS) : filtered.slice(0, MAX_RESULTS),
+      );
       setTotalMatches(total);
     }, DEBOUNCE_MS);
 

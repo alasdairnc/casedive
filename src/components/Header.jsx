@@ -1,6 +1,10 @@
 import { useTheme, useThemeActions } from "../lib/ThemeContext.jsx";
 
-export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeExplorer }) {
+export default function Header({
+  bookmarkCount = 0,
+  onOpenBookmarks,
+  onOpenCodeExplorer,
+}) {
   const t = useTheme();
   const { isDark, toggleTheme } = useThemeActions();
 
@@ -21,8 +25,12 @@ export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeE
     gap: 4,
   };
 
-  const hover = (e) => { e.currentTarget.style.color = t.text; };
-  const leave = (e) => { e.currentTarget.style.color = t.textTertiary; };
+  const hover = (e) => {
+    e.currentTarget.style.color = t.text;
+  };
+  const leave = (e) => {
+    e.currentTarget.style.color = t.textTertiary;
+  };
 
   return (
     <header>
@@ -30,22 +38,35 @@ export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeE
       <div style={{ height: 2, background: t.accent }} />
 
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "16px 24px 0" }}>
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 12,
-        }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
           {/* Wordmark */}
           <img
-            src={isDark ? '/logos/casedive-header-dark.svg' : '/logos/casedive-header.svg'}
+            src={
+              isDark
+                ? "/logos/casedive-header-dark.svg"
+                : "/logos/casedive-header.svg"
+            }
             alt="CaseDive"
-            style={{ height: '28px', width: 'auto', display: 'block' }}
+            style={{ height: "28px", width: "auto", display: "block" }}
           />
 
           {/* Nav */}
-          <nav style={{ display: "flex", gap: 22, alignItems: "center", flexWrap: "wrap" }}>
+          <nav
+            style={{
+              display: "flex",
+              gap: 22,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
             {onOpenBookmarks && (
               <button
                 onClick={onOpenBookmarks}
@@ -70,7 +91,14 @@ export default function Header({ bookmarkCount = 0, onOpenBookmarks, onOpenCodeE
                 onMouseEnter={hover}
                 onMouseLeave={leave}
               >
-                <span style={{ fontFamily: "'Courier New', monospace", fontSize: 12 }}>§</span>
+                <span
+                  style={{
+                    fontFamily: "'Courier New', monospace",
+                    fontSize: 12,
+                  }}
+                >
+                  §
+                </span>
                 &thinsp;Code
               </button>
             )}

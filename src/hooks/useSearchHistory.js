@@ -11,7 +11,7 @@ function loadFromStorage() {
     const parsed = JSON.parse(raw);
     const now = Date.now();
     // Filter expired entries
-    return parsed.filter(e => now - e.timestamp < TTL_MS);
+    return parsed.filter((e) => now - e.timestamp < TTL_MS);
   } catch {
     return [];
   }
@@ -29,7 +29,7 @@ export function useSearchHistory() {
   const [history, setHistory] = useState(() => loadFromStorage());
 
   const addToHistory = useCallback((query, filters, result) => {
-    setHistory(prev => {
+    setHistory((prev) => {
       const entry = {
         id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
         query,
@@ -50,15 +50,22 @@ export function useSearchHistory() {
 
   const clearHistory = useCallback(() => {
     setHistory([]);
-    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   // Returns { query, filters } for the given id — caller re-runs the query
-  const rerunQuery = useCallback((id) => {
-    const entry = history.find(e => e.id === id);
-    if (!entry) return null;
-    return { query: entry.query, filters: entry.filters };
-  }, [history]);
+  const rerunQuery = useCallback(
+    (id) => {
+      const entry = history.find((e) => e.id === id);
+      if (!entry) return null;
+      return { query: entry.query, filters: entry.filters };
+    },
+    [history],
+  );
 
   // Sorted newest first (already maintained by addToHistory)
   const getHistory = useCallback(() => history, [history]);

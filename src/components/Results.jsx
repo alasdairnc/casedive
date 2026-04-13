@@ -10,23 +10,33 @@ function SectionBreak({ label, count, t }) {
   return (
     <div style={{ marginBottom: 24, marginTop: 56 }}>
       <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 10 }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
-          <div style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 9,
-            letterSpacing: "0.44em",
-            textTransform: "uppercase",
-            color: t.textTertiary,
-          }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 9,
+              letterSpacing: "0.44em",
+              textTransform: "uppercase",
+              color: t.textTertiary,
+            }}
+          >
             {label}
           </div>
           {count != null && (
-            <div style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
-              fontSize: 9,
-              letterSpacing: "0.2em",
-              color: t.textTertiary,
-            }}>
+            <div
+              style={{
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 9,
+                letterSpacing: "0.2em",
+                color: t.textTertiary,
+              }}
+            >
               {count}
             </div>
           )}
@@ -54,7 +64,13 @@ const SECTIONS = [
   { key: "charter", label: "Charter Rights" },
 ];
 
-export default function Results({ data, scenario, addBookmark, removeBookmark, isBookmarked }) {
+export default function Results({
+  data,
+  scenario,
+  addBookmark,
+  removeBookmark,
+  isBookmarked,
+}) {
   const t = useTheme();
   const analysisText = useTypewriter(data.analysis || "", 10);
   const [verifications, setVerifications] = useState({});
@@ -70,16 +86,15 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
     caseLawMeta?.reason !== "filter_disabled" &&
     (!Array.isArray(data.case_law) || data.case_law.length === 0);
 
-  const caseLawEmptyMessage =
-    caseLawMeta?.reason?.startsWith("retrieval_error")
-      ? "Case law retrieval is temporarily unavailable. Please try again in a moment."
-      : caseLawMeta?.reason === "missing_api_key"
-        ? "Case law retrieval is unavailable (CanLII not configured)."
-        : caseLawMeta?.reason === "no_terms_or_databases"
-          ? "No search terms could be formed from this scenario."
-          : issuePrimary === "minor_traffic_stop"
-            ? "This looks like a routine traffic-stop fact pattern. Broader landmark cases were filtered out because they were not close enough to the facts."
-            : "No directly on-point verified case law was found. Broader landmark cases were filtered out because they were not close enough to the facts.";
+  const caseLawEmptyMessage = caseLawMeta?.reason?.startsWith("retrieval_error")
+    ? "Case law retrieval is temporarily unavailable. Please try again in a moment."
+    : caseLawMeta?.reason === "missing_api_key"
+      ? "Case law retrieval is unavailable (CanLII not configured)."
+      : caseLawMeta?.reason === "no_terms_or_databases"
+        ? "No search terms could be formed from this scenario."
+        : issuePrimary === "minor_traffic_stop"
+          ? "This looks like a routine traffic-stop fact pattern. Broader landmark cases were filtered out because they were not close enough to the facts."
+          : "No directly on-point verified case law was found. Broader landmark cases were filtered out because they were not close enough to the facts.";
 
   const caseLawEmptyGuidance =
     caseLawMeta?.reason === "no_terms_or_databases"
@@ -96,11 +111,11 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
               "If the only fact is a tiny speed overage, no case-law result is the better answer.",
               "Add the specific Charter section or offence provision only if there is an actual issue to analyze.",
             ]
-        : [
-            "Add the specific legal issue you want researched.",
-            "Use the exact fact pattern that matters, not just a nearby topic.",
-            "For routine traffic stops or low-detail facts, no case-law result can be the correct answer.",
-          ];
+          : [
+              "Add the specific legal issue you want researched.",
+              "Use the exact fact pattern that matters, not just a nearby topic.",
+              "For routine traffic stops or low-detail facts, no case-law result can be the correct answer.",
+            ];
 
   const canliiSearchUrl = scenario
     ? `https://www.canlii.org/en/#search/text=${encodeURIComponent(scenario.slice(0, 200))}`
@@ -176,33 +191,48 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       setPdfState("idle");
     } catch {
       setPdfState("error");
-      pdfErrorTimer.current = setTimeout(() => setPdfState("idle"), PDF_ERROR_RESET_MS);
+      pdfErrorTimer.current = setTimeout(
+        () => setPdfState("idle"),
+        PDF_ERROR_RESET_MS,
+      );
     }
   }, [pdfState, data, verifications]);
 
   return (
-    <section data-testid="results-section" style={{ maxWidth: 760, margin: "0 auto", padding: "0 24px 80px" }}>
-
+    <section
+      data-testid="results-section"
+      style={{ maxWidth: 760, margin: "0 auto", padding: "0 24px 80px" }}
+    >
       {/* Summary — first section, top rule built in */}
-      <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 10, marginTop: 40 }}>
-        <div style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: 9,
-          letterSpacing: "0.44em",
-          textTransform: "uppercase",
-          color: t.textTertiary,
-          marginBottom: 18,
-        }}>
+      <div
+        style={{
+          borderTop: `1px solid ${t.border}`,
+          paddingTop: 10,
+          marginTop: 40,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 9,
+            letterSpacing: "0.44em",
+            textTransform: "uppercase",
+            color: t.textTertiary,
+            marginBottom: 18,
+          }}
+        >
           Scenario Summary
         </div>
-        <p style={{
-          fontFamily: "'Times New Roman', serif",
-          fontSize: "clamp(17px, 2.5vw, 20px)",
-          color: t.text,
-          lineHeight: 1.65,
-          margin: 0,
-          fontStyle: "italic",
-        }}>
+        <p
+          style={{
+            fontFamily: "'Times New Roman', serif",
+            fontSize: "clamp(17px, 2.5vw, 20px)",
+            color: t.text,
+            lineHeight: 1.65,
+            margin: 0,
+            fontStyle: "italic",
+          }}
+        >
           {data.summary}
         </p>
       </div>
@@ -226,176 +256,217 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
             opacity: pdfState === "loading" ? 0.5 : 1,
             transition: "color 0.15s",
           }}
-          onMouseEnter={(e) => { if (pdfState !== "loading") e.currentTarget.style.color = t.textSecondary; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = pdfState === "error" ? t.accentRed : t.textTertiary; }}
+          onMouseEnter={(e) => {
+            if (pdfState !== "loading")
+              e.currentTarget.style.color = t.textSecondary;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color =
+              pdfState === "error" ? t.accentRed : t.textTertiary;
+          }}
         >
-          {pdfState === "loading" ? "Generating\u2026" : pdfState === "error" ? "Export failed" : "\u2193 Export PDF"}
+          {pdfState === "loading"
+            ? "Generating\u2026"
+            : pdfState === "error"
+              ? "Export failed"
+              : "\u2193 Export PDF"}
         </button>
       </div>
 
       {/* Old format notice */}
       {isOldFormat && (
-        <div style={{
-          marginTop: 32,
-          borderLeft: `3px solid ${t.border}`,
-          paddingLeft: 16,
-          fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: 13,
-          color: t.textSecondary,
-          lineHeight: 1.5,
-        }}>
-          This result uses an older format. Re-run your search to see grouped results by law type.
+        <div
+          style={{
+            marginTop: 32,
+            borderLeft: `3px solid ${t.border}`,
+            paddingLeft: 16,
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 13,
+            color: t.textSecondary,
+            lineHeight: 1.5,
+          }}
+        >
+          This result uses an older format. Re-run your search to see grouped
+          results by law type.
         </div>
       )}
 
       {/* Grouped result sections */}
-      {!isOldFormat && SECTIONS.map(({ key, label }) => {
-        const rawItems = data[key];
-        if (!rawItems?.length) return null;
+      {!isOldFormat &&
+        SECTIONS.map(({ key, label }) => {
+          const rawItems = data[key];
+          if (!rawItems?.length) return null;
 
-        let items = rawItems;
-        let verificationBanner = null;
+          let items = rawItems;
+          let verificationBanner = null;
 
-        if (key === "case_law" && Object.keys(verifications).length > 0) {
-          items = rawItems.filter((item) => {
-            if (item.verificationStatus === "verified") return true;
-            const v = verifications[item.citation];
-            if (!v) return true;
-            if (v.status === "not_found" || v.status === "unparseable" || v.status === "unknown_court" || v.status === "error")
-              return false;
-            return v.status === "verified" || v.status === "unverified";
-          });
-          const verified = rawItems.filter(
-            (item) =>
-              item.verificationStatus === "verified" || verifications[item.citation]?.status === "verified"
-          ).length;
-          const removed = rawItems.length - items.length;
-          if (removed > 0) {
-            verificationBanner = (
-              <div style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
-                fontSize: 11,
-                color: t.textTertiary,
-                marginBottom: 16,
-                letterSpacing: "0.02em",
-              }}>
-                {verified} of {rawItems.length} verified — {removed} unconfirmed removed
-              </div>
-            );
-          } else if (verified === rawItems.length && verified > 0) {
-            verificationBanner = (
-              <div style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
-                fontSize: 11,
-                color: t.accentGreen,
-                marginBottom: 16,
-              }}>
-                {verified} of {verified} citation{verified !== 1 ? "s" : ""} verified on CanLII
-              </div>
-            );
+          if (key === "case_law" && Object.keys(verifications).length > 0) {
+            items = rawItems.filter((item) => {
+              if (item.verificationStatus === "verified") return true;
+              const v = verifications[item.citation];
+              if (!v) return true;
+              if (
+                v.status === "not_found" ||
+                v.status === "unparseable" ||
+                v.status === "unknown_court" ||
+                v.status === "error"
+              )
+                return false;
+              return v.status === "verified" || v.status === "unverified";
+            });
+            const verified = rawItems.filter(
+              (item) =>
+                item.verificationStatus === "verified" ||
+                verifications[item.citation]?.status === "verified",
+            ).length;
+            const removed = rawItems.length - items.length;
+            if (removed > 0) {
+              verificationBanner = (
+                <div
+                  style={{
+                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontSize: 11,
+                    color: t.textTertiary,
+                    marginBottom: 16,
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  {verified} of {rawItems.length} verified — {removed}{" "}
+                  unconfirmed removed
+                </div>
+              );
+            } else if (verified === rawItems.length && verified > 0) {
+              verificationBanner = (
+                <div
+                  style={{
+                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontSize: 11,
+                    color: t.accentGreen,
+                    marginBottom: 16,
+                  }}
+                >
+                  {verified} of {verified} citation{verified !== 1 ? "s" : ""}{" "}
+                  verified on CanLII
+                </div>
+              );
+            }
           }
-        }
 
-        if (!items.length) {
-          if (key === "case_law" && rawItems.length > 0) {
+          if (!items.length) {
+            if (key === "case_law" && rawItems.length > 0) {
+              return (
+                <div key={key}>
+                  <SectionBreak label={label} t={t} />
+                  <div
+                    style={{
+                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontSize: 12,
+                      color: t.textTertiary,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    None of the suggested case law citations were verified on
+                    CanLII.
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          }
+
+          if (key === "civil_law") {
+            const groups = {};
+            items.forEach((item) => {
+              const v = verifications[item.citation];
+              const groupName = v?.jurisdiction
+                ? v.jurisdiction === "Federal"
+                  ? "Federal Statutes"
+                  : `${v.jurisdiction} Statutes`
+                : "Civil Law";
+              if (!groups[groupName]) groups[groupName] = [];
+              groups[groupName].push(item);
+            });
+
             return (
               <div key={key}>
-                <SectionBreak label={label} t={t} />
-                <div style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
-                  fontSize: 12,
-                  color: t.textTertiary,
-                  lineHeight: 1.5,
-                }}>
-                  None of the suggested case law citations were verified on CanLII.
-                </div>
+                {Object.entries(groups).map(([groupName, groupItems], idx) => (
+                  <div key={`${key}-${idx}`}>
+                    <SectionBreak
+                      label={groupName}
+                      count={groupItems.length}
+                      t={t}
+                    />
+                    {idx === 0 && verificationBanner}
+                    {groupItems.map((item, i) => (
+                      <ResultCard
+                        key={i}
+                        item={item}
+                        type={key}
+                        verification={verifications[item.citation]}
+                        addBookmark={addBookmark}
+                        removeBookmark={removeBookmark}
+                        isBookmarked={isBookmarked}
+                      />
+                    ))}
+                  </div>
+                ))}
               </div>
             );
           }
-          return null;
-        }
-
-        if (key === "civil_law") {
-          const groups = {};
-          items.forEach(item => {
-            const v = verifications[item.citation];
-            const groupName = v?.jurisdiction
-              ? (v.jurisdiction === "Federal" ? "Federal Statutes" : `${v.jurisdiction} Statutes`)
-              : "Civil Law";
-            if (!groups[groupName]) groups[groupName] = [];
-            groups[groupName].push(item);
-          });
 
           return (
             <div key={key}>
-              {Object.entries(groups).map(([groupName, groupItems], idx) => (
-                <div key={`${key}-${idx}`}>
-                  <SectionBreak label={groupName} count={groupItems.length} t={t} />
-                  {idx === 0 && verificationBanner}
-                  {groupItems.map((item, i) => (
-                    <ResultCard
-                      key={i}
-                      item={item}
-                      type={key}
-                      verification={verifications[item.citation]}
-                      addBookmark={addBookmark}
-                      removeBookmark={removeBookmark}
-                      isBookmarked={isBookmarked}
-                    />
-                  ))}
-                </div>
+              <SectionBreak label={label} count={items.length} t={t} />
+              {verificationBanner}
+              {items.map((item, i) => (
+                <ResultCard
+                  key={i}
+                  item={item}
+                  type={key}
+                  verification={verifications[item.citation]}
+                  onCardClick={key === "case_law" ? setSelectedCase : undefined}
+                  addBookmark={addBookmark}
+                  removeBookmark={removeBookmark}
+                  isBookmarked={isBookmarked}
+                />
               ))}
             </div>
           );
-        }
-
-        return (
-          <div key={key}>
-            <SectionBreak label={label} count={items.length} t={t} />
-            {verificationBanner}
-            {items.map((item, i) => (
-              <ResultCard
-                key={i}
-                item={item}
-                type={key}
-                verification={verifications[item.citation]}
-                onCardClick={key === "case_law" ? setSelectedCase : undefined}
-                addBookmark={addBookmark}
-                removeBookmark={removeBookmark}
-                isBookmarked={isBookmarked}
-              />
-            ))}
-          </div>
-        );
-      })}
+        })}
 
       {/* Case law empty state */}
       {showCaseLawEmptyState && (
         <div>
           <SectionBreak label="Case Law" t={t} />
-          <div style={{
-            borderLeft: `2px solid ${t.accent}`,
-            paddingLeft: 18,
-          }}>
-            <div style={{
-              fontFamily: "'Times New Roman', serif",
-              fontSize: "clamp(14px, 2vw, 16px)",
-              color: t.textSecondary,
-              lineHeight: 1.6,
-              fontStyle: "italic",
-            }}>
+          <div
+            style={{
+              borderLeft: `2px solid ${t.accent}`,
+              paddingLeft: 18,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "'Times New Roman', serif",
+                fontSize: "clamp(14px, 2vw, 16px)",
+                color: t.textSecondary,
+                lineHeight: 1.6,
+                fontStyle: "italic",
+              }}
+            >
               {caseLawEmptyMessage}
             </div>
 
             {caseLawEmptyGuidance.length > 0 && (
-              <ul style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
-                fontSize: 12,
-                color: t.textTertiary,
-                lineHeight: 1.8,
-                margin: "12px 0 0",
-                paddingLeft: 16,
-              }}>
+              <ul
+                style={{
+                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontSize: 12,
+                  color: t.textTertiary,
+                  lineHeight: 1.8,
+                  margin: "12px 0 0",
+                  paddingLeft: 16,
+                }}
+              >
                 {caseLawEmptyGuidance.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
@@ -416,24 +487,32 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
                   textDecoration: "none",
                   marginTop: 14,
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.textDecoration = "underline";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.textDecoration = "none";
+                }}
               >
                 Search CanLII manually {"\u2197"}
               </a>
             )}
 
             {showRetrievalStats && (
-              <div style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
-                fontSize: 10,
-                color: t.textTertiary,
-                marginTop: 10,
-                letterSpacing: "0.04em",
-              }}>
-                {retrievalStats.searchCalls} database{retrievalStats.searchCalls !== 1 ? "s" : ""} searched
+              <div
+                style={{
+                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontSize: 10,
+                  color: t.textTertiary,
+                  marginTop: 10,
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {retrievalStats.searchCalls} database
+                {retrievalStats.searchCalls !== 1 ? "s" : ""} searched
                 {" · "}
-                {retrievalStats.candidateCount} candidate{retrievalStats.candidateCount !== 1 ? "s" : ""} evaluated
+                {retrievalStats.candidateCount} candidate
+                {retrievalStats.candidateCount !== 1 ? "s" : ""} evaluated
               </div>
             )}
           </div>
@@ -443,14 +522,16 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       {/* Legal Analysis */}
       <div>
         <SectionBreak label="Legal Analysis" t={t} />
-        <div style={{
-          fontFamily: "'Times New Roman', serif",
-          fontSize: "clamp(15px, 2.3vw, 17px)",
-          color: t.text,
-          lineHeight: 1.85,
-          borderLeft: `2px solid ${t.accent}`,
-          paddingLeft: 20,
-        }}>
+        <div
+          style={{
+            fontFamily: "'Times New Roman', serif",
+            fontSize: "clamp(15px, 2.3vw, 17px)",
+            color: t.text,
+            lineHeight: 1.85,
+            borderLeft: `2px solid ${t.accent}`,
+            paddingLeft: 20,
+          }}
+        >
           {analysisText}
         </div>
       </div>
@@ -468,25 +549,38 @@ export default function Results({ data, scenario, addBookmark, removeBookmark, i
       )}
 
       {/* Disclaimer */}
-      <div style={{ marginTop: 56, borderTop: `1px solid ${t.borderLight}`, paddingTop: 16 }}>
-        <p style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: 11,
-          color: t.textSecondary,
-          lineHeight: 1.65,
-          margin: 0,
-          letterSpacing: "0.02em",
-        }}>
-          CaseDive is an educational research tool and does not constitute legal advice.
-          Case citations should be verified through CanLII or official legal databases.
-          Always consult a qualified legal professional.
+      <div
+        style={{
+          marginTop: 56,
+          borderTop: `1px solid ${t.borderLight}`,
+          paddingTop: 16,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 11,
+            color: t.textSecondary,
+            lineHeight: 1.65,
+            margin: 0,
+            letterSpacing: "0.02em",
+          }}
+        >
+          CaseDive is an educational research tool and does not constitute legal
+          advice. Case citations should be verified through CanLII or official
+          legal databases. Always consult a qualified legal professional.
         </p>
       </div>
 
       {selectedCase && (
         <CaseSummaryModal
           item={selectedCase}
-          canliiUrl={selectedCase.url_canlii || verifications[selectedCase.citation]?.url || verifications[selectedCase.citation]?.searchUrl || null}
+          canliiUrl={
+            selectedCase.url_canlii ||
+            verifications[selectedCase.citation]?.url ||
+            verifications[selectedCase.citation]?.searchUrl ||
+            null
+          }
           onClose={() => setSelectedCase(null)}
         />
       )}

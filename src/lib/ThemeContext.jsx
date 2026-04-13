@@ -9,7 +9,7 @@ export function ThemeProvider({ children }) {
 
   const value = useMemo(
     () => ({ theme, isDark, toggleTheme: () => setIsDark((d) => !d) }),
-    [theme, isDark]
+    [theme, isDark],
   );
 
   return (
@@ -25,6 +25,7 @@ export function useTheme() {
 
 export function useThemeActions() {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useThemeActions must be used within ThemeProvider");
+  if (!ctx)
+    throw new Error("useThemeActions must be used within ThemeProvider");
   return { isDark: ctx.isDark, toggleTheme: ctx.toggleTheme };
 }

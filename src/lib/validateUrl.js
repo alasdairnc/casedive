@@ -7,7 +7,7 @@ export function isValidUrl(url) {
     return (
       parsed.protocol === "https:" &&
       TRUSTED_DOMAINS.some(
-        (d) => parsed.hostname === d || parsed.hostname.endsWith("." + d)
+        (d) => parsed.hostname === d || parsed.hostname.endsWith("." + d),
       )
     );
   } catch {

@@ -10,7 +10,7 @@ function loadFromStorage() {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     const now = Date.now();
-    return parsed.filter(e => now - e.bookmarkedAt < TTL_MS);
+    return parsed.filter((e) => now - e.bookmarkedAt < TTL_MS);
   } catch {
     return [];
   }
@@ -31,9 +31,9 @@ export function useBookmarks() {
     const id = item.citation || item.section || "";
     if (!id) return;
 
-    setBookmarks(prev => {
+    setBookmarks((prev) => {
       // Remove existing entry with same id (re-add to front with fresh timestamp)
-      const filtered = prev.filter(b => b.id !== id);
+      const filtered = prev.filter((b) => b.id !== id);
       const entry = {
         id,
         citation: id,
@@ -50,21 +50,34 @@ export function useBookmarks() {
   }, []);
 
   const removeBookmark = useCallback((id) => {
-    setBookmarks(prev => {
-      const updated = prev.filter(b => b.id !== id);
+    setBookmarks((prev) => {
+      const updated = prev.filter((b) => b.id !== id);
       saveToStorage(updated);
       return updated;
     });
   }, []);
 
-  const isBookmarked = useCallback((id) => {
-    return bookmarks.some(b => b.id === id);
-  }, [bookmarks]);
+  const isBookmarked = useCallback(
+    (id) => {
+      return bookmarks.some((b) => b.id === id);
+    },
+    [bookmarks],
+  );
 
   const clearBookmarks = useCallback(() => {
     setBookmarks([]);
-    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
   }, []);
 
-  return { bookmarks, addBookmark, removeBookmark, isBookmarked, clearBookmarks };
+  return {
+    bookmarks,
+    addBookmark,
+    removeBookmark,
+    isBookmarked,
+    clearBookmarks,
+  };
 }

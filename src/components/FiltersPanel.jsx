@@ -1,5 +1,11 @@
 import { useTheme } from "../lib/ThemeContext.jsx";
-import { jurisdictions, courtLevels, dateRanges, lawTypeOptions, defaultLawTypes } from "../lib/constants.js";
+import {
+  jurisdictions,
+  courtLevels,
+  dateRanges,
+  lawTypeOptions,
+  defaultLawTypes,
+} from "../lib/constants.js";
 
 // filtersOpen / setFiltersOpen are accepted but unused — filters are always visible inline
 export default function FiltersPanel({ filters, setFilters }) {
@@ -28,26 +34,32 @@ export default function FiltersPanel({ filters, setFilters }) {
     filters.jurisdiction !== "all" ||
     filters.courtLevel !== "all" ||
     filters.dateRange !== "all" ||
-    lawTypeOptions.some(o => !filters.lawTypes?.[o.key]);
+    lawTypeOptions.some((o) => !filters.lawTypes?.[o.key]);
 
   return (
-    <div style={{
-      maxWidth: 760,
-      margin: "0 auto",
-      padding: "12px 24px 0",
-      display: "flex",
-      alignItems: "center",
-      flexWrap: "wrap",
-      gap: "8px 18px",
-    }}>
+    <div
+      style={{
+        maxWidth: 760,
+        margin: "0 auto",
+        padding: "12px 24px 0",
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap",
+        gap: "8px 18px",
+      }}
+    >
       <select
         value={filters.jurisdiction}
-        onChange={(e) => setFilters({ ...filters, jurisdiction: e.target.value })}
+        onChange={(e) =>
+          setFilters({ ...filters, jurisdiction: e.target.value })
+        }
         style={selectStyle}
         aria-label="Jurisdiction"
       >
-        {jurisdictions.map(o => (
-          <option key={o.value} value={o.value}>{o.label}</option>
+        {jurisdictions.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
         ))}
       </select>
 
@@ -57,8 +69,10 @@ export default function FiltersPanel({ filters, setFilters }) {
         style={selectStyle}
         aria-label="Court level"
       >
-        {courtLevels.map(o => (
-          <option key={o.value} value={o.value}>{o.label}</option>
+        {courtLevels.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
         ))}
       </select>
 
@@ -68,24 +82,30 @@ export default function FiltersPanel({ filters, setFilters }) {
         style={selectStyle}
         aria-label="Date range"
       >
-        {dateRanges.map(o => (
-          <option key={o.value} value={o.value}>{o.label}</option>
+        {dateRanges.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
         ))}
       </select>
 
       {/* Visual divider */}
-      <div style={{ width: 1, height: 12, background: t.border, flexShrink: 0 }} />
+      <div
+        style={{ width: 1, height: 12, background: t.border, flexShrink: 0 }}
+      />
 
       {/* Law type toggles — strikethrough when off */}
-      {lawTypeOptions.map(o => {
+      {lawTypeOptions.map((o) => {
         const active = !!filters.lawTypes?.[o.key];
         return (
           <button
             key={o.key}
-            onClick={() => setFilters({
-              ...filters,
-              lawTypes: { ...filters.lawTypes, [o.key]: !active },
-            })}
+            onClick={() =>
+              setFilters({
+                ...filters,
+                lawTypes: { ...filters.lawTypes, [o.key]: !active },
+              })
+            }
             style={{
               background: "none",
               border: "none",
@@ -106,12 +126,14 @@ export default function FiltersPanel({ filters, setFilters }) {
 
       {isNonDefault && (
         <button
-          onClick={() => setFilters({
-            jurisdiction: "all",
-            courtLevel: "all",
-            dateRange: "all",
-            lawTypes: { ...defaultLawTypes },
-          })}
+          onClick={() =>
+            setFilters({
+              jurisdiction: "all",
+              courtLevel: "all",
+              dateRange: "all",
+              lawTypes: { ...defaultLawTypes },
+            })
+          }
           style={{
             background: "none",
             border: "none",

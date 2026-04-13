@@ -13,58 +13,87 @@ import { useBookmarks } from "./hooks/useBookmarks.js";
 
 const SearchHistory = lazy(() => import("./components/SearchHistory.jsx"));
 const BookmarksPanel = lazy(() => import("./components/BookmarksPanel.jsx"));
-const CriminalCodeExplorer = lazy(() => import("./components/CriminalCodeExplorer.jsx"));
+const CriminalCodeExplorer = lazy(
+  () => import("./components/CriminalCodeExplorer.jsx"),
+);
 
 const EXAMPLE_SCENARIOS = [
-  { label: "Impaired driving", text: "A driver was pulled over at a RIDE checkpoint, failed the roadside breath test, and refused to provide a breathalyzer sample. Police arrested the driver and obtained a blood sample." },
-  { label: "Break and enter", text: "A person was found inside an occupied house at 2 a.m. with stolen electronics. The homeowner was home during the break-in and called 911." },
-  { label: "Drug trafficking", text: "An individual was stopped by police and found with 50 grams of cocaine packaged in individual baggies alongside a scale and $3,000 cash. Police conducted a warrantless search of the vehicle." },
-  { label: "Assault (GBH)", text: "Two people got into a fight outside a bar. One person punched the other repeatedly, causing a broken nose and cheekbone fracture that required surgery." },
-  { label: "Youth offender", text: "A 17-year-old was apprehended shoplifting $800 in clothing from a retail store. It is a first offence with no prior record." },
-  { label: "Fraud over $5,000", text: "An accused allegedly defrauded an elderly victim of $90,000 through a fake investment scheme, collecting payments over 18 months before the victim discovered the fraud." },
+  {
+    label: "Impaired driving",
+    text: "A driver was pulled over at a RIDE checkpoint, failed the roadside breath test, and refused to provide a breathalyzer sample. Police arrested the driver and obtained a blood sample.",
+  },
+  {
+    label: "Break and enter",
+    text: "A person was found inside an occupied house at 2 a.m. with stolen electronics. The homeowner was home during the break-in and called 911.",
+  },
+  {
+    label: "Drug trafficking",
+    text: "An individual was stopped by police and found with 50 grams of cocaine packaged in individual baggies alongside a scale and $3,000 cash. Police conducted a warrantless search of the vehicle.",
+  },
+  {
+    label: "Assault (GBH)",
+    text: "Two people got into a fight outside a bar. One person punched the other repeatedly, causing a broken nose and cheekbone fracture that required surgery.",
+  },
+  {
+    label: "Youth offender",
+    text: "A 17-year-old was apprehended shoplifting $800 in clothing from a retail store. It is a first offence with no prior record.",
+  },
+  {
+    label: "Fraud over $5,000",
+    text: "An accused allegedly defrauded an elderly victim of $90,000 through a fake investment scheme, collecting payments over 18 months before the victim discovered the fraud.",
+  },
 ];
 
 function EmptyState({ setQuery, t }) {
   return (
-    <div className="cd-fade-in" style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 0" }}>
+    <div
+      className="cd-fade-in"
+      style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 0" }}
+    >
       {/* Thin rule above headline */}
       <div style={{ borderTop: `1px solid ${t.border}`, marginBottom: 24 }} />
 
-      <h2 style={{
-        fontFamily: "'Times New Roman', Times, serif",
-        fontSize: "clamp(26px, 4.5vw, 38px)",
-        fontWeight: 400,
-        fontStyle: "italic",
-        color: t.text,
-        margin: "0 0 14px 0",
-        lineHeight: 1.2,
-        letterSpacing: "-0.3px",
-      }}>
+      <h2
+        style={{
+          fontFamily: "'Times New Roman', Times, serif",
+          fontSize: "clamp(26px, 4.5vw, 38px)",
+          fontWeight: 400,
+          fontStyle: "italic",
+          color: t.text,
+          margin: "0 0 14px 0",
+          lineHeight: 1.2,
+          letterSpacing: "-0.3px",
+        }}
+      >
         Describe your legal scenario.
       </h2>
 
-      <p style={{
-        fontFamily: "'Helvetica Neue', sans-serif",
-        fontSize: "clamp(12px, 1.8vw, 13px)",
-        color: t.textSecondary,
-        lineHeight: 1.75,
-        margin: "0 0 28px 0",
-        maxWidth: 480,
-      }}>
-        Criminal Code sections, verified case law, Charter rights, and civil law statutes —
-        drawn from CanLII and the Justice Laws database.
+      <p
+        style={{
+          fontFamily: "'Helvetica Neue', sans-serif",
+          fontSize: "clamp(12px, 1.8vw, 13px)",
+          color: t.textSecondary,
+          lineHeight: 1.75,
+          margin: "0 0 28px 0",
+          maxWidth: 480,
+        }}
+      >
+        Criminal Code sections, verified case law, Charter rights, and civil law
+        statutes — drawn from CanLII and the Justice Laws database.
       </p>
 
       {/* Example chips */}
       <div>
-        <div style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: 9,
-          letterSpacing: "0.38em",
-          textTransform: "uppercase",
-          color: t.textTertiary,
-          marginBottom: 10,
-        }}>
+        <div
+          style={{
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 9,
+            letterSpacing: "0.38em",
+            textTransform: "uppercase",
+            color: t.textTertiary,
+            marginBottom: 10,
+          }}
+        >
           Try an example
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -107,7 +136,9 @@ function AdUnit({ slotId, style }) {
   useEffect(() => {
     if (!ref.current || ref.current.dataset.adLoaded) return;
     ref.current.dataset.adLoaded = "true";
-    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch {}
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch {}
   }, []);
   return (
     <ins
@@ -125,7 +156,7 @@ function AdUnit({ slotId, style }) {
 function AppInner() {
   const t = useTheme();
   const [pathname, setPathname] = useState(() =>
-    typeof window !== "undefined" ? window.location.pathname : "/"
+    typeof window !== "undefined" ? window.location.pathname : "/",
   );
 
   useEffect(() => {
@@ -149,8 +180,15 @@ function AppInner() {
   });
   const [submittedQuery, setSubmittedQuery] = useState("");
   const resultsRef = useRef(null);
-  const { history, addToHistory, clearHistory, rerunQuery } = useSearchHistory();
-  const { bookmarks, addBookmark, removeBookmark, isBookmarked, clearBookmarks } = useBookmarks();
+  const { history, addToHistory, clearHistory, rerunQuery } =
+    useSearchHistory();
+  const {
+    bookmarks,
+    addBookmark,
+    removeBookmark,
+    isBookmarked,
+    clearBookmarks,
+  } = useBookmarks();
 
   if (pathname === "/internal/retrieval-health") {
     return (
@@ -164,8 +202,10 @@ function AppInner() {
   }
 
   const analyzeScenario = async (overrideQuery, overrideFilters) => {
-    const activeQuery = typeof overrideQuery === "string" ? overrideQuery : query;
-    const activeFilters = (overrideFilters && !overrideFilters.target) ? overrideFilters : filters;
+    const activeQuery =
+      typeof overrideQuery === "string" ? overrideQuery : query;
+    const activeFilters =
+      overrideFilters && !overrideFilters.target ? overrideFilters : filters;
     if (!activeQuery.trim()) return;
     setLoading(true);
     setResult(null);
@@ -175,7 +215,10 @@ function AppInner() {
       const response = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ scenario: activeQuery.trim(), filters: activeFilters }),
+        body: JSON.stringify({
+          scenario: activeQuery.trim(),
+          filters: activeFilters,
+        }),
       });
 
       if (!response.ok) {
@@ -183,7 +226,12 @@ function AppInner() {
         if (response.status === 429) {
           const retryAfter = response.headers.get("Retry-After");
           const mins = retryAfter ? Math.ceil(Number(retryAfter) / 60) : null;
-          throw new Error(errData.error || (mins ? `Rate limit reached. Try again in ${mins} minute${mins !== 1 ? "s" : ""}.` : "Rate limit exceeded."));
+          throw new Error(
+            errData.error ||
+              (mins
+                ? `Rate limit reached. Try again in ${mins} minute${mins !== 1 ? "s" : ""}.`
+                : "Rate limit exceeded."),
+          );
         }
         throw new Error(errData.error || `Request failed (${response.status})`);
       }
@@ -196,14 +244,18 @@ function AppInner() {
       addToHistory(activeQuery.trim(), activeFilters, data);
 
       setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }, 100);
     } catch (err) {
-      const isInternalParse = err.message?.includes("parse") && !err.message.includes("Rate");
+      const isInternalParse =
+        err.message?.includes("parse") && !err.message.includes("Rate");
       setError(
         isInternalParse
           ? "The AI response couldn't be parsed. Try rephrasing your scenario with more detail."
-          : (err.message || "Something went wrong. Please try again.")
+          : err.message || "Something went wrong. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -213,12 +265,14 @@ function AppInner() {
   const isEmpty = !result && !loading && !error;
 
   return (
-    <div style={{
-      background: t.bg,
-      minHeight: "100vh",
-      color: t.text,
-      transition: "background 0.3s, color 0.3s",
-    }}>
+    <div
+      style={{
+        background: t.bg,
+        minHeight: "100vh",
+        color: t.text,
+        transition: "background 0.3s, color 0.3s",
+      }}
+    >
       <style>{`
         @media (max-width: 1200px) {
           .ad-side-left, .ad-side-right { display: none !important; }
@@ -263,21 +317,31 @@ function AppInner() {
 
       {/* Disclaimer */}
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "12px 24px 0" }}>
-        <p style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: 10,
-          lineHeight: 1.5,
-          color: t.textSecondary,
-          letterSpacing: "0.02em",
-          margin: 0,
-        }}>
-          Educational tool only — not legal advice. Always consult a qualified lawyer. Citations verified against CanLII where possible.
+        <p
+          style={{
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 10,
+            lineHeight: 1.5,
+            color: t.textSecondary,
+            letterSpacing: "0.02em",
+            margin: 0,
+          }}
+        >
+          Educational tool only — not legal advice. Always consult a qualified
+          lawyer. Citations verified against CanLII where possible.
         </p>
       </div>
 
       {/* History button */}
       {history.length > 0 && (
-        <div style={{ maxWidth: 760, margin: "0 auto", padding: "10px 24px 0", textAlign: "right" }}>
+        <div
+          style={{
+            maxWidth: 760,
+            margin: "0 auto",
+            padding: "10px 24px 0",
+            textAlign: "right",
+          }}
+        >
           <button
             onClick={() => setHistoryOpen(true)}
             style={{
@@ -292,8 +356,12 @@ function AppInner() {
               padding: 0,
               transition: "color 0.15s",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = t.textSecondary; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = t.textTertiary; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = t.textSecondary;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = t.textTertiary;
+            }}
           >
             History ({Math.min(history.length, 10)})
           </button>
@@ -304,15 +372,17 @@ function AppInner() {
       {isEmpty && <EmptyState setQuery={setQuery} t={t} />}
 
       {/* 3-column layout */}
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        gap: 24,
-        maxWidth: "100%",
-        margin: "0 auto",
-        padding: "24px 12px",
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          gap: 24,
+          maxWidth: "100%",
+          margin: "0 auto",
+          padding: "24px 12px",
+        }}
+      >
         {/* Left side ad */}
         <div className="ad-side-left" style={{ flex: "0 0 160px" }}>
           <div style={{ position: "sticky", top: 24 }}>
@@ -328,7 +398,9 @@ function AppInner() {
 
           <div ref={resultsRef}>
             {loading && <StagedLoading />}
-            {error && <ErrorMessage message={error} onRetry={analyzeScenario} />}
+            {error && (
+              <ErrorMessage message={error} onRetry={analyzeScenario} />
+            )}
           </div>
 
           {result && (
@@ -340,8 +412,14 @@ function AppInner() {
                 removeBookmark={removeBookmark}
                 isBookmarked={isBookmarked}
               />
-              <div className="ad-bottom" style={{ margin: "32px 24px 0", textAlign: "center" }}>
-                <AdUnit slotId="1225553652" style={{ maxWidth: "100%", height: "auto" }} />
+              <div
+                className="ad-bottom"
+                style={{ margin: "32px 24px 0", textAlign: "center" }}
+              >
+                <AdUnit
+                  slotId="1225553652"
+                  style={{ maxWidth: "100%", height: "auto" }}
+                />
               </div>
             </div>
           )}
@@ -392,38 +470,61 @@ function AppInner() {
       </Suspense>
 
       <footer style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px" }}>
-        <div style={{ borderTop: `1px solid ${t.borderLight}`, paddingTop: 20 }}>
-          <p style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 10,
-            color: t.textTertiary,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            margin: "0 0 10px 0",
-          }}>
+        <div
+          style={{ borderTop: `1px solid ${t.borderLight}`, paddingTop: 20 }}
+        >
+          <p
+            style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 10,
+              color: t.textTertiary,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              margin: "0 0 10px 0",
+            }}
+          >
             CaseDive &middot; Canadian Legal Research
           </p>
-          <p style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 10,
-            color: t.textSecondary,
-            lineHeight: 1.6,
-            margin: "0 0 14px 0",
-          }}>
-            Educational tool only. Not legal advice. Always consult a qualified lawyer.
-            Verify all citations with CanLII.
+          <p
+            style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 10,
+              color: t.textSecondary,
+              lineHeight: 1.6,
+              margin: "0 0 14px 0",
+            }}
+          >
+            Educational tool only. Not legal advice. Always consult a qualified
+            lawyer. Verify all citations with CanLII.
           </p>
-          <p style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 10,
-            color: t.textTertiary,
-            margin: 0,
-          }}>
-            <a href="/about.html" style={{ color: t.textTertiary, textDecoration: "none" }}>About</a>
+          <p
+            style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 10,
+              color: t.textTertiary,
+              margin: 0,
+            }}
+          >
+            <a
+              href="/about.html"
+              style={{ color: t.textTertiary, textDecoration: "none" }}
+            >
+              About
+            </a>
             {" \u00B7 "}
-            <a href="/privacy.html" style={{ color: t.textTertiary, textDecoration: "none" }}>Privacy</a>
+            <a
+              href="/privacy.html"
+              style={{ color: t.textTertiary, textDecoration: "none" }}
+            >
+              Privacy
+            </a>
             {" \u00B7 "}
-            <a href="/terms.html" style={{ color: t.textTertiary, textDecoration: "none" }}>Terms</a>
+            <a
+              href="/terms.html"
+              style={{ color: t.textTertiary, textDecoration: "none" }}
+            >
+              Terms
+            </a>
           </p>
         </div>
       </footer>

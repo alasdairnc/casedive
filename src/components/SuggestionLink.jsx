@@ -26,7 +26,7 @@ export default function SuggestionLink({ suggestion }) {
   const [url, setUrl] = useState(
     suggestion.type === "canlii"
       ? `https://www.canlii.org/en/#search/text=${encodeURIComponent(suggestion.term)}`
-      : null
+      : null,
   );
 
   useEffect(() => {

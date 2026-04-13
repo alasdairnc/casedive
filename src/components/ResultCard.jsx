@@ -13,11 +13,15 @@ export function sanitizeMatchedTextForDisplay(text) {
     .replace(/\|\s*token_overlap:\d+[^|]*/gi, "")
     .replace(/\|\s*semantic_match:[^|]*/gi, "")
     .replace(/\|\s*issue:[a-z_]+[^|]*/gi, "")
-    .replace(/\|\s*(recent_case|modern_case|landmark|local_fallback|minimal_detail_scenario)[^|]*/gi, "")
+    .replace(
+      /\|\s*(recent_case|modern_case|landmark|local_fallback|minimal_detail_scenario)[^|]*/gi,
+      "",
+    )
     .replace(/\|\s*(court_level:[^|,\s]+|jurisdiction:[^|,\s]+)[^|]*/gi, "")
     .replace(/\|\s*(overlap:\d+|issue_hits:\d+)[^|]*/gi, "");
 
-  const debugTokenPattern = /(token_overlap:|semantic_match:|\bissue:|court_level:|jurisdiction:|overlap:\d+|issue_hits:\d+|local_fallback|minimal_detail_scenario)/i;
+  const debugTokenPattern =
+    /(token_overlap:|semantic_match:|\bissue:|court_level:|jurisdiction:|overlap:\d+|issue_hits:\d+|local_fallback|minimal_detail_scenario)/i;
 
   return scrubbed
     .split("|")
@@ -30,12 +34,18 @@ export function sanitizeMatchedTextForDisplay(text) {
 function VerificationBadge({ verification, item, t, type }) {
   if (!verification) return null;
   const { status, url, searchUrl } = verification;
-  const itemUrl = type === "case_law" && isValidUrl(item?.url_canlii) ? item.url_canlii : null;
+  const itemUrl =
+    type === "case_law" && isValidUrl(item?.url_canlii)
+      ? item.url_canlii
+      : null;
 
   if (status === "verified") {
     const safeUrl = isValidUrl(url) ? url : null;
     if (!safeUrl) return null;
-    const label = type === "criminal_code" ? "Confirmed — Justice Laws" : "Verified on CanLII";
+    const label =
+      type === "criminal_code"
+        ? "Confirmed — Justice Laws"
+        : "Verified on CanLII";
     return (
       <a
         href={safeUrl}
@@ -52,8 +62,12 @@ function VerificationBadge({ verification, item, t, type }) {
           textDecoration: "none",
           marginTop: 10,
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.textDecoration = "underline";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.textDecoration = "none";
+        }}
       >
         {"\u2713"}&thinsp;{label}&thinsp;{"\u2197"}
       </a>
@@ -63,9 +77,10 @@ function VerificationBadge({ verification, item, t, type }) {
   if (status === "not_found") {
     const safeSearchUrl = itemUrl || (isValidUrl(searchUrl) ? searchUrl : null);
     if (!safeSearchUrl) return null;
-    const label = type === "criminal_code"
-      ? "Section not confirmed — check Justice Laws"
-      : "Not found — search CanLII";
+    const label =
+      type === "criminal_code"
+        ? "Section not confirmed — check Justice Laws"
+        : "Not found — search CanLII";
     return (
       <a
         href={safeSearchUrl}
@@ -82,8 +97,12 @@ function VerificationBadge({ verification, item, t, type }) {
           textDecoration: "none",
           marginTop: 10,
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.textDecoration = "underline";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.textDecoration = "none";
+        }}
       >
         {"\u26A0"}&thinsp;{label}&thinsp;{"\u2197"}
       </a>
@@ -91,7 +110,10 @@ function VerificationBadge({ verification, item, t, type }) {
   }
 
   if (status === "unverified") {
-    const safeUrl = itemUrl || (isValidUrl(searchUrl) && searchUrl) || (isValidUrl(url) && url);
+    const safeUrl =
+      itemUrl ||
+      (isValidUrl(searchUrl) && searchUrl) ||
+      (isValidUrl(url) && url);
     if (!safeUrl) return null;
     return (
       <a
@@ -109,15 +131,20 @@ function VerificationBadge({ verification, item, t, type }) {
           textDecoration: "none",
           marginTop: 10,
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.textDecoration = "underline";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.textDecoration = "none";
+        }}
       >
         {"\u2192"}&thinsp;Pre-2000 — verify on CanLII&thinsp;{"\u2197"}
       </a>
     );
   }
 
-  const href = itemUrl || (isValidUrl(url) && url) || (isValidUrl(searchUrl) && searchUrl);
+  const href =
+    itemUrl || (isValidUrl(url) && url) || (isValidUrl(searchUrl) && searchUrl);
   if (!href) return null;
   return (
     <a
@@ -135,8 +162,12 @@ function VerificationBadge({ verification, item, t, type }) {
         textDecoration: "none",
         marginTop: 10,
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none"; }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.textDecoration = "underline";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.textDecoration = "none";
+      }}
     >
       {"\u2192"}&thinsp;Search CanLII&thinsp;{"\u2197"}
     </a>
@@ -146,7 +177,9 @@ function VerificationBadge({ verification, item, t, type }) {
 function BookmarkIcon({ filled, color }) {
   return (
     <svg
-      width="14" height="14" viewBox="0 0 16 16"
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
       fill={filled ? color : "none"}
       stroke={color}
       strokeWidth="1.5"
@@ -157,9 +190,19 @@ function BookmarkIcon({ filled, color }) {
   );
 }
 
-export default function ResultCard({ item, type, verification, onCardClick, addBookmark, removeBookmark, isBookmarked }) {
+export default function ResultCard({
+  item,
+  type,
+  verification,
+  onCardClick,
+  addBookmark,
+  removeBookmark,
+  isBookmarked,
+}) {
   const t = useTheme();
-  const matchedText = sanitizeMatchedTextForDisplay(item.matched_section || item.matched_content);
+  const matchedText = sanitizeMatchedTextForDisplay(
+    item.matched_section || item.matched_content,
+  );
   const showCanLII = type === "case_law" || type === "criminal_code";
   const clickable = type === "case_law" && typeof onCardClick === "function";
   const citationId = item.citation || item.section || "";
@@ -183,66 +226,94 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
         padding: "20px 0",
         cursor: clickable ? "pointer" : "default",
       }}
-      onMouseEnter={clickable ? (e) => { e.currentTarget.style.opacity = "0.72"; } : undefined}
-      onMouseLeave={clickable ? (e) => { e.currentTarget.style.opacity = "1"; } : undefined}
+      onMouseEnter={
+        clickable
+          ? (e) => {
+              e.currentTarget.style.opacity = "0.72";
+            }
+          : undefined
+      }
+      onMouseLeave={
+        clickable
+          ? (e) => {
+              e.currentTarget.style.opacity = "1";
+            }
+          : undefined
+      }
     >
       {/* Citation row */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        gap: 12,
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: 12,
+        }}
+      >
         <div style={{ flex: 1, minWidth: 0 }}>
           {/* Title / Citation heading */}
-          <div style={{
-            fontFamily: "'Times New Roman', serif",
-            fontSize: "clamp(15px, 2.2vw, 17px)",
-            color: t.text,
-            fontWeight: 700,
-            lineHeight: 1.3,
-          }}>
+          <div
+            style={{
+              fontFamily: "'Times New Roman', serif",
+              fontSize: "clamp(15px, 2.2vw, 17px)",
+              color: t.text,
+              fontWeight: 700,
+              lineHeight: 1.3,
+            }}
+          >
             {item.title || item.citation}
           </div>
 
           {/* Neutral citation below title when both present */}
           {item.title && item.title !== item.citation && (
-            <div style={{
-              fontFamily: "'Courier New', monospace",
-              fontSize: 11,
-              color: t.textTertiary,
-              marginTop: 2,
-            }}>
+            <div
+              style={{
+                fontFamily: "'Courier New', monospace",
+                fontSize: 11,
+                color: t.textTertiary,
+                marginTop: 2,
+              }}
+            >
               {item.citation}
             </div>
           )}
 
           {/* Court / year / jurisdiction tag — same line below citation */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            marginTop: 4,
-            flexWrap: "wrap",
-          }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginTop: 4,
+              flexWrap: "wrap",
+            }}
+          >
             {type === "case_law" && item.court && (
-              <div style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
-                fontSize: 11,
-                color: t.textTertiary,
-                letterSpacing: "0.04em",
-              }}>
-                {item.court}{item.year ? ` \u00B7 ${item.year}` : ""}
+              <div
+                style={{
+                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontSize: 11,
+                  color: t.textTertiary,
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {item.court}
+                {item.year ? ` \u00B7 ${item.year}` : ""}
               </div>
             )}
             {type === "civil_law" && verification?.jurisdiction && (
-              <div style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
-                fontSize: 10,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: verification.jurisdiction === "Federal" ? t.accentGreen : t.accent,
-              }}>
+              <div
+                style={{
+                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontSize: 10,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color:
+                    verification.jurisdiction === "Federal"
+                      ? t.accentGreen
+                      : t.accent,
+                }}
+              >
                 {verification.jurisdiction}
               </div>
             )}
@@ -254,7 +325,9 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
           <button
             data-testid={bookmarked ? "bookmark-remove" : "bookmark-add"}
             onClick={handleBookmarkClick}
-            aria-label={bookmarked ? "Remove bookmark" : "Bookmark this citation"}
+            aria-label={
+              bookmarked ? "Remove bookmark" : "Bookmark this citation"
+            }
             style={{
               background: "none",
               border: "none",
@@ -264,23 +337,34 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
               transition: "color 0.15s",
               flexShrink: 0,
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = t.accentOlive; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = bookmarked ? t.accentOlive : t.textTertiary; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = t.accentOlive;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = bookmarked
+                ? t.accentOlive
+                : t.textTertiary;
+            }}
           >
-            <BookmarkIcon filled={bookmarked} color={bookmarked ? t.accentOlive : "currentColor"} />
+            <BookmarkIcon
+              filled={bookmarked}
+              color={bookmarked ? t.accentOlive : "currentColor"}
+            />
           </button>
         )}
       </div>
 
       {/* Summary */}
       {item.summary && (
-        <div style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
-          fontSize: 13,
-          color: t.textSecondary,
-          lineHeight: 1.65,
-          marginTop: 10,
-        }}>
+        <div
+          style={{
+            fontFamily: "'Helvetica Neue', sans-serif",
+            fontSize: 13,
+            color: t.textSecondary,
+            lineHeight: 1.65,
+            marginTop: 10,
+          }}
+        >
           {item.summary}
         </div>
       )}
@@ -288,50 +372,71 @@ export default function ResultCard({ item, type, verification, onCardClick, addB
       {/* Why It Matched */}
       {matchedText && (
         <div style={{ marginTop: 12 }}>
-          <div style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 9,
-            letterSpacing: "0.32em",
-            textTransform: "uppercase",
-            color: t.textTertiary,
-            marginBottom: 5,
-          }}>
+          <div
+            style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 9,
+              letterSpacing: "0.32em",
+              textTransform: "uppercase",
+              color: t.textTertiary,
+              marginBottom: 5,
+            }}
+          >
             Why it matched
           </div>
-          <div style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
-            fontSize: 12,
-            color: t.textSecondary,
-            lineHeight: 1.65,
-            borderLeft: `1px solid ${t.border}`,
-            paddingLeft: 12,
-          }}>
+          <div
+            style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 12,
+              color: t.textSecondary,
+              lineHeight: 1.65,
+              borderLeft: `1px solid ${t.border}`,
+              paddingLeft: 12,
+            }}
+          >
             {matchedText}
           </div>
         </div>
       )}
 
       {/* Verified Criminal Code enrichment */}
-      {type === "criminal_code" && verification?.status === "verified" && verification.title && (
-        <div style={{
-          marginTop: 10,
-          fontFamily: "'Courier New', monospace",
-          fontSize: 11,
-          color: t.textTertiary,
-          lineHeight: 1.5,
-        }}>
-          <span style={{ color: t.text }}>{verification.title}</span>
-          {verification.severity && verification.severity !== "N/A" && (
-            <span style={{ color: t.textTertiary }}> &middot; {verification.severity}</span>
-          )}
-          {verification.maxPenalty && verification.maxPenalty !== "N/A" && (
-            <span style={{ color: t.textTertiary }}> &middot; Max: {verification.maxPenalty}</span>
-          )}
-        </div>
-      )}
+      {type === "criminal_code" &&
+        verification?.status === "verified" &&
+        verification.title && (
+          <div
+            style={{
+              marginTop: 10,
+              fontFamily: "'Courier New', monospace",
+              fontSize: 11,
+              color: t.textTertiary,
+              lineHeight: 1.5,
+            }}
+          >
+            <span style={{ color: t.text }}>{verification.title}</span>
+            {verification.severity && verification.severity !== "N/A" && (
+              <span style={{ color: t.textTertiary }}>
+                {" "}
+                &middot; {verification.severity}
+              </span>
+            )}
+            {verification.maxPenalty && verification.maxPenalty !== "N/A" && (
+              <span style={{ color: t.textTertiary }}>
+                {" "}
+                &middot; Max: {verification.maxPenalty}
+              </span>
+            )}
+          </div>
+        )}
 
       {/* Verification badge */}
-      {showCanLII && <VerificationBadge verification={verification} item={item} t={t} type={type} />}
+      {showCanLII && (
+        <VerificationBadge
+          verification={verification}
+          item={item}
+          t={t}
+          type={type}
+        />
+      )}
     </div>
   );
 }
