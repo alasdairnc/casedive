@@ -48,38 +48,38 @@ jobs:
       - name: Write Claude prompt
         run: |
           cat > /tmp/security-prompt.txt << 'ENDOFPROMPT'
-You are running a nightly security audit and fix pass on the CaseDive codebase.
+          You are running a nightly security audit and fix pass on the CaseDive codebase.
 
-## Your job (two phases)
+          ## Your job (two phases)
 
-### Phase 1 - Audit
-Score every non-underscore file in api/ against this rubric (100 points total):
-- Rate Limiting (20): imports _rateLimit.js with a named bucket string
-- Input Validation (20): validateJsonRequest with maxBytes + field checks
-- Security Headers (20): applyStandardApiHeaders sets all four headers
-- CORS (15): all headers via _cors.js, no inline Access-Control-*
-- Fetch Hygiene (15): every fetch() uses AbortSignal.timeout()
-- Model ID (10): model string from _constants.js, never hardcoded
+          ### Phase 1 - Audit
+          Score every non-underscore file in api/ against this rubric (100 points total):
+          - Rate Limiting (20): imports _rateLimit.js with a named bucket string
+          - Input Validation (20): validateJsonRequest with maxBytes + field checks
+          - Security Headers (20): applyStandardApiHeaders sets all four headers
+          - CORS (15): all headers via _cors.js, no inline Access-Control-*
+          - Fetch Hygiene (15): every fetch() uses AbortSignal.timeout()
+          - Model ID (10): model string from _constants.js, never hardcoded
 
-### Phase 2 - Fix
-For every failing check you find:
-1. Apply the minimal fix that makes the check pass
-2. Do NOT refactor surrounding code
-3. Do NOT add new features or change logic
-4. Only modify files in api/ -- no src/, no config files
+          ### Phase 2 - Fix
+          For every failing check you find:
+          1. Apply the minimal fix that makes the check pass
+          2. Do NOT refactor surrounding code
+          3. Do NOT add new features or change logic
+          4. Only modify files in api/ -- no src/, no config files
 
-### Constraints
-- Maximum 5 files modified
-- If a fix would require changing more than 20 lines in a single file, skip it and note why
-- Do not touch _cors.js, _rateLimit.js, _constants.js, or any underscore-prefixed helper
-- Do not create new files
+          ### Constraints
+          - Maximum 5 files modified
+          - If a fix would require changing more than 20 lines in a single file, skip it and note why
+          - Do not touch _cors.js, _rateLimit.js, _constants.js, or any underscore-prefixed helper
+          - Do not create new files
 
-### Output
-After all fixes, print a markdown report:
-- Overall score before and after
-- Each file: what was fixed, what was skipped and why
-- List any issues that need human review
-ENDOFPROMPT
+          ### Output
+          After all fixes, print a markdown report:
+          - Overall score before and after
+          - Each file: what was fixed, what was skipped and why
+          - List any issues that need human review
+          ENDOFPROMPT
 
       - name: Run Claude security audit and fix pass
         env:
