@@ -84,4 +84,43 @@ test.describe("Preview verification", () => {
       },
     );
   });
+
+  test("civil law scenario returns results", async ({ page }) => {
+    await page.goto("/");
+    await page
+      .locator('[data-testid="scenario-input"]')
+      .fill(
+        "A landlord entered the tenant's unit without 24 hours notice and removed personal belongings.",
+      );
+    await page.locator('[data-testid="research-submit"]').click();
+
+    await expect(
+      page.getByText("Scenario Summary", { exact: true }),
+    ).toBeVisible({ timeout: 60000 });
+    await expect(page.getByText("Legal Analysis", { exact: true })).toBeVisible(
+      { timeout: 15000 },
+    );
+  });
+
+  test("empty or gibberish input shows a graceful empty state", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page
+      .locator('[data-testid="scenario-input"]')
+      .fill("xyzzy nonsense gibberish 12345");
+    await page.locator('[data-testid="research-submit"]').click();
+
+    // Should not crash — either show an empty state message or a generic analysis
+    await expect(page.locator("body")).not.toContainText("500", {
+      timeout: 60000,
+    });
+    await expect(page.locator("body")).not.toContainText("Unhandled", {
+      timeout: 60000,
+    });
+    // Positive check: the app must reach a rendered state (not hang silently)
+    await expect(
+      page.getByText("Scenario Summary", { exact: true }),
+    ).toBeVisible({ timeout: 60000 });
+  });
 });
