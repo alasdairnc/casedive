@@ -16,6 +16,9 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      MAX_CHANGED_FILES: "5"
+      MAX_LINE_DELTA: "200"
 
     steps:
       - uses: actions/checkout@v5
@@ -24,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -41,7 +44,7 @@ jobs:
       - name: Create fix branch
         id: branch
         run: |
-          BRANCH="security-autofix/$(date +%Y-%m-%d)"
+          BRANCH="security-autofix/$(date +%Y-%m-%d)-${GITHUB_RUN_ID}"
           git checkout -b "$BRANCH"
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
 
@@ -75,10 +78,15 @@ jobs:
           - Do not create new files
 
           ### Output
-          After all fixes, print a markdown report:
+          After all fixes, print a markdown report and finish with these exact machine-readable lines:
           - Overall score before and after
           - Each file: what was fixed, what was skipped and why
           - List any issues that need human review
+          - SECURITY_SCORE_BEFORE=<0-100 integer>
+          - SECURITY_SCORE_AFTER=<0-100 integer>
+          - HUMAN_REVIEW_REQUIRED=<yes|no>
+          - SEVERITY_RECOMMENDATION=<critical|high|medium|low>
+          - FINDING|<severity>|<file>|<check>|<summary>
           ENDOFPROMPT
 
       - name: Run Claude security audit and fix pass
@@ -90,16 +98,60 @@ jobs:
             --max-turns 40 \
             --output-format text 2>&1 | tee claude-security-report.txt
 
-      - name: Check diff size (safety gate)
+      - name: Analyze diff and enforce safety budgets
         id: diff_check
         run: |
-          CHANGED=$(git diff --name-only | wc -l | tr -d ' ')
-          LINES=$(git diff --stat | tail -1 | grep -oE '[0-9]+ insertion' | grep -oE '[0-9]+' || echo 0)
-          echo "changed_files=$CHANGED" >> "$GITHUB_OUTPUT"
-          echo "lines_changed=$LINES" >> "$GITHUB_OUTPUT"
-          echo "Files changed: $CHANGED, Lines inserted: $LINES"
-          if [ "$CHANGED" -gt 10 ]; then
-            echo "Safety gate: too many files changed ($CHANGED > 10). Aborting."
+          set -euo pipefail
+          CHANGED_FILES_LIST="$(git diff --name-only | sed '/^$/d' || true)"
+          if [ -z "$CHANGED_FILES_LIST" ]; then
+            echo "changed_files=0" >> "$GITHUB_OUTPUT"
+            echo "insertions=0" >> "$GITHUB_OUTPUT"
+            echo "deletions=0" >> "$GITHUB_OUTPUT"
+            echo "line_delta=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          CHANGED_COUNT="$(printf '%s\n' "$CHANGED_FILES_LIST" | wc -l | tr -d ' ')"
+          INSERTIONS="$(git diff --numstat | awk '{i+=$1} END{print i+0}')"
+          DELETIONS="$(git diff --numstat | awk '{d+=$2} END{print d+0}')"
+          LINE_DELTA="$((INSERTIONS + DELETIONS))"
+
+          echo "changed_files=$CHANGED_COUNT" >> "$GITHUB_OUTPUT"
+          echo "insertions=$INSERTIONS" >> "$GITHUB_OUTPUT"
+          echo "deletions=$DELETIONS" >> "$GITHUB_OUTPUT"
+          echo "line_delta=$LINE_DELTA" >> "$GITHUB_OUTPUT"
+
+          echo "Changed files: $CHANGED_COUNT"
+          echo "Insertions: $INSERTIONS"
+          echo "Deletions: $DELETIONS"
+          echo "Total line delta: $LINE_DELTA"
+
+          FORBIDDEN=0
+          while IFS= read -r FILE; do
+            [ -z "$FILE" ] && continue
+            if [[ ! "$FILE" =~ ^api/[^/]+\.js$ ]]; then
+              echo "Forbidden path modified: $FILE"
+              FORBIDDEN=1
+            fi
+            BASENAME="$(basename "$FILE")"
+            if [[ "$BASENAME" == _* ]]; then
+              echo "Forbidden helper file modified: $FILE"
+              FORBIDDEN=1
+            fi
+          done <<< "$CHANGED_FILES_LIST"
+
+          if [ "$CHANGED_COUNT" -gt "$MAX_CHANGED_FILES" ]; then
+            echo "Safety gate: too many files changed ($CHANGED_COUNT > $MAX_CHANGED_FILES)."
+            exit 1
+          fi
+
+          if [ "$LINE_DELTA" -gt "$MAX_LINE_DELTA" ]; then
+            echo "Safety gate: line delta too high ($LINE_DELTA > $MAX_LINE_DELTA)."
+            exit 1
+          fi
+
+          if [ "$FORBIDDEN" -eq 1 ]; then
+            echo "Safety gate: forbidden path changes detected."
             exit 1
           fi
 
@@ -113,8 +165,107 @@ jobs:
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Commit fixes
+      - name: Run verification gates
+        id: verify
         if: steps.has_changes.outputs.has_changes == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          npm run test:guardrails 2>&1 | tee verification-guardrails.txt
+          npm run test:unit 2>&1 | tee verification-unit.txt
+
+      - name: Set verification status
+        id: verify_status
+        run: |
+          if [ "${{ steps.has_changes.outputs.has_changes }}" != "true" ]; then
+            echo "verification_passed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "${{ steps.verify.outcome }}" = "success" ]; then
+            echo "verification_passed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "verification_passed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build scorecard and findings artifacts
+        id: scorecard
+        run: |
+          set -euo pipefail
+          BEFORE_SCORE="$(grep -Eo 'SECURITY_SCORE_BEFORE=[0-9]+' claude-security-report.txt | tail -1 | cut -d'=' -f2 || true)"
+          AFTER_SCORE="$(grep -Eo 'SECURITY_SCORE_AFTER=[0-9]+' claude-security-report.txt | tail -1 | cut -d'=' -f2 || true)"
+          HUMAN_REVIEW="$(grep -Eo 'HUMAN_REVIEW_REQUIRED=(yes|no)' claude-security-report.txt | tail -1 | cut -d'=' -f2 || true)"
+          RECOMMENDED_SEVERITY="$(grep -Eo 'SEVERITY_RECOMMENDATION=(critical|high|medium|low)' claude-security-report.txt | tail -1 | cut -d'=' -f2 || true)"
+
+          if [ -z "$BEFORE_SCORE" ]; then BEFORE_SCORE="n/a"; fi
+          if [ -z "$AFTER_SCORE" ]; then AFTER_SCORE="n/a"; fi
+          if [ -z "$HUMAN_REVIEW" ]; then HUMAN_REVIEW="yes"; fi
+
+          if [ -n "$RECOMMENDED_SEVERITY" ]; then
+            SEVERITY="$RECOMMENDED_SEVERITY"
+          elif [ "$AFTER_SCORE" = "n/a" ]; then
+            SEVERITY="medium"
+          elif [ "$AFTER_SCORE" -lt 90 ]; then
+            SEVERITY="high"
+          elif [ "$AFTER_SCORE" -lt 100 ]; then
+            SEVERITY="medium"
+          else
+            SEVERITY="low"
+          fi
+
+          VERIFICATION="${{ steps.verify_status.outputs.verification_passed }}"
+          CHANGED_FILES="${{ steps.diff_check.outputs.changed_files }}"
+          INSERTIONS="${{ steps.diff_check.outputs.insertions }}"
+          DELETIONS="${{ steps.diff_check.outputs.deletions }}"
+          LINE_DELTA="${{ steps.diff_check.outputs.line_delta }}"
+
+          echo "before_score=$BEFORE_SCORE" >> "$GITHUB_OUTPUT"
+          echo "after_score=$AFTER_SCORE" >> "$GITHUB_OUTPUT"
+          echo "severity=$SEVERITY" >> "$GITHUB_OUTPUT"
+          echo "human_review_required=$HUMAN_REVIEW" >> "$GITHUB_OUTPUT"
+
+          cat > security-scorecard.md << EOF
+          ## Security Scorecard
+
+          - Before: ${BEFORE_SCORE}
+          - After: ${AFTER_SCORE}
+          - Severity: ${SEVERITY}
+          - Human review required: ${HUMAN_REVIEW}
+          - Verification passed: ${VERIFICATION}
+          - Files changed: ${CHANGED_FILES}
+          - Insertions: ${INSERTIONS}
+          - Deletions: ${DELETIONS}
+          - Total line delta: ${LINE_DELTA}
+          EOF
+
+          {
+            echo "{";
+            echo "  \"beforeScore\": \"${BEFORE_SCORE}\",";
+            echo "  \"afterScore\": \"${AFTER_SCORE}\",";
+            echo "  \"severity\": \"${SEVERITY}\",";
+            echo "  \"humanReviewRequired\": \"${HUMAN_REVIEW}\",";
+            echo "  \"verificationPassed\": \"${VERIFICATION}\",";
+            echo "  \"changedFiles\": ${CHANGED_FILES:-0},";
+            echo "  \"insertions\": ${INSERTIONS:-0},";
+            echo "  \"deletions\": ${DELETIONS:-0},";
+            echo "  \"lineDelta\": ${LINE_DELTA:-0}";
+            echo "}";
+          } > security-findings.json
+
+      - name: Upload overnight artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: overnight-security-loop-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: |
+            claude-security-report.txt
+            security-scorecard.md
+            security-findings.json
+            verification-guardrails.txt
+            verification-unit.txt
+
+      - name: Commit fixes
+        if: steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
         run: |
           git add api/
           CHANGED_COUNT="${{ steps.diff_check.outputs.changed_files }}"
@@ -123,32 +274,44 @@ jobs:
             -m "Automated fixes from overnight-security-loop workflow.\n\nFiles changed: ${CHANGED_COUNT}\n\nSee PR description for full audit report."
 
       - name: Push branch
-        if: steps.has_changes.outputs.has_changes == 'true'
+        if: steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
         env:
           BRANCH: ${{ steps.branch.outputs.branch }}
         run: git push origin "$BRANCH"
 
       - name: Open PR
-        if: steps.has_changes.outputs.has_changes == 'true'
+        if: steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ steps.branch.outputs.branch }}
           CHANGED_FILES: ${{ steps.diff_check.outputs.changed_files }}
+          LINE_DELTA: ${{ steps.diff_check.outputs.line_delta }}
+          BEFORE_SCORE: ${{ steps.scorecard.outputs.before_score }}
+          AFTER_SCORE: ${{ steps.scorecard.outputs.after_score }}
+          HUMAN_REVIEW_REQUIRED: ${{ steps.scorecard.outputs.human_review_required }}
+          SEVERITY: ${{ steps.scorecard.outputs.severity }}
         run: |
-          REPORT=$(head -100 claude-security-report.txt 2>/dev/null || echo "(no report generated)")
+          REPORT=$(head -120 claude-security-report.txt 2>/dev/null || echo "(no report generated)")
+          SCORECARD=$(cat security-scorecard.md 2>/dev/null || echo "(no scorecard generated)")
           TITLE="fix(security): nightly security autofix $(date +%Y-%m-%d)"
           LABEL_ARGS=()
-          for LABEL in security automated; do
+          for LABEL in security automated "severity:${SEVERITY}"; do
             if gh label list --limit 200 | awk '{print $1}' | grep -qx "$LABEL"; then
               LABEL_ARGS+=(--label "$LABEL")
             fi
           done
-          read -r -d '' BODY << 'BODYEOF' || true
+          read -r -d '' BODY << BODYEOF || true
           ## Overnight Security Loop
 
           Automated security fixes from nightly audit pass.
 
           **Files changed:** ${CHANGED_FILES}
+          **Line delta:** ${LINE_DELTA}
+          **Severity:** ${SEVERITY}
+
+          ---
+
+          ${SCORECARD}
 
           ---
 
@@ -161,6 +324,7 @@ jobs:
           ---
 
           > Generated by overnight-security-loop workflow.
+          > Verification gates passed before PR creation.
           > Review before merging -- automated fixes only touch rate limiting, validation, headers, CORS, fetch timeouts, and model ID sourcing.
           BODYEOF
 
@@ -170,3 +334,9 @@ jobs:
             --base main \
             --head "$BRANCH" \
             "${LABEL_ARGS[@]}"
+
+      - name: Block on verification failure
+        if: steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed != 'true'
+        run: |
+          echo "Verification failed. No PR was created. See uploaded artifacts for logs and diagnostics."
+          exit 1
