@@ -10,6 +10,10 @@ on:
   schedule:
     - cron: "0 6 * * *" # 2am ET / 6am UTC nightly
 
+concurrency:
+  group: overnight-security-loop
+  cancel-in-progress: true
+
 jobs:
   security-loop:
     runs-on: ubuntu-latest
@@ -19,36 +23,77 @@ jobs:
     env:
       MAX_CHANGED_FILES: "5"
       MAX_LINE_DELTA: "200"
+      MAX_CLAUDE_TURNS: "20"
 
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      - name: Check whether a Claude run is needed
+        id: precheck
+        env:
+          FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force_run || 'false' }}
+        run: |
+          set -euo pipefail
+
+          if [ "${FORCE_RUN}" = "true" ]; then
+            echo "run_claude=true" >> "$GITHUB_OUTPUT"
+            echo "reason=forced-manual-run" >> "$GITHUB_OUTPUT"
+            echo "Manual dispatch with force_run=true; proceeding."
+            exit 0
+          fi
+
+          RECENT_FILES="$(git log --since='36 hours ago' --name-only --pretty=format: | sed '/^$/d' | sort -u)"
+          if [ -z "$RECENT_FILES" ]; then
+            echo "run_claude=false" >> "$GITHUB_OUTPUT"
+            echo "reason=no-recent-changes" >> "$GITHUB_OUTPUT"
+            echo "No commits in lookback window; skipping token-consuming run."
+            exit 0
+          fi
+
+          RELEVANT_COUNT="$(printf '%s\n' "$RECENT_FILES" | grep -Ec '^api/.*\.js$|^\.github/workflows/overnight-security-loop\.yml$|^\.github/workflows/quality-guardrails\.yml$|^package\.json$' || true)"
+
+          if [ "$RELEVANT_COUNT" -eq 0 ]; then
+            echo "run_claude=false" >> "$GITHUB_OUTPUT"
+            echo "reason=no-security-relevant-changes" >> "$GITHUB_OUTPUT"
+            echo "No recent security-relevant file changes; skipping token-consuming run."
+          else
+            echo "run_claude=true" >> "$GITHUB_OUTPUT"
+            echo "reason=security-relevant-changes-detected" >> "$GITHUB_OUTPUT"
+            echo "Detected $RELEVANT_COUNT relevant changed files; proceeding."
+          fi
+
       - uses: actions/setup-node@v5
+        if: steps.precheck.outputs.run_claude == 'true'
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
+        if: steps.precheck.outputs.run_claude == 'true'
         run: npm ci
 
       - name: Install Claude CLI
+        if: steps.precheck.outputs.run_claude == 'true'
         run: npm install -g @anthropic-ai/claude-code
 
       - name: Configure git
+        if: steps.precheck.outputs.run_claude == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Create fix branch
         id: branch
+        if: steps.precheck.outputs.run_claude == 'true'
         run: |
           BRANCH="security-autofix/$(date +%Y-%m-%d)-${GITHUB_RUN_ID}"
           git checkout -b "$BRANCH"
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
 
       - name: Write Claude prompt
+        if: steps.precheck.outputs.run_claude == 'true'
         run: |
           cat > /tmp/security-prompt.txt << 'ENDOFPROMPT'
           You are running a nightly security audit and fix pass on the CaseDive codebase.
@@ -90,16 +135,18 @@ jobs:
           ENDOFPROMPT
 
       - name: Run Claude security audit and fix pass
+        if: steps.precheck.outputs.run_claude == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           claude -p "$(cat /tmp/security-prompt.txt)" \
             --allowedTools "Read,Edit,Grep,Glob,Bash(ls:*),Bash(cat:api/*)" \
-            --max-turns 40 \
+            --max-turns "$MAX_CLAUDE_TURNS" \
             --output-format text 2>&1 | tee claude-security-report.txt
 
       - name: Analyze diff and enforce safety budgets
         id: diff_check
+        if: steps.precheck.outputs.run_claude == 'true'
         run: |
           set -euo pipefail
           CHANGED_FILES_LIST="$(git diff --name-only | sed '/^$/d' || true)"
@@ -157,6 +204,7 @@ jobs:
 
       - name: Check for changes
         id: has_changes
+        if: steps.precheck.outputs.run_claude == 'true'
         run: |
           if git diff --quiet; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
@@ -167,7 +215,7 @@ jobs:
 
       - name: Run verification gates
         id: verify
-        if: steps.has_changes.outputs.has_changes == 'true'
+        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true'
         continue-on-error: true
         run: |
           set -euo pipefail
@@ -176,6 +224,7 @@ jobs:
 
       - name: Set verification status
         id: verify_status
+        if: steps.precheck.outputs.run_claude == 'true'
         run: |
           if [ "${{ steps.has_changes.outputs.has_changes }}" != "true" ]; then
             echo "verification_passed=true" >> "$GITHUB_OUTPUT"
@@ -189,6 +238,7 @@ jobs:
 
       - name: Build scorecard and findings artifacts
         id: scorecard
+        if: steps.precheck.outputs.run_claude == 'true'
         run: |
           set -euo pipefail
           BEFORE_SCORE="$(grep -Eo 'SECURITY_SCORE_BEFORE=[0-9]+' claude-security-report.txt | tail -1 | cut -d'=' -f2 || true)"
@@ -252,7 +302,7 @@ jobs:
           } > security-findings.json
 
       - name: Upload overnight artifacts
-        if: always()
+        if: always() && steps.precheck.outputs.run_claude == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: overnight-security-loop-${{ github.run_id }}
@@ -265,7 +315,7 @@ jobs:
             verification-unit.txt
 
       - name: Commit fixes
-        if: steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
+        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
         run: |
           git add api/
           CHANGED_COUNT="${{ steps.diff_check.outputs.changed_files }}"
@@ -274,13 +324,13 @@ jobs:
             -m "Automated fixes from overnight-security-loop workflow.\n\nFiles changed: ${CHANGED_COUNT}\n\nSee PR description for full audit report."
 
       - name: Push branch
-        if: steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
+        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
         env:
           BRANCH: ${{ steps.branch.outputs.branch }}
         run: git push origin "$BRANCH"
 
       - name: Open PR
-        if: steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
+        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ steps.branch.outputs.branch }}
@@ -336,7 +386,13 @@ jobs:
             "${LABEL_ARGS[@]}"
 
       - name: Block on verification failure
-        if: steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed != 'true'
+        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed != 'true'
         run: |
           echo "Verification failed. No PR was created. See uploaded artifacts for logs and diagnostics."
           exit 1
+
+      - name: Skip summary
+        if: steps.precheck.outputs.run_claude != 'true'
+        run: |
+          echo "Skipping Claude security loop to save tokens."
+          echo "Reason: ${{ steps.precheck.outputs.reason }}"

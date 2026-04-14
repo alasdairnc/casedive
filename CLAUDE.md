@@ -54,6 +54,7 @@ When making non-obvious architecture decisions, rejecting an approach, or discov
 - Preserve grouped response schema: `criminal_code`, `case_law`, `civil_law`, `charter`
 - Never commit `.env` or secrets
 - Never commit or push to git without being explicitly told to
+- Any new workflow that uses Claude tokens must default to skip, require a high-signal trigger or explicit manual opt-in, and include concurrency cancellation plus a precheck that short-circuits before the Claude step when the change is low-value.
 
 ## Key Gotchas
 

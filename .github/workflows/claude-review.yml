@@ -3,6 +3,15 @@ name: Claude PR Review
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - 'api/**'
+      - '.github/workflows/**'
+      - 'package.json'
+      - 'CLAUDE.md'
+
+concurrency:
+  group: claude-pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   claude-review:
@@ -16,11 +25,44 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check whether Claude review is needed
+        id: precheck
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const relevantPrefixes = [
+              'api/',
+              '.github/workflows/',
+              'package.json',
+              'CLAUDE.md',
+            ];
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              per_page: 100,
+            });
+
+            const relevantFiles = files.filter((file) =>
+              relevantPrefixes.some((prefix) => file.filename === prefix || file.filename.startsWith(prefix)),
+            );
+
+            const runClaude = relevantFiles.length > 0;
+            core.setOutput('run_claude', runClaude ? 'true' : 'false');
+            core.setOutput('reason', runClaude ? 'relevant-files-present' : 'no-high-risk-files');
+            core.setOutput('relevant_files', relevantFiles.map((file) => file.filename).join('\n'));
+
+            if (!runClaude) {
+              core.info('Skipping Claude PR review to save tokens: no high-risk files changed.');
+            }
+
       - uses: anthropics/claude-code-action@v1
+        if: steps.precheck.outputs.run_claude == 'true'
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          direct_prompt: |
+          prompt: |
             Review this PR against the casedive architecture rules in CLAUDE.md.
 
             Check for:
@@ -34,3 +76,9 @@ jobs:
 
             Post a concise comment summarising findings. If everything looks good, say so clearly.
             Flag any hard blocks (architecture rule violations) vs. minor suggestions separately.
+
+      - name: Skip summary
+        if: steps.precheck.outputs.run_claude != 'true'
+        run: |
+          echo "Skipping Claude PR review to save tokens."
+          echo "Reason: ${{ steps.precheck.outputs.reason }}"
