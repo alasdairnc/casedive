@@ -87,15 +87,47 @@ CaseDive rules:
 Commit when green: "feat(<slice>): implement <slice-name>"
 ```
 
-### Step 4 — Integration check
+**Example dispatch call (for 3 slices):**
 
-After all subagents report green, run the full suite:
+Dispatch all three Agent tool calls in a single message (not sequentially):
 
-```bash
-npm run test:unit && npm run test:component && npm run test:guardrails
+```
+Agent(slice="api-endpoint", files=["api/new-feature.js"], testFile="tests/unit/new-feature.test.js", command="npm run test:unit -- tests/unit/new-feature.test.js")
+Agent(slice="ui-component", files=["src/components/NewFeature.jsx"], testFile="tests/unit/NewFeature.test.jsx", command="npm run test:component -- tests/unit/NewFeature.test.jsx")
+Agent(slice="data-model", files=["src/lib/newFeatureData.js"], testFile="tests/unit/newFeatureData.test.js", command="npm run test:unit -- tests/unit/newFeatureData.test.js")
 ```
 
-Fix any cross-slice failures yourself (don't re-dispatch). Then run `/e2e-verify` for end-to-end confirmation.
+These run in parallel. Wait for all three to complete before proceeding to Step 4.
+
+### Step 4 — Integration check
+
+After all subagents report green, run the full suite in order:
+
+```bash
+npm run test:unit
+```
+
+If that passes:
+
+```bash
+npm run test:component
+```
+
+If that passes:
+
+```bash
+npm run test:guardrails
+```
+
+> `test:guardrails` runs the sanitizer, retrieval failures, and filter tuner. It does NOT require a running dev server. `CANLII_API_KEY` is optional — if absent, the keyed filter gate is skipped gracefully.
+
+Fix any cross-slice failures yourself (don't re-dispatch subagents). Typical cross-slice issues:
+
+- Two slices export functions with the same name — rename one
+- A slice's test imports a fixture created by another slice's test — move the fixture to `tests/fixtures/`
+- A component slice imports from an API slice that isn't importable in jsdom — mock the import boundary
+
+Then run `/e2e-verify` for end-to-end confirmation.
 
 ### Step 5 — Finish
 
