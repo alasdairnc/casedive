@@ -37,6 +37,8 @@ jobs:
       no_caselaw_failures: ${{ steps.detect_outputs.outputs.no_caselaw_failures }}
       report_path: ${{ steps.detect_outputs.outputs.report_path }}
       markdown_path: ${{ steps.detect_outputs.outputs.markdown_path }}
+      report_filename: ${{ steps.detect_outputs.outputs.report_filename }}
+      markdown_filename: ${{ steps.detect_outputs.outputs.markdown_filename }}
 
     steps:
       - uses: actions/checkout@v5
@@ -104,13 +106,19 @@ jobs:
           NO_CASELAW_FAILURES="${{ steps.collect.outputs.no_caselaw_failures }}"
           REPORT_PATH="${{ steps.collect.outputs.report_path }}"
           MARKDOWN_PATH="${{ steps.collect.outputs.markdown_path }}"
+          REPORT_FILENAME=""
+          MARKDOWN_FILENAME=""
           if [ -z "$NO_CASELAW_FAILURES" ]; then NO_CASELAW_FAILURES=0; fi
+          if [ -n "$REPORT_PATH" ]; then REPORT_FILENAME="$(basename "$REPORT_PATH")"; fi
+          if [ -n "$MARKDOWN_PATH" ]; then MARKDOWN_FILENAME="$(basename "$MARKDOWN_PATH")"; fi
 
           echo "run_autofix=${{ steps.precheck.outputs.run_autofix }}" >> "$GITHUB_OUTPUT"
           echo "reason=${{ steps.precheck.outputs.reason }}" >> "$GITHUB_OUTPUT"
           echo "no_caselaw_failures=${NO_CASELAW_FAILURES}" >> "$GITHUB_OUTPUT"
           echo "report_path=${REPORT_PATH}" >> "$GITHUB_OUTPUT"
           echo "markdown_path=${MARKDOWN_PATH}" >> "$GITHUB_OUTPUT"
+          echo "report_filename=${REPORT_FILENAME}" >> "$GITHUB_OUTPUT"
+          echo "markdown_filename=${MARKDOWN_FILENAME}" >> "$GITHUB_OUTPUT"
 
       - name: Write daily detector summary
         run: |
@@ -163,7 +171,32 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: production-retrieval-detector-${{ github.run_id }}
-          path: .
+          path: reports/retrieval-autofix
+
+      - name: Verify detector handoff payload
+        id: detector_handoff
+        run: |
+          set -euo pipefail
+          REPORT_FILE="${{ needs.detect.outputs.report_filename }}"
+          if [ -z "$REPORT_FILE" ]; then
+            echo "Missing report filename from detect job outputs."
+            exit 1
+          fi
+          REPORT_PATH="reports/retrieval-autofix/$REPORT_FILE"
+          if [ ! -f "$REPORT_PATH" ]; then
+            echo "Detector report not found at $REPORT_PATH"
+            echo "Downloaded files:"
+            find reports/retrieval-autofix -maxdepth 2 -type f | sort || true
+            exit 1
+          fi
+          REPORT_FAILURES=$(node -e "const fs=require('fs'); const p=process.argv[1]; const json=JSON.parse(fs.readFileSync(p,'utf8')); process.stdout.write(String(Number(json.noCaselawFailures||0))); " "$REPORT_PATH")
+          EXPECTED_FAILURES="${{ needs.detect.outputs.no_caselaw_failures }}"
+          if [ "$REPORT_FAILURES" != "$EXPECTED_FAILURES" ]; then
+            echo "Detector handoff mismatch: report has $REPORT_FAILURES but detect output says $EXPECTED_FAILURES"
+            exit 1
+          fi
+          echo "report_path=$REPORT_PATH" >> "$GITHUB_OUTPUT"
+          echo "Report handoff verified at $REPORT_PATH with $REPORT_FAILURES no-case-law failures."
 
       - name: Create branch
         id: branch
@@ -177,10 +210,7 @@ jobs:
         id: deterministic
         run: |
           set -euo pipefail
-          REPORT_PATH="reports/retrieval-autofix/$(basename '${{ needs.detect.outputs.report_path }}')"
-          if [ ! -f "$REPORT_PATH" ]; then
-            REPORT_PATH="${{ needs.detect.outputs.report_path }}"
-          fi
+          REPORT_PATH="${{ steps.detector_handoff.outputs.report_path }}"
           node scripts/apply-retrieval-autofix.js \
             --apply \
             --min-failures "$MIN_FAILURE_EVENTS" \
@@ -281,9 +311,10 @@ jobs:
           FAILURES: ${{ needs.detect.outputs.no_caselaw_failures }}
         run: |
           set -euo pipefail
-          REPORT_MD="reports/retrieval-autofix/$(basename '${{ needs.detect.outputs.markdown_path }}')"
-          if [ ! -f "$REPORT_MD" ]; then
-            REPORT_MD="${{ needs.detect.outputs.markdown_path }}"
+          REPORT_MD="reports/retrieval-autofix/${{ needs.detect.outputs.markdown_filename }}"
+          if [ -z "${{ needs.detect.outputs.markdown_filename }}" ] || [ ! -f "$REPORT_MD" ]; then
+            echo "Missing markdown report for PR body."
+            exit 1
           fi
           PLAN_MD="reports/retrieval-autofix/autofix-plan.md"
           BODY="$(cat "$REPORT_MD")\n\n---\n\n$(cat "$PLAN_MD")\n\n---\n\nSource: $SOURCE\nNo-case-law failures: $FAILURES"
