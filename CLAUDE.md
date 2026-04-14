@@ -5,6 +5,22 @@
 AI-powered Canadian legal research tool. Live at [casedive.ca](https://casedive.ca). Repo: `alasdairnc/casefinder`
 Stack: React 18 + Vite, Vercel serverless `/api/`, Anthropic API, Upstash Redis, CanLII API.
 
+## Action Bias
+
+- When intent is clear, act directly — don't offer multiple options
+- Be concise; avoid verbose narration during tool use
+
+## Testing & Verification
+
+- Always start the dev server (`npm run dev:api`) before running E2E/Playwright tests
+- Run the full test suite after code changes and fix failures before declaring done
+- Add regression tests when fixing bugs
+
+## Dependencies
+
+- Pin major version upgrades; do not auto-bump to new majors (e.g., Vite stays on v6.x)
+- Verify build after any dependency change
+
 ## Active Development Context
 
 Current focus: case-law retrieval quality — query shaping, fallback calibration, and empty-state UX.
@@ -22,6 +38,10 @@ npm run test:component  # Vitest component tests (.test.jsx only)
 npm run test:guardrails # Pre-PR: sanitizer + retrieval-failures + hallucination filter
 npm run test:retrieval-failures  # Labeled retrieval failure scenarios
 ```
+
+## Memory & Session Continuity
+
+When making non-obvious architecture decisions, rejecting an approach, or discovering a project-specific gotcha mid-session — save it to memory immediately (don't wait until the session ends). Use the Write tool to create/update files in `.claude/projects/*/memory/`. The Stop hook can't capture conversation content; proactive saves during the session are the only way this persists.
 
 ## Critical Rules
 
