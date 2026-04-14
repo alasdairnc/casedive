@@ -232,6 +232,10 @@ jobs:
             preview-compare.md
             preview-artifacts/preview-status.txt
 
+      - name: Install Claude CLI
+        if: steps.preview.outputs.preview_url != '' && steps.verification_status.outputs.verification_passed == 'false' && env.ALLOW_SELF_HEAL == 'true' && env.HAS_ANTHROPIC_API_KEY != ''
+        run: npm install -g @anthropic-ai/claude-code
+
       - name: Self-heal failing preview
         id: self_heal
         if: steps.preview.outputs.preview_url != '' && steps.verification_status.outputs.verification_passed == 'false' && env.ALLOW_SELF_HEAL == 'true' && env.HAS_ANTHROPIC_API_KEY != ''
