@@ -301,6 +301,86 @@ jobs:
             echo "}";
           } > security-findings.json
 
+      - name: Parse findings summary
+        id: findings
+        if: steps.precheck.outputs.run_claude == 'true'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+
+          severity_order = ["critical", "high", "medium", "low"]
+          report_path = "claude-security-report.txt"
+          findings = []
+
+          with open(report_path, "r", encoding="utf-8", errors="replace") as handle:
+            for raw_line in handle:
+              line = raw_line.rstrip("\n")
+              if not line.startswith("FINDING|"):
+                continue
+              parts = line.split("|", 4)
+              if len(parts) != 5:
+                continue
+              _, severity, file_path, check_name, summary = parts
+              findings.append(
+                {
+                  "severity": severity,
+                  "file": file_path,
+                  "check": check_name,
+                  "summary": summary,
+                }
+              )
+
+          counts = {severity: 0 for severity in severity_order}
+          for finding in findings:
+            if finding["severity"] in counts:
+              counts[finding["severity"]] += 1
+
+          summary_lines = ["## Findings Summary", ""]
+          if findings:
+            for severity in severity_order:
+              severity_findings = [item for item in findings if item["severity"] == severity]
+              if not severity_findings:
+                continue
+              summary_lines.append(f"### {severity.title()} ({len(severity_findings)})")
+              for finding in severity_findings:
+                summary_lines.append(
+                  f"- {finding['file']} | {finding['check']} | {finding['summary']}"
+                )
+              summary_lines.append("")
+          else:
+            summary_lines.append("No structured findings were returned.")
+
+          with open("security-findings-summary.md", "w", encoding="utf-8") as handle:
+            handle.write("\n".join(summary_lines).rstrip() + "\n")
+
+          with open("security-findings.json", "w", encoding="utf-8") as handle:
+            json.dump(
+              {
+                "findings": findings,
+                "counts": counts,
+                "severityBuckets": [severity for severity in severity_order if counts[severity] > 0],
+              },
+              handle,
+              indent=2,
+            )
+            handle.write("\n")
+
+          outputs = {
+            "finding_count": str(len(findings)),
+            "severity_buckets": ",".join([severity for severity in severity_order if counts[severity] > 0]),
+            "critical_findings": str(counts["critical"]),
+            "high_findings": str(counts["high"]),
+            "medium_findings": str(counts["medium"]),
+            "low_findings": str(counts["low"]),
+          }
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+            for key, value in outputs.items():
+              handle.write(f"{key}={value}\n")
+          PY
+
       - name: Upload overnight artifacts
         if: always() && steps.precheck.outputs.run_claude == 'true'
         uses: actions/upload-artifact@v4
@@ -310,6 +390,7 @@ jobs:
           path: |
             claude-security-report.txt
             security-scorecard.md
+            security-findings-summary.md
             security-findings.json
             verification-guardrails.txt
             verification-unit.txt
@@ -324,13 +405,13 @@ jobs:
             -m "Automated fixes from overnight-security-loop workflow.\n\nFiles changed: ${CHANGED_COUNT}\n\nSee PR description for full audit report."
 
       - name: Push branch
-        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
+        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true' && steps.findings.outputs.finding_count == '0'
         env:
           BRANCH: ${{ steps.branch.outputs.branch }}
         run: git push origin "$BRANCH"
 
-      - name: Open PR
-        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true'
+      - name: Open aggregate PR
+        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true' && steps.findings.outputs.finding_count == '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ steps.branch.outputs.branch }}
@@ -343,6 +424,7 @@ jobs:
         run: |
           REPORT=$(head -120 claude-security-report.txt 2>/dev/null || echo "(no report generated)")
           SCORECARD=$(cat security-scorecard.md 2>/dev/null || echo "(no scorecard generated)")
+          FINDINGS_SUMMARY=$(cat security-findings-summary.md 2>/dev/null || echo "(no findings summary generated)")
           TITLE="fix(security): nightly security autofix $(date +%Y-%m-%d)"
           LABEL_ARGS=()
           for LABEL in security automated "severity:${SEVERITY}"; do
@@ -358,10 +440,15 @@ jobs:
           **Files changed:** ${CHANGED_FILES}
           **Line delta:** ${LINE_DELTA}
           **Severity:** ${SEVERITY}
+          **Findings:** ${{ steps.findings.outputs.finding_count }}
 
           ---
 
           ${SCORECARD}
+
+          ---
+
+          ${FINDINGS_SUMMARY}
 
           ---
 
@@ -384,6 +471,106 @@ jobs:
             --base main \
             --head "$BRANCH" \
             "${LABEL_ARGS[@]}"
+
+      - name: Fan out severity PRs
+        if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed == 'true' && steps.findings.outputs.finding_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGED_FILES: ${{ steps.diff_check.outputs.changed_files }}
+          LINE_DELTA: ${{ steps.diff_check.outputs.line_delta }}
+          BEFORE_SCORE: ${{ steps.scorecard.outputs.before_score }}
+          AFTER_SCORE: ${{ steps.scorecard.outputs.after_score }}
+          HUMAN_REVIEW_REQUIRED: ${{ steps.scorecard.outputs.human_review_required }}
+          SEVERITY_BUCKETS: ${{ steps.findings.outputs.severity_buckets }}
+          HEAD_SHA: ${{ github.sha }}
+          TITLE_PREFIX: 'fix(security): nightly security autofix'
+        run: |
+          set -euo pipefail
+
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          summary_path = Path("security-findings-summary.md")
+          severity_buckets = [bucket for bucket in os.environ.get("SEVERITY_BUCKETS", "").split(",") if bucket]
+          title_prefix = os.environ["TITLE_PREFIX"]
+          head_sha = os.environ["HEAD_SHA"]
+          changed_files = os.environ.get("CHANGED_FILES", "0")
+          line_delta = os.environ.get("LINE_DELTA", "0")
+          before_score = os.environ.get("BEFORE_SCORE", "n/a")
+          after_score = os.environ.get("AFTER_SCORE", "n/a")
+          human_review_required = os.environ.get("HUMAN_REVIEW_REQUIRED", "yes")
+
+          summary_text = summary_path.read_text(encoding="utf-8") if summary_path.exists() else "(no findings summary generated)"
+          sections = {}
+          current = None
+          current_lines = []
+          for line in summary_text.splitlines():
+            if line.startswith("### "):
+              if current is not None:
+                sections[current] = "\n".join(current_lines).strip()
+              current = line.split(" ", 2)[1].lower()
+              current_lines = [line]
+            elif current is not None:
+              current_lines.append(line)
+          if current is not None:
+            sections[current] = "\n".join(current_lines).strip()
+
+          for severity in severity_buckets:
+            branch = f"security-autofix/{os.environ['GITHUB_RUN_ID']}-{severity}"
+            body_path = Path(f"/tmp/security-body-{severity}.md")
+            severity_section = sections.get(severity, f"### {severity.title()}\nNo detailed findings were parsed for this bucket.")
+            body = "\n".join([
+              "## Overnight Security Loop",
+              "",
+              f"Automated security fixes for the {severity} bucket.",
+              "",
+              f"**Files changed:** {changed_files}",
+              f"**Line delta:** {line_delta}",
+              f"**Severity:** {severity}",
+              f"**Before score:** {before_score}",
+              f"**After score:** {after_score}",
+              f"**Human review required:** {human_review_required}",
+              "",
+              "---",
+              "",
+              severity_section,
+              "",
+              "---",
+              "",
+              "> Generated by overnight-security-loop workflow.",
+              "> Review before merging -- this PR is one severity bucket from the nightly run.",
+            ])
+            body_path.write_text(body, encoding="utf-8")
+
+            import subprocess
+
+            subprocess.run(["git", "branch", "-f", branch, head_sha], check=True)
+            subprocess.run(["git", "push", "origin", branch], check=True)
+            subprocess.run(
+              [
+                "gh",
+                "pr",
+                "create",
+                "--title",
+                f"{title_prefix}: {severity} {os.environ['GITHUB_RUN_ID']}",
+                "--body-file",
+                str(body_path),
+                "--base",
+                "main",
+                "--head",
+                branch,
+                "--label",
+                "security",
+                "--label",
+                "automated",
+                "--label",
+                f"severity:{severity}",
+              ],
+              check=True,
+            )
+          PY
 
       - name: Block on verification failure
         if: steps.precheck.outputs.run_claude == 'true' && steps.has_changes.outputs.has_changes == 'true' && steps.verify_status.outputs.verification_passed != 'true'
