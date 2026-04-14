@@ -15,6 +15,7 @@ Your job is to inspect a failing preview-verification run, identify the smallest
 ## Constraints
 
 - Do not modify workflow files, docs, or generated artifacts.
+- Do not modify `.github/workflows/`, `.github/agents/`, `docs/`, or test spec files.
 - Prefer the smallest safe patch.
 - Limit changes to the runtime code paths involved in the failure.
 - If the failure is not auto-fixable, stop and explain why instead of making speculative changes.
@@ -34,7 +35,7 @@ Treat this as a retrieval-quality regression first. If the preview failure is du
 ## What to inspect
 
 1. Read `preview-verification.log` and any Playwright failure output.
-2. Read `preview-compare.json` if it exists.
+2. Read `preview-compare.json`. If `sameShape` is `false`, the preview API is returning a different schema than production — prioritize fixing the API response shape over UI fixes.
 3. Check the scenario that failed in `tests/live/preview-verification.spec.js`.
 4. Trace the relevant code path in the API or UI.
 5. Patch the smallest safe fix.
