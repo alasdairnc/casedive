@@ -19,6 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
+  actions: read
   contents: write
   pull-requests: write
 
@@ -35,12 +36,15 @@ jobs:
       run_autofix: ${{ steps.detect_outputs.outputs.run_autofix }}
       reason: ${{ steps.detect_outputs.outputs.reason }}
       no_caselaw_failures: ${{ steps.detect_outputs.outputs.no_caselaw_failures }}
+      new_no_caselaw_failures: ${{ steps.detect_outputs.outputs.new_no_caselaw_failures }}
       report_path: ${{ steps.detect_outputs.outputs.report_path }}
       markdown_path: ${{ steps.detect_outputs.outputs.markdown_path }}
       report_filename: ${{ steps.detect_outputs.outputs.report_filename }}
       markdown_filename: ${{ steps.detect_outputs.outputs.markdown_filename }}
       telemetry_ok: ${{ steps.detect_outputs.outputs.telemetry_ok }}
       fetch_error: ${{ steps.detect_outputs.outputs.fetch_error }}
+      previous_cursor_ts: ${{ steps.detect_outputs.outputs.previous_cursor_ts }}
+      latest_event_ts: ${{ steps.detect_outputs.outputs.latest_event_ts }}
 
     steps:
       - uses: actions/checkout@v5
@@ -86,6 +90,40 @@ jobs:
             --max-pages 8 \
             --out-dir reports/retrieval-autofix
 
+      - name: Load previous cursor
+        id: load_cursor
+        if: steps.token.outputs.token_available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          PREVIOUS_CURSOR_TS=0
+          ARTIFACT_ID=""
+
+          ARTIFACT_JSON="$(curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts?per_page=100")"
+
+          ARTIFACT_ID="$(printf '%s' "$ARTIFACT_JSON" | python -c 'import json,sys; data=json.load(sys.stdin); items=[a for a in data.get("artifacts", []) if a.get("name")=="production-retrieval-cursor" and not a.get("expired")]; items.sort(key=lambda a:a.get("created_at",""), reverse=True); print(items[0]["id"] if items else "")')"
+
+          if [ -n "$ARTIFACT_ID" ]; then
+            mkdir -p .cursor-state
+            curl -fsSL -L \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
+              -o .cursor-state/cursor.zip
+            unzip -q .cursor-state/cursor.zip -d .cursor-state
+            CURSOR_FILE="$(find .cursor-state -type f -name 'cursor-state.json' | head -n 1 || true)"
+            if [ -n "$CURSOR_FILE" ]; then
+              PREVIOUS_CURSOR_TS="$(python -c 'import json,sys; p=sys.argv[1]; data=json.load(open(p)); ts=data.get("last_processed_ts",0); print(int(ts) if isinstance(ts,(int,float)) else 0)' "$CURSOR_FILE")"
+            fi
+          fi
+
+          echo "previous_cursor_ts=$PREVIOUS_CURSOR_TS" >> "$GITHUB_OUTPUT"
+          echo "cursor_artifact_id=$ARTIFACT_ID" >> "$GITHUB_OUTPUT"
+
       - name: Decide whether to tune
         id: precheck
         run: |
@@ -108,6 +146,21 @@ jobs:
 
           FAILURES="${{ steps.collect.outputs.no_caselaw_failures }}"
           if [ -z "$FAILURES" ]; then FAILURES=0; fi
+          NEW_FAILURES=0
+          LATEST_EVENT_TS="${{ steps.load_cursor.outputs.previous_cursor_ts }}"
+          if [ -z "$LATEST_EVENT_TS" ]; then LATEST_EVENT_TS=0; fi
+          PREVIOUS_CURSOR_TS="${{ steps.load_cursor.outputs.previous_cursor_ts }}"
+          if [ -z "$PREVIOUS_CURSOR_TS" ]; then PREVIOUS_CURSOR_TS=0; fi
+
+          REPORT_PATH="${{ steps.collect.outputs.report_path }}"
+          if [ -n "$REPORT_PATH" ] && [ -f "$REPORT_PATH" ]; then
+            PARSED="$(node -e "const fs=require('fs'); const report=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const cursor=Number(process.argv[2]||0); const events=Array.isArray(report.events)?report.events:[]; let latest=cursor; let fresh=0; for (const e of events) { const ts=Date.parse(e.ts||''); if (!Number.isFinite(ts)) continue; if (ts>latest) latest=ts; if (ts>cursor) fresh += 1; } process.stdout.write(JSON.stringify({fresh, latest}));" "$REPORT_PATH" "$PREVIOUS_CURSOR_TS")"
+            NEW_FAILURES="$(printf '%s' "$PARSED" | python -c 'import json,sys; print(int(json.load(sys.stdin).get("fresh",0)))')"
+            LATEST_EVENT_TS="$(printf '%s' "$PARSED" | python -c 'import json,sys; print(int(json.load(sys.stdin).get("latest",0)))')"
+          fi
+          echo "new_no_caselaw_failures=$NEW_FAILURES" >> "$GITHUB_OUTPUT"
+          echo "latest_event_ts=$LATEST_EVENT_TS" >> "$GITHUB_OUTPUT"
+          echo "previous_cursor_ts=$PREVIOUS_CURSOR_TS" >> "$GITHUB_OUTPUT"
 
           if [ "${FORCE_RUN}" = "true" ]; then
             echo "run_autofix=true" >> "$GITHUB_OUTPUT"
@@ -115,12 +168,12 @@ jobs:
           elif [ "$TELEMETRY_OK" != "true" ]; then
             echo "run_autofix=false" >> "$GITHUB_OUTPUT"
             echo "reason=telemetry-unavailable" >> "$GITHUB_OUTPUT"
-          elif [ "$FAILURES" -ge "$MIN_FAILURE_EVENTS" ]; then
+          elif [ "$NEW_FAILURES" -ge "$MIN_FAILURE_EVENTS" ]; then
             echo "run_autofix=true" >> "$GITHUB_OUTPUT"
-            echo "reason=threshold-met" >> "$GITHUB_OUTPUT"
+            echo "reason=new-threshold-met" >> "$GITHUB_OUTPUT"
           else
             echo "run_autofix=false" >> "$GITHUB_OUTPUT"
-            echo "reason=below-threshold" >> "$GITHUB_OUTPUT"
+            echo "reason=below-new-threshold" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Publish detector outputs
@@ -128,23 +181,28 @@ jobs:
         run: |
           set -euo pipefail
           NO_CASELAW_FAILURES="${{ steps.collect.outputs.no_caselaw_failures }}"
+          NEW_NO_CASELAW_FAILURES="${{ steps.precheck.outputs.new_no_caselaw_failures }}"
           REPORT_PATH="${{ steps.collect.outputs.report_path }}"
           MARKDOWN_PATH="${{ steps.collect.outputs.markdown_path }}"
           REPORT_FILENAME=""
           MARKDOWN_FILENAME=""
           if [ -z "$NO_CASELAW_FAILURES" ]; then NO_CASELAW_FAILURES=0; fi
+          if [ -z "$NEW_NO_CASELAW_FAILURES" ]; then NEW_NO_CASELAW_FAILURES=0; fi
           if [ -n "$REPORT_PATH" ]; then REPORT_FILENAME="$(basename "$REPORT_PATH")"; fi
           if [ -n "$MARKDOWN_PATH" ]; then MARKDOWN_FILENAME="$(basename "$MARKDOWN_PATH")"; fi
 
           echo "run_autofix=${{ steps.precheck.outputs.run_autofix }}" >> "$GITHUB_OUTPUT"
           echo "reason=${{ steps.precheck.outputs.reason }}" >> "$GITHUB_OUTPUT"
           echo "no_caselaw_failures=${NO_CASELAW_FAILURES}" >> "$GITHUB_OUTPUT"
+          echo "new_no_caselaw_failures=${NEW_NO_CASELAW_FAILURES}" >> "$GITHUB_OUTPUT"
           echo "report_path=${REPORT_PATH}" >> "$GITHUB_OUTPUT"
           echo "markdown_path=${MARKDOWN_PATH}" >> "$GITHUB_OUTPUT"
           echo "report_filename=${REPORT_FILENAME}" >> "$GITHUB_OUTPUT"
           echo "markdown_filename=${MARKDOWN_FILENAME}" >> "$GITHUB_OUTPUT"
           echo "telemetry_ok=${{ steps.precheck.outputs.telemetry_ok }}" >> "$GITHUB_OUTPUT"
           echo "fetch_error=${{ steps.precheck.outputs.fetch_error }}" >> "$GITHUB_OUTPUT"
+          echo "previous_cursor_ts=${{ steps.precheck.outputs.previous_cursor_ts }}" >> "$GITHUB_OUTPUT"
+          echo "latest_event_ts=${{ steps.precheck.outputs.latest_event_ts }}" >> "$GITHUB_OUTPUT"
 
       - name: Write daily detector summary
         run: |
@@ -156,7 +214,10 @@ jobs:
           - Run autofix: ${{ steps.precheck.outputs.run_autofix }}
           - Reason: ${{ steps.precheck.outputs.reason }}
           - Telemetry available: ${{ steps.precheck.outputs.telemetry_ok }}
-          - No-case-law failures: ${{ steps.detect_outputs.outputs.no_caselaw_failures }}
+          - No-case-law failures (current window): ${{ steps.detect_outputs.outputs.no_caselaw_failures }}
+          - No-case-law failures (new since cursor): ${{ steps.detect_outputs.outputs.new_no_caselaw_failures }}
+          - Previous cursor ts: ${{ steps.detect_outputs.outputs.previous_cursor_ts || '0' }}
+          - Latest event ts: ${{ steps.detect_outputs.outputs.latest_event_ts || '0' }}
           - Report path: ${{ steps.detect_outputs.outputs.report_path || '(none)' }}
           - Markdown path: ${{ steps.detect_outputs.outputs.markdown_path || '(none)' }}
           - Fetch error: ${{ steps.precheck.outputs.fetch_error || '(none)' }}
@@ -362,5 +423,38 @@ jobs:
           echo "Skipping daily retrieval autofix."
           echo "Reason: ${{ needs.detect.outputs.reason }}"
           echo "Telemetry available: ${{ needs.detect.outputs.telemetry_ok }}"
-          echo "No-case-law failures: ${{ needs.detect.outputs.no_caselaw_failures }}"
+          echo "No-case-law failures (current window): ${{ needs.detect.outputs.no_caselaw_failures }}"
+          echo "No-case-law failures (new since cursor): ${{ needs.detect.outputs.new_no_caselaw_failures }}"
+          echo "Previous cursor ts: ${{ needs.detect.outputs.previous_cursor_ts }}"
+          echo "Latest event ts: ${{ needs.detect.outputs.latest_event_ts }}"
           echo "Fetch error: ${{ needs.detect.outputs.fetch_error }}"
+
+  persist-cursor:
+    needs: [detect, repair]
+    if: needs.detect.outputs.run_autofix == 'true' && needs.repair.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write cursor state
+        run: |
+          set -euo pipefail
+          mkdir -p reports/retrieval-autofix
+          LAST_PROCESSED_TS="${{ needs.detect.outputs.latest_event_ts }}"
+          if [ -z "$LAST_PROCESSED_TS" ]; then
+            LAST_PROCESSED_TS="${{ needs.detect.outputs.previous_cursor_ts }}"
+          fi
+          if [ -z "$LAST_PROCESSED_TS" ]; then
+            LAST_PROCESSED_TS=0
+          fi
+          python -c "import json,os; from datetime import datetime, timezone; out={'last_processed_ts': int(os.environ.get('LAST_PROCESSED_TS','0')), 'last_processed_at': datetime.now(timezone.utc).isoformat(), 'run_id': os.environ.get('GITHUB_RUN_ID'), 'no_caselaw_failures': int(os.environ.get('NO_CASELAW_FAILURES','0')), 'new_no_caselaw_failures': int(os.environ.get('NEW_NO_CASELAW_FAILURES','0'))}; open('reports/retrieval-autofix/cursor-state.json','w').write(json.dumps(out, indent=2) + '\n')"
+        env:
+          LAST_PROCESSED_TS: ${{ needs.detect.outputs.latest_event_ts }}
+          NO_CASELAW_FAILURES: ${{ needs.detect.outputs.no_caselaw_failures }}
+          NEW_NO_CASELAW_FAILURES: ${{ needs.detect.outputs.new_no_caselaw_failures }}
+
+      - name: Upload cursor artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: production-retrieval-cursor
+          if-no-files-found: error
+          retention-days: 30
+          path: reports/retrieval-autofix/cursor-state.json
