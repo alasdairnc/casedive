@@ -1,7 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const isLiveMode = process.env.PLAYWRIGHT_MODE === "live";
-const liveBaseUrl = process.env.PLAYWRIGHT_BASE_URL || "https://www.casedive.ca";
+const liveBaseUrl =
+  process.env.PLAYWRIGHT_BASE_URL || "https://www.casedive.ca";
 
 export default defineConfig({
   testDir: isLiveMode ? "./tests/live" : "./tests/e2e",

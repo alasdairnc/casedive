@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       run_probe:
-        description: 'Run token-consuming Claude probe'
+        description: "Run token-consuming Claude probe"
         required: false
         default: false
         type: boolean

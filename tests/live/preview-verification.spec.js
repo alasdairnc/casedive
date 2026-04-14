@@ -43,12 +43,16 @@ test.describe("Preview verification", () => {
       );
     await page.locator('[data-testid="research-submit"]').click();
 
-    await expect(page.getByText("Scenario Summary", { exact: true })).toBeVisible({
+    await expect(
+      page.getByText("Scenario Summary", { exact: true }),
+    ).toBeVisible({
       timeout: 60000,
     });
-    await expect(page.getByText("Legal Analysis", { exact: true })).toBeVisible({
-      timeout: 15000,
-    });
+    await expect(page.getByText("Legal Analysis", { exact: true })).toBeVisible(
+      {
+        timeout: 15000,
+      },
+    );
     const neutralCitations = page
       .getByText(
         /\b(19|20)\d{2}\s+(SCC|ONCA|ABCA|BCCA|QCCA|NSCA|NBCA|SKCA|MBCA|CanLII)\s+\d+\b/i,
@@ -69,11 +73,15 @@ test.describe("Preview verification", () => {
       );
     await page.locator('[data-testid="research-submit"]').click();
 
-    await expect(page.getByText("Scenario Summary", { exact: true })).toBeVisible({
+    await expect(
+      page.getByText("Scenario Summary", { exact: true }),
+    ).toBeVisible({
       timeout: 60000,
     });
-    await expect(page.getByText("Legal Analysis", { exact: true })).toBeVisible({
-      timeout: 15000,
-    });
+    await expect(page.getByText("Legal Analysis", { exact: true })).toBeVisible(
+      {
+        timeout: 15000,
+      },
+    );
   });
 });

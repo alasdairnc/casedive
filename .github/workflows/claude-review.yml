@@ -4,10 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'api/**'
-      - '.github/workflows/**'
-      - 'package.json'
-      - 'CLAUDE.md'
+      - "api/**"
+      - ".github/workflows/**"
+      - "package.json"
+      - "CLAUDE.md"
 
 concurrency:
   group: claude-pr-review-${{ github.event.pull_request.number }}

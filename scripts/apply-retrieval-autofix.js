@@ -121,7 +121,8 @@ function buildPlan(report, minFailures) {
       key: "relevance_min_token_overlap",
       delta: -1,
       floor: 1,
-      rationale: "No-case-law rate indicates token-overlap gate is likely over-pruning.",
+      rationale:
+        "No-case-law rate indicates token-overlap gate is likely over-pruning.",
     });
   }
 
@@ -146,7 +147,9 @@ function buildPlan(report, minFailures) {
   }
 
   return {
-    reason: actions.length ? "threshold-relaxation" : "No safe deterministic action",
+    reason: actions.length
+      ? "threshold-relaxation"
+      : "No safe deterministic action",
     actions: actions.slice(0, 2),
     stats: {
       noCaseLawCount,
@@ -169,7 +172,9 @@ function writeSummary(filePath, summaryText) {
 
 function appendOutputs(outputs) {
   if (!process.env.GITHUB_OUTPUT) return;
-  const lines = Object.entries(outputs).map(([key, value]) => `${key}=${value}`);
+  const lines = Object.entries(outputs).map(
+    ([key, value]) => `${key}=${value}`,
+  );
   fs.appendFileSync(process.env.GITHUB_OUTPUT, `${lines.join("\n")}\n`);
 }
 

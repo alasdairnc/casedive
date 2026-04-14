@@ -7,7 +7,10 @@ import crypto from "crypto";
 function parseArgs(argv) {
   const out = {
     baseUrl: process.env.RETRIEVAL_HEALTH_BASE_URL || "https://www.casedive.ca",
-    fallbackBaseUrls: (process.env.RETRIEVAL_HEALTH_FALLBACK_BASE_URLS || "https://casedive.vercel.app")
+    fallbackBaseUrls: (
+      process.env.RETRIEVAL_HEALTH_FALLBACK_BASE_URLS ||
+      "https://casedive.vercel.app"
+    )
       .split(",")
       .map((value) => value.trim())
       .filter(Boolean),
@@ -136,11 +139,15 @@ async function fetchFailureArchive(baseUrl, token, limit, maxPages) {
     if (!response.ok) {
       const body = await response.text().catch(() => "");
       if (response.status === 403 && isCloudflareChallenge(body)) {
-        const err = new Error(`retrieval-health cloudflare_challenge on ${cleanBase}`);
+        const err = new Error(
+          `retrieval-health cloudflare_challenge on ${cleanBase}`,
+        );
         err.code = "CLOUDFLARE_CHALLENGE";
         throw err;
       }
-      throw new Error(`retrieval-health ${response.status}: ${body.slice(0, 300)}`);
+      throw new Error(
+        `retrieval-health ${response.status}: ${body.slice(0, 300)}`,
+      );
     }
 
     const json = await response.json();
@@ -155,7 +162,13 @@ async function fetchFailureArchive(baseUrl, token, limit, maxPages) {
   return allItems;
 }
 
-async function fetchFailureArchiveWithFallback({ baseUrl, fallbackBaseUrls, token, limit, maxPages }) {
+async function fetchFailureArchiveWithFallback({
+  baseUrl,
+  fallbackBaseUrls,
+  token,
+  limit,
+  maxPages,
+}) {
   const candidates = [baseUrl, ...fallbackBaseUrls]
     .map((value) => String(value || "").trim())
     .filter(Boolean)
@@ -164,7 +177,12 @@ async function fetchFailureArchiveWithFallback({ baseUrl, fallbackBaseUrls, toke
   const attempts = [];
   for (const candidate of candidates) {
     try {
-      const items = await fetchFailureArchive(candidate, token, limit, maxPages);
+      const items = await fetchFailureArchive(
+        candidate,
+        token,
+        limit,
+        maxPages,
+      );
       return { items, resolvedBaseUrl: candidate, attempts };
     } catch (error) {
       attempts.push({
@@ -176,7 +194,9 @@ async function fetchFailureArchiveWithFallback({ baseUrl, fallbackBaseUrls, toke
     }
   }
 
-  const details = attempts.map((attempt) => `${attempt.baseUrl} -> ${attempt.code}`).join(", ");
+  const details = attempts
+    .map((attempt) => `${attempt.baseUrl} -> ${attempt.code}`)
+    .join(", ");
   throw new Error(`all retrieval-health base URLs failed: ${details}`);
 }
 
@@ -200,7 +220,9 @@ function renderMarkdown(summary, grouped) {
   }
 
   for (const group of grouped.slice(0, 20)) {
-    lines.push(`- (${group.count}) ${group.reason}: ${group.scenarioSnippet || "(no scenario snippet)"}`);
+    lines.push(
+      `- (${group.count}) ${group.reason}: ${group.scenarioSnippet || "(no scenario snippet)"}`,
+    );
   }
   lines.push("");
   return lines.join("\n");

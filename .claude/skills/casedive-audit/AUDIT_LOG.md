@@ -179,3 +179,20 @@ Append-only. Each run adds a dated section. Never overwrite previous entries.
 ### Still open
 
 - None
+
+## Audit — 2026-04-14
+
+### Fixed since last run
+
+- `api/filter-quality.js` missing rate limit — `checkRateLimit(getClientIp(req), "filter-quality")` now present at api/filter-quality.js:34
+- `api/filter-quality.js` missing vercel.json entry — all 7 public endpoints now have functions config in vercel.json
+- `api/retrieval-health.js` unbounded query params — `parseBoundedInt()` applied to failureLimit, failuresBeforeTs, failuresOffset at api/retrieval-health.js:90-107
+
+### New findings
+
+- Hardcoded model ID `"claude-sonnet-4-20250514"` in Vite dev server middleware (should use `ANTHROPIC_MODEL_ID` from `_constants.js`) | Medium | vite.config.js:168, 281
+- `src/lib/criminalCodeParts.js` has no dedicated unit test file | Low | src/lib/criminalCodeParts.js
+
+### Still open
+
+- Local `.env` contains live API and Redis credentials (gitignored but present on disk) | High | .env

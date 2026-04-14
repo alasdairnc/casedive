@@ -6,6 +6,7 @@ import {
   buildSearchUrl,
   parseCitation,
 } from "./src/lib/canlii.js";
+import { ANTHROPIC_MODEL_ID } from "./api/_constants.js";
 
 /**
  * A helper function to create a POST-only API handler for the dev server.
@@ -86,7 +87,8 @@ function buildOfflineAnalyzeResponse(scenario) {
             court: selectedCase.court,
             year: selectedCase.year,
             summary: selectedCase.ratio || selectedCase.facts || summary,
-            matched_content: selectedCase.facts || selectedCase.ratio || summary,
+            matched_content:
+              selectedCase.facts || selectedCase.ratio || summary,
             verificationStatus: "verified",
             url_canlii: caseUrl,
           },
@@ -146,7 +148,9 @@ export default defineConfig(({ mode }) => {
               if (!process.env.ANTHROPIC_API_KEY) {
                 res.writeHead(200, { "Content-Type": "application/json" });
                 res.end(
-                  JSON.stringify(buildOfflineAnalyzeResponse(scenario, filters)),
+                  JSON.stringify(
+                    buildOfflineAnalyzeResponse(scenario, filters),
+                  ),
                 );
                 return;
               }
@@ -165,7 +169,7 @@ export default defineConfig(({ mode }) => {
                       "anthropic-version": "2023-06-01",
                     },
                     body: JSON.stringify({
-                      model: "claude-sonnet-4-20250514",
+                      model: ANTHROPIC_MODEL_ID,
                       max_tokens: 1000,
                       system: buildSystemPrompt(filters || {}),
                       messages: [{ role: "user", content: scenario }],
@@ -278,7 +282,7 @@ export default defineConfig(({ mode }) => {
                     "anthropic-version": "2023-06-01",
                   },
                   body: JSON.stringify({
-                    model: "claude-sonnet-4-20250514",
+                    model: ANTHROPIC_MODEL_ID,
                     max_tokens: 800,
                     system,
                     messages: [{ role: "user", content: prompt }],

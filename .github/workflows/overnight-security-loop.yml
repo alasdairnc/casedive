@@ -1,12 +1,12 @@
-name: 'Overnight Security Loop'
+name: "Overnight Security Loop"
 
 on:
   workflow_dispatch:
     inputs:
       force_run:
-        description: 'Force run security audit'
+        description: "Force run security audit"
         required: false
-        default: 'true'
+        default: "true"
   schedule:
     - cron: "0 6 * * *" # 2am ET / 6am UTC nightly
 
@@ -483,7 +483,7 @@ jobs:
           HUMAN_REVIEW_REQUIRED: ${{ steps.scorecard.outputs.human_review_required }}
           SEVERITY_BUCKETS: ${{ steps.findings.outputs.severity_buckets }}
           HEAD_SHA: ${{ github.sha }}
-          TITLE_PREFIX: 'fix(security): nightly security autofix'
+          TITLE_PREFIX: "fix(security): nightly security autofix"
         run: |
           set -euo pipefail
 
