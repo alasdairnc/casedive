@@ -246,7 +246,7 @@ jobs:
           set -euo pipefail
           PROMPT="$(awk 'BEGIN { in_frontmatter = 0 } /^---$/ { in_frontmatter++; next } in_frontmatter >= 2 { print }' .github/agents/preview-self-heal.agent.md)"
           claude -p "$PROMPT" \
-            --model haiku \
+            --model claude-haiku-4-5-20251001 \
             --allowedTools "Read,Edit,Grep,Glob" \
             --max-turns 18 \
             --output-format text 2>&1 | tee preview-self-heal.log
