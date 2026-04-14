@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROD_BASE_URL: https://www.casedive.ca
-      RETRIEVAL_HEALTH_FALLBACK_BASE_URLS: https://casedive.vercel.app
+      RETRIEVAL_HEALTH_FALLBACK_BASE_URLS: https://casedive.ca
       RETRIEVAL_HEALTH_SOFT_FAIL: "true"
       MIN_FAILURE_EVENTS: "25"
       FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force_run || 'false' }}
@@ -39,6 +39,8 @@ jobs:
       markdown_path: ${{ steps.detect_outputs.outputs.markdown_path }}
       report_filename: ${{ steps.detect_outputs.outputs.report_filename }}
       markdown_filename: ${{ steps.detect_outputs.outputs.markdown_filename }}
+      telemetry_ok: ${{ steps.detect_outputs.outputs.telemetry_ok }}
+      fetch_error: ${{ steps.detect_outputs.outputs.fetch_error }}
 
     steps:
       - uses: actions/checkout@v5
@@ -85,12 +87,25 @@ jobs:
             exit 0
           fi
 
+          TELEMETRY_OK="false"
+          FETCH_ERROR=""
+          REPORT_PATH="${{ steps.collect.outputs.report_path }}"
+          if [ -n "$REPORT_PATH" ] && [ -f "$REPORT_PATH" ]; then
+            TELEMETRY_OK=$(node -e "const fs=require('fs'); const report=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(report.fetchError ? 'false' : 'true');" "$REPORT_PATH")
+            FETCH_ERROR=$(node -e "const fs=require('fs'); const report=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(String(report.fetchError || ''));" "$REPORT_PATH")
+          fi
+          echo "telemetry_ok=$TELEMETRY_OK" >> "$GITHUB_OUTPUT"
+          echo "fetch_error=$FETCH_ERROR" >> "$GITHUB_OUTPUT"
+
           FAILURES="${{ steps.collect.outputs.no_caselaw_failures }}"
           if [ -z "$FAILURES" ]; then FAILURES=0; fi
 
           if [ "${FORCE_RUN}" = "true" ]; then
             echo "run_autofix=true" >> "$GITHUB_OUTPUT"
             echo "reason=forced" >> "$GITHUB_OUTPUT"
+          elif [ "$TELEMETRY_OK" != "true" ]; then
+            echo "run_autofix=false" >> "$GITHUB_OUTPUT"
+            echo "reason=telemetry-unavailable" >> "$GITHUB_OUTPUT"
           elif [ "$FAILURES" -ge "$MIN_FAILURE_EVENTS" ]; then
             echo "run_autofix=true" >> "$GITHUB_OUTPUT"
             echo "reason=threshold-met" >> "$GITHUB_OUTPUT"
@@ -119,6 +134,8 @@ jobs:
           echo "markdown_path=${MARKDOWN_PATH}" >> "$GITHUB_OUTPUT"
           echo "report_filename=${REPORT_FILENAME}" >> "$GITHUB_OUTPUT"
           echo "markdown_filename=${MARKDOWN_FILENAME}" >> "$GITHUB_OUTPUT"
+          echo "telemetry_ok=${{ steps.precheck.outputs.telemetry_ok }}" >> "$GITHUB_OUTPUT"
+          echo "fetch_error=${{ steps.precheck.outputs.fetch_error }}" >> "$GITHUB_OUTPUT"
 
       - name: Write daily detector summary
         run: |
@@ -129,9 +146,11 @@ jobs:
 
           - Run autofix: ${{ steps.precheck.outputs.run_autofix }}
           - Reason: ${{ steps.precheck.outputs.reason }}
+          - Telemetry available: ${{ steps.precheck.outputs.telemetry_ok }}
           - No-case-law failures: ${{ steps.detect_outputs.outputs.no_caselaw_failures }}
           - Report path: ${{ steps.detect_outputs.outputs.report_path || '(none)' }}
           - Markdown path: ${{ steps.detect_outputs.outputs.markdown_path || '(none)' }}
+          - Fetch error: ${{ steps.precheck.outputs.fetch_error || '(none)' }}
           EOF
 
       - name: Upload detector artifacts
@@ -333,4 +352,6 @@ jobs:
         run: |
           echo "Skipping daily retrieval autofix."
           echo "Reason: ${{ needs.detect.outputs.reason }}"
+          echo "Telemetry available: ${{ needs.detect.outputs.telemetry_ok }}"
           echo "No-case-law failures: ${{ needs.detect.outputs.no_caselaw_failures }}"
+          echo "Fetch error: ${{ needs.detect.outputs.fetch_error }}"
