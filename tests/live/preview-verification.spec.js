@@ -49,7 +49,7 @@ test.describe("Preview verification", () => {
     await expect(page.getByText("Legal Analysis", { exact: true })).toBeVisible({
       timeout: 15000,
     });
-    await expect(page.getByText(/R v Dorfer/i)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/R\. v\. Mann/i)).toBeVisible({ timeout: 15000 });
     await expect(
       page.getByRole("link", { name: /Verified on CanLII/i }),
     ).toBeVisible({ timeout: 15000 });
