@@ -43,9 +43,9 @@ fi
 
 echo ""
 
-# 2. Create SKILLS folder and copy skill files
-echo -e "${BLUE}Step 2: Creating SKILLS folder and copying skill files...${NC}"
-SKILLS_DIR="$PROJECT_DIR/SKILLS"
+# 2. Create skills folder and copy skill files
+echo -e "${BLUE}Step 2: Creating skills folder and copying skill files...${NC}"
+SKILLS_DIR="$PROJECT_DIR/skills"
 mkdir -p "$SKILLS_DIR"
 
 # Copy all skill files from /tmp/casefinder-skills/
@@ -98,7 +98,7 @@ echo -e "${BLUE}Folder structure:${NC}"
 echo "$PROJECT_DIR/"
 echo "├── CASEFINDER_2_0_PLAN.md"
 echo "├── CASEFINDER_SKILLS_PLAN.md"
-echo "└── SKILLS/"
+echo "└── skills/"
 echo "    ├── README.md"
 echo "    ├── criminal-code-builder/"
 echo "    │   └── SKILL.md"
@@ -115,5 +115,4 @@ echo ""
 echo -e "${YELLOW}Next steps:${NC}"
 echo "1. Open VS Code: cd $PROJECT_DIR && code ."
 echo "2. View plans: Open CASEFINDER_2_0_PLAN.md and CASEFINDER_SKILLS_PLAN.md"
-echo "3. Sunday: Install skills by copying SKILLS folder to /mnt/skills/user/"
-
+echo "3. Sunday: Install skills by copying the generated skill subfolders to /mnt/skills/user/"

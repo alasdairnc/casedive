@@ -44,7 +44,11 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - CanLII API key optional; Sentry no-ops if unset
 
 ## Reference Files (read on demand)
+- `docs/README.md` (documentation index)
 - `docs/architecture.md`, `docs/design-system.md`, `docs/security.md`
+- `docs/filtering/FILTER_TUNING.md`, `docs/filtering/FILTER_TUNING_QUICKSTART.md`
+- `docs/operations/` (runbooks, snapshots, performance plan, audit log)
+- `artifacts/` (generated outputs, including `filter-quality-report.html`)
 
 ## Agent Skills & Subagents
 Auto-loaded from `.claude/skills/` (e.g., `casedive-audit`, `new-api-endpoint`).

@@ -1,5 +1,14 @@
 # CaseDive Skills Collection
 
+## Repository Locations (Current)
+
+- Skill source files in this repo: `skills/`
+- Logo assets in this repo: `logo/`
+- Documentation index: `docs/README.md`
+- Filter docs: `docs/filtering/`
+- Operations docs/runbooks: `docs/operations/`
+- Generated reports/artifacts: `artifacts/` (for example `artifacts/filter-quality-report.html`)
+
 ## Quality Guardrails
 
 - Local pre-PR check: run `npm run test:guardrails`

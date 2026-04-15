@@ -1,5 +1,11 @@
 # CaseDive Skills Collection
 
+## Repository Locations (Current)
+
+- This repo stores skill source files under `skills/`
+- Docs index: `docs/README.md`
+- Generated reports/artifacts: `artifacts/`
+
 **Ready to use on Sunday!** All 4 skills are drafted and ready to go.
 
 ## What You Have
