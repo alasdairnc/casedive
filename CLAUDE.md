@@ -1,82 +1,62 @@
-# CaseDive - Claude Context File
-
-## About
-
-AI-powered Canadian legal research tool. Live at [casedive.ca](https://casedive.ca). Repo: `alasdairnc/casefinder`
-Stack: React 18 + Vite, Vercel serverless `/api/`, Anthropic API, Upstash Redis, CanLII API.
-
-## Action Bias
-
-- When intent is clear, act directly — don't offer multiple options
-- Be concise; avoid verbose narration during tool use
-
-## Testing & Verification
-
-- Always start the dev server (`npm run dev:api`) before running E2E/Playwright tests
-- Run the full test suite after code changes and fix failures before declaring done
-- Add regression tests when fixing bugs
-
-## Dependencies
-
-- Pin major version upgrades; do not auto-bump to new majors (e.g., Vite stays on v6.x)
-- Verify build after any dependency change
-
-## Active Development Context
-
-Current focus: case-law retrieval quality — query shaping, fallback calibration, and empty-state UX.
-Retrieval failure corpus is the active test target (`npm run test:retrieval-failures`).
-
-## Commands
-
-```bash
-npm run dev          # Vite frontend only (localhost:5173)
 npm run dev:api      # Full stack via Vercel CLI — USE THIS for any API work
-npm run build        # Production build
-npm test             # Playwright E2E
-npm run test:unit    # Vitest JS unit tests (excludes .test.jsx)
 npm run test:component  # Vitest component tests (.test.jsx only)
 npm run test:guardrails # Pre-PR: sanitizer + retrieval-failures + hallucination filter
-npm run test:retrieval-failures  # Labeled retrieval failure scenarios
-```
 
-## Memory & Session Continuity
+# CaseDive - Claude Context File
 
-When making non-obvious architecture decisions, rejecting an approach, or discovering a project-specific gotcha mid-session — save it to memory immediately (don't wait until the session ends). Use the Write tool to create/update files in `.claude/projects/*/memory/`. The Stop hook can't capture conversation content; proactive saves during the session are the only way this persists.
+AI-powered Canadian legal research tool. Stack: React 18 + Vite, Vercel serverless `/api/`, Anthropic API, Upstash Redis, CanLII API. Live at [casedive.ca](https://casedive.ca).
+
+## Action Bias & Testing
+- Act directly when intent is clear; avoid verbose narration
+- Always start dev server (`npm run dev:api`) before E2E/Playwright tests
+- Run full test suite after code changes; fix failures before declaring done
+- Add regression tests when fixing bugs
+
+## Dependencies & Build
+- Pin major version upgrades; do not auto-bump
+- Verify build after any dependency change
+
+## Active Dev Context
+Focus: case-law retrieval quality (query shaping, fallback calibration, empty-state UX). Test target: retrieval failure corpus (`npm run test:retrieval-failures`).
+
+## Commands
+`npm run dev` (frontend), `npm run dev:api` (full stack), `npm run build`, `npm test`, `npm run test:unit`, `npm run test:component`, `npm run test:guardrails`, `npm run test:retrieval-failures`
+
+## Memory & Session
+Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 
 ## Critical Rules
-
-- No CSS framework — all styling is inline via ThemeContext
-- All model/API calls server-side only (never from React components)
-- New endpoints must have: rate limiting, input validation, security headers
-- CORS is centralized in `_cors.js` — don't set headers directly in endpoints
-- Model ID comes from `_constants.js` — change it in one place only
-- Use real Canadian legal citations only (no fabricated sections/cases)
+- No CSS framework (all styling via ThemeContext)
+- Model/API calls server-side only
+- New endpoints: rate limiting, input validation, security headers
+- CORS via `_cors.js` only
+- Model ID from `_constants.js` only
+- Use real Canadian legal citations only
 - Preserve grouped response schema: `criminal_code`, `case_law`, `civil_law`, `charter`
-- Never commit `.env` or secrets
-- Never commit or push to git without being explicitly told to
-- Any new workflow that uses Claude tokens must default to skip, require a high-signal trigger or explicit manual opt-in, and include concurrency cancellation plus a precheck that short-circuits before the Claude step when the change is low-value.
+- Never commit `.env`/secrets or push to git without explicit instruction
+- Claude-token workflows: default skip, require opt-in, concurrency cancel, precheck for low-value
 
 ## Key Gotchas
+- `npm run dev` ≠ `npm run dev:api` (use `dev:api` for `/api/`)
+- `test:unit` excludes `.test.jsx` (use `test:component` for JSX)
+- `criminalCodeData.js` is 316KB (import `criminalCodeParts.js` for parts list)
+- Redis falls back to in-memory in dev
+- CanLII API key optional; Sentry no-ops if unset
 
-- `npm run dev` ≠ `npm run dev:api` — use `dev:api` when touching `/api/`
-- `test:unit` excludes `.test.jsx` — use `test:component` for JSX tests
-- `criminalCodeData.js` is 316KB — import `criminalCodeParts.js` for just the parts list
-- Redis falls back to in-memory in dev (no Upstash needed locally)
-- CanLII API key is optional — verification degrades gracefully without it
-- Sentry no-ops if `SENTRY_DSN` is not set
+## Reference Files (read on demand)
+- `docs/architecture.md`, `docs/design-system.md`, `docs/security.md`
 
-## Reference Files (read on demand, not every turn)
+## Agent Skills & Subagents
+Auto-loaded from `.claude/skills/` (e.g., `casedive-audit`, `new-api-endpoint`).
+- `api-invariant-reviewer`: Checks `api/*.js` for rate limiting, input validation, security headers
+- `legal-data-validator`: Validates schema of legal data files
 
-- `docs/architecture.md` — project structure, response format, verification pipeline, case law DB, filtering, env vars
-- `docs/design-system.md` — fonts, colors, theme tokens
-- `docs/security.md` — CORS, rate limiting, input validation, key handling
-
-## Agent Skills
-
-Auto-loaded from `.claude/skills/`. Key ones: `casedive-audit`, `new-api-endpoint`.
-
-## Subagents
-
-- `api-invariant-reviewer`: Checks `api/*.js` for rate limiting, input validation, security headers.
-- `legal-data-validator`: Validates schema of entries in `criminalCodeData.js`, `civilLawData.js`, `charterData.js` — required fields, correct types, no duplicate keys. Run after adding any legal data entry.
-- `pre-push-checklist`: Compound pre-push gate. Chains: (1) full /verify loop, (2) console.log scan across src/ and api/, (3) .env drift check. Run before any git push.
+## Workflow Rules (from claude-doctor)
+- Read the full file before editing; plan all changes, then make ONE complete edit
+- If a file is edited 3+ times, re-read requirements
+- Re-read the last user message before responding; follow every instruction
+- Every few turns, re-read the original request to avoid drift
+- When corrected, quote back the request and confirm before proceeding
+- When stuck, summarize attempts and ask for guidance
+- Double-check output before presenting; verify it addresses the request
+- After 2 consecutive tool failures, change approach and explain
