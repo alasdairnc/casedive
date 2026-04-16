@@ -1,0 +1,28 @@
+
+                     __     _
+   ____  __  _______/ /__  (_)
+  / __ \/ / / / ___/ / _ \/ /
+ / / / / /_/ / /__/ /  __/ /
+/_/ /_/\__,_/\___/_/\___/_/   v3.7.1
+
+		projectdiscovery.io
+
+[INF] Your current nuclei-templates v10.4.1 are outdated. Latest is v10.4.2
+[INF] cleaned up 2 orphaned template file(s)
+[INF] Successfully updated nuclei-templates (v10.4.2) to /Users/alasdairnc/nuclei-templates. GoodLuck!
+
+Nuclei Templates v10.4.2 Changelog
+┌───────┬───────┬──────────┬─────────┐
+│ TOTAL │ ADDED │ MODIFIED │ REMOVED │
+├───────┼───────┼──────────┼─────────┤
+│ 4351  │ 121   │ 4228     │ 2       │
+└───────┴───────┴──────────┴─────────┘
+[WRN] Found 1 templates with runtime error (use -validate flag for further examination)
+[INF] Current nuclei version: v3.7.1 (latest)
+[INF] Current nuclei-templates version: v10.4.2 (latest)
+[INF] New templates added in latest release: 121
+[INF] Templates loaded for current scan: 1907
+[INF] Executing 1907 signed templates from projectdiscovery/nuclei-templates
+[INF] Targets loaded for current scan: 1
+[INF] Templates clustered: 153 (Reduced 126 Requests)
+[INF] Using Interactsh Server: oast.online

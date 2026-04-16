@@ -1,0 +1,11 @@
+[2026-04-15 19:50:09] Starting security audit for casedive.ca
+[2026-04-15 19:50:09] Output directory: security_audit
+[2026-04-15 19:50:09] Step 1/5: Enumerating subdomains with subfinder
+[2026-04-15 19:50:40] Subdomains found: 1
+[2026-04-15 19:50:40] Step 2/5: Verifying live targets with httpx
+[2026-04-15 19:50:41] Live targets found: 1
+[2026-04-15 19:50:41] Step 3/5: Discovering JavaScript files with subjs
+[2026-04-15 19:50:41] JavaScript files found: 4
+[2026-04-15 19:50:41] Step 4/5: Running jsluice secrets + urls on each JS file
+[2026-04-15 19:50:42] Processed JS files: 4
+[2026-04-15 19:50:42] Step 5/5: Running nuclei scan (severity: medium,high,critical | tags: xss,exposure | rate-limit: 5)
