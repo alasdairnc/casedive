@@ -1,8 +1,7 @@
 name: Preview Verification and Self-Heal
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+
+
   workflow_dispatch:
     inputs:
       preview_url:
@@ -13,7 +12,6 @@ on:
         description: "Allow Claude self-heal step"
         required: false
         default: "false"
-
 concurrency:
   group: preview-self-heal-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
