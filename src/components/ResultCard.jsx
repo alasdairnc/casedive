@@ -1,5 +1,10 @@
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { isValidUrl } from "../lib/validateUrl.js";
+import { useState } from "react";
+import {
+  CASE_LAW_REPORT_REASONS,
+  MAX_CASE_LAW_REPORT_NOTE_LENGTH,
+} from "../lib/caseLawReportReasons.js";
 
 export function sanitizeMatchedTextForDisplay(text) {
   const raw = String(text || "").trim();
@@ -198,6 +203,8 @@ export default function ResultCard({
   addBookmark,
   removeBookmark,
   isBookmarked,
+  resultIndex = 0,
+  onReportCaseLaw,
 }) {
   const t = useTheme();
   const matchedText = sanitizeMatchedTextForDisplay(
@@ -207,6 +214,15 @@ export default function ResultCard({
   const clickable = type === "case_law" && typeof onCardClick === "function";
   const citationId = item.citation || item.section || "";
   const bookmarked = isBookmarked ? isBookmarked(citationId) : false;
+  const reportable =
+    type === "case_law" &&
+    typeof onReportCaseLaw === "function" &&
+    Boolean(citationId);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportNote, setReportNote] = useState("");
+  const [reportState, setReportState] = useState("idle");
+  const [reportError, setReportError] = useState("");
 
   function handleBookmarkClick(e) {
     e.stopPropagation();
@@ -215,6 +231,47 @@ export default function ResultCard({
       removeBookmark(citationId);
     } else {
       addBookmark(item, type, verification);
+    }
+  }
+
+  function handleReportToggle(e) {
+    e.stopPropagation();
+    if (reportState === "success") return;
+    setReportError("");
+    setReportOpen((open) => !open);
+  }
+
+  function handleReportCancel(e) {
+    e.stopPropagation();
+    setReportError("");
+    setReportOpen(false);
+  }
+
+  async function handleReportSubmit(e) {
+    e.stopPropagation();
+    if (reportState === "submitting") return;
+    if (!reportReason) {
+      setReportError("Choose a reason before sending the report.");
+      return;
+    }
+
+    setReportState("submitting");
+    setReportError("");
+
+    try {
+      await onReportCaseLaw({
+        item,
+        resultIndex,
+        reason: reportReason,
+        note: reportNote.slice(0, MAX_CASE_LAW_REPORT_NOTE_LENGTH),
+      });
+      setReportState("success");
+      setReportOpen(false);
+    } catch (err) {
+      setReportState("error");
+      setReportError(
+        err?.message || "Could not send the report. Please try again.",
+      );
     }
   }
 
@@ -320,38 +377,90 @@ export default function ResultCard({
           </div>
         </div>
 
-        {/* Bookmark button — right aligned */}
-        {addBookmark && removeBookmark && isBookmarked && citationId && (
-          <button
-            data-testid={bookmarked ? "bookmark-remove" : "bookmark-add"}
-            onClick={handleBookmarkClick}
-            aria-label={
-              bookmarked ? "Remove bookmark" : "Bookmark this citation"
-            }
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 4,
-              color: bookmarked ? t.accentOlive : t.textTertiary,
-              transition: "color 0.15s",
-              flexShrink: 0,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = t.accentOlive;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = bookmarked
-                ? t.accentOlive
-                : t.textTertiary;
-            }}
-          >
-            <BookmarkIcon
-              filled={bookmarked}
-              color={bookmarked ? t.accentOlive : "currentColor"}
-            />
-          </button>
-        )}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            flexShrink: 0,
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {reportable &&
+            (reportState === "success" ? (
+              <div
+                data-testid="report-case-law-success"
+                style={{
+                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontSize: 10,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: t.textTertiary,
+                }}
+              >
+                Reported
+              </div>
+            ) : (
+              <button
+                type="button"
+                data-testid="report-case-law-open"
+                onClick={handleReportToggle}
+                aria-label="Report this case law result"
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontSize: 10,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: t.textTertiary,
+                  transition: "color 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = t.textSecondary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = t.textTertiary;
+                }}
+              >
+                Report
+              </button>
+            ))}
+
+          {addBookmark && removeBookmark && isBookmarked && citationId && (
+            <button
+              type="button"
+              data-testid={bookmarked ? "bookmark-remove" : "bookmark-add"}
+              onClick={handleBookmarkClick}
+              aria-label={
+                bookmarked ? "Remove bookmark" : "Bookmark this citation"
+              }
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 4,
+                color: bookmarked ? t.accentOlive : t.textTertiary,
+                transition: "color 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = t.accentOlive;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = bookmarked
+                  ? t.accentOlive
+                  : t.textTertiary;
+              }}
+            >
+              <BookmarkIcon
+                filled={bookmarked}
+                color={bookmarked ? t.accentOlive : "currentColor"}
+              />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Summary */}
@@ -366,6 +475,176 @@ export default function ResultCard({
           }}
         >
           {item.summary}
+        </div>
+      )}
+
+      {reportable && reportOpen && reportState !== "success" && (
+        <div
+          data-testid="report-case-law-panel"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            marginTop: 12,
+            padding: 14,
+            border: `1px solid ${t.border}`,
+            background: t.bgAlt,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 9,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: t.textTertiary,
+              marginBottom: 8,
+            }}
+          >
+            Report this result
+          </div>
+
+          <label
+            style={{
+              display: "block",
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 11,
+              color: t.textSecondary,
+              marginBottom: 8,
+            }}
+          >
+            Reason
+          </label>
+          <select
+            data-testid="report-case-law-reason"
+            value={reportReason}
+            onChange={(e) => setReportReason(e.target.value)}
+            style={{
+              width: "100%",
+              border: `1px solid ${t.border}`,
+              background: t.bg,
+              color: t.text,
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 12,
+              padding: "10px 12px",
+            }}
+          >
+            <option value="">Select a reason</option>
+            {CASE_LAW_REPORT_REASONS.map((reason) => (
+              <option key={reason.value} value={reason.value}>
+                {reason.label}
+              </option>
+            ))}
+          </select>
+
+          <label
+            style={{
+              display: "block",
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 11,
+              color: t.textSecondary,
+              marginTop: 12,
+              marginBottom: 8,
+            }}
+          >
+            Note (optional)
+          </label>
+          <textarea
+            data-testid="report-case-law-note"
+            value={reportNote}
+            onChange={(e) =>
+              setReportNote(
+                e.target.value.slice(0, MAX_CASE_LAW_REPORT_NOTE_LENGTH),
+              )
+            }
+            rows={3}
+            maxLength={MAX_CASE_LAW_REPORT_NOTE_LENGTH}
+            placeholder="Add any context that would help improve this match."
+            style={{
+              width: "100%",
+              resize: "vertical",
+              border: `1px solid ${t.border}`,
+              background: t.bg,
+              color: t.text,
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 12,
+              lineHeight: 1.6,
+              padding: "10px 12px",
+              boxSizing: "border-box",
+            }}
+          />
+
+          <div
+            style={{
+              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: 10,
+              color: t.textTertiary,
+              marginTop: 8,
+            }}
+          >
+            {MAX_CASE_LAW_REPORT_NOTE_LENGTH - reportNote.length} characters
+            remaining
+          </div>
+
+          {reportError && (
+            <div
+              data-testid="report-case-law-error"
+              style={{
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 11,
+                color: t.accentRed,
+                marginTop: 10,
+              }}
+            >
+              {reportError}
+            </div>
+          )}
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginTop: 12,
+            }}
+          >
+            <button
+              type="button"
+              data-testid="report-case-law-submit"
+              onClick={handleReportSubmit}
+              disabled={reportState === "submitting"}
+              style={{
+                border: `1px solid ${t.border}`,
+                background: t.bg,
+                color: t.text,
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 10,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                padding: "9px 12px",
+                cursor: reportState === "submitting" ? "default" : "pointer",
+                opacity: reportState === "submitting" ? 0.65 : 1,
+              }}
+            >
+              {reportState === "submitting" ? "Sending..." : "Submit report"}
+            </button>
+            <button
+              type="button"
+              onClick={handleReportCancel}
+              disabled={reportState === "submitting"}
+              style={{
+                border: "none",
+                background: "none",
+                color: t.textTertiary,
+                fontFamily: "'Helvetica Neue', sans-serif",
+                fontSize: 10,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                padding: 0,
+                cursor: reportState === "submitting" ? "default" : "pointer",
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
 

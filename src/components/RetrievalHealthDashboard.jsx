@@ -1223,7 +1223,8 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                             marginBottom: 8,
                           }}
                         >
-                          Scenario: {clip(sample.scenarioSnippet, 220)}
+                          Class: {clip(sample.classId, 120)} · Primary issue:{" "}
+                          {clip(sample.issuePrimary, 120)}
                         </div>
                         <div
                           style={{
@@ -1372,7 +1373,8 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                           marginBottom: 4,
                         }}
                       >
-                        Scenario: {clip(item.scenarioSnippet, 180)}
+                        Primary issue:{" "}
+                        {clip(item.issuePrimary || item.classId, 180)}
                       </div>
                       <div
                         style={{

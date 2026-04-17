@@ -35,10 +35,15 @@ export function buildAgentFixPrompt(sample = {}) {
     `Fallback used: ${sample.fallbackPathUsed ? "yes" : "no"}`,
     `Latency (ms): ${sample.latencyMs ?? "n/a"}`,
     `Semantic drops: ${sample.semanticFilterDropCount ?? 0}`,
+    `Issue class: ${sample.classId || "unknown"}`,
+    `Primary issue: ${sample.issuePrimary || sample.classId || "unknown"}`,
     "",
-    "Scenario:",
-    sample.scenarioSnippet || "(not captured)",
+    "Use aggregated retrieval telemetry only; no raw scenario text is available.",
   ];
+
+  if (sample.fallbackTriggerReason) {
+    lines.push(`Fallback trigger: ${sample.fallbackTriggerReason}`);
+  }
 
   if (sample.errorMessage) {
     lines.push("", `Error message: ${sample.errorMessage}`);

@@ -10,6 +10,7 @@ import ErrorMessage from "./components/ErrorMessage.jsx";
 import RetrievalHealthDashboard from "./components/RetrievalHealthDashboard.jsx";
 import { useSearchHistory } from "./hooks/useSearchHistory.js";
 import { useBookmarks } from "./hooks/useBookmarks.js";
+import { MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH } from "./lib/caseLawReportReasons.js";
 
 const SearchHistory = lazy(() => import("./components/SearchHistory.jsx"));
 const BookmarksPanel = lazy(() => import("./components/BookmarksPanel.jsx"));
@@ -43,6 +44,37 @@ const EXAMPLE_SCENARIOS = [
     text: "An accused allegedly defrauded an elderly victim of $90,000 through a fake investment scheme, collecting payments over 18 months before the victim discovered the fraud.",
   },
 ];
+
+function createDefaultFilters() {
+  return {
+    jurisdiction: "all",
+    courtLevel: "all",
+    dateRange: "all",
+    lawTypes: { ...defaultLawTypes },
+  };
+}
+
+function cloneSubmittedFilters(filters = {}) {
+  return {
+    jurisdiction: filters.jurisdiction || "all",
+    courtLevel: filters.courtLevel || "all",
+    dateRange: filters.dateRange || "all",
+    lawTypes: {
+      criminal_code: filters?.lawTypes?.criminal_code !== false,
+      case_law: filters?.lawTypes?.case_law !== false,
+      civil_law: filters?.lawTypes?.civil_law !== false,
+      charter: filters?.lawTypes?.charter !== false,
+    },
+  };
+}
+
+function toScenarioSnippet(value) {
+  if (typeof value !== "string") return "";
+  return value
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH);
+}
 
 function EmptyState({ setQuery, t }) {
   return (
@@ -130,29 +162,6 @@ function EmptyState({ setQuery, t }) {
   );
 }
 
-// AdSense — only push once per <ins> element
-function AdUnit({ slotId, style }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    if (!ref.current || ref.current.dataset.adLoaded) return;
-    ref.current.dataset.adLoaded = "true";
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch {}
-  }, []);
-  return (
-    <ins
-      ref={ref}
-      className="adsbygoogle"
-      style={{ display: "block", ...style }}
-      data-ad-client="ca-pub-5931276184603899"
-      data-ad-slot={slotId}
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    />
-  );
-}
-
 function AppInner() {
   const t = useTheme();
   const [pathname, setPathname] = useState(() =>
@@ -172,13 +181,12 @@ function AppInner() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [bookmarksOpen, setBookmarksOpen] = useState(false);
   const [codeExplorerOpen, setCodeExplorerOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    jurisdiction: "all",
-    courtLevel: "all",
-    dateRange: "all",
-    lawTypes: { ...defaultLawTypes },
-  });
+  const [filters, setFilters] = useState(() => createDefaultFilters());
   const [submittedQuery, setSubmittedQuery] = useState("");
+  const [submittedScenarioSnippet, setSubmittedScenarioSnippet] = useState("");
+  const [submittedFilters, setSubmittedFilters] = useState(() =>
+    createDefaultFilters(),
+  );
   const resultsRef = useRef(null);
   const { history, addToHistory, clearHistory, rerunQuery } =
     useSearchHistory();
@@ -240,6 +248,8 @@ function AppInner() {
       if (data.error) throw new Error(data.error);
 
       setSubmittedQuery(activeQuery.trim());
+      setSubmittedScenarioSnippet(toScenarioSnippet(activeQuery));
+      setSubmittedFilters(cloneSubmittedFilters(activeFilters));
       setResult(data);
       addToHistory(activeQuery.trim(), activeFilters, data);
 
@@ -274,12 +284,6 @@ function AppInner() {
       }}
     >
       <style>{`
-        @media (max-width: 1200px) {
-          .ad-side-left, .ad-side-right { display: none !important; }
-        }
-        @media (min-width: 1201px) {
-          .ad-bottom { display: none !important; }
-        }
         @keyframes cdFadeSlideIn {
           from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -371,66 +375,31 @@ function AppInner() {
       {/* Empty state */}
       {isEmpty && <EmptyState setQuery={setQuery} t={t} />}
 
-      {/* 3-column layout */}
       <div
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          gap: 24,
-          maxWidth: "100%",
+          maxWidth: 760,
           margin: "0 auto",
-          padding: "24px 12px",
+          padding: "24px 24px",
         }}
       >
-        {/* Left side ad */}
-        <div className="ad-side-left" style={{ flex: "0 0 160px" }}>
-          <div style={{ position: "sticky", top: 24 }}>
-            <AdUnit slotId="5671735556" style={{ minHeight: 600 }} />
-          </div>
+        <div ref={resultsRef}>
+          {loading && <StagedLoading />}
+          {error && <ErrorMessage message={error} onRetry={analyzeScenario} />}
         </div>
 
-        {/* Center column */}
-        <div style={{ flex: "1 1 auto", maxWidth: 760, minWidth: 0 }}>
-          <div style={{ marginBottom: 8 }}>
-            <AdUnit slotId="7399604405" style={{ maxWidth: "100%" }} />
+        {result && (
+          <div className="cd-results-in">
+            <Results
+              data={result}
+              scenario={submittedQuery}
+              scenarioSnippet={submittedScenarioSnippet}
+              filters={submittedFilters}
+              addBookmark={addBookmark}
+              removeBookmark={removeBookmark}
+              isBookmarked={isBookmarked}
+            />
           </div>
-
-          <div ref={resultsRef}>
-            {loading && <StagedLoading />}
-            {error && (
-              <ErrorMessage message={error} onRetry={analyzeScenario} />
-            )}
-          </div>
-
-          {result && (
-            <div className="cd-results-in">
-              <Results
-                data={result}
-                scenario={submittedQuery}
-                addBookmark={addBookmark}
-                removeBookmark={removeBookmark}
-                isBookmarked={isBookmarked}
-              />
-              <div
-                className="ad-bottom"
-                style={{ margin: "32px 24px 0", textAlign: "center" }}
-              >
-                <AdUnit
-                  slotId="1225553652"
-                  style={{ maxWidth: "100%", height: "auto" }}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right side ad */}
-        <div className="ad-side-right" style={{ flex: "0 0 160px" }}>
-          <div style={{ position: "sticky", top: 24 }}>
-            <AdUnit slotId="3173060142" style={{ minHeight: 600 }} />
-          </div>
-        </div>
+        )}
       </div>
 
       <Suspense fallback={null}>

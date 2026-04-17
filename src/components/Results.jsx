@@ -67,6 +67,8 @@ const SECTIONS = [
 export default function Results({
   data,
   scenario,
+  scenarioSnippet,
+  filters,
   addBookmark,
   removeBookmark,
   isBookmarked,
@@ -125,6 +127,7 @@ export default function Results({
   const showRetrievalStats =
     retrievalStats &&
     (retrievalStats.searchCalls > 0 || retrievalStats.candidateCount > 0);
+  const analysisRequestId = data?.meta?.requestId || null;
 
   useEffect(() => {
     if (!data || verifyingCitations) return;
@@ -197,6 +200,50 @@ export default function Results({
       );
     }
   }, [pdfState, data, verifications]);
+
+  const handleReportCaseLaw = useCallback(
+    async ({ item, resultIndex, reason, note }) => {
+      const trimmedNote = String(note || "").trim();
+      const res = await fetch("/api/report-case-law", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          analysisRequestId,
+          scenarioSnippet,
+          filters,
+          item: {
+            citation: item?.citation || "",
+            title: item?.title || "",
+            court: item?.court || "",
+            year: item?.year || "",
+            url_canlii: item?.url_canlii || "",
+            summary: item?.summary || item?.description || "",
+          },
+          resultIndex,
+          reason,
+          note: trimmedNote || undefined,
+          caseLawMeta: {
+            source: caseLawMeta?.source || null,
+            reason: caseLawMeta?.reason || null,
+            issuePrimary: retrievalMeta?.issuePrimary || null,
+            retrievalPass: retrievalMeta?.retrievalPass || null,
+            fallbackReason: retrievalMeta?.fallbackReason || null,
+            verifiedCount:
+              typeof caseLawMeta?.verifiedCount === "number"
+                ? caseLawMeta.verifiedCount
+                : null,
+          },
+        }),
+      });
+
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok || payload?.ok !== true) {
+        throw new Error(payload?.error || `Report failed (${res.status})`);
+      }
+      return payload;
+    },
+    [analysisRequestId, caseLawMeta, filters, retrievalMeta, scenarioSnippet],
+  );
 
   return (
     <section
@@ -420,7 +467,7 @@ export default function Results({
               {verificationBanner}
               {items.map((item, i) => (
                 <ResultCard
-                  key={i}
+                  key={analysisRequestId ? `${analysisRequestId}-${i}` : i}
                   item={item}
                   type={key}
                   verification={verifications[item.citation]}
@@ -428,6 +475,10 @@ export default function Results({
                   addBookmark={addBookmark}
                   removeBookmark={removeBookmark}
                   isBookmarked={isBookmarked}
+                  resultIndex={i}
+                  onReportCaseLaw={
+                    key === "case_law" ? handleReportCaseLaw : undefined
+                  }
                 />
               ))}
             </div>
