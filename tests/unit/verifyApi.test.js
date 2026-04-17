@@ -4,6 +4,7 @@ const mockCheckRateLimit = vi.fn();
 const mockGetClientIp = vi.fn(() => "127.0.0.1");
 const mockRateLimitHeaders = vi.fn(() => ({ "X-RateLimit-Limit": "60" }));
 const mockApplyCorsHeaders = vi.fn();
+const mockIsOriginAllowed = vi.fn(() => true);
 
 vi.mock("../../api/_rateLimit.js", () => ({
   redis: null,
@@ -14,6 +15,7 @@ vi.mock("../../api/_rateLimit.js", () => ({
 
 vi.mock("../../api/_cors.js", () => ({
   applyCorsHeaders: mockApplyCorsHeaders,
+  isOriginAllowed: mockIsOriginAllowed,
 }));
 
 vi.mock("../../api/_logging.js", () => ({
@@ -139,6 +141,26 @@ describe("verify handler", () => {
     expect(res.statusCode).toBe(429);
     expect(res.body).toEqual({
       error: "Rate limit exceeded. Please try again later.",
+    });
+  });
+
+  it("returns 503 when the rate-limit backend is unavailable", async () => {
+    mockCheckRateLimit.mockResolvedValue({
+      allowed: false,
+      limit: 60,
+      remaining: 0,
+      resetAt: new Date(Date.now() + 60_000).toISOString(),
+      reason: "backend_unavailable",
+      retryAfterSeconds: 60,
+    });
+    const req = createReq({ body: { citations: ["2016 SCC 27"] } });
+    const res = createRes();
+
+    await handler(req, res);
+
+    expect(res.statusCode).toBe(503);
+    expect(res.body).toEqual({
+      error: "Service temporarily unavailable. Please try again shortly.",
     });
   });
 

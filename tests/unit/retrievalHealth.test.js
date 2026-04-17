@@ -4,6 +4,7 @@ const mockCheckRateLimit = vi.fn();
 const mockGetClientIp = vi.fn(() => "127.0.0.1");
 const mockRateLimitHeaders = vi.fn(() => ({ "X-RateLimit-Limit": "60" }));
 const mockApplyCorsHeaders = vi.fn();
+const mockIsOriginAllowed = vi.fn(() => true);
 const mockGetRetrievalHealthSnapshot = vi.fn();
 const mockGetTrendlineSnapshots = vi.fn();
 const mockGetFailureScenarioPage = vi.fn();
@@ -17,6 +18,7 @@ vi.mock("../../api/_rateLimit.js", () => ({
 
 vi.mock("../../api/_cors.js", () => ({
   applyCorsHeaders: mockApplyCorsHeaders,
+  isOriginAllowed: mockIsOriginAllowed,
 }));
 
 vi.mock("../../api/_retrievalHealthStore.js", () => ({
@@ -90,7 +92,8 @@ describe("retrieval-health handler", () => {
           ts: new Date(1).toISOString(),
           endpoint: "analyze",
           reason: "no_verified",
-          scenarioSnippet: "sample scenario",
+          classId: "trial_delay",
+          issuePrimary: "trial_delay",
         },
       ],
     });
@@ -103,7 +106,8 @@ describe("retrieval-health handler", () => {
           ts: new Date(1).toISOString(),
           endpoint: "analyze",
           reason: "no_verified",
-          scenarioSnippet: "sample scenario",
+          classId: "trial_delay",
+          issuePrimary: "trial_delay",
         },
       ],
       hasMore: false,
@@ -214,7 +218,8 @@ describe("retrieval-health handler", () => {
           ts: new Date(1).toISOString(),
           endpoint: "analyze",
           reason: "no_verified",
-          scenarioSnippet: "sample scenario",
+          classId: "trial_delay",
+          issuePrimary: "trial_delay",
         },
       ],
       failureArchive: {
@@ -223,7 +228,8 @@ describe("retrieval-health handler", () => {
             ts: new Date(1).toISOString(),
             endpoint: "analyze",
             reason: "no_verified",
-            scenarioSnippet: "sample scenario",
+            classId: "trial_delay",
+            issuePrimary: "trial_delay",
           },
         ],
         hasMore: false,

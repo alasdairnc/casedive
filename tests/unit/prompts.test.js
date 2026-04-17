@@ -14,6 +14,8 @@ describe("buildSystemPrompt", () => {
 
   it("includes the untrusted input warning", () => {
     expect(buildSystemPrompt()).toContain("<user_input>");
+    expect(buildSystemPrompt()).toContain("<reference_context>");
+    expect(buildSystemPrompt()).toContain("<external_content>");
     expect(buildSystemPrompt()).toContain("UNTRUSTED");
   });
 

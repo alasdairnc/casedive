@@ -20,7 +20,8 @@ describe("retrieval health store recent failures", () => {
       caseLawFilterEnabled: true,
       finalCaseLawCount: 0,
       verifiedCount: 0,
-      scenarioSnippet: "neighbor built fence onto my property",
+      classId: "property_dispute",
+      issuePrimary: "property_dispute",
     });
 
     const snapshot = await getRetrievalHealthSnapshot({ nowMs: futureNow });
@@ -29,7 +30,8 @@ describe("retrieval health store recent failures", () => {
     expect(snapshot.recentFailures[0]).toMatchObject({
       endpoint: "analyze",
       reason: "no_verified",
-      scenarioSnippet: "neighbor built fence onto my property",
+      classId: "property_dispute",
+      issuePrimary: "property_dispute",
       finalCaseLawCount: 0,
     });
   });
@@ -116,7 +118,8 @@ describe("retrieval health store recent failures", () => {
       caseLawFilterEnabled: true,
       finalCaseLawCount: 0,
       verifiedCount: 0,
-      scenarioSnippet: "first scenario",
+      classId: "first_issue",
+      issuePrimary: "first_issue",
     });
 
     await recordRetrievalMetricsEvent({
@@ -126,7 +129,8 @@ describe("retrieval health store recent failures", () => {
       caseLawFilterEnabled: true,
       finalCaseLawCount: 0,
       verifiedCount: 0,
-      scenarioSnippet: "second scenario",
+      classId: "second_issue",
+      issuePrimary: "second_issue",
     });
 
     await recordRetrievalMetricsEvent({
@@ -136,7 +140,8 @@ describe("retrieval health store recent failures", () => {
       caseLawFilterEnabled: true,
       finalCaseLawCount: 0,
       verifiedCount: 0,
-      scenarioSnippet: "third scenario",
+      classId: "third_issue",
+      issuePrimary: "third_issue",
     });
 
     const firstPage = await getFailureScenarioPage({

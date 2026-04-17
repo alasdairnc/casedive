@@ -30,17 +30,19 @@ describe("retrievalHealthUtils", () => {
     expect(fmtDate("2026-01-01T00:00:00.000Z")).not.toBe("—");
   });
 
-  it("builds agent fix prompt with scenario and optional error", () => {
+  it("builds agent fix prompt with class metadata and optional error", () => {
     const prompt = buildAgentFixPrompt({
       ts: "2026-04-02T00:00:00.000Z",
       endpoint: "analyze",
       reason: "retrieval_error",
-      scenarioSnippet: "trial delay issue",
+      classId: "trial_delay",
+      issuePrimary: "trial_delay",
       errorMessage: "network failure",
     });
 
     expect(prompt).toContain("Investigate and fix retrieval failure");
-    expect(prompt).toContain("trial delay issue");
+    expect(prompt).toContain("Issue class: trial_delay");
+    expect(prompt).toContain("Primary issue: trial_delay");
     expect(prompt).toContain("Error message: network failure");
   });
 

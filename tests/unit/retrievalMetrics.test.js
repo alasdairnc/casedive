@@ -45,9 +45,8 @@ describe("buildRetrievalMetrics", () => {
       landmark: 4,
       localFallback: 2,
     });
-    expect(payload.scenarioSnippet).toBe(
-      "I was stopped at a RIDE checkpoint and refused the breath test after arrest.",
-    );
+    expect(payload.classId).toBe("charter_detention");
+    expect(payload.issuePrimary).toBe("charter_detention");
   });
 
   it("applies safe defaults for missing or invalid phase-4 fields", () => {
@@ -74,15 +73,16 @@ describe("buildRetrievalMetrics", () => {
       landmark: 0,
       localFallback: 0,
     });
-    expect(payload.scenarioSnippet).toBeNull();
+    expect(payload.classId).toBe("general_criminal");
+    expect(payload.issuePrimary).toBe("general_criminal");
   });
 
-  it("trims and truncates scenario snippets", () => {
+  it("classifies scenarios from scenario text when retrieval meta omits a class", () => {
     const payload = buildRetrievalMetrics({
-      scenario: `  ${"x".repeat(400)}  `,
+      scenario: "my trial was delayed for over two years",
     });
 
-    expect(payload.scenarioSnippet.length).toBe(280);
-    expect(payload.scenarioSnippet).toBe("x".repeat(280));
+    expect(payload.classId).toBe("trial_delay");
+    expect(payload.issuePrimary).toBe("trial_delay");
   });
 });
