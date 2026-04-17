@@ -15,6 +15,7 @@ import { logRetrievalMetrics } from "./_retrievalMetrics.js";
 import {
   applyStandardApiHeaders,
   handleOptionsAndMethod,
+  respondRateLimit,
   validateJsonRequest,
 } from "./_apiCommon.js";
 import {
@@ -26,7 +27,8 @@ import {
   logError,
 } from "./_logging.js";
 import { API_REDIS_TIMEOUT_MS } from "./_constants.js";
-import { withRequestDedup } from "./_requestDedup.js";
+import { normalizeFilters } from "./_filters.js";
+import { withRedisTimeout } from "./_redisTimeout.js";
 
 function logRetrievalMetricsAsync(payload) {
   Promise.resolve(logRetrievalMetrics(payload)).catch(() => {});
@@ -60,16 +62,11 @@ export default async function handler(req, res) {
   logRateLimitCheck(requestId, "retrieve-caselaw", rlResult, getClientIp(req));
   const rlHeaders = rateLimitHeaders(rlResult);
   Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
-  if (!rlResult.allowed) {
-    return res
-      .status(429)
-      .json({ error: "Rate limit exceeded. Please try again later." });
-  }
+  if (respondRateLimit(res, rlResult)) return;
 
   const body = req.body || {};
   const scenario = sanitizeUserInput(body.scenario || "").trim();
-  const filters =
-    body.filters && typeof body.filters === "object" ? body.filters : {};
+  const filters = normalizeFilters(body.filters);
   const suggestions = Array.isArray(body.suggestions)
     ? body.suggestions.slice(0, 12)
     : [];
@@ -86,13 +83,13 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.CANLII_API_KEY || "";
 
-  const cacheKey = `cache:retrieve-caselaw:${createHash("sha256").update(JSON.stringify({ scenario, filters, suggestions })).digest("hex")}`;
+  const cacheKey = `cache:retrieve-caselaw:v2:${createHash("sha256").update(JSON.stringify({ scenario, filters, suggestions })).digest("hex")}`;
   if (redis) {
     try {
-      const timeoutGet = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout")), API_REDIS_TIMEOUT_MS),
+      const cached = await withRedisTimeout(
+        redis.get(cacheKey),
+        API_REDIS_TIMEOUT_MS,
       );
-      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
       if (cached) {
         const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
         logSuccess(
@@ -142,17 +139,14 @@ export default async function handler(req, res) {
 
   const retrievalStartMs = Date.now();
   try {
-    const dedupeKey = `inflight:retrieve-caselaw:${cacheKey}`;
-    const { cases, meta } = await withRequestDedup(dedupeKey, () =>
-      runCaseLawRetrieval({
-        scenario,
-        filters,
-        aiSuggestions: suggestions,
-        apiKey,
-        maxResults: 3,
-        timeoutMs: 7_000,
-      }),
-    );
+    const { cases, meta } = await runCaseLawRetrieval({
+      scenario,
+      filters,
+      aiSuggestions: suggestions,
+      apiKey,
+      maxResults: 3,
+      timeoutMs: 7_000,
+    });
     const retrievalDurationMs = Date.now() - retrievalStartMs;
 
     logExternalApiCall(
@@ -191,17 +185,14 @@ export default async function handler(req, res) {
 
     if (redis) {
       try {
-        const timeoutSet = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Timeout")), API_REDIS_TIMEOUT_MS),
-        );
-        await Promise.race([
+        await withRedisTimeout(
           redis.setex(
             cacheKey,
             7 * 24 * 60 * 60,
             JSON.stringify({ case_law: cases, meta }),
           ),
-          timeoutSet,
-        ]);
+          API_REDIS_TIMEOUT_MS,
+        );
       } catch (err) {}
     }
 

@@ -6,6 +6,10 @@ export const ALLOWED_ORIGINS = [
   "https://casedive.vercel.app",
 ];
 
+export function isOriginAllowed(origin) {
+  return ALLOWED_ORIGINS.includes(origin);
+}
+
 /**
  * Applies CORS headers to the response.
  * @param {object} req - Vercel/Node IncomingMessage
@@ -15,7 +19,7 @@ export const ALLOWED_ORIGINS = [
  */
 export function applyCorsHeaders(req, res, methods, headers) {
   const origin = req.headers.origin ?? "";
-  if (ALLOWED_ORIGINS.includes(origin)) {
+  if (isOriginAllowed(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
   res.setHeader("Access-Control-Allow-Methods", methods);

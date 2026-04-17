@@ -12,6 +12,7 @@ import { randomUUID, createHash } from "crypto";
 import {
   applyStandardApiHeaders,
   handleOptionsAndMethod,
+  respondRateLimit,
   validateJsonRequest,
 } from "./_apiCommon.js";
 import {
@@ -22,6 +23,7 @@ import {
   logError,
 } from "./_logging.js";
 import { API_REDIS_TIMEOUT_MS } from "./_constants.js";
+import { withRedisTimeout } from "./_redisTimeout.js";
 
 const ACCENT = "#d4a040";
 const BG = "#FAF7F2";
@@ -95,11 +97,7 @@ export default async function handler(req, res) {
   logRateLimitCheck(requestId, "export-pdf", rlResult, getClientIp(req));
   const rlHeaders = rateLimitHeaders(rlResult);
   Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
-  if (!rlResult.allowed) {
-    return res
-      .status(429)
-      .json({ error: "Rate limit exceeded. Please try again later." });
-  }
+  if (respondRateLimit(res, rlResult)) return;
 
   const body = req.body;
   if (!body || typeof body !== "object") {
@@ -115,10 +113,10 @@ export default async function handler(req, res) {
   const cacheKey = `cache:export-pdf:${createHash("sha256").update(JSON.stringify(body)).digest("hex")}`;
   if (redis) {
     try {
-      const timeoutGet = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout")), API_REDIS_TIMEOUT_MS),
+      const cached = await withRedisTimeout(
+        redis.get(cacheKey),
+        API_REDIS_TIMEOUT_MS,
       );
-      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
       if (cached) {
         const pdfBuffer = Buffer.from(cached, "base64");
         res.setHeader("Content-Type", "application/pdf");
@@ -379,13 +377,10 @@ export default async function handler(req, res) {
 
   if (redis) {
     try {
-      const timeoutSet = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout")), API_REDIS_TIMEOUT_MS),
-      );
-      await Promise.race([
+      await withRedisTimeout(
         redis.setex(cacheKey, 7 * 24 * 60 * 60, pdfBuffer.toString("base64")),
-        timeoutSet,
-      ]);
+        API_REDIS_TIMEOUT_MS,
+      );
     } catch (err) {}
   }
 

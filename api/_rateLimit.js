@@ -1,15 +1,17 @@
-// api/_rateLimit.js — Sliding-window rate limiter for Vercel serverless
+// api/_rateLimit.js — Fixed-window rate limiter for Vercel serverless
 //
-// Uses Upstash Redis for persistence across serverless instances.
-// Falls back to in-memory state if UPSTASH_REDIS_REST_URL is not configured.
+// Uses atomic Redis counters in production.
+// Falls back to in-memory state only in local development or via explicit opt-in.
 
 import { Redis } from "@upstash/redis";
 import { RATE_LIMIT_REDIS_TIMEOUT_MS } from "./_constants.js";
+import { withRedisTimeout } from "./_redisTimeout.js";
 
 const MAX_REQUESTS = 5;
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const REDIS_TIMEOUT_MS = RATE_LIMIT_REDIS_TIMEOUT_MS;
 const RETRIEVAL_HEALTH_MAX_REQUESTS = 100; // Higher limit for internal monitoring
+const BACKEND_UNAVAILABLE_RETRY_AFTER_SECONDS = 60;
 
 export let redis = null;
 
@@ -36,80 +38,113 @@ if (redisUrl && redisToken) {
 // Fallback in-memory store for development
 const store = new Map();
 
+function getLimitForEndpoint(endpoint) {
+  return endpoint === "retrieval-health"
+    ? RETRIEVAL_HEALTH_MAX_REQUESTS
+    : MAX_REQUESTS;
+}
+
+function shouldAllowInMemoryFallback() {
+  if (process.env.ALLOW_IN_MEMORY_RATE_LIMIT_FALLBACK === "1") return true;
+  return process.env.VERCEL_ENV !== "production";
+}
+
+function buildKey(endpoint, ip, bucketId) {
+  const prefix = endpoint ? `rl:${endpoint}` : "rl";
+  return `${prefix}:${ip ?? "unknown"}:${bucketId}`;
+}
+
+function buildWindowResult({ allowed, count, limit, resetAt, reason = null }) {
+  return {
+    allowed,
+    limit,
+    remaining: Math.max(0, limit - count),
+    resetAt,
+    reason,
+  };
+}
+
+function markBackendUnavailable(limit) {
+  const resetAt = new Date(
+    Date.now() + BACKEND_UNAVAILABLE_RETRY_AFTER_SECONDS * 1000,
+  ).toISOString();
+  return {
+    allowed: false,
+    limit,
+    remaining: 0,
+    resetAt,
+    reason: "backend_unavailable",
+    retryAfterSeconds: BACKEND_UNAVAILABLE_RETRY_AFTER_SECONDS,
+  };
+}
+
+function updateInMemoryCounter(key, bucketId) {
+  const current = store.get(key);
+  if (!current || current.bucketId !== bucketId) {
+    const next = { bucketId, count: 1 };
+    store.set(key, next);
+    return next.count;
+  }
+
+  current.count += 1;
+  store.set(key, current);
+  return current.count;
+}
+
 /**
  * Check whether the given IP is within the rate limit.
  * @param {string|null} ip
  * @param {string} [endpoint] — optional endpoint name for per-route buckets
- * @returns {{ allowed: boolean, remaining: number, resetAt?: string }}
+ * @returns {{ allowed: boolean, remaining: number, resetAt?: string, limit: number, reason?: string }}
  */
 export async function checkRateLimit(ip, endpoint) {
   const now = Date.now();
-  const prefix = endpoint ? `rl:${endpoint}` : "rl";
-  const key = `${prefix}:${ip ?? "unknown"}`;
-  const maxRequests =
-    endpoint === "retrieval-health"
-      ? RETRIEVAL_HEALTH_MAX_REQUESTS
-      : MAX_REQUESTS;
+  const maxRequests = getLimitForEndpoint(endpoint);
+  const bucketId = Math.floor(now / WINDOW_MS);
+  const key = buildKey(endpoint, ip, bucketId);
+  const resetAt = new Date((bucketId + 1) * WINDOW_MS).toISOString();
 
-  try {
-    // Try Redis if available
-    if (redis) {
-      const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS),
+  if (redis) {
+    try {
+      const currentCount = Number(
+        await withRedisTimeout(redis.incr(key), REDIS_TIMEOUT_MS),
       );
-      const hitsJson = await Promise.race([redis.get(key), timeout]);
-      let hits = hitsJson ? JSON.parse(hitsJson) : [];
-      hits = hits.filter((t) => now - t < WINDOW_MS);
 
-      if (hits.length >= maxRequests) {
-        return {
-          allowed: false,
-          remaining: 0,
-          resetAt: new Date(hits[0] + WINDOW_MS).toISOString(),
-        };
+      if (!Number.isFinite(currentCount) || currentCount <= 0) {
+        throw new Error("Invalid Redis counter value");
       }
 
-      hits.push(now);
-      await Promise.race([
-        redis.setex(key, Math.ceil(WINDOW_MS / 1000), JSON.stringify(hits)),
-        new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error("Redis timeout")),
-            REDIS_TIMEOUT_MS,
-          ),
-        ),
-      ]);
+      if (currentCount === 1) {
+        await withRedisTimeout(
+          redis.expire(key, Math.ceil(WINDOW_MS / 1000) + 5),
+          REDIS_TIMEOUT_MS,
+        );
+      }
 
-      return { allowed: true, remaining: maxRequests - hits.length };
+      return buildWindowResult({
+        allowed: currentCount <= maxRequests,
+        count: currentCount,
+        limit: maxRequests,
+        resetAt,
+      });
+    } catch (err) {
+      console.error("Redis rate limit check failed:", err.message);
+      if (!shouldAllowInMemoryFallback()) {
+        return markBackendUnavailable(maxRequests);
+      }
     }
-  } catch (err) {
-    console.error(
-      "Redis rate limit check failed, falling back to in-memory:",
-      err.message,
-    );
   }
 
   // Fallback: in-memory store (development or Redis unavailable)
-  const hits = (store.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
-
-  if (hits.length >= maxRequests) {
-    return {
-      allowed: false,
-      remaining: 0,
-      resetAt: new Date(hits[0] + WINDOW_MS).toISOString(),
-    };
-  }
-
-  hits.push(now);
-  store.set(key, hits);
+  const currentCount = updateInMemoryCounter(key, bucketId);
 
   // Prune old entries to avoid unbounded memory growth
   if (store.size > 500) {
-    // Remove expired entries first
-    for (const [k, v] of store) {
-      if (v.every((t) => now - t >= WINDOW_MS)) store.delete(k);
+    for (const [storeKey, value] of store) {
+      if (!value || value.bucketId !== bucketId) {
+        store.delete(storeKey);
+      }
     }
-    // If still over limit, evict oldest entries (LRU)
     if (store.size > 500) {
       const targetSize = 430;
       const excess = store.size - targetSize;
@@ -122,7 +157,12 @@ export async function checkRateLimit(ip, endpoint) {
     }
   }
 
-  return { allowed: true, remaining: maxRequests - hits.length };
+  return buildWindowResult({
+    allowed: currentCount <= maxRequests,
+    count: currentCount,
+    limit: maxRequests,
+    resetAt,
+  });
 }
 
 /**
@@ -131,14 +171,17 @@ export async function checkRateLimit(ip, endpoint) {
  */
 export function rateLimitHeaders(result) {
   const headers = {
-    "X-RateLimit-Limit": String(MAX_REQUESTS),
+    "X-RateLimit-Limit": String(result.limit ?? MAX_REQUESTS),
     "X-RateLimit-Remaining": String(result.remaining ?? 0),
   };
   if (result.resetAt) {
     const resetEpoch = Math.ceil(new Date(result.resetAt).getTime() / 1000);
     headers["X-RateLimit-Reset"] = String(resetEpoch);
     headers["Retry-After"] = String(
-      Math.max(0, resetEpoch - Math.ceil(Date.now() / 1000)),
+      result.reason === "backend_unavailable"
+        ? result.retryAfterSeconds ??
+            BACKEND_UNAVAILABLE_RETRY_AFTER_SECONDS
+        : Math.max(0, resetEpoch - Math.ceil(Date.now() / 1000)),
     );
   }
   return headers;
@@ -148,9 +191,23 @@ export function rateLimitHeaders(result) {
  * Extract the real client IP from Vercel's request headers.
  */
 export function getClientIp(req) {
-  // Vercel sets x-forwarded-for reliably; x-real-ip is not standard on Vercel
-  const forwarded = req.headers["x-forwarded-for"]?.split(",")[0]?.trim();
-  if (forwarded) return forwarded;
+  const vercelForwarded = req.headers["x-vercel-forwarded-for"]
+    ?.split(",")[0]
+    ?.trim();
+  if (vercelForwarded) return vercelForwarded;
+
+  const realIp = req.headers["x-real-ip"]?.split(",")[0]?.trim();
+  if (realIp) return realIp;
+
+  const isVercelRuntime =
+    Boolean(req.headers["x-vercel-id"]) ||
+    Boolean(process.env.VERCEL) ||
+    Boolean(process.env.VERCEL_ENV);
+  if (!isVercelRuntime) {
+    const forwarded = req.headers["x-forwarded-for"]?.split(",")[0]?.trim();
+    if (forwarded) return forwarded;
+  }
+
   const remote = req.socket?.remoteAddress;
   if (remote) return remote;
   // No identifiable IP — return a fixed key so all anonymous requests share one strict bucket

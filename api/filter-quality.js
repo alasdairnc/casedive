@@ -12,6 +12,7 @@ import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import {
   applyStandardApiHeaders,
   handleOptionsAndMethod,
+  respondRateLimit,
 } from "./_apiCommon.js";
 import {
   logRequestStart,
@@ -37,11 +38,7 @@ export default async function handler(req, res) {
   Object.entries(rlHeaders).forEach(([key, value]) =>
     res.setHeader(key, value),
   );
-  if (!rlResult.allowed) {
-    return res
-      .status(429)
-      .json({ error: "Rate limit exceeded. Please try again later." });
-  }
+  if (respondRateLimit(res, rlResult)) return;
 
   // Check auth token (same as retrieval-health)
   const token = req.headers.authorization?.replace(/^Bearer\s+/, "");

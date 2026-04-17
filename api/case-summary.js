@@ -9,6 +9,7 @@ import { randomUUID, createHash } from "crypto";
 import {
   applyStandardApiHeaders,
   handleOptionsAndMethod,
+  respondRateLimit,
   validateJsonRequest,
 } from "./_apiCommon.js";
 import {
@@ -20,7 +21,7 @@ import {
   logError,
 } from "./_logging.js";
 import { API_REDIS_TIMEOUT_MS, ANTHROPIC_MODEL_ID } from "./_constants.js";
-import { withRequestDedup } from "./_requestDedup.js";
+import { withRedisTimeout } from "./_redisTimeout.js";
 
 // Strip XML-like tags from user input to prevent delimiter escape
 function sanitizeUserInput(input) {
@@ -150,11 +151,7 @@ export default async function handler(req, res) {
   logRateLimitCheck(requestId, "case-summary", rlResult, getClientIp(req));
   const rlHeaders = rateLimitHeaders(rlResult);
   Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
-  if (!rlResult.allowed) {
-    return res
-      .status(429)
-      .json({ error: "Rate limit exceeded. Please try again later." });
-  }
+  if (respondRateLimit(res, rlResult)) return;
 
   const { citation, title, court, year, summary, matchedContent } =
     req.body || {};
@@ -193,13 +190,13 @@ export default async function handler(req, res) {
     }
   }
 
-  const cacheKey = `cache:case-summary:${createHash("sha256").update(JSON.stringify(body)).digest("hex")}`;
+  const cacheKey = `cache:case-summary:v2:${createHash("sha256").update(JSON.stringify(body)).digest("hex")}`;
   if (redis) {
     try {
-      const timeoutGet = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout")), API_REDIS_TIMEOUT_MS),
+      const cached = await withRedisTimeout(
+        redis.get(cacheKey),
+        API_REDIS_TIMEOUT_MS,
       );
-      const cached = await Promise.race([redis.get(cacheKey), timeoutGet]);
       if (cached) {
         logSuccess(
           requestId,
@@ -244,10 +241,7 @@ export default async function handler(req, res) {
     }
 
     const anthropicStartMs = Date.now();
-    const dedupeKey = `inflight:case-summary:${cacheKey}`;
-    const { text: raw, citations } = await withRequestDedup(dedupeKey, () =>
-      callAnthropic(caseText, apiKey),
-    );
+    const { text: raw, citations } = await callAnthropic(caseText, apiKey);
     const anthropicDurationMs = Date.now() - anthropicStartMs;
     logExternalApiCall(
       requestId,
@@ -289,17 +283,14 @@ export default async function handler(req, res) {
 
     if (redis) {
       try {
-        const timeoutSet = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Timeout")), API_REDIS_TIMEOUT_MS),
-        );
-        await Promise.race([
+        await withRedisTimeout(
           redis.setex(
             cacheKey,
             7 * 24 * 60 * 60,
             JSON.stringify(responsePayload),
           ),
-          timeoutSet,
-        ]);
+          API_REDIS_TIMEOUT_MS,
+        );
       } catch (err) {}
     }
 

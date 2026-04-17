@@ -1,4 +1,4 @@
-import { applyCorsHeaders } from "./_cors.js";
+import { applyCorsHeaders, isOriginAllowed } from "./_cors.js";
 
 export function applyStandardApiHeaders(
   req,
@@ -15,6 +15,11 @@ export function applyStandardApiHeaders(
 }
 
 export function handleOptionsAndMethod(req, res, method) {
+  const origin = req.headers.origin ?? "";
+  if (origin && !isOriginAllowed(origin)) {
+    res.status(403).json({ error: "Origin not allowed" });
+    return true;
+  }
   if (req.method === "OPTIONS") {
     res.status(200).end();
     return true;
@@ -58,5 +63,24 @@ export function validateJsonRequest(
     return false;
   }
 
+  return true;
+}
+
+export function respondRateLimit(res, rlResult, messages = {}) {
+  if (rlResult.allowed) return false;
+
+  if (rlResult.reason === "backend_unavailable") {
+    res.status(503).json({
+      error:
+        messages.backendUnavailable ||
+        "Service temporarily unavailable. Please try again shortly.",
+    });
+    return true;
+  }
+
+  res.status(429).json({
+    error:
+      messages.exceeded || "Rate limit exceeded. Please try again later.",
+  });
   return true;
 }

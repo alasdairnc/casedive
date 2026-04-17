@@ -1,8 +1,13 @@
-import { applyStandardApiHeaders } from "./_apiCommon.js";
+import {
+  applyStandardApiHeaders,
+  handleOptionsAndMethod,
+  respondRateLimit,
+} from "./_apiCommon.js";
 import { checkRateLimit, rateLimitHeaders, getClientIp } from "./_rateLimit.js";
 
 export default async function handler(req, res) {
   applyStandardApiHeaders(req, res, "GET, OPTIONS");
+  if (handleOptionsAndMethod(req, res, "GET")) return;
 
   const ip = getClientIp(req);
   const rl = await checkRateLimit(ip, "status");
@@ -11,17 +16,7 @@ export default async function handler(req, res) {
     res.setHeader(k, v);
   }
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
-  if (!rl.allowed) {
-    return res.status(429).json({ error: "Rate limit exceeded" });
-  }
+  if (respondRateLimit(res, rl, { exceeded: "Rate limit exceeded" })) return;
 
   return res.status(200).json({ ok: true, ts: new Date().toISOString() });
 }

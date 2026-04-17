@@ -3,6 +3,7 @@
 
 import { redis } from "./_rateLimit.js";
 import { RETRIEVAL_HEALTH_STORE_REDIS_TIMEOUT_MS } from "./_constants.js";
+import { withRedisTimeout } from "./_redisTimeout.js";
 
 const EVENT_LIST_KEY = "metrics:retrieval:events:v1";
 const LAST_EVENT_KEY = "metrics:retrieval:last-event:v1";
@@ -75,6 +76,10 @@ function normalizeEvent(raw) {
       event.issuePrimary.trim().length > 0
         ? event.issuePrimary.trim().slice(0, 40)
         : "general_criminal",
+    classId:
+      typeof event.classId === "string" && event.classId.trim().length > 0
+        ? event.classId.trim().slice(0, 40)
+        : "general_criminal",
     retrievalPass:
       typeof event.retrievalPass === "string" &&
       event.retrievalPass.trim().length > 0
@@ -89,11 +94,6 @@ function normalizeEvent(raw) {
       landmark: toNonNegativeInt(event?.candidateSourceMix?.landmark),
       localFallback: toNonNegativeInt(event?.candidateSourceMix?.localFallback),
     },
-    scenarioSnippet:
-      typeof event.scenarioSnippet === "string" &&
-      event.scenarioSnippet.trim().length > 0
-        ? event.scenarioSnippet.trim().slice(0, 280)
-        : null,
     errorMessage:
       typeof event.errorMessage === "string" &&
       event.errorMessage.trim().length > 0
@@ -121,11 +121,11 @@ function buildStoredEvent(metricsPayload = {}) {
     fallbackPathUsed: metricsPayload.fallbackPathUsed === true,
     fallbackTriggerReason: metricsPayload.fallbackTriggerReason,
     issuePrimary: metricsPayload.issuePrimary,
+    classId: metricsPayload.classId,
     retrievalPass: metricsPayload.retrievalPass,
     prefilterConceptRescueCount: metricsPayload.prefilterConceptRescueCount,
     semanticFilterDropCount: metricsPayload.semanticFilterDropCount,
     candidateSourceMix: metricsPayload.candidateSourceMix,
-    scenarioSnippet: metricsPayload.scenarioSnippet,
     errorMessage: metricsPayload.errorMessage,
   });
 }
@@ -176,7 +176,9 @@ function toFailureSample(event) {
       ? event.retrievalLatencyMs
       : null,
     semanticFilterDropCount: toNonNegativeInt(event.semanticFilterDropCount),
-    scenarioSnippet: event.scenarioSnippet || null,
+    issuePrimary: event.issuePrimary || "general_criminal",
+    classId: event.classId || "general_criminal",
+    fallbackTriggerReason: event.fallbackTriggerReason || null,
     errorMessage: event.errorMessage || null,
   };
 }
@@ -233,10 +235,7 @@ function pruneMemory(nowMs = Date.now()) {
 }
 
 async function readRedisEvents() {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS),
-  );
-  const raw = await Promise.race([redis.get(EVENT_LIST_KEY), timeout]);
+  const raw = await withRedisTimeout(redis.get(EVENT_LIST_KEY), REDIS_TIMEOUT_MS);
   let rows = raw;
 
   if (typeof raw === "string") {
@@ -258,37 +257,31 @@ async function readRedisEvents() {
 }
 
 async function readRedisLastEvent() {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS),
-  );
-  const raw = await Promise.race([redis.get(LAST_EVENT_KEY), timeout]);
+  const raw = await withRedisTimeout(redis.get(LAST_EVENT_KEY), REDIS_TIMEOUT_MS);
   return normalizeEvent(raw);
 }
 
 async function writeRedisLastEvent(event) {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS),
-  );
-  await Promise.race([
+  await withRedisTimeout(
     redis.set(LAST_EVENT_KEY, JSON.stringify(event)),
-    timeout,
-  ]);
+    REDIS_TIMEOUT_MS,
+  );
 }
 
 async function incrementRedisEventCount() {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS),
+  const count = await withRedisTimeout(
+    redis.incr(EVENT_COUNT_KEY),
+    REDIS_TIMEOUT_MS,
   );
-  const count = await Promise.race([redis.incr(EVENT_COUNT_KEY), timeout]);
   const num = Number(count);
   return Number.isFinite(num) ? num : null;
 }
 
 async function readRedisEventCount() {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS),
+  const raw = await withRedisTimeout(
+    redis.get(EVENT_COUNT_KEY),
+    REDIS_TIMEOUT_MS,
   );
-  const raw = await Promise.race([redis.get(EVENT_COUNT_KEY), timeout]);
   const num = Number(raw);
   return Number.isFinite(num) && num > 0 ? Math.floor(num) : 0;
 }
@@ -982,9 +975,9 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
               backupLastEvent.semanticFilterDropCount,
             ),
             issuePrimary: backupLastEvent.issuePrimary || "general_criminal",
+            classId: backupLastEvent.classId || "general_criminal",
             fallbackTriggerReason:
               backupLastEvent.fallbackTriggerReason || null,
-            scenarioSnippet: backupLastEvent.scenarioSnippet || null,
             errorMessage: backupLastEvent.errorMessage || null,
           },
         ];

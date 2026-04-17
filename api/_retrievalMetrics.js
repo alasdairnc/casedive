@@ -7,6 +7,7 @@ import {
   recordRetrievalMetricsEvent,
 } from "./_retrievalHealthStore.js";
 import { emitRetrievalAlerts } from "./_retrievalThresholds.js";
+import { classifyScenarioText } from "./_scenarioClassification.js";
 
 const METRIC_FIELDS = [
   "termsTried",
@@ -49,13 +50,6 @@ function normalizeSourceMix(raw = {}) {
   };
 }
 
-function toScenarioSnippet(value, maxLen = 280) {
-  if (typeof value !== "string") return null;
-  const cleaned = value.replace(/\s+/g, " ").trim();
-  if (!cleaned) return null;
-  return cleaned.slice(0, maxLen);
-}
-
 function toLabel(value, maxLen = 60) {
   if (typeof value !== "string") return null;
   const cleaned = value.trim();
@@ -96,6 +90,7 @@ export function buildRetrievalMetrics(input = {}) {
 
   const metrics = normalizeMetrics(retrievalMeta);
   const sourceMix = normalizeSourceMix(retrievalMeta?.candidateSourceMix);
+  const classifiedScenario = classifyScenarioText(scenario);
   const finalCount = toNonNegativeInt(
     finalCaseLawCount == null ? metrics.verifiedCount : finalCaseLawCount,
   );
@@ -108,6 +103,12 @@ export function buildRetrievalMetrics(input = {}) {
     Boolean(retrievalError) ||
     normalizedReason === "retrieval_error" ||
     normalizedReason === "missing_api_key";
+  const classId =
+    toLabel(retrievalMeta?.classId, 40) ||
+    (classifiedScenario.classId !== "unknown"
+      ? classifiedScenario.classId
+      : "general_criminal");
+  const issuePrimary = toLabel(retrievalMeta?.issuePrimary, 40) || classId;
 
   return {
     requestId,
@@ -129,8 +130,8 @@ export function buildRetrievalMetrics(input = {}) {
     fallbackTriggerReason:
       toReason(retrievalMeta?.fallbackDiagnostics?.fallbackTriggerReason) ||
       null,
-    issuePrimary:
-      toLabel(retrievalMeta?.issuePrimary, 40) || "general_criminal",
+    classId,
+    issuePrimary,
     retrievalPass: toLabel(retrievalMeta?.retrievalPass, 40) || null,
     prefilterConceptRescueCount: toNonNegativeInt(
       retrievalMeta?.prefilterDiagnostics?.passedByConceptRescue,
@@ -149,7 +150,6 @@ export function buildRetrievalMetrics(input = {}) {
     errorMessage: isError
       ? String(errorMessage || "unknown").slice(0, 200)
       : null,
-    scenarioSnippet: toScenarioSnippet(scenario),
   };
 }
 
