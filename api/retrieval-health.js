@@ -165,11 +165,7 @@ export default async function handler(req, res) {
     if (redis) {
       try {
         await withRedisTimeout(
-          redis.setex(
-            cacheKey,
-            7 * 24 * 60 * 60,
-            JSON.stringify(response),
-          ),
+          redis.setex(cacheKey, 7 * 24 * 60 * 60, JSON.stringify(response)),
           API_REDIS_TIMEOUT_MS,
         );
       } catch (err) {}

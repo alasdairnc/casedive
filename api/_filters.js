@@ -21,12 +21,7 @@ const VALID_COURT_LEVELS = new Set([
 ]);
 
 const VALID_DATE_RANGES = new Set(["all", "5", "10", "20"]);
-const VALID_LAW_TYPES = [
-  "criminal_code",
-  "case_law",
-  "civil_law",
-  "charter",
-];
+const VALID_LAW_TYPES = ["criminal_code", "case_law", "civil_law", "charter"];
 
 export function normalizeFilters(rawFilters = {}) {
   const rawLawTypes =

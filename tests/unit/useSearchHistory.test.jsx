@@ -4,7 +4,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { useSearchHistory } from "../../src/hooks/useSearchHistory.js";
 
 function Harness() {
-  const { history, addToHistory, clearHistory, rerunQuery } = useSearchHistory();
+  const { history, addToHistory, clearHistory, rerunQuery } =
+    useSearchHistory();
 
   return (
     <div>

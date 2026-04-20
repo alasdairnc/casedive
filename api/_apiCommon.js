@@ -79,8 +79,7 @@ export function respondRateLimit(res, rlResult, messages = {}) {
   }
 
   res.status(429).json({
-    error:
-      messages.exceeded || "Rate limit exceeded. Please try again later.",
+    error: messages.exceeded || "Rate limit exceeded. Please try again later.",
   });
   return true;
 }

@@ -26,7 +26,9 @@ async function loadRateLimitModule({ redisImpl = null } = {}) {
     vi.doMock("@upstash/redis", () => ({
       Redis: class MockRedis {
         constructor() {
-          throw new Error("Redis constructor should not be called in this test");
+          throw new Error(
+            "Redis constructor should not be called in this test",
+          );
         }
       },
     }));

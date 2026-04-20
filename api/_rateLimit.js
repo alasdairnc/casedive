@@ -110,7 +110,7 @@ export async function checkRateLimit(ip, endpoint) {
       // Set expiry only if key is new (INCR returns 1)
       const currentCount = await withRedisTimeout(
         redis.incr(key),
-        REDIS_TIMEOUT_MS
+        REDIS_TIMEOUT_MS,
       );
       if (!Number.isFinite(currentCount) || currentCount <= 0) {
         throw new Error("Invalid Redis counter value");
@@ -119,7 +119,7 @@ export async function checkRateLimit(ip, endpoint) {
         // Set expiry for the window
         await withRedisTimeout(
           redis.expire(key, Math.ceil(WINDOW_MS / 1000) + 5),
-          REDIS_TIMEOUT_MS
+          REDIS_TIMEOUT_MS,
         );
       }
       return buildWindowResult({
@@ -180,8 +180,7 @@ export function rateLimitHeaders(result) {
     headers["X-RateLimit-Reset"] = String(resetEpoch);
     headers["Retry-After"] = String(
       result.reason === "backend_unavailable"
-        ? result.retryAfterSeconds ??
-            BACKEND_UNAVAILABLE_RETRY_AFTER_SECONDS
+        ? (result.retryAfterSeconds ?? BACKEND_UNAVAILABLE_RETRY_AFTER_SECONDS)
         : Math.max(0, resetEpoch - Math.ceil(Date.now() / 1000)),
     );
   }
@@ -217,7 +216,8 @@ export function getClientIp(req) {
 
 // Only trust X-Forwarded-For from known proxies (Vercel); otherwise, use req.socket.remoteAddress.
 export function getClientIp(req) {
-  const trustedVercel = req.headers["x-vercel-proxied-for"] || req.headers["x-vercel-id"];
+  const trustedVercel =
+    req.headers["x-vercel-proxied-for"] || req.headers["x-vercel-id"];
   let ip = null;
   if (trustedVercel && req.headers["x-forwarded-for"]) {
     // Only trust X-Forwarded-For if Vercel proxy headers are present
@@ -227,7 +227,10 @@ export function getClientIp(req) {
     ip = req.socket?.remoteAddress;
   }
   // Basic validation: must look like an IPv4 or IPv6 address
-  if (typeof ip === "string" && /^(\d{1,3}\.){3}\d{1,3}$|^[a-fA-F0-9:]+$/.test(ip)) {
+  if (
+    typeof ip === "string" &&
+    /^(\d{1,3}\.){3}\d{1,3}$|^[a-fA-F0-9:]+$/.test(ip)
+  ) {
     return ip;
   }
   return "unknown";

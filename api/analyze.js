@@ -61,7 +61,6 @@ function sanitizeUserInput(input) {
   return input.replace(/<\/?[a-zA-Z_][a-zA-Z0-9_]*(?:\s[^>\s][^>]*)?>/g, "");
 }
 
-
 // Remove common instruction-like phrases to mitigate prompt injection.
 function filterInstructionLikeText(input) {
   if (!input) return "";
@@ -91,7 +90,7 @@ function filterInstructionLikeText(input) {
     /mode:/gi,
     /execute/gi,
     /command:/gi,
-    /please/gi
+    /please/gi,
   ];
   for (const pat of patterns) {
     out = out.replace(pat, "");
@@ -103,12 +102,14 @@ function safePromptLine(input) {
   return filterInstructionLikeText(
     String(input || "")
       .replace(/[<>`\n\r]/g, " ")
-      .slice(0, 300)
+      .slice(0, 300),
   );
 }
 
 function buildUserPromptContent(scenario, matchedLandmarks, retrievedCases) {
-  const blocks = [`<user_input>\n${sanitizeUserInput(scenario)}\n</user_input>`];
+  const blocks = [
+    `<user_input>\n${sanitizeUserInput(scenario)}\n</user_input>`,
+  ];
 
   if (Array.isArray(matchedLandmarks) && matchedLandmarks.length > 0) {
     blocks.push(
@@ -1007,7 +1008,11 @@ export default async function handler(req, res) {
     // Store in cache (fire-and-forget)
     if (redis) {
       withRedisTimeout(
-        redis.setex(cacheKey(scenario, filters), CACHE_TTL_S, JSON.stringify(result)),
+        redis.setex(
+          cacheKey(scenario, filters),
+          CACHE_TTL_S,
+          JSON.stringify(result),
+        ),
         API_REDIS_TIMEOUT_MS,
       ).catch(() => {});
     }

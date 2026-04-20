@@ -31,11 +31,7 @@ const CLASSIFICATION_RULES = [
   {
     classId: "charter_detention",
     pattern: /\b(detain|detention|arrest|charter|search|seizure)\b/,
-    labels: [
-      "R v Grant 2009 SCC 32",
-      "Charter section 9",
-      "Charter section 8",
-    ],
+    labels: ["R v Grant 2009 SCC 32", "Charter section 9", "Charter section 8"],
   },
 ];
 

@@ -102,7 +102,6 @@ function normalizeEvent(raw) {
   };
 }
 
-
 function buildStoredEvent(metricsPayload = {}) {
   // Truncate scenarioSnippet to 100 chars and add TTL for Redis storage
   const event = normalizeEvent({
@@ -239,7 +238,10 @@ function pruneMemory(nowMs = Date.now()) {
 }
 
 async function readRedisEvents() {
-  const raw = await withRedisTimeout(redis.get(EVENT_LIST_KEY), REDIS_TIMEOUT_MS);
+  const raw = await withRedisTimeout(
+    redis.get(EVENT_LIST_KEY),
+    REDIS_TIMEOUT_MS,
+  );
   let rows = raw;
 
   if (typeof raw === "string") {
@@ -261,7 +263,10 @@ async function readRedisEvents() {
 }
 
 async function readRedisLastEvent() {
-  const raw = await withRedisTimeout(redis.get(LAST_EVENT_KEY), REDIS_TIMEOUT_MS);
+  const raw = await withRedisTimeout(
+    redis.get(LAST_EVENT_KEY),
+    REDIS_TIMEOUT_MS,
+  );
   return normalizeEvent(raw);
 }
 
@@ -752,15 +757,11 @@ export async function recordRetrievalMetricsEvent(metricsPayload = {}) {
           ? merged.slice(merged.length - MAX_PERSISTED_EVENTS)
           : merged;
 
-
       // Use Redis list for events, enforce cap with LTRIM
       const eventStr = JSON.stringify(event);
 
       // Store event with TTL for scenario snippet
-      await Promise.race([
-        redis.rpush(EVENT_LIST_KEY, eventStr),
-        timeout(),
-      ]);
+      await Promise.race([redis.rpush(EVENT_LIST_KEY, eventStr), timeout()]);
       await Promise.race([
         redis.ltrim(EVENT_LIST_KEY, -MAX_PERSISTED_EVENTS, -1),
         timeout(),
