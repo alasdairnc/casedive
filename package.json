@@ -27,6 +27,9 @@
     "test:guardrails": "vitest run tests/unit/resultCardSanitizer.test.js && npm run test:retrieval-failures && npm run test:filter",
     "test:security": "vitest run tests/unit/rateLimit.test.js tests/unit/analyzeApi.test.js tests/unit/retrievalHealth.test.js tests/unit/canlii.test.js tests/unit/securityConfig.test.js tests/unit/resultCardSanitizer.test.js",
     "perf:monitor": "node scripts/performance-monitor.js",
+    "docs:build": "node scripts/docs-build.js",
+    "docs:preview": "node scripts/docs-preview.js",
+    "docs:lint": "markdownlint-cli2 \"reports/**/*.md\" \"artifacts/**/*.md\" \"docs/superpowers/**/*.md\"",
     "security:scan": "gitleaks git . --log-opts='--branches --tags' --redact --no-banner",
     "security:scan:all": "gitleaks git . --log-opts='--all' --redact --no-banner",
     "security:hooks": "bash scripts/setup-git-hooks.sh"
@@ -47,8 +50,11 @@
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.7.0",
     "@vitest/browser": "^4.1.7",
+    "browser-sync": "^3.0.4",
     "happy-dom": "^20.8.8",
     "jsdom": "^29.0.1",
+    "markdownlint-cli2": "^0.22.1",
+    "marked": "^18.0.4",
     "vite": "^6.4.2",
     "vitest": "^4.1.7"
   }
