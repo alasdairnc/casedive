@@ -8,3 +8,15 @@ fi
 
 echo "pre-commit: running gitleaks on staged changes..."
 gitleaks git . --pre-commit --staged --redact --no-banner
+
+# Lint staged markdown in actively-authored dirs (non-blocking if tool absent).
+STAGED_MD=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -E '^(reports|artifacts|docs/superpowers)/.*\.md$' || true)
+if [ -n "$STAGED_MD" ]; then
+  if command -v npx >/dev/null 2>&1 && [ -d node_modules/markdownlint-cli2 ]; then
+    echo "pre-commit: linting staged markdown..."
+    echo "$STAGED_MD" | xargs npx --no-install markdownlint-cli2
+  else
+    echo "pre-commit: markdownlint-cli2 not installed; skipping markdown lint." >&2
+  fi
+fi
