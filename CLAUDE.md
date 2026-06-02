@@ -30,6 +30,8 @@ Run `npm run security:scan` before any pre-push check.
 
 **Security:** `npm run security:scan` (gitleaks scan, run before pushing)
 
+**Docs authoring:** `npm run docs:preview` (live-reload preview of docs/reports), `npm run docs:build -- <file.md>` (md → `artifacts/html/`), `npm run docs:lint` (markdownlint over reports/artifacts/superpowers). Generate digests with the `/weekly-report` skill.
+
 ## Memory & Session
 
 Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
@@ -55,6 +57,7 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - CanLII API key optional; Sentry no-ops if unset
 - PostToolUse hooks: use `$CLAUDE_TOOL_INPUT_FILE_PATH` env var (shell hooks) or `data.get('tool_input', {}).get('file_path', '')` from stdin (Python hooks) — both patterns exist in `.claude/hooks/`
 - `node --check` cannot parse JSX — scope JS syntax checks to `.js` only, never `.jsx`
+- All Redis cache TTLs are 7 days (`604800s`). Changes to filter logic or landmark data won't be visible to cached users until TTL expires — manually purge affected keys in Upstash if a hotfix needs to take effect immediately.
 - context7 MCP is active via global plugin; `.claude/mcp.json` entry is for team/project sharing — don't add it twice
 
 ## API Module Structure
@@ -70,6 +73,16 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - `docs/filtering/FILTER_TUNING.md`, `docs/filtering/FILTER_TUNING_QUICKSTART.md`
 - `docs/operations/` (runbooks, snapshots, performance plan, audit log)
 - `artifacts/` (generated outputs, including `filter-quality-report.html`)
+
+## Advisor Checkpoints
+
+Call `advisor()` (no parameters — forwards full context to a stronger reviewer) at these gates:
+
+- **New API endpoint:** after `api-invariant-reviewer` passes, before writing business logic
+- **Retrieval/filter changes:** before editing any `_filters.js`, `_filterScoring.js`, `_filterConfig.js`, `_scenarioClassification.js`, or `_retrievalThresholds.js` — retrieval regressions are hard to spot inline
+- **Security-touching changes:** before any change to auth, CORS, rate limiting, or input validation
+- **Pre-push on high-effort tasks:** before `pre-push-checklist`, if the branch touches 4+ files or changes core logic
+- **Stuck:** after 2 consecutive tool failures, before changing approach
 
 ## Agent Skills & Subagents
 
@@ -90,9 +103,9 @@ Auto-loaded from `.claude/skills/` (e.g., `casedive-audit`, `new-api-endpoint`).
 - Re-read the last user message before responding; follow every instruction
 - Every few turns, re-read the original request to avoid drift
 - When corrected, quote back the request and confirm before proceeding
-- When stuck, summarize attempts and ask for guidance
+- When stuck, summarize attempts and ask for guidance — **call `advisor()` before changing approach**
 - Double-check output before presenting; verify it addresses the request
-- After 2 consecutive tool failures, change approach and explain
+- After 2 consecutive tool failures, **call `advisor()`** before trying a third approach
 
 ## Testing & Verification
 
