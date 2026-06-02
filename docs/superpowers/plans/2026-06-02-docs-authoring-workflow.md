@@ -41,7 +41,7 @@ docs (59 pre-existing violations, out of scope). The pre-commit hook lints only
 Run:
 
 ```bash
-npm install --save-dev markdownlint-cli2@^0.22.1 marked@^12.0.0 browser-sync@^3.0.0
+npm install --save-dev markdownlint-cli2@^0.22.1 marked@^18.0.0 browser-sync@^3.0.0
 ```
 
 Expected: `package.json` gains the three under `devDependencies`; `package-lock.json` updates; no errors.
@@ -342,7 +342,9 @@ git commit -m "feat: docs-preview.js — browser-sync live preview for markdown"
 ## Task 4: Lint — verify clean over scope
 
 The `docs:lint` script already exists from Task 1. This task confirms it passes
-over the intended scope (it must, since these files were clean in the dry run).
+over the intended scope. (During planning, `npx markdownlint-cli2
+"docs/superpowers/**/*.md"` reported `0 error(s)` against the spec + this plan, and
+`reports/**` was clean — so this should pass first try.)
 
 **Files:** none (verification only)
 
@@ -350,13 +352,22 @@ over the intended scope (it must, since these files were clean in the dry run).
 
 Run: `npm run docs:lint`
 Expected: `Summary: 0 error(s)` (scope = `reports/**`, `artifacts/**/*.md`,
-`docs/superpowers/**`). If the new spec/plan markdown surfaces a violation, fix it
-in that file inline, then re-run until clean.
+`docs/superpowers/**`). If a violation surfaces, fix it in that file inline, then
+re-run until clean.
 
-- [ ] **Step 2: Confirm legacy docs are NOT in scope**
+- [ ] **Step 2: Assert legacy docs are genuinely out of scope**
 
-Run: `npm run docs:lint -- --help >/dev/null 2>&1; echo "scope is reports/artifacts/superpowers only — README/SECURITY/operations excluded by design"`
-Expected: prints the reminder. (No assertion needed — scope is fixed in the script.)
+Run:
+
+```bash
+npm run docs:lint 2>&1 | grep -qE "README\.md|SECURITY\.md|docs/operations/" \
+  && echo "FAIL: legacy docs leaked into lint scope" \
+  || echo "OK: legacy docs excluded"
+```
+
+Expected: `OK: legacy docs excluded` (the lint output must not mention
+`README.md`, `SECURITY.md`, or `docs/operations/`, which carry 59 pre-existing
+violations and are out of scope by design).
 
 No commit (no file change). If a fix was needed in Step 1, commit it:
 
@@ -562,4 +573,7 @@ git commit -m "docs: document docs:* authoring workflow and /weekly-report skill
   de-scope note in the spec). Visual kinship comes from the shared palette only.
 - `browser-sync` default port is 3000 and auto-increments if taken; if a smoke-test
   curl fails, check the port browser-sync printed.
-- The `marked@^12` API used is `marked.parse(md)` (synchronous) — correct for v12.
+- The `marked@^18` API used is `marked.parse(md)` — returns a string synchronously
+  by default (verified against current marked docs; it is async only if you opt in
+  via `marked.use({ async: true })`, which this script does not). Latest published
+  marked is 18.0.4 as of this plan.
