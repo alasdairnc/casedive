@@ -41,16 +41,24 @@ author's (Alasdair's) workflow for producing project documentation and reports.
 
 ## Architecture Overview
 
-Four small, independent units, all npm-local (no system deps). The keystone is a
-**single shared stylesheet** that lint, build, and preview all flow through — and
-which is the _same_ theme the existing `filter-quality-report.html` already uses,
-so converted docs look like one product, not a bolt-on.
+Four small, independent units, all npm-local (no system deps).
+
+> **De-scope (2026-06-02, post-spec):** An earlier draft proposed a _shared
+> stylesheet extracted from `tune-filters.js`_ as the keystone. Reading that CSS
+> (`tune-filters.js:388-409`) showed it is **report-specific** dashboard CSS —
+> `.metric` grids, `.suggestion` boxes, pass/fail row coloring — not a reusable
+> prose theme. A weekly digest is prose (headings, paragraphs, code, tables) with
+> almost no overlap, so there is nothing to DRY. The _only_ shared surface is ~3
+> palette hex codes. Therefore: `docs-build.js` carries its **own self-contained
+> prose stylesheet**, reusing the existing palette (`#2c2825` / `#faf7f2` /
+> `#d4a040`) for visual kinship; `tune-filters.js` is **left untouched**, and the
+> byte-identical-report verification (which existed only to guard that refactor) is
+> removed.
 
 ```
 scripts/
-  _docReportStyle.js   ← shared CSS (extracted from tune-filters.js), single source of truth
-  docs-build.js        ← md → standalone styled .html (uses marked + _docReportStyle)
-  docs-preview.js      ← browser-sync live server (renders md via marked + _docReportStyle)
+  docs-build.js        ← md → standalone styled .html (marked + own prose CSS)
+  docs-preview.js      ← browser-sync live server (renders md via the same pipeline)
 .markdownlint.json     ← (existing) now actually enforced
 .githooks/pre-commit   ← (existing) gains a markdown-lint step
 .claude/skills/weekly-report/SKILL.md  ← generation skill
@@ -83,28 +91,27 @@ Dependencies added (all devDependencies):
 
 - **What it does:** Turns a `.md` file into a standalone, styled `.html` document.
 - **How to use it:** `npm run docs:build` → emits to `artifacts/html/`.
-- **Depends on:** `marked`, `scripts/_docReportStyle.js`.
-- **Behavior:** Wraps `marked`-rendered HTML body in a full HTML document with the
-  shared `<style>` inlined (standalone files, no external CSS — portable/shareable).
-- **Refactor included:** Extract the inline CSS currently in `tune-filters.js`
-  (the `#2c2825` / `#faf7f2` palette, `.metrics` grid, etc.) into
-  `scripts/_docReportStyle.js`, and have `tune-filters.js` import it. This
-  de-duplicates the template and guarantees `filter-quality-report.html` and
-  converted docs share one look. **This is a targeted improvement to code we're
-  working in, not unrelated refactoring** — `tune-filters.js` behavior is preserved
-  (same output bytes for the report, verified by regenerating and diffing).
+- **Depends on:** `marked` only.
+- **Behavior:** Wraps `marked`-rendered HTML body in a full HTML document with an
+  inlined prose `<style>` (standalone files, no external CSS — portable/shareable).
+  The stylesheet targets what prose documents actually contain — headings,
+  paragraphs, lists, blockquotes, fenced code, and prose tables — and reuses the
+  existing report palette (`#2c2825` header, `#faf7f2` text-on-dark, `#d4a040`
+  accent) so output is visually kin to `filter-quality-report.html` without sharing
+  code. `tune-filters.js` is **not** modified.
 
 ### Unit 3 — Preview
 
 - **What it does:** Serves `docs/`, `reports/`, and `artifacts/` in the browser with
-  live reload; `.md` is rendered on the fly through the same `marked` +
-  `_docReportStyle` pipeline as `docs:build`, so preview === build output.
+  live reload; `.md` is rendered on the fly through the **same render function
+  `docs-build.js` exports** (`renderMarkdownDocument`), so preview === build output.
 - **How to use it:** `npm run docs:preview` (opens browser, watches files, reloads
   on save).
-- **Depends on:** `browser-sync`, `marked`, `scripts/_docReportStyle.js`.
+- **Depends on:** `browser-sync`, and `scripts/docs-build.js` (imports its exported
+  render function — `marked` comes in transitively).
 - **Implementation:** `browser-sync` with a small middleware that intercepts `*.md`
-  requests, renders them through the shared pipeline, and serves the HTML. Static
-  `.html` files served directly.
+  requests, renders them via the shared `renderMarkdownDocument`, and serves the
+  HTML. Static `.html` files served directly.
 
 ### Unit 4 — Generate (`/weekly-report` skill)
 
@@ -134,8 +141,10 @@ Author writes  →  docs:preview (live render)  →  iterate
 Claude /weekly-report  →  reports/weekly/<date>.md  →  docs:lint  →  commit
 ```
 
-All three of preview / build / the existing filter report converge on
-`scripts/_docReportStyle.js` — one stylesheet, one look.
+Preview and build converge on one render function (`renderMarkdownDocument` in
+`docs-build.js`), so what you preview is exactly what you ship. The existing filter
+report keeps its own generator untouched; visual kinship comes from a shared palette,
+not shared code.
 
 ## Error Handling
 
@@ -156,11 +165,10 @@ This is tooling, not app code, so verification is script-level:
    and out of scope).
 2. `npm run docs:build` produces valid HTML for a sample report; open it to confirm
    styling.
-3. Regenerate `filter-quality-report.html` via `tune-filters.js` after the CSS
-   extraction and **diff against the committed version** — must be byte-identical
-   (proves the refactor is behavior-preserving).
-4. `npm run docs:preview` serves and live-reloads a `.md` edit.
-5. `/weekly-report` produces a digest matching the template and passing `docs:lint`.
+3. `npm run docs:preview` serves and live-reloads a `.md` edit.
+4. `/weekly-report` produces a digest matching the template and passing `docs:lint`.
+
+(`tune-filters.js` is untouched, so no report byte-diff verification is needed.)
 
 No changes to existing test suites (`test:unit`, `test:component`, `test:guardrails`)
 are needed since no app/API code changes.
@@ -168,12 +176,10 @@ are needed since no app/API code changes.
 ## Build Sequence
 
 1. Add devDeps (`markdownlint-cli2`, `marked`, `browser-sync`); `npm install`.
-2. Extract `scripts/_docReportStyle.js`; refactor `tune-filters.js` to import it;
-   verify byte-identical report output.
-3. `scripts/docs-build.js` + `docs:build` script.
-4. `scripts/docs-preview.js` + `docs:preview` script.
-5. `docs:lint` script; run it; clean up violations.
-6. Wire markdown lint into `.githooks/pre-commit` (non-blocking guard).
-7. `.claude/skills/weekly-report/SKILL.md`.
-8. Update project docs (`CLAUDE.md` commands list, `docs/README.md`) to mention the
+2. `scripts/docs-build.js` (exports `renderMarkdownDocument`) + `docs:build` script.
+3. `scripts/docs-preview.js` (imports that render fn) + `docs:preview` script.
+4. `docs:lint` script; run it; clean up violations.
+5. Wire markdown lint into `.githooks/pre-commit` (non-blocking guard).
+6. `.claude/skills/weekly-report/SKILL.md`.
+7. Update project docs (`CLAUDE.md` commands list, `docs/README.md`) to mention the
    new `docs:*` scripts and the skill.
