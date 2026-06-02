@@ -148,8 +148,10 @@ verification:
   - `Adsense/Info/*.mhtml` ×2 (commit `ab77410`, 2026-03-24) — high-entropy regex matches
     inside base64/MIME-encoded saved web pages, not credentials.
   - None exist in HEAD (files deleted in later commits); 10 weeks older than this work.
-    Added a documented `.gitleaksignore` so future scans stay clean. **No real secret was
-    committed; no key rotation or history rewrite is warranted.**
+    A documented `.gitleaksignore` exists in the working tree suppressing these fingerprints;
+    it is not yet committed (pending review), so CI/fresh-checkout scans will re-flag these
+    same 4 false positives until it lands. **No real secret was committed; no key rotation
+    or history rewrite is warranted.**
 
 ---
 
