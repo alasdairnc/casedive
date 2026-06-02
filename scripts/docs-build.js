@@ -90,5 +90,13 @@ function main() {
 // Run main() only when invoked directly (not when imported by docs-preview.js).
 // realpathSync comparison is robust to symlinks and spaced paths, unlike a raw
 // `file://${process.argv[1]}` string compare.
-const invokedPath = process.argv[1] ? fs.realpathSync(process.argv[1]) : "";
+const invokedPath = process.argv[1]
+  ? (() => {
+      try {
+        return fs.realpathSync(process.argv[1]);
+      } catch {
+        return "";
+      }
+    })()
+  : "";
 if (invokedPath === fileURLToPath(import.meta.url)) main();
