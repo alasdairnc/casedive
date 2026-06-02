@@ -35,8 +35,7 @@
   with live reload; `.md` renders to styled HTML on the fly.
 - **Build:** `npm run docs:build -- <file.md>` — writes standalone HTML to
   `artifacts/html/` (git-ignored).
-- **Lint:** `npm run docs:lint` — runs markdownlint over `reports/**`,
-  `artifacts/**/*.md`, `docs/superpowers/**`. Also runs on staged `.md` in
-  pre-commit. Legacy docs (`README`, `SECURITY`, `docs/operations/**`) are out of
-  scope by design.
+- **Lint:** `npm run docs:lint` — runs markdownlint over `reports/**` and
+  `docs/superpowers/**`. Also runs on staged `.md` in pre-commit. `artifacts/`
+  contains generated reports (not hand-authored) and is excluded.
 - **Generate:** the `/weekly-report` skill produces a digest in the standard format.

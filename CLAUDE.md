@@ -30,7 +30,7 @@ Run `npm run security:scan` before any pre-push check.
 
 **Security:** `npm run security:scan` (gitleaks scan, run before pushing)
 
-**Docs authoring:** `npm run docs:preview` (live-reload preview of docs/reports), `npm run docs:build -- <file.md>` (md → `artifacts/html/`), `npm run docs:lint` (markdownlint over reports/artifacts/superpowers). Generate digests with the `/weekly-report` skill.
+**Docs authoring:** `npm run docs:preview` (live-reload preview of docs/reports), `npm run docs:build -- <file.md>` (md → `artifacts/html/`), `npm run docs:lint` (markdownlint over reports + docs/superpowers). Generate digests with the `/weekly-report` skill.
 
 ## Memory & Session
 
