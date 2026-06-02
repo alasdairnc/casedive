@@ -1,0 +1,14 @@
+# gitleaks allowlist — verified false positives in git HISTORY only.
+# None of these files exist in the current tree (HEAD); the matches were inspected
+# by hand (security session 2026-06-02) and confirmed non-secret. Listing their
+# fingerprints keeps `npm run security:scan` clean so a real future leak can't hide
+# in known historical noise.
+#
+# 1-2) ECC scaffold doc — the "key" is a documentation placeholder in a code sample:
+#        X-API-Key: sk_live_[redacted]   (illustrative placeholder, not a real key)
+# 3-4) Saved Google AdSense help pages (.mhtml) — high-entropy regex matches inside
+#        base64/MIME-encoded web-archive content, not credentials.
+2b9fa9bfefbf297669a98c0e55ac6e697aaf613c:Skills/ecc/api-design/SKILL.md:generic-api-key:306
+2b9fa9bfefbf297669a98c0e55ac6e697aaf613c:Skills/ecc/skills/api-design/SKILL.md:generic-api-key:306
+ab77410f178af7b798f4a546b8b7b5983e2a3b60:Adsense/Info/AdSense Program policies - Google AdSense Help.mhtml:generic-api-key:1815
+ab77410f178af7b798f4a546b8b7b5983e2a3b60:Adsense/Info/Google-served ads on screens without publisher-content - Publisher Policies Help.mhtml:square-access-token:1362

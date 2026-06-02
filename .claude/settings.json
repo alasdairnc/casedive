@@ -6,7 +6,6 @@
       "Bash(npm run test:integration)",
       "Bash(npm run build)",
       "Bash(npm audit)",
-      "Bash(vercel env ls)"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -78,7 +77,7 @@
           },
           {
             "type": "command",
-            "command": "git status --short 2>/dev/null || true",
+            "command": "command": "git status --short",
             "statusMessage": "Checking git status..."
           },
           {

@@ -1,6 +1,12 @@
 ---
 name: retrieval-regression-detector
 description: Use when _filters.js, _filterScoring.js, _filterConfig.js, _scenarioClassification.js, or _retrievalThresholds.js have been modified. Runs the retrieval failure corpus and reports which previously-passing queries now regress.
+model: haiku
+tools:
+  - Glob
+  - Grep
+  - Read
+  - Bash
 ---
 
 # Retrieval Regression Detector

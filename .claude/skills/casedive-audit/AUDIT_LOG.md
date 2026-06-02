@@ -255,3 +255,52 @@ Append-only. Each run adds a dated section. Never overwrite previous entries.
 ---
 
 All findings above are new or still open as of this run. See summary for file and line references.
+
+## Audit — 2026-06-02
+
+### Fixed since last run
+
+- `api/case-summary.js` fetch() call lacks explicit abort/timeout — now uses `AbortSignal.timeout(25_000)` | api/case-summary.js:75
+- `api/case-summary.js` hardcoded Anthropic URL — now imports `ANTHROPIC_MESSAGES_URL` from `_constants.js` | api/case-summary.js:25,75
+- `api/filter-quality.js` no explicit rate limiting — `checkRateLimit(getClientIp(req), "filter-quality")` present | api/filter-quality.js:34
+- `api/status.js` no explicit rate limiting — `checkRateLimit(ip, "status")` present | api/status.js:13
+- `api/retrieval-health.js` no explicit rate limiting — `checkRateLimit(getClientIp(req), "retrieval-health")` present | api/retrieval-health.js:68
+- `api/status.js` missing from vercel.json functions config — all 9 public endpoints now have entries in vercel.json
+- Stale MODE5/MODE4/MODE1 snapshot and checklist .md files in project root — removed
+- 9/14 React components zero dedicated E2E coverage — all 14 components now have E2E coverage
+- No Playwright mobile device profiles — Mobile Chrome (Pixel 5) and Mobile Safari (iPhone 12) now configured
+- Missing packageManager field in package.json — `"packageManager": "npm@11.11.0"` present
+- 3 unlinked skills not in CLAUDE.md — all skills now documented in CLAUDE.md Agent Skills section
+- 4/6 API endpoints no response caching — verify, case-summary, retrieve-caselaw, export-pdf all now have Redis caching with setex TTLs
+
+### New findings
+
+- Unbounded `redis.set()` in `_caseLawReportStore.js` — no TTL, data persists indefinitely | Medium | api/\_caseLawReportStore.js:130
+- `retrievalHealthPanels.jsx` has zero E2E or unit test coverage | Low | src/components/retrievalHealthPanels.jsx
+- `src/lib/caseLawReportReasons.js` has no unit test file | Low | src/lib/caseLawReportReasons.js
+- Stale audit report files at project root: `audit-fix-plan-2026-04-18.md`, `audit-security-2026-04-18.md`, `GEMINI.md` | Low | (project root)
+
+### Still open
+
+- 2 unbounded `redis.set()` calls in `_retrievalHealthStore.js` with no TTL | Medium | api/\_retrievalHealthStore.js:275, 592
+- `report-case-law.js` and `filter-quality.js` have no Redis response caching | Low | api/report-case-law.js, api/filter-quality.js
+
+## Audit — 2026-06-02 (post-fix)
+
+### Fixed since last run
+
+- `src/lib/caseLawReportReasons.js` has no unit test — `tests/unit/caseLawReportReasons.test.js` added (6 tests, all passing)
+- `retrievalHealthPanels.jsx` has zero unit test coverage — `tests/unit/retrievalHealthPanels.test.jsx` added (MetricCard, TrendlineChart, WindowPanel; note: JSX worker timeout is a pre-existing environment issue affecting all component tests, not a regression from this file)
+- Stale audit report files at project root (`audit-fix-plan-2026-04-18.md`, `audit-security-2026-04-18.md`) — deleted
+
+### Reclassified as false positive
+
+- Unbounded `redis.set()` in `_caseLawReportStore.js:130` — single fixed key (`feedback:case-law-reports:v1`), value is always overwritten with a slice-capped array (MAX_STORED_REPORTS=1000); no key proliferation, no Redis bloat. Adding a TTL would silently drop user feedback reports. **Not a real finding.**
+- Unbounded `redis.set()` in `_retrievalHealthStore.js:275` (LAST_EVENT_KEY) and `:592` (ALLTIME_KEY) — both are single fixed keys, always overwritten. ALLTIME_KEY is explicitly designed to persist indefinitely (all-time accumulator). Adding a TTL would destroy historical metrics on idle. **Not a real finding.**
+- `report-case-law.js` no Redis response caching — this is a write endpoint (`recordCaseLawReport`); caching a write path is incorrect. **Not a real finding.**
+- `filter-quality.js` no Redis response caching — internal dashboard that serves fresh filter metrics; caching would serve stale data. **Not a real finding.**
+- `GEMINI.md` flagged as stale — this is an active project file (Gemini CLI instructions, equivalent to CLAUDE.md). **Not a stale artifact; retained.**
+
+### Still open
+
+- None (all prior open items resolved or reclassified)

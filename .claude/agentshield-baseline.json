@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "timestamp": "2026-06-02T22:40:00.476Z",
+  "score": {
+    "grade": "A",
+    "numericScore": 99,
+    "breakdown": {
+      "secrets": 100,
+      "permissions": 96,
+      "hooks": 100,
+      "mcp": 100,
+      "agents": 100
+    }
+  },
+  "findings": [
+    {
+      "id": "permissions-permissive-Bash(chmod +x /Users/alasdairnc/Desktop/Dev/casedive/.claude/hooks/lint-on-save.sh)",
+      "severity": "medium",
+      "category": "permissions",
+      "title": "Overly permissive allow rule: Bash(chmod +x /Users/alasdairnc/Desktop/Dev/casedive/.claude/hooks/lint-on-save.sh)",
+      "file": "settings.local.json",
+      "evidence": "Bash(chmod +x /Users/alasdairnc/Desktop/Dev/casedive/.claude/hooks/lint-on-save.sh)",
+      "fingerprint": "permissions-permissive-Bash(chmod +x /Users/alasdairnc/Desktop/Dev/casedive/.claude/hooks/lint-on-save.sh)::settings.local.json::Bash(chmod +x /Users/alasdairnc/Desktop/Dev/casedive/.claude/hooks/lint-on-save.sh)"
+    }
+  ]
+}
