@@ -9,6 +9,7 @@ AI-powered Canadian legal research tool. Stack: React 18 + Vite, Vercel serverle
 ## Action Bias & Testing
 
 - Act directly when intent is clear; avoid verbose narration
+- When asked to "implement", "do", or "fix" something, execute it — do not drop into a brainstorming or scoping pass first. Plan briefly inline, then act. (Ask one clarifying question only if the target is genuinely ambiguous.)
 - Always start dev server (`npm run dev:api`) before E2E/Playwright tests
 - Run full test suite after code changes; fix failures before declaring done
 - Add regression tests when fixing bugs
