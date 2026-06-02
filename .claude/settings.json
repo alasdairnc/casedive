@@ -68,8 +68,18 @@
           },
           {
             "type": "command",
+            "command": "sh -c 'case \"$CLAUDE_TOOL_INPUT_FILE_PATH\" in *.js) node --check \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>&1 | head -5 ;; esac; exit 0'",
+            "statusMessage": "Checking JS syntax..."
+          },
+          {
+            "type": "command",
             "command": "git status --short 2>/dev/null || true",
             "statusMessage": "Checking git status..."
+          },
+          {
+            "type": "command",
+            "command": "python3 -c \"\nimport sys, json\ndata = json.load(sys.stdin)\npath = data.get('tool_input', {}).get('file_path', '')\nlegal_files = ['criminalCodeData.js', 'civilLawData.js', 'charterData.js']\nif any(f in path for f in legal_files):\n    print(json.dumps({'systemMessage': 'Legal data file edited — run legal-data-validator before committing.'}))\n\"",
+            "statusMessage": "Checking legal data files..."
           }
         ]
       }

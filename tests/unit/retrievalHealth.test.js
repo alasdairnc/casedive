@@ -10,10 +10,17 @@ const mockGetTrendlineSnapshots = vi.fn();
 const mockGetFailureScenarioPage = vi.fn();
 const mockEvaluateRetrievalAlerts = vi.fn(() => []);
 
+// retrieval-health.js also imports `redis` from this module (used to gate the
+// response cache). vitest throws on access to an undefined named export, so the
+// mock must declare it. These tests exercise the non-cached path, so redis is null.
+let mockRedis = null;
 vi.mock("../../api/_rateLimit.js", () => ({
   checkRateLimit: mockCheckRateLimit,
   getClientIp: mockGetClientIp,
   rateLimitHeaders: mockRateLimitHeaders,
+  get redis() {
+    return mockRedis;
+  },
 }));
 
 vi.mock("../../api/_cors.js", () => ({
@@ -273,6 +280,55 @@ describe("retrieval-health handler", () => {
       beforeTs: null,
       offset: 1000,
     });
+  });
+
+  // Regression: the response cache key must be derived from the CLAMPED params, not
+  // the raw req.url. Two requests whose raw params differ but clamp to the same values
+  // must resolve to the same cache entry (second request = cache hit), preventing
+  // cache fragmentation / unbounded 7-day-TTL growth from unclamped query values.
+  it("keys the response cache on clamped params (no fragmentation from out-of-range values)", async () => {
+    const store = new Map();
+    mockRedis = {
+      get: vi.fn((key) => Promise.resolve(store.get(key) ?? null)),
+      setex: vi.fn((key, _ttl, value) => {
+        store.set(key, value);
+        return Promise.resolve("OK");
+      }),
+    };
+
+    try {
+      // First request: failuresOffset=5000 clamps to 1000.
+      const req1 = {
+        method: "GET",
+        url: "/api/retrieval-health?failureLimit=999&failuresOffset=5000",
+        headers: { authorization: "Bearer test-token" },
+      };
+      await handler(req1, createRes());
+
+      // Second request: a DIFFERENT raw offset (99999) that clamps to the SAME 1000.
+      const req2 = {
+        method: "GET",
+        url: "/api/retrieval-health?failureLimit=12345&failuresOffset=99999",
+        headers: { authorization: "Bearer test-token" },
+      };
+      const res2 = createRes();
+      await handler(req2, res2);
+
+      // Exactly one cache entry was written (both requests share the clamped key:
+      // limit=100, offset=1000), and the second request was served from cache.
+      expect(store.size).toBe(1);
+      expect(mockRedis.setex).toHaveBeenCalledTimes(1);
+      expect(res2.statusCode).toBe(200);
+      // Second request hit the cache, so the upstream store was only read once total.
+      expect(mockGetFailureScenarioPage).toHaveBeenCalledTimes(1);
+      // The key reflects clamped values, not the raw query string.
+      const writtenKey = [...store.keys()][0];
+      expect(writtenKey).toContain("v2:100:none:1000");
+      expect(writtenKey).not.toContain("5000");
+      expect(writtenKey).not.toContain("99999");
+    } finally {
+      mockRedis = null;
+    }
   });
 
   it("passes through upstream 4xx errors unchanged", async () => {

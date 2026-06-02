@@ -20,11 +20,15 @@ AI-powered Canadian legal research tool. Stack: React 18 + Vite, Vercel serverle
 
 ## Active Dev Context
 
-Focus: case-law retrieval quality (query shaping, fallback calibration, empty-state UX). Test target: retrieval failure corpus (`npm run test:retrieval-failures`).
+Run `npm run security:scan` before any pre-push check.
 
 ## Commands
 
 `npm run dev` (frontend), `npm run dev:api` (full stack), `npm run build`, `npm test`, `npm run test:unit`, `npm run test:component`, `npm run test:guardrails`, `npm run test:retrieval-failures`
+
+**Filter tuning:** `npm run test:filter` (report), `npm run test:filter:calibrate` (recalibrate thresholds), `npm run test:filter:compare` (before/after diff)
+
+**Security:** `npm run security:scan` (gitleaks scan, run before pushing)
 
 ## Memory & Session
 
@@ -49,6 +53,15 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - `criminalCodeData.js` is 316KB (import `criminalCodeParts.js` for parts list)
 - Redis falls back to in-memory in dev
 - CanLII API key optional; Sentry no-ops if unset
+- PostToolUse hooks: use `$CLAUDE_TOOL_INPUT_FILE_PATH` env var (shell hooks) or `data.get('tool_input', {}).get('file_path', '')` from stdin (Python hooks) — both patterns exist in `.claude/hooks/`
+- `node --check` cannot parse JSX — scope JS syntax checks to `.js` only, never `.jsx`
+- context7 MCP is active via global plugin; `.claude/mcp.json` entry is for team/project sharing — don't add it twice
+
+## API Module Structure
+
+`api/_*.js` = shared modules (rate limit, CORS, constants, filters, etc.)
+`api/*.js` = endpoint handlers (analyze, case-summary, export-pdf, etc.)
+`.claude/rules/` = auto-loaded guardrails (import rules, citation rules, git rules)
 
 ## Reference Files (read on demand)
 
@@ -64,6 +77,11 @@ Auto-loaded from `.claude/skills/` (e.g., `casedive-audit`, `new-api-endpoint`).
 
 - `api-invariant-reviewer`: Checks `api/*.js` for rate limiting, input validation, security headers
 - `legal-data-validator`: Validates schema of legal data files
+- `pre-push-checklist`: Chains build + security scan + E2E before any push
+- `retrieval-regression-detector`: Run when `_filters.js`, `_filterScoring.js`, `_filterConfig.js`, `_scenarioClassification.js`, or `_retrievalThresholds.js` change
+- `test-selector`: Determines which test suites to run based on changed files
+
+**Full skills list:** `casedive-audit`, `new-api-endpoint`, `e2e`, `e2e-verify`, `feature-factory`, `security-audit`, `caching-audit`, `verify-before-push`, `resume-checkpoint`, `filter-tune`
 
 ## Workflow Rules (from claude-doctor)
 

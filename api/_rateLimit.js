@@ -187,18 +187,41 @@ export function rateLimitHeaders(result) {
   return headers;
 }
 
-// Only trust X-Forwarded-For from known proxies (Vercel); otherwise, use req.socket.remoteAddress.
+// Resolve the client IP used as the rate-limit bucket key.
+//
+// Security: the rate limiter protects a paid downstream API, so it must key on a
+// value the client cannot freely control. We prefer the headers Vercel sets on
+// its own edge (x-vercel-forwarded-for, then x-real-ip), which a client cannot
+// override. The freely-spoofable x-forwarded-for is trusted ONLY when not running
+// behind the Vercel proxy (i.e. local/self-hosted dev), and falls back to the
+// socket address. The resolved value is finally validated as an IP shape before
+// being used as a key, so a malformed/injected header value collapses to the
+// shared "unknown" bucket rather than minting a fresh bucket per request.
 export function getClientIp(req) {
-  const trustedVercel =
-    req.headers["x-vercel-proxied-for"] || req.headers["x-vercel-id"];
-  let ip = null;
-  if (trustedVercel && req.headers["x-forwarded-for"]) {
-    // Only trust X-Forwarded-For if Vercel proxy headers are present
-    ip = req.headers["x-forwarded-for"].split(",")[0]?.trim();
+  const headers = req.headers || {};
+  const firstHop = (value) =>
+    typeof value === "string" ? value.split(",")[0]?.trim() : null;
+
+  let ip =
+    firstHop(headers["x-vercel-forwarded-for"]) ||
+    firstHop(headers["x-real-ip"]);
+
+  if (!ip) {
+    const onVercel =
+      Boolean(headers["x-vercel-id"]) ||
+      Boolean(headers["x-vercel-proxied-for"]) ||
+      Boolean(process.env.VERCEL) ||
+      Boolean(process.env.VERCEL_ENV);
+    // Only trust the spoofable X-Forwarded-For when NOT behind the Vercel proxy.
+    if (!onVercel) {
+      ip = firstHop(headers["x-forwarded-for"]);
+    }
   }
+
   if (!ip) {
     ip = req.socket?.remoteAddress;
   }
+
   // Basic validation: must look like an IPv4 or IPv6 address
   if (
     typeof ip === "string" &&

@@ -139,4 +139,65 @@ describe("rate limiter", () => {
 
     expect(ip).toBe("4.4.4.4");
   });
+
+  it("collapses malformed/injected IP header values into the shared 'unknown' bucket", async () => {
+    resetRateLimitEnv();
+    process.env.VERCEL_ENV = "production";
+
+    const { getClientIp } = await loadRateLimitModule();
+    // A value that is not an IP shape (e.g. a key-injection attempt) must not
+    // be used verbatim as a Redis key.
+    const ip = getClientIp({
+      headers: { "x-vercel-forwarded-for": "rl:analyze:victim:0" },
+      socket: {},
+    });
+
+    expect(ip).toBe("unknown");
+  });
+
+  // Security regression (CWE-770): on Vercel, a client cannot escape its rate-limit
+  // bucket by spoofing the freely-settable X-Forwarded-For header. Two requests that
+  // are identical except for X-Forwarded-For, with the trusted platform header held
+  // constant, must resolve to the same bucket key.
+  it("does not let a spoofed x-forwarded-for create a fresh rate-limit bucket on Vercel", async () => {
+    resetRateLimitEnv();
+    process.env.UPSTASH_REDIS_REST_URL = "https://redis.example";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "token";
+    process.env.VERCEL_ENV = "production";
+
+    const seen = [];
+    const redisImpl = {
+      incr: vi.fn((key) => {
+        seen.push(key);
+        return Promise.resolve(seen.filter((k) => k === key).length);
+      }),
+      expire: vi.fn().mockResolvedValue(1),
+    };
+
+    const { checkRateLimit, getClientIp } = await loadRateLimitModule({
+      redisImpl,
+    });
+
+    const platformHeader = { "x-vercel-forwarded-for": "8.8.8.8" };
+    const attempt = (spoofedXff) =>
+      checkRateLimit(
+        getClientIp({
+          headers: { ...platformHeader, "x-forwarded-for": spoofedXff },
+          socket: {},
+        }),
+        "analyze",
+      );
+
+    // First five exhaust the bucket; the sixth — with a rotated spoofed XFF —
+    // must still be denied (same bucket), not reset to a fresh one.
+    let last = null;
+    for (let i = 0; i < 6; i += 1) {
+      last = await attempt(`10.0.0.${i}`);
+    }
+
+    expect(last.allowed).toBe(false);
+    // Every request hashed to the same key despite rotating X-Forwarded-For.
+    expect(new Set(seen).size).toBe(1);
+    expect(seen[0]).toContain("8.8.8.8");
+  });
 });

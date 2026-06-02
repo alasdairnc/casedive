@@ -249,17 +249,22 @@ export function buildCaseId({ year, courtCode, number, isLegacy }) {
 
 /**
  * Build a CanLII API URL for a specific case (requires API key).
+ * `dbId` is a fixed allowlist value (e.g. "csc-scc") so it is left as-is; `caseId`
+ * is encoded as an opaque path token for defense-in-depth.
  */
 export function buildApiUrl(dbId, caseId, apiKey) {
-  return `${CANLII_BASE}/caseBrowse/en/${dbId}/${caseId}/?api_key=${encodeURIComponent(apiKey)}`;
+  return `${CANLII_BASE}/caseBrowse/en/${dbId}/${encodeURIComponent(caseId)}/?api_key=${encodeURIComponent(apiKey)}`;
 }
 
 /**
  * Build a CanLII web URL for a case (no API key, public).
  * Format: /en/{dbId}/doc/{year}/{caseId}/{caseId}.html
+ * `dbId` (web form, e.g. "ca/scc") contains a structural "/" and must NOT be encoded;
+ * `caseId` is encoded as an opaque path token.
  */
 export function buildCaseUrl(dbId, year, caseId) {
-  return `${CANLII_WEB}/en/${dbId}/doc/${year}/${caseId}/${caseId}.html`;
+  const encodedCaseId = encodeURIComponent(caseId);
+  return `${CANLII_WEB}/en/${dbId}/doc/${year}/${encodedCaseId}/${encodedCaseId}.html`;
 }
 
 /**

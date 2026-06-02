@@ -25,6 +25,7 @@
     "test:retrieval-failures:baseline": "node scripts/evaluate-retrieval-failures.js --baseline",
     "test:retrieval-failures:compare": "node scripts/evaluate-retrieval-failures.js --compare",
     "test:guardrails": "vitest run tests/unit/resultCardSanitizer.test.js && npm run test:retrieval-failures && npm run test:filter",
+    "test:security": "vitest run tests/unit/rateLimit.test.js tests/unit/analyzeApi.test.js tests/unit/retrievalHealth.test.js tests/unit/canlii.test.js tests/unit/securityConfig.test.js tests/unit/resultCardSanitizer.test.js",
     "perf:monitor": "node scripts/performance-monitor.js",
     "security:scan": "gitleaks git . --log-opts='--branches --tags' --redact --no-banner",
     "security:scan:all": "gitleaks git . --log-opts='--all' --redact --no-banner",
@@ -33,22 +34,22 @@
   "dependencies": {
     "@sentry/node": "^10.46.0",
     "@sentry/react": "^10.46.0",
-    "@upstash/redis": "1.31.1",
+    "@upstash/redis": "1.38.0",
     "@vercel/analytics": "^2.0.1",
     "pdfkit": "^0.18.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.60.0",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.7.0",
-    "@vitest/browser": "^4.1.2",
+    "@vitest/browser": "^4.1.7",
     "happy-dom": "^20.8.8",
     "jsdom": "^29.0.1",
     "vite": "^6.4.2",
-    "vitest": "^4.1.1"
+    "vitest": "^4.1.7"
   }
 }

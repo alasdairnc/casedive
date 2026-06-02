@@ -402,6 +402,50 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
 
     expect(userText).not.toContain("A".repeat(400));
   });
+
+  // Regression: safePromptLine must NOT strip ordinary legal vocabulary out of
+  // grounding data. A prior blocklist removed words like "executed", "instruction",
+  // "do not", and "command", silently corrupting CanLII/landmark text passed to the
+  // model (e.g. "police executed a search" -> "police  a search"). The structural
+  // defenses (angle-bracket/backtick stripping + <reference_context> wrapping) are the
+  // real control; legitimate phrasing must survive verbatim.
+  it("preserves ordinary legal vocabulary in landmark data (no blocklist mangling)", async () => {
+    const ratio =
+      "Police executed a search warrant; the trial judge gave an instruction that the " +
+      "accused did not consent and the officer's command did not override s. 8 rights.";
+    const { MASTER_CASE_LAW_DB } =
+      await import("../../src/lib/caselaw/index.js");
+    MASTER_CASE_LAW_DB.length = 0;
+    MASTER_CASE_LAW_DB.push({
+      citation: "R v Grant, 2009 SCC 32",
+      title: "R v Grant",
+      ratio,
+      tags: ["charter", "exclusion", "search", "seizure"],
+      topics: ["Charter rights"],
+      year: 2009,
+    });
+
+    mockAnthropicSuccess();
+
+    const req = createReq({
+      body: { scenario: "charter exclusion search warrant grant" },
+    });
+    const res = createRes();
+    await handler(req, res);
+
+    const fetchCalls = globalThis.fetch.mock.calls;
+    const anthropicCall = fetchCalls.find((c) =>
+      String(c[0]).includes("anthropic.com"),
+    );
+    const body = JSON.parse(anthropicCall[1].body);
+    const userText = getUserTextBlock(body.messages[0].content);
+
+    // The substantive legal phrasing must reach the model intact.
+    expect(userText).toContain("executed a search warrant");
+    expect(userText).toContain("gave an instruction");
+    expect(userText).toContain("did not consent");
+    expect(userText).toContain("command did not override");
+  });
 });
 
 // ── 2. RAG poisoning / user input sanitization ────────────────────────────────

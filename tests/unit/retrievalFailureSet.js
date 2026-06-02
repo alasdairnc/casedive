@@ -1162,6 +1162,51 @@ export const RETRIEVAL_FAILURE_SET = [
       },
     ],
   },
+  {
+    id: "detention_no_counsel_positive",
+    scenario:
+      "I was stopped by police and held for thirty minutes without being told I could call a lawyer.",
+    expectedPrimary: "charter_detention",
+    expectedResult: "nonzero_required",
+    shouldInclude: ["Grant", "detention", "s. 9"],
+    shouldExclude: ["Jordan", "11(b)", "trial delay"],
+    expectedKeywords: ["detention", "charter", "s. 9"],
+    minResults: 1,
+    maxResults: 3,
+    landmarkMatches: [
+      {
+        citation: "R v Grant, 2009 SCC 32",
+        title: "R v Grant",
+        ratio:
+          "Defines psychological detention and the section 9 arbitrary detention analysis.",
+        tags: ["charter", "detention", "s. 9", "arbitrary"],
+        topics: ["detention", "charter rights"],
+        year: 2009,
+      },
+    ],
+  },
+  {
+    id: "counsel_no_detention_positive",
+    scenario:
+      "After my arrest at the station, officers kept questioning me for two hours and refused to let me speak to a lawyer.",
+    expectedPrimary: "charter_counsel",
+    expectedResult: "nonzero_required",
+    shouldInclude: ["counsel", "10(b)"],
+    shouldExclude: ["search", "warrant", "Hunter"],
+    expectedKeywords: ["counsel", "s. 10", "arrest"],
+    minResults: 1,
+    maxResults: 3,
+    landmarkMatches: [
+      {
+        citation: "R. v. Woods, 2005 SCC 42",
+        title: "R. v. Woods",
+        ratio: "Right to counsel obligations upon arrest or detention.",
+        tags: ["charter", "10(b)", "counsel", "arrest"],
+        topics: ["counsel", "charter rights"],
+        year: 2005,
+      },
+    ],
+  },
   // ── Regression: Production failures logged 2026-04-04/05 ─────────────────────
   {
     id: "indigenous_sentencing_not_non_criminal",

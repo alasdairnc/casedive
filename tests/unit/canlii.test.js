@@ -273,6 +273,17 @@ describe("buildApiUrl", () => {
     const url = buildApiUrl("csc-scc", "2016scc27", "key with spaces");
     expect(url).toContain("key%20with%20spaces");
   });
+
+  it("URL-encodes the caseId path token (defense-in-depth)", () => {
+    // Normal alphanumeric caseId is unchanged (encoding is a no-op).
+    expect(buildApiUrl("csc-scc", "2016scc27", "k")).toContain(
+      "/caseBrowse/en/csc-scc/2016scc27/",
+    );
+    // A caseId carrying path-significant characters is neutralized.
+    const url = buildApiUrl("csc-scc", "a/b?x=1", "k");
+    expect(url).toContain("/caseBrowse/en/csc-scc/a%2Fb%3Fx%3D1/");
+    expect(url).not.toContain("/a/b?x=1/");
+  });
 });
 
 describe("buildCaseUrl", () => {
@@ -280,6 +291,16 @@ describe("buildCaseUrl", () => {
     const url = buildCaseUrl("ca/scc", "2016", "2016scc27");
     expect(url).toBe(
       "https://www.canlii.org/en/ca/scc/doc/2016/2016scc27/2016scc27.html",
+    );
+  });
+
+  it("preserves the structural slash in the web dbId but encodes the caseId", () => {
+    const url = buildCaseUrl("ca/scc", "2016", "a/b");
+    // dbId slash is part of the path structure and must survive.
+    expect(url).toContain("/en/ca/scc/doc/2016/");
+    // caseId is encoded in both occurrences.
+    expect(url).toBe(
+      "https://www.canlii.org/en/ca/scc/doc/2016/a%2Fb/a%2Fb.html",
     );
   });
 });

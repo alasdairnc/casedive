@@ -83,8 +83,45 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  // Redis response caching (7-day TTL)
-  const cacheKey = `cache:retrieval-health:v1:${req.url || "default"}`;
+  // Parse + clamp pagination params BEFORE building the cache key, so the key is
+  // derived from the normalized (clamped) values rather than the raw query string.
+  // Keying on raw req.url would let distinct unclamped values (e.g. failuresOffset=5
+  // vs failuresOffset=999999, both clamped to <=1000) mint separate 7-day cache
+  // entries holding identical data — cache fragmentation / unbounded growth.
+  let failureLimit;
+  let failuresBeforeTs;
+  let failuresOffset;
+  try {
+    const url = new URL(
+      req.url || "http://localhost/api/retrieval-health",
+      "http://localhost",
+    );
+    failureLimit = parseBoundedInt(
+      url.searchParams.get("failureLimit"),
+      20,
+      1,
+      MAX_FAILURE_ARCHIVE_LIMIT,
+    );
+    failuresBeforeTs = parseBoundedInt(
+      url.searchParams.get("failuresBeforeTs"),
+      null,
+      1,
+      Number.MAX_SAFE_INTEGER,
+    );
+    failuresOffset = parseBoundedInt(
+      url.searchParams.get("failuresOffset"),
+      0,
+      0,
+      MAX_FAILURE_ARCHIVE_OFFSET,
+    );
+  } catch {
+    failureLimit = 20;
+    failuresBeforeTs = null;
+    failuresOffset = 0;
+  }
+
+  // Redis response caching (7-day TTL). Key bump v1 -> v2: now keyed on clamped params.
+  const cacheKey = `cache:retrieval-health:v2:${failureLimit}:${failuresBeforeTs ?? "none"}:${failuresOffset}`;
   if (redis) {
     try {
       const cached = await withRedisTimeout(
@@ -108,29 +145,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = new URL(
-      req.url || "http://localhost/api/retrieval-health",
-      "http://localhost",
-    );
-    const failureLimit = parseBoundedInt(
-      url.searchParams.get("failureLimit"),
-      20,
-      1,
-      MAX_FAILURE_ARCHIVE_LIMIT,
-    );
-    const failuresBeforeTs = parseBoundedInt(
-      url.searchParams.get("failuresBeforeTs"),
-      null,
-      1,
-      Number.MAX_SAFE_INTEGER,
-    );
-    const failuresOffset = parseBoundedInt(
-      url.searchParams.get("failuresOffset"),
-      0,
-      0,
-      MAX_FAILURE_ARCHIVE_OFFSET,
-    );
-
     const [snapshot, trendline, failureArchive] = await Promise.all([
       getRetrievalHealthSnapshot(),
       getTrendlineSnapshots(),

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Pre-push gate: run the security-relevant unit suites and block the push if any
+# fail. This exists because a rate-limit-bypass regression and a prompt-injection
+# blocklist bug once shipped with their unit tests already red — nothing ran
+# test:unit before push. This gate covers that regression class.
+#
+# Scoped to the currently-green security suites (not the full test:unit) so it never
+# falsely blocks on the unrelated pre-existing retrievalFailureSet retrieval-tuning
+# gap. Promote to `npm run test:unit` once that suite is green.
+#
+# Escape hatch (use sparingly, e.g. docs-only pushes): git push --no-verify
+
+echo "pre-push: running security test suites (npm run test:security)..."
+
+if ! npm run --silent test:security; then
+  echo "" >&2
+  echo "pre-push: BLOCKED — security tests failed. Fix them before pushing." >&2
+  echo "pre-push: (to bypass for a non-code push: git push --no-verify)" >&2
+  exit 1
+fi
+
+echo "pre-push: security tests passed."

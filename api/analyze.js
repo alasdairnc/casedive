@@ -61,49 +61,19 @@ function sanitizeUserInput(input) {
   return input.replace(/<\/?[a-zA-Z_][a-zA-Z0-9_]*(?:\s[^>\s][^>]*)?>/g, "");
 }
 
-// Remove common instruction-like phrases to mitigate prompt injection.
-function filterInstructionLikeText(input) {
-  if (!input) return "";
-  let out = String(input);
-  const patterns = [
-    /ignore all previous instructions/gi,
-    /you are now in debug mode/gi,
-    /assistant:/gi,
-    /system:/gi,
-    /user:/gi,
-    /as an ai language model/gi,
-    /disregard prior context/gi,
-    /reset all instructions/gi,
-    /override/gi,
-    /forget previous/gi,
-    /role:/gi,
-    /\[system\]/gi,
-    /\[user\]/gi,
-    /\[assistant\]/gi,
-    /you must/gi,
-    /return only/gi,
-    /do not/gi,
-    /output:/gi,
-    /instruction/gi,
-    /prompt:/gi,
-    /debug/gi,
-    /mode:/gi,
-    /execute/gi,
-    /command:/gi,
-    /please/gi,
-  ];
-  for (const pat of patterns) {
-    out = out.replace(pat, "");
-  }
-  return out;
-}
-
+// Sanitize a single line of external/reference text (landmark DB + CanLII-retrieved
+// content) before it is embedded in the prompt. The control is purely structural:
+// strip the block-delimiter characters (< > ` newlines) so the text cannot escape its
+// XML wrapper, then cap length. buildUserPromptContent wraps the result in
+// <external_content> / <reference_context> and instructs the model to treat every block
+// as data only — that wrapping, not a phrase blocklist, is what neutralizes injection.
+// A content blocklist is intentionally NOT used here: it is trivially bypassable (e.g.
+// doubling a letter) and silently corrupts legitimate case text — words like "executed",
+// "instruction", "command", and "do not" are ordinary legal vocabulary.
 function safePromptLine(input) {
-  return filterInstructionLikeText(
-    String(input || "")
-      .replace(/[<>`\n\r]/g, " ")
-      .slice(0, 300),
-  );
+  return String(input || "")
+    .replace(/[<>`\n\r]/g, " ")
+    .slice(0, 300);
 }
 
 function buildUserPromptContent(scenario, matchedLandmarks, retrievedCases) {
