@@ -81,39 +81,39 @@ The rubric score is clean, but the broader-goal sweep surfaced **3 real issues**
 
 ### FIXED — process
 
-3. **No CI gate on `test:unit`** — root cause that let #1 and #2 ship. `test:guardrails`
-   runs only sanitizer + retrieval-failures + filter; `test:unit` was in no pre-commit /
-   pre-push hook. That is why **3 security-relevant unit tests sat red in the repo**
-   (2 rate-limit, 1 analyze) unnoticed. **Fix:** added a fail-closed `pre-push` hook
-   (`.githooks/pre-push`, executable; `core.hooksPath` already → `.githooks`) running a
-   new `npm run test:security` script — the green security suites (rateLimit, analyzeApi,
-   retrievalHealth, canlii, securityConfig, resultCardSanitizer; 89 tests, ~250ms).
-   Scoped to the green subset rather than full `test:unit` so it never falsely blocks on
-   the unrelated pre-existing `retrievalFailureSet` retrieval-tuning gap; promote to full
-   `test:unit` once that suite is green. Verified runs green (exit 0) and fails closed
-   (exit 1) directly via `bash .githooks/pre-push`.
+**Finding 3 — No CI gate on `test:unit`** — root cause that let #1 and #2 ship.
+`test:guardrails` runs only sanitizer + retrieval-failures + filter; `test:unit` was in no
+pre-commit / pre-push hook. That is why **3 security-relevant unit tests sat red in the
+repo** (2 rate-limit, 1 analyze) unnoticed. **Fix:** added a fail-closed `pre-push` hook
+(`.githooks/pre-push`, executable; `core.hooksPath` already → `.githooks`) running a new
+`npm run test:security` script — the green security suites (rateLimit, analyzeApi,
+retrievalHealth, canlii, securityConfig, resultCardSanitizer; 89 tests, ~250ms). Scoped to
+the green subset rather than full `test:unit` so it never falsely blocks on the unrelated
+pre-existing `retrievalFailureSet` retrieval-tuning gap; promote to full `test:unit` once
+that suite is green. Verified runs green (exit 0) and fails closed (exit 1) directly via
+`bash .githooks/pre-push`.
 
 ### FIXED — low severity
 
-4. **retrieval-health cache key used raw `req.url`** — `api/retrieval-health.js`.
-   The 7-day-TTL response cache keyed on the unsanitized query string, while the _data_
-   used clamped params. Distinct unclamped `failuresOffset` values (e.g. `5` vs `999999`,
-   both clamped to ≤1000) minted distinct cache entries with identical data → cache
-   fragmentation/growth. Auth-gated, so low impact. **Fix:** parse + clamp params before
-   building the key; key on the clamped `failureLimit:failuresBeforeTs:failuresOffset`
-   (bumped `v1`→`v2`). Regression test asserts two requests with different raw params that
-   clamp identically share one cache entry (second = cache hit).
+**Finding 4 — retrieval-health cache key used raw `req.url`** — `api/retrieval-health.js`.
+The 7-day-TTL response cache keyed on the unsanitized query string, while the _data_ used
+clamped params. Distinct unclamped `failuresOffset` values (e.g. `5` vs `999999`, both
+clamped to ≤1000) minted distinct cache entries with identical data → cache
+fragmentation/growth. Auth-gated, so low impact. **Fix:** parse + clamp params before
+building the key; key on the clamped `failureLimit:failuresBeforeTs:failuresOffset` (bumped
+`v1`→`v2`). Regression test asserts two requests with different raw params that clamp
+identically share one cache entry (second = cache hit).
 
-5. **`caseId` interpolated into CanLII path without `encodeURIComponent`** —
-   `src/lib/canlii.js`. `caseId` is built from validated numeric/code fields (not free
-   text), so not currently exploitable, but encoding is defense-in-depth. **Fix:**
-   `buildApiUrl` and `buildCaseUrl` now `encodeURIComponent(caseId)`. The web `dbId`
-   (e.g. `ca/scc`) contains a structural `/` and is deliberately **left unencoded** —
-   encoding it would 404 the real CanLII lookup. Encoding is a no-op for well-formed
-   caseIds (`2016scc27`), so existing URL assertions are unchanged; new tests cover both
-   the no-op and a path-significant caseId, and assert the dbId slash survives.
-   Remaining consistency nit (not changed, both safe): `filter-quality` strips `Bearer `
-   before `timingSafeEqual` while `retrieval-health` compares the full header.
+**Finding 5 — `caseId` interpolated into CanLII path without `encodeURIComponent`** —
+`src/lib/canlii.js`. `caseId` is built from validated numeric/code fields (not free text),
+so not currently exploitable, but encoding is defense-in-depth. **Fix:** `buildApiUrl` and
+`buildCaseUrl` now `encodeURIComponent(caseId)`. The web `dbId` (e.g. `ca/scc`) contains a
+structural `/` and is deliberately **left unencoded** — encoding it would 404 the real
+CanLII lookup. Encoding is a no-op for well-formed caseIds (`2016scc27`), so existing URL
+assertions are unchanged; new tests cover both the no-op and a path-significant caseId, and
+assert the dbId slash survives. Remaining consistency nit (not changed, both safe):
+`filter-quality` strips the `Bearer` prefix before `timingSafeEqual` while `retrieval-health`
+compares the full header.
 
 ---
 
@@ -130,7 +130,31 @@ flagged for separate cleanup per project convention (not created this session). 
 
 ---
 
-_Generated during a security-focused session. **All findings (1–5) are now implemented
-with regression tests.** End state: 248/249 unit tests pass — the single remaining
-failure (`retrievalFailureSet.test.js`) is a pre-existing, out-of-scope retrieval-tuning
-gap in uncommitted working-tree changes, not a regression from this work._
+### Verification (`/verify` loop, post-commit)
+
+The work is committed (`87ba26a "feat: enhance security and retrieval logic"`). Full
+verification:
+
+- **Build:** PASS — `vite build`, 348 modules, no errors.
+- **E2E:** PASS — `276/276` Playwright tests across all browsers (incl. Mobile Safari),
+  45.4s. (Dev server must run unsandboxed — the sandbox blocks the `:5173` port bind.)
+- **Unit:** PASS — 248/249 (the lone failure is the pre-existing `retrievalFailureSet`
+  retrieval-tuning gap, not this work).
+- **Secret scan (gitleaks, full history — 714 commits):** PASS for this work — **0 leaks
+  in any changed file or in HEAD.** Gitleaks flagged 4 history-only matches, all
+  **inspected by hand and confirmed false positives**:
+  - `Skills/ecc/.../api-design/SKILL.md` ×2 (commit `2b9fa9b`, 2026-03-23) — the match is
+    a documentation placeholder (`X-API-Key:` with a fake `sk_live_<redacted>` value) in a code sample.
+  - `Adsense/Info/*.mhtml` ×2 (commit `ab77410`, 2026-03-24) — high-entropy regex matches
+    inside base64/MIME-encoded saved web pages, not credentials.
+  - None exist in HEAD (files deleted in later commits); 10 weeks older than this work.
+    Added a documented `.gitleaksignore` so future scans stay clean. **No real secret was
+    committed; no key rotation or history rewrite is warranted.**
+
+---
+
+_Generated during a security-focused session. **All findings (1–5) are implemented with
+regression tests and committed (`87ba26a`); `/verify` passes (build, 276/276 E2E,
+248/249 unit, 0 real secrets).** The single remaining unit failure
+(`retrievalFailureSet.test.js`) is a pre-existing, out-of-scope retrieval-tuning gap, not
+a regression from this work._

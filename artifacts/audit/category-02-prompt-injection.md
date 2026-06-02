@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD038 -->
+
 # Category 2: Prompt Injection & RAG Poisoning
 
 ## Summary

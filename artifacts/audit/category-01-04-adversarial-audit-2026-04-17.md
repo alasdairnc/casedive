@@ -22,9 +22,9 @@ File: api/\_caseLawRetrieval.js:32-36
 
 ---
 
-# Category 02: Prompt Injection & RAG Poisoning
+## Category 02: Prompt Injection & RAG Poisoning
 
-## Findings (2026-04-17)
+## Findings — Category 02 (2026-04-17)
 
 ### [High] CanLII-derived case title/summary concatenated into system prompt without delimiters
 
@@ -36,9 +36,9 @@ File: api/analyze.js:552-567
 
 ---
 
-# Category 03: API Endpoint Hardening
+## Category 03: API Endpoint Hardening
 
-## Findings (2026-04-17)
+## Findings — Category 03 (2026-04-17)
 
 ### [High] X-Forwarded-For is fully trusted (rate-limit bypass)
 
@@ -50,9 +50,9 @@ File: api/\_cors.js:16-24
 
 ---
 
-# Category 04: Redis / Cache Integrity
+## Category 04: Redis / Cache Integrity
 
-## Findings (2026-04-17)
+## Findings — Category 04 (2026-04-17)
 
 ### [High] Sliding-window rate limiter is not atomic (race allows bypass)
 

@@ -175,7 +175,7 @@ Evidence: `citation` requires string; other fields must be strings of bounded le
 Impact: None directly. Flagging only for defense-in-depth: no strict allow-list on body keys.
 Trace confidence: High
 
-#### [Low] Cache key includes entire body
+#### [Low] Cache key includes entire body (case-summary)
 
 File: `api/case-summary.js:196`
 Evidence:

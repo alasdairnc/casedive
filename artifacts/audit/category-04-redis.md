@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD033 MD038 -->
+
 # Category 4: Redis / Cache Integrity
 
 Scope: every Upstash/Redis usage under `api/`, including rate limiting, response caching, retrieval-health metrics, case-law report store, retrieval-threshold alert dedup, and in-flight request dedup.
