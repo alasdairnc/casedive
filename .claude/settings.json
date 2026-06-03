@@ -5,7 +5,7 @@
       "Bash(npm run test:component)",
       "Bash(npm run test:integration)",
       "Bash(npm run build)",
-      "Bash(npm audit)",
+      "Bash(npm audit)"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -77,7 +77,7 @@
           },
           {
             "type": "command",
-            "command": "command": "git status --short",
+            "command": "git status --short 2>/dev/null || true",
             "statusMessage": "Checking git status..."
           },
           {

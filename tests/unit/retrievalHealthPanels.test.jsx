@@ -103,6 +103,10 @@ describe("WindowPanel", () => {
       />,
     );
     expect(screen.getByText("1 HOUR")).toBeTruthy();
-    expect(container.firstChild).toBeTruthy();
+    expect(
+      screen.getByText(/Latency avg \/ p95: 150 ms \/ 220 ms/),
+    ).toBeTruthy();
+    expect(screen.getByText(/Avg verified \/ request: 2\.5/)).toBeTruthy();
+    expect(screen.getByText(/Error rate \(5\.0%\)/)).toBeTruthy();
   });
 });
