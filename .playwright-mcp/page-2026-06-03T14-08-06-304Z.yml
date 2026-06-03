@@ -1,0 +1,71 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e7]:
+      - img "CaseDive" [ref=e8]
+      - navigation [ref=e9]:
+        - button "Saved citations" [ref=e10] [cursor=pointer]: Saved
+        - button "Criminal Code Explorer" [ref=e11] [cursor=pointer]:
+          - generic [ref=e12]: §
+          - text: Code
+        - link "Coffee" [ref=e13] [cursor=pointer]:
+          - /url: https://buymeacoffee.com/alasdairnc
+        - button "Dark" [ref=e14] [cursor=pointer]
+  - generic [ref=e16]:
+    - combobox "Jurisdiction" [ref=e17] [cursor=pointer]:
+      - option "All Jurisdictions" [selected]
+      - option "Ontario"
+      - option "British Columbia"
+      - option "Alberta"
+      - option "Quebec"
+      - option "Manitoba"
+      - option "Saskatchewan"
+      - option "Nova Scotia"
+      - option "New Brunswick"
+      - option "Newfoundland & Lab."
+      - option "PEI"
+      - option "Yukon"
+      - option "NWT"
+      - option "Nunavut"
+    - combobox "Court level" [ref=e18] [cursor=pointer]:
+      - option "All Courts" [selected]
+      - option "Supreme Court"
+      - option "Court of Appeal"
+      - option "Superior Court"
+      - option "Provincial Court"
+    - combobox "Date range" [ref=e19] [cursor=pointer]:
+      - option "Any Date" [selected]
+      - option "Last 5 Years"
+      - option "Last 10 Years"
+      - option "Last 20 Years"
+    - button "Criminal Code" [ref=e21] [cursor=pointer]
+    - button "Case Law" [ref=e22] [cursor=pointer]
+    - button "Civil Law" [ref=e23] [cursor=pointer]
+    - button "Charter Rights" [ref=e24] [cursor=pointer]
+  - generic [ref=e25]:
+    - textbox "Describe your legal scenario in plain language…" [ref=e27]
+    - generic [ref=e28]:
+      - button "Research" [disabled] [ref=e29]
+      - generic [ref=e30]: ⌘/Ctrl + Enter
+  - paragraph [ref=e32]: Educational tool only — not legal advice. Always consult a qualified lawyer. Citations verified against CanLII where possible.
+  - generic [ref=e33]:
+    - heading "Describe your legal scenario." [level=2] [ref=e35]
+    - paragraph [ref=e36]: Criminal Code sections, verified case law, Charter rights, and civil law statutes — drawn from CanLII and the Justice Laws database.
+    - generic [ref=e37]:
+      - generic [ref=e38]: Try an example
+      - generic [ref=e39]:
+        - button "Impaired driving" [ref=e40] [cursor=pointer]
+        - button "Break and enter" [ref=e41] [cursor=pointer]
+        - button "Drug trafficking" [ref=e42] [cursor=pointer]
+  - contentinfo [ref=e44]:
+    - generic [ref=e45]:
+      - paragraph [ref=e46]: CaseDive · Canadian Legal Research
+      - paragraph [ref=e47]: Educational tool only. Not legal advice. Always consult a qualified lawyer. Verify all citations with CanLII.
+      - paragraph [ref=e48]:
+        - link "About" [ref=e49] [cursor=pointer]:
+          - /url: /about.html
+        - text: ·
+        - link "Privacy" [ref=e50] [cursor=pointer]:
+          - /url: /privacy.html
+        - text: ·
+        - link "Terms" [ref=e51] [cursor=pointer]:
+          - /url: /terms.html
