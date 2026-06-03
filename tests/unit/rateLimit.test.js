@@ -106,24 +106,26 @@ describe("rate limiter", () => {
     });
   });
 
-  it("prefers trusted platform IP headers and ignores spoofed x-forwarded-for on Vercel", async () => {
+  // Security regression (CWE-770 / audit 2026-06): x-real-ip is client-spoofable
+  // through the Cloudflare → Vercel chain and must NOT be trusted.
+  it("ignores spoofed x-real-ip and falls back to socket address when x-vercel-forwarded-for is absent", async () => {
     resetRateLimitEnv();
     process.env.VERCEL_ENV = "production";
 
     const { getClientIp } = await loadRateLimitModule();
     const ip = getClientIp({
       headers: {
-        "x-vercel-id": "iad1::abc",
         "x-real-ip": "2.2.2.2",
         "x-forwarded-for": "9.9.9.9",
       },
-      socket: {},
+      socket: { remoteAddress: "3.3.3.3" },
     });
 
-    expect(ip).toBe("2.2.2.2");
+    // x-real-ip must be ignored; socket address is the trusted fallback
+    expect(ip).toBe("3.3.3.3");
   });
 
-  it("prefers x-vercel-forwarded-for over other candidates", async () => {
+  it("uses x-vercel-forwarded-for (first hop) when present", async () => {
     resetRateLimitEnv();
     process.env.VERCEL_ENV = "production";
 
@@ -134,10 +136,23 @@ describe("rate limiter", () => {
         "x-real-ip": "2.2.2.2",
         "x-forwarded-for": "9.9.9.9",
       },
-      socket: {},
+      socket: { remoteAddress: "3.3.3.3" },
     });
 
     expect(ip).toBe("4.4.4.4");
+  });
+
+  it("falls back to socket address when x-vercel-forwarded-for is absent", async () => {
+    resetRateLimitEnv();
+    process.env.VERCEL_ENV = "production";
+
+    const { getClientIp } = await loadRateLimitModule();
+    const ip = getClientIp({
+      headers: {},
+      socket: { remoteAddress: "7.7.7.7" },
+    });
+
+    expect(ip).toBe("7.7.7.7");
   });
 
   it("collapses malformed/injected IP header values into the shared 'unknown' bucket", async () => {
