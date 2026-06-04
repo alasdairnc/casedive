@@ -4,7 +4,6 @@
 
 import {
   COURT_API_MAP,
-  lookupCase,
   parseCitation,
   buildSearchUrl,
   buildCaseUrl,
@@ -28,6 +27,7 @@ import {
   hasAnyConcept,
   missingRequiredConceptBuckets,
 } from "./_legalConcepts.js";
+import { cachedLookupCase } from "./_canliiCache.js";
 
 // SECURITY TESTING: Set CANLII_API_BASE_URL env var to redirect to a mock server.
 // Also update the matching constant in src/lib/canlii.js (where HTTP calls originate).
@@ -2666,9 +2666,10 @@ export async function retrieveVerifiedCaseLaw({
     }
   }
 
-  // Verify non-landmark candidates in parallel
+  // Verify non-landmark candidates in parallel (Redis-cached per citation;
+  // falls through to a direct lookupCase on any cache miss/timeout).
   const verificationResults = await Promise.all(
-    toVerify.map((candidate) => lookupCase(candidate.citation, apiKey)),
+    toVerify.map((candidate) => cachedLookupCase(candidate.citation, apiKey)),
   );
 
   const verifiedCases = [];
