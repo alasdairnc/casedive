@@ -27,6 +27,7 @@ import {
   ANTHROPIC_TIMEOUT_MS,
 } from "./_constants.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
+import { findLandmarkSummary } from "../src/lib/landmarkCases.js";
 
 // Strip XML-like tags from user input to prevent delimiter escape
 function sanitizeUserInput(input) {
@@ -193,6 +194,16 @@ export default async function handler(req, res) {
       logValidationError(requestId, "case-summary", `${field} too long`, field);
       return res.status(400).json({ error: `${field} too long` });
     }
+  }
+
+  // Landmark fast-path: serve curated summaries directly without calling Claude.
+  // Landmark cases are well-known, stable, and accurately summarized in the DB.
+  const landmarkResult = findLandmarkSummary(citation);
+  if (landmarkResult) {
+    logSuccess(requestId, "case-summary", 200, Date.now() - startMs, rlResult, {
+      landmark: true,
+    });
+    return res.status(200).json({ ...landmarkResult, citations: [] });
   }
 
   const cacheKey = `cache:case-summary:v2:${createHash("sha256").update(JSON.stringify(body)).digest("hex")}`;
