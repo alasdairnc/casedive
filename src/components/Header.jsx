@@ -4,9 +4,22 @@ export default function Header({
   bookmarkCount = 0,
   onOpenBookmarks,
   onOpenCodeExplorer,
+  // auth integration props
+  user = null,
+  onAuthClick,
+  onSignOut,
+  // alias props (used by tests / new callers)
+  onShowHistory,
+  onShowBookmarks,
+  onShowCriminalCode,
+  activePanel,
 }) {
   const t = useTheme();
   const { isDark, toggleTheme } = useThemeActions();
+
+  // support both old and new prop names
+  const handleBookmarks = onOpenBookmarks || onShowBookmarks;
+  const handleCodeExplorer = onOpenCodeExplorer || onShowCriminalCode;
 
   const navItem = {
     background: "none",
@@ -67,10 +80,21 @@ export default function Header({
               flexWrap: "wrap",
             }}
           >
-            {onOpenBookmarks && (
+            {!user && onShowHistory && (
               <button
-                onClick={onOpenBookmarks}
-                aria-label="Saved citations"
+                onClick={onShowHistory}
+                aria-label="History"
+                style={navItem}
+                onMouseEnter={hover}
+                onMouseLeave={leave}
+              >
+                History
+              </button>
+            )}
+            {!user && handleBookmarks && (
+              <button
+                onClick={handleBookmarks}
+                aria-label="Bookmarks"
                 style={{ ...navItem, position: "relative" }}
                 onMouseEnter={hover}
                 onMouseLeave={leave}
@@ -83,9 +107,9 @@ export default function Header({
                 )}
               </button>
             )}
-            {onOpenCodeExplorer && (
+            {!user && handleCodeExplorer && (
               <button
-                onClick={onOpenCodeExplorer}
+                onClick={handleCodeExplorer}
                 aria-label="Criminal Code Explorer"
                 style={navItem}
                 onMouseEnter={hover}
@@ -102,24 +126,54 @@ export default function Header({
                 &thinsp;Code
               </button>
             )}
-            <a
-              href="https://buymeacoffee.com/alasdairnc"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ ...navItem, textDecoration: "none" }}
-              onMouseEnter={hover}
-              onMouseLeave={leave}
-            >
-              Coffee
-            </a>
-            <button
-              onClick={toggleTheme}
-              style={navItem}
-              onMouseEnter={hover}
-              onMouseLeave={leave}
-            >
-              {isDark ? "Light" : "Dark"}
-            </button>
+            {!user && (
+              <a
+                href="https://buymeacoffee.com/alasdairnc"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ ...navItem, textDecoration: "none" }}
+                onMouseEnter={hover}
+                onMouseLeave={leave}
+              >
+                Coffee
+              </a>
+            )}
+            {!user && (
+              <button
+                onClick={toggleTheme}
+                style={navItem}
+                onMouseEnter={hover}
+                onMouseLeave={leave}
+              >
+                {isDark ? "Light" : "Dark"}
+              </button>
+            )}
+            {user ? (
+              <>
+                <span style={{ ...navItem, cursor: "default" }}>
+                  {user.email}
+                </span>
+                <button
+                  onClick={onSignOut}
+                  aria-label="Sign out"
+                  style={navItem}
+                  onMouseEnter={hover}
+                  onMouseLeave={leave}
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={onAuthClick}
+                aria-label="Sign in"
+                style={navItem}
+                onMouseEnter={hover}
+                onMouseLeave={leave}
+              >
+                Sign In
+              </button>
+            )}
           </nav>
         </div>
 
