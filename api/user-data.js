@@ -2,8 +2,13 @@
 // Cloud sync of bookmarks, history, and scenarios per authenticated user
 
 import { createClient } from "@supabase/supabase-js";
-import { applyStandardApiHeaders, respondRateLimit } from "./_apiCommon.js";
-import { checkRateLimit, getClientIp } from "./_rateLimit.js";
+import {
+  applyStandardApiHeaders,
+  respondRateLimit,
+  validateJsonRequest,
+} from "./_apiCommon.js";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { logValidationError } from "./_logging.js";
 
 const TABLE = {
   bookmarks: "user_bookmarks",
@@ -31,6 +36,13 @@ export default async function handler(req, res) {
     "Content-Type, Authorization",
   );
 
+  // OPTIONS preflight already handled by applyStandardApiHeaders via CORS headers;
+  // respond 200 and stop.
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+
   // Method gate — support GET and POST only
   if (!["GET", "POST"].includes(req.method)) {
     return res.status(405).json({ error: "Method not allowed" });
@@ -38,6 +50,8 @@ export default async function handler(req, res) {
 
   // Rate limit
   const rlResult = await checkRateLimit(getClientIp(req), "user-data");
+  const rlHdrs = rateLimitHeaders(rlResult);
+  Object.entries(rlHdrs).forEach(([k, v]) => res.setHeader(k, v));
   if (respondRateLimit(res, rlResult)) return;
 
   // Auth — require Bearer token
@@ -62,11 +76,9 @@ export default async function handler(req, res) {
   // Type validation — prefer query param, fall back to body (POST sends type in body)
   const type = req.query?.type ?? req.body?.type;
   if (!TABLE[type]) {
-    return res
-      .status(400)
-      .json({
-        error: "Invalid type. Must be one of: bookmarks, history, scenarios",
-      });
+    return res.status(400).json({
+      error: "Invalid type. Must be one of: bookmarks, history, scenarios",
+    });
   }
 
   const table = TABLE[type];
@@ -88,7 +100,18 @@ export default async function handler(req, res) {
     return res.status(200).json({ [type]: data ?? [] });
   }
 
-  // POST
+  // POST — validate JSON body
+  if (
+    !validateJsonRequest(req, res, {
+      requestId: "",
+      endpoint: "user-data",
+      maxBytes: 500_000,
+      logValidationError,
+    })
+  ) {
+    return;
+  }
+
   const { data: items } = req.body ?? {};
   if (!Array.isArray(items)) {
     return res.status(400).json({ error: "data must be an array" });

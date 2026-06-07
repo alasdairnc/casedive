@@ -8,7 +8,7 @@ import {
   respondRateLimit,
   validateJsonRequest,
 } from "./_apiCommon.js";
-import { checkRateLimit, getClientIp } from "./_rateLimit.js";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import {
   logRequestStart,
   logRateLimitCheck,
@@ -47,6 +47,8 @@ export default async function handler(req, res) {
   const ip = getClientIp(req);
   const rlResult = await checkRateLimit(req, AUTH_RATE_LIMIT);
   logRateLimitCheck("", "auth", rlResult, ip);
+  const rlHeaders = rateLimitHeaders(rlResult);
+  Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
   if (respondRateLimit(res, rlResult)) return;
 
   const { action, email, password } = req.body ?? {};
@@ -92,7 +94,12 @@ export default async function handler(req, res) {
       .json({ error: "email is required and must be a valid email address" });
   }
 
-  if (!password || typeof password !== "string" || password.length < 8) {
+  if (
+    !password ||
+    typeof password !== "string" ||
+    password.length < 8 ||
+    password.length > 128
+  ) {
     logValidationError("", "auth", "Password too short", "password");
     return res
       .status(400)
