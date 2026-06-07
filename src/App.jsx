@@ -11,12 +11,14 @@ import RetrievalHealthDashboard from "./components/RetrievalHealthDashboard.jsx"
 import { useSearchHistory } from "./hooks/useSearchHistory.js";
 import { useBookmarks } from "./hooks/useBookmarks.js";
 import { MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH } from "./lib/caseLawReportReasons.js";
+import { useAuth } from "./hooks/useAuth.js";
 
 const SearchHistory = lazy(() => import("./components/SearchHistory.jsx"));
 const BookmarksPanel = lazy(() => import("./components/BookmarksPanel.jsx"));
 const CriminalCodeExplorer = lazy(
   () => import("./components/CriminalCodeExplorer.jsx"),
 );
+const AuthModal = lazy(() => import("./components/AuthModal.jsx"));
 
 // NOTE: Sensitive user scenario data is no longer stored in localStorage. AdSense script context is restricted.
 const EXAMPLE_SCENARIOS = [
@@ -175,6 +177,10 @@ function AppInner() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
+  const { user, token, signIn, signUp, signOut } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState("signin");
+
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -309,6 +315,12 @@ function AppInner() {
         bookmarkCount={bookmarks.length}
         onOpenBookmarks={() => setBookmarksOpen(true)}
         onOpenCodeExplorer={() => setCodeExplorerOpen(true)}
+        user={user}
+        onAuthClick={() => {
+          setAuthModalMode("signin");
+          setAuthModalOpen(true);
+        }}
+        onSignOut={signOut}
       />
 
       <FiltersPanel filters={filters} setFilters={setFilters} />
@@ -404,6 +416,12 @@ function AppInner() {
       </div>
 
       <Suspense fallback={null}>
+        <AuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          mode={authModalMode}
+        />
+
         {bookmarksOpen && (
           <BookmarksPanel
             bookmarks={bookmarks}
