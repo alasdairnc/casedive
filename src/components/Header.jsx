@@ -148,32 +148,24 @@ export default function Header({
                 {isDark ? "Light" : "Dark"}
               </button>
             )}
-            {user ? (
-              <>
-                <span style={{ ...navItem, cursor: "default" }}>
-                  {user.email}
-                </span>
-                <button
-                  onClick={onSignOut}
-                  aria-label="Sign out"
-                  style={navItem}
-                  onMouseEnter={hover}
-                  onMouseLeave={leave}
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={onAuthClick}
-                aria-label="Sign in"
-                style={navItem}
-                onMouseEnter={hover}
-                onMouseLeave={leave}
-              >
-                Sign In
-              </button>
-            )}
+            {
+              user ? (
+                <>
+                  <span style={{ ...navItem, cursor: "default" }}>
+                    {user.email}
+                  </span>
+                  <button
+                    onClick={onSignOut}
+                    aria-label="Sign out"
+                    style={navItem}
+                    onMouseEnter={hover}
+                    onMouseLeave={leave}
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : null /* auth hidden — debug mode */
+            }
           </nav>
         </div>
 
