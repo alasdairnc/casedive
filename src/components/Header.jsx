@@ -80,7 +80,7 @@ export default function Header({
               flexWrap: "wrap",
             }}
           >
-            {!user && onShowHistory && (
+            {onShowHistory && (
               <button
                 onClick={onShowHistory}
                 aria-label="History"
@@ -91,10 +91,10 @@ export default function Header({
                 History
               </button>
             )}
-            {!user && handleBookmarks && (
+            {handleBookmarks && (
               <button
                 onClick={handleBookmarks}
-                aria-label="Bookmarks"
+                aria-label="Saved citations"
                 style={{ ...navItem, position: "relative" }}
                 onMouseEnter={hover}
                 onMouseLeave={leave}
@@ -107,7 +107,7 @@ export default function Header({
                 )}
               </button>
             )}
-            {!user && handleCodeExplorer && (
+            {handleCodeExplorer && (
               <button
                 onClick={handleCodeExplorer}
                 aria-label="Criminal Code Explorer"
@@ -126,46 +126,66 @@ export default function Header({
                 &thinsp;Code
               </button>
             )}
-            {!user && (
-              <a
-                href="https://buymeacoffee.com/alasdairnc"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ ...navItem, textDecoration: "none" }}
-                onMouseEnter={hover}
-                onMouseLeave={leave}
-              >
-                Coffee
-              </a>
-            )}
-            {!user && (
+            <a
+              href="https://buymeacoffee.com/alasdairnc"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ ...navItem, textDecoration: "none" }}
+              onMouseEnter={hover}
+              onMouseLeave={leave}
+            >
+              Coffee
+            </a>
+            <button
+              onClick={toggleTheme}
+              style={navItem}
+              onMouseEnter={hover}
+              onMouseLeave={leave}
+            >
+              {isDark ? "Light" : "Dark"}
+            </button>
+            {user ? (
+              <>
+                <span
+                  style={{
+                    ...navItem,
+                    cursor: "default",
+                    color: t.textSecondary,
+                    textTransform: "none",
+                    letterSpacing: "0.04em",
+                    maxWidth: 180,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    display: "inline-block",
+                  }}
+                  title={user.email}
+                >
+                  {user.email}
+                </span>
+                <button
+                  onClick={onSignOut}
+                  aria-label="Sign out"
+                  style={navItem}
+                  onMouseEnter={hover}
+                  onMouseLeave={leave}
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
               <button
-                onClick={toggleTheme}
-                style={navItem}
+                onClick={onAuthClick}
+                aria-label="Sign in"
+                style={{ ...navItem, color: t.accentOlive }}
                 onMouseEnter={hover}
-                onMouseLeave={leave}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = t.accentOlive;
+                }}
               >
-                {isDark ? "Light" : "Dark"}
+                Sign In
               </button>
             )}
-            {
-              user ? (
-                <>
-                  <span style={{ ...navItem, cursor: "default" }}>
-                    {user.email}
-                  </span>
-                  <button
-                    onClick={onSignOut}
-                    aria-label="Sign out"
-                    style={navItem}
-                    onMouseEnter={hover}
-                    onMouseLeave={leave}
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : null /* auth hidden — debug mode */
-            }
           </nav>
         </div>
 

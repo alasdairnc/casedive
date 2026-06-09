@@ -158,6 +158,19 @@ describe("api/user-data.js", () => {
     expect(res._headers["X-Frame-Options"]).toBe("DENY");
   });
 
+  // ── Config guard ────────────────────────────────────────────────────────────
+
+  it("returns 503 when Supabase env vars are missing", async () => {
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_SERVICE_KEY;
+    const req = makeReq("GET", null);
+    req.query = { type: "bookmarks" };
+    const res = makeRes();
+    await handler(req, res);
+    expect(res._status).toBe(503);
+    expect(res._body.error).toMatch(/not available/i);
+  });
+
   // ── Auth guard ──────────────────────────────────────────────────────────────
 
   it("returns 401 when no Authorization header present", async () => {

@@ -84,9 +84,28 @@ describe("Header auth integration", () => {
         activePanel={null}
       />,
     );
-    // Either the email or an avatar initial should appear
-    const text = screen.getByText(/a@casedive\.ca|A/i);
+    const text = screen.getByText("a@casedive.ca");
     expect(text).toBeDefined();
+  });
+
+  it("keeps nav items visible when user is signed in", async () => {
+    const Header = await getHeader();
+    render(
+      <Header
+        user={{ id: "uid-1", email: "a@casedive.ca" }}
+        onAuthClick={vi.fn()}
+        onSignOut={vi.fn()}
+        onShowHistory={vi.fn()}
+        onShowBookmarks={vi.fn()}
+        onShowCriminalCode={vi.fn()}
+        activePanel={null}
+      />,
+    );
+    expect(screen.getByRole("button", { name: /history/i })).toBeDefined();
+    expect(screen.getByRole("button", { name: /saved/i })).toBeDefined();
+    expect(
+      screen.getByRole("button", { name: /criminal code/i }),
+    ).toBeDefined();
   });
 
   it("does not show Sign In button when user is present", async () => {
@@ -164,6 +183,6 @@ describe("Header auth integration", () => {
       />,
     );
     expect(screen.getByRole("button", { name: /history/i })).toBeDefined();
-    expect(screen.getByRole("button", { name: /bookmark/i })).toBeDefined();
+    expect(screen.getByRole("button", { name: /saved/i })).toBeDefined();
   });
 });

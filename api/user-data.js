@@ -48,6 +48,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  // Config guard — fail cleanly (not a crash) when Supabase isn't configured
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+    return res.status(503).json({ error: "Account sync is not available" });
+  }
+
   // Rate limit
   const rlResult = await checkRateLimit(getClientIp(req), "user-data");
   const rlHdrs = rateLimitHeaders(rlResult);

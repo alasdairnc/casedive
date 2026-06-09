@@ -176,9 +176,17 @@ function AppInner() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  const { user, token, signIn, signUp, signOut } = useAuth();
+  const { user, token, signOut, recovery, clearRecovery } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState("signin");
+
+  // Arriving from a password-reset email link: prompt for the new password.
+  useEffect(() => {
+    if (recovery) {
+      setAuthModalMode("reset");
+      setAuthModalOpen(true);
+    }
+  }, [recovery]);
 
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -417,11 +425,16 @@ function AppInner() {
       </div>
 
       <Suspense fallback={null}>
-        <AuthModal
-          isOpen={authModalOpen}
-          onClose={() => setAuthModalOpen(false)}
-          mode={authModalMode}
-        />
+        {authModalOpen && (
+          <AuthModal
+            isOpen={authModalOpen}
+            onClose={() => {
+              setAuthModalOpen(false);
+              if (recovery) clearRecovery?.();
+            }}
+            mode={authModalMode}
+          />
+        )}
 
         {bookmarksOpen && (
           <BookmarksPanel
