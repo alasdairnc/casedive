@@ -3,7 +3,7 @@ import { useTheme } from "../lib/ThemeContext.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 
 export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
-  const { theme } = useTheme();
+  const theme = useTheme();
   const { signIn, signUp } = useAuth();
 
   const [mode, setMode] = useState(initialMode);
