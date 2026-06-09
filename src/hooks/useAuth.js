@@ -1,15 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-
-let supabase = null;
-try {
-  supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY,
-  );
-} catch {
-  // env vars not set (e.g. test environment without Supabase credentials)
-}
+import { supabase } from "../lib/supabase.js";
 
 export function useAuth() {
   const [user, setUser] = useState(null);

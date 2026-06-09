@@ -122,11 +122,65 @@ export default async function handler(req, res) {
       .json({ error: `Maximum ${maxItems} items allowed for ${type}` });
   }
 
-  const rows = items.map((item) => ({ ...item, user_id: user.id }));
+  // Build rows from an explicit field allowlist — never spread client data
+  // into the DB row, which could overwrite user_id or inject unexpected columns.
+  const rows = items.map((item) => {
+    const base = { user_id: user.id };
+    if (type === "bookmarks") {
+      return {
+        ...base,
+        citation:
+          typeof item.citation === "string" ? item.citation.slice(0, 500) : "",
+        summary:
+          typeof item.summary === "string" ? item.summary.slice(0, 2000) : "",
+        type: typeof item.type === "string" ? item.type.slice(0, 50) : "",
+        bookmarkedAt: Number.isFinite(item.bookmarkedAt)
+          ? item.bookmarkedAt
+          : Date.now(),
+        verification: item.verification != null ? item.verification : null,
+      };
+    }
+    if (type === "history") {
+      return {
+        ...base,
+        query: typeof item.query === "string" ? item.query.slice(0, 1000) : "",
+        filters:
+          item.filters && typeof item.filters === "object" ? item.filters : {},
+        resultCounts:
+          item.resultCounts && typeof item.resultCounts === "object"
+            ? item.resultCounts
+            : {},
+        timestamp: Number.isFinite(item.timestamp)
+          ? item.timestamp
+          : Date.now(),
+      };
+    }
+    // scenarios
+    return {
+      ...base,
+      name: typeof item.name === "string" ? item.name.slice(0, 200) : "",
+      text: typeof item.text === "string" ? item.text.slice(0, 10000) : "",
+      savedAt: Number.isFinite(item.savedAt) ? item.savedAt : Date.now(),
+    };
+  });
 
-  const { error: upsertError } = await supabase.from(table).upsert(rows);
-  if (upsertError) {
+  // Replace semantics: the client POSTs the full desired array for this type,
+  // so we delete the user's existing rows and insert the new set. This makes
+  // removals and clears (empty array) propagate correctly, and prevents the
+  // table from accumulating duplicate rows on every sync.
+  const { error: deleteError } = await supabase
+    .from(table)
+    .delete()
+    .eq("user_id", user.id);
+  if (deleteError) {
     return res.status(500).json({ error: "Failed to save data" });
+  }
+
+  if (rows.length > 0) {
+    const { error: insertError } = await supabase.from(table).insert(rows);
+    if (insertError) {
+      return res.status(500).json({ error: "Failed to save data" });
+    }
   }
 
   return res.status(200).json({ ok: true });

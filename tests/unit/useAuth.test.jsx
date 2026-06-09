@@ -10,8 +10,11 @@ const mockSignOut = vi.fn();
 const mockGetSession = vi.fn();
 const mockOnAuthStateChange = vi.fn();
 
-vi.mock("@supabase/supabase-js", () => ({
-  createClient: vi.fn(() => ({
+// useAuth imports the shared client from ../lib/supabase.js — mock that module
+// directly so the hook receives a working client even though VITE_SUPABASE_*
+// env vars are undefined in the test environment.
+vi.mock("../../src/lib/supabase.js", () => ({
+  supabase: {
     auth: {
       signInWithPassword: mockSignIn,
       signUp: mockSignUp,
@@ -19,7 +22,8 @@ vi.mock("@supabase/supabase-js", () => ({
       getSession: mockGetSession,
       onAuthStateChange: mockOnAuthStateChange,
     },
-  })),
+  },
+  isAuthEnabled: true,
 }));
 
 describe("useAuth hook", () => {

@@ -40,6 +40,7 @@ const mockFrom = vi.fn();
 const mockSelect = vi.fn();
 const mockInsert = vi.fn();
 const mockUpsert = vi.fn();
+const mockDelete = vi.fn();
 const mockEq = vi.fn();
 const mockOrder = vi.fn();
 const mockLimit = vi.fn();
@@ -48,6 +49,7 @@ const mockQueryChain = {
   select: mockSelect,
   insert: mockInsert,
   upsert: mockUpsert,
+  delete: mockDelete,
   eq: mockEq,
   order: mockOrder,
   limit: mockLimit,
@@ -58,6 +60,7 @@ mockSelect.mockReturnValue(mockQueryChain);
 mockEq.mockReturnValue(mockQueryChain);
 mockOrder.mockReturnValue(mockQueryChain);
 mockLimit.mockReturnValue(mockQueryChain);
+mockDelete.mockReturnValue(mockQueryChain);
 
 vi.mock("@supabase/supabase-js", () => ({
   createClient: vi.fn(() => ({
@@ -119,6 +122,12 @@ describe("api/user-data.js", () => {
     mockSelect.mockReturnValue({
       ...mockQueryChain,
       then: (resolve) => resolve({ data: [], error: null }),
+    });
+    // delete().eq(...) is awaited directly in the POST replace path — make the
+    // eq() after a delete resolve to a success result. GET path uses
+    // eq().order().limit() which is overridden per-test below.
+    mockDelete.mockReturnValue({
+      eq: vi.fn().mockResolvedValue({ data: [], error: null }),
     });
     mockEq.mockReturnValue({
       ...mockQueryChain,
@@ -224,7 +233,7 @@ describe("api/user-data.js", () => {
 
   // ── POST bookmarks ──────────────────────────────────────────────────────────
 
-  it("POST bookmarks upserts data for authenticated user", async () => {
+  it("POST bookmarks replaces data for authenticated user (delete then insert)", async () => {
     const bookmarks = [
       { citation: "R v Grant, 2009 SCC 32", summary: "Charter s.24(2)" },
     ];
@@ -233,6 +242,27 @@ describe("api/user-data.js", () => {
     await handler(req, res);
     expect(res._status).toBe(200);
     expect(res._body).toMatchObject({ ok: true });
+    // Replace semantics: the user's existing rows are deleted, then the new
+    // set is inserted. This is what makes removals/clears propagate and
+    // prevents duplicate accumulation on every sync.
+    expect(mockDelete).toHaveBeenCalled();
+    expect(mockInsert).toHaveBeenCalled();
+    // The inserted rows must carry the verified user's id, never the client's.
+    const insertedRows = mockInsert.mock.calls[0][0];
+    expect(insertedRows.every((r) => r.user_id === VALID_USER.id)).toBe(true);
+    // Client-supplied id must NOT survive into the DB row.
+    expect(insertedRows.every((r) => !("id" in r))).toBe(true);
+  });
+
+  it("POST with empty array clears the user's rows (delete, no insert)", async () => {
+    const req = makeReq("POST", { type: "bookmarks", data: [] });
+    const res = makeRes();
+    await handler(req, res);
+    expect(res._status).toBe(200);
+    expect(res._body).toMatchObject({ ok: true });
+    // Clear = delete all, insert nothing.
+    expect(mockDelete).toHaveBeenCalled();
+    expect(mockInsert).not.toHaveBeenCalled();
   });
 
   it("POST bookmarks rejects payload over 200 items (logged-in limit)", async () => {

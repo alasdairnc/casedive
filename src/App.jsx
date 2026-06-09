@@ -8,10 +8,9 @@ import StagedLoading from "./components/StagedLoading.jsx";
 import Results from "./components/Results.jsx";
 import ErrorMessage from "./components/ErrorMessage.jsx";
 import RetrievalHealthDashboard from "./components/RetrievalHealthDashboard.jsx";
-import { useSearchHistory } from "./hooks/useSearchHistory.js";
-import { useBookmarks } from "./hooks/useBookmarks.js";
 import { MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH } from "./lib/caseLawReportReasons.js";
 import { useAuth } from "./hooks/useAuth.js";
+import { useCloudSync } from "./hooks/useCloudSync.js";
 
 const SearchHistory = lazy(() => import("./components/SearchHistory.jsx"));
 const BookmarksPanel = lazy(() => import("./components/BookmarksPanel.jsx"));
@@ -195,15 +194,17 @@ function AppInner() {
     createDefaultFilters(),
   );
   const resultsRef = useRef(null);
-  const { history, addToHistory, clearHistory, rerunQuery } =
-    useSearchHistory();
   const {
     bookmarks,
     addBookmark,
     removeBookmark,
     isBookmarked,
     clearBookmarks,
-  } = useBookmarks();
+    history,
+    addToHistory,
+    clearHistory,
+    rerunQuery,
+  } = useCloudSync(user, token);
 
   if (pathname === "/internal/retrieval-health") {
     return (
