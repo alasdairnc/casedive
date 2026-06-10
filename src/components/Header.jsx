@@ -173,7 +173,7 @@ export default function Header({
                   Sign Out
                 </button>
               </>
-            ) : (
+            ) : onAuthClick ? (
               <button
                 onClick={onAuthClick}
                 aria-label="Sign in"
@@ -185,7 +185,7 @@ export default function Header({
               >
                 Sign In
               </button>
-            )}
+            ) : null}
           </nav>
         </div>
 

@@ -1,7 +1,3 @@
-npm run dev:api # Full stack via Vercel CLI — USE THIS for any API work
-npm run test:component # Vitest component tests (.test.jsx only)
-npm run test:guardrails # Pre-PR: sanitizer + retrieval-failures + hallucination filter
-
 # CaseDive - Claude Context File
 
 AI-powered Canadian legal research tool. Stack: React 18 + Vite, Vercel serverless `/api/`, Anthropic API, Upstash Redis, CanLII API. Live at [casedive.ca](https://casedive.ca).
@@ -25,7 +21,7 @@ Run `npm run security:scan` before any pre-push check.
 
 ## Commands
 
-`npm run dev` (frontend), `npm run dev:api` (full stack), `npm run build`, `npm test`, `npm run test:unit`, `npm run test:component`, `npm run test:guardrails`, `npm run test:retrieval-failures`
+`npm run dev` (frontend), `npm run dev:api` (full stack), `npm run build`, `npm test`, `npm run test:unit`, `npm run test:component`, `npm run test:guardrails` (pre-PR: sanitizer + retrieval-failures + filter), `npm run test:retrieval-failures`
 
 **Filter tuning:** `npm run test:filter` (report), `npm run test:filter:calibrate` (recalibrate thresholds), `npm run test:filter:compare` (before/after diff)
 
@@ -53,7 +49,7 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 
 - `npm run dev` ≠ `npm run dev:api` (use `dev:api` for `/api/`)
 - `test:unit` excludes `.test.jsx` (use `test:component` for JSX)
-- `criminalCodeData.js` is 316KB (import `criminalCodeParts.js` for parts list)
+- `criminalCodeData.js` is ~390KB (import `criminalCodeParts.js` for parts list)
 - Redis falls back to in-memory in dev
 - CanLII API key optional; Sentry no-ops if unset
 - PostToolUse hooks: use `$CLAUDE_TOOL_INPUT_FILE_PATH` env var (shell hooks) or `data.get('tool_input', {}).get('file_path', '')` from stdin (Python hooks) — both patterns exist in `.claude/hooks/`
@@ -66,6 +62,13 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 `api/_*.js` = shared modules (rate limit, CORS, constants, filters, etc.)
 `api/*.js` = endpoint handlers (analyze, case-summary, export-pdf, etc.)
 `.claude/rules/` = auto-loaded guardrails (import rules, citation rules, git rules)
+
+## Auth (Optional Login)
+
+- Client-side Supabase auth: `src/lib/supabase.js`, `src/hooks/useAuth.js`, `src/components/AuthModal.jsx`; cloud sync via `api/user-data.js`
+- There is NO `api/auth.js` — it was deleted; auth runs in the browser via the Supabase SDK
+- Gated on `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`: if missing, auth silently disables (`isAuthEnabled` false, no sign-in button, no error)
+- Server-side sync needs `SUPABASE_URL` + `SUPABASE_SERVICE_KEY`
 
 ## Reference Files (read on demand)
 
@@ -90,12 +93,14 @@ Call `advisor()` (no parameters — forwards full context to a stronger reviewer
 Auto-loaded from `.claude/skills/` (e.g., `casedive-audit`, `new-api-endpoint`).
 
 - `api-invariant-reviewer`: Checks `api/*.js` for rate limiting, input validation, security headers
+- `caching-reviewer`: Checks Redis caching invariants on endpoints making Anthropic/CanLII calls
 - `legal-data-validator`: Validates schema of legal data files
 - `pre-push-checklist`: Chains build + security scan + E2E before any push
+- `retrieval-quality-reviewer`: Reviews filter scoring/threshold consistency after `_filter*`/`_scenarioClassification`/`_retrievalThresholds` changes
 - `retrieval-regression-detector`: Run when `_filters.js`, `_filterScoring.js`, `_filterConfig.js`, `_scenarioClassification.js`, or `_retrievalThresholds.js` change
 - `test-selector`: Determines which test suites to run based on changed files
 
-**Full skills list:** `casedive-audit`, `new-api-endpoint`, `e2e`, `e2e-verify`, `feature-factory`, `security-audit`, `caching-audit`, `verify-before-push`, `resume-checkpoint`, `filter-tune`
+**Full skills list:** `casedive-audit`, `new-api-endpoint`, `e2e`, `e2e-verify`, `feature-factory`, `security-audit`, `caching-audit`, `verify-before-push`, `resume-checkpoint`, `filter-tune`, `ops-checklist`, `weekly-report`
 
 ## Workflow Rules (from claude-doctor)
 

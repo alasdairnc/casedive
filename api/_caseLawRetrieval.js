@@ -603,8 +603,10 @@ function detectCoreIssue(scenario) {
     },
     charter_detention: {
       tests: [
-        /\b(charter|detain\w*|arbitrary|free\s+to\s+leave|boxed\s+in)\b/,
-        /\b(detain\w*|arbitrary|free\s+to\s+leave|boxed\s+in|questioned)\b/,
+        // "held for thirty minutes" / "stopped by police" are common lay
+        // phrasings of psychological detention that never use "detain".
+        /\b(charter|detain\w*|arbitrary|free\s+to\s+leave|boxed\s+in|stopped\s+by\s+(the\s+)?police|held\s+for)\b/,
+        /\b(detain\w*|arbitrary|free\s+to\s+leave|boxed\s+in|questioned|held\s+for\s+\w+\s+(minutes?|hours?)|without\s+being\s+told)\b/,
       ],
       primary: "charter_detention",
       subIssues: new Set([

@@ -7,7 +7,7 @@ paths: "**/*"
 ## IMPORTS
 
 - Import Criminal Code parts via `criminalCodeParts.js` — never import the full
-  `criminalCodeData.js` (316KB) unless section-level lookup is required
+  `criminalCodeData.js` (~390KB) unless section-level lookup is required
 - All API keys and model IDs live in `api/_constants.js` — never hardcode inline
 - CORS headers come from `api/_cors.js` only — never set `Access-Control-*` directly
 

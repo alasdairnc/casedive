@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase.js";
+import { supabase, isAuthEnabled } from "../lib/supabase.js";
 
 export function useAuth() {
   const [user, setUser] = useState(null);
@@ -104,6 +104,7 @@ export function useAuth() {
     token,
     loading,
     recovery,
+    isAuthEnabled,
     signIn,
     signUp,
     signOut,

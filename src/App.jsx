@@ -176,7 +176,8 @@ function AppInner() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  const { user, token, signOut, recovery, clearRecovery } = useAuth();
+  const { user, token, signOut, recovery, clearRecovery, isAuthEnabled } =
+    useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState("signin");
 
@@ -325,10 +326,14 @@ function AppInner() {
         onOpenBookmarks={() => setBookmarksOpen(true)}
         onOpenCodeExplorer={() => setCodeExplorerOpen(true)}
         user={user}
-        onAuthClick={() => {
-          setAuthModalMode("signin");
-          setAuthModalOpen(true);
-        }}
+        onAuthClick={
+          isAuthEnabled
+            ? () => {
+                setAuthModalMode("signin");
+                setAuthModalOpen(true);
+              }
+            : undefined
+        }
         onSignOut={signOut}
       />
 

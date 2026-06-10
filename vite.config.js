@@ -6,7 +6,11 @@ import {
   buildSearchUrl,
   parseCitation,
 } from "./src/lib/canlii.js";
-import { ANTHROPIC_MODEL_ID } from "./api/_constants.js";
+import {
+  ANTHROPIC_MODEL_ID,
+  ANTHROPIC_MESSAGES_URL,
+  ANTHROPIC_TIMEOUT_MS,
+} from "./api/_constants.js";
 
 /**
  * A helper function to create a POST-only API handler for the dev server.
@@ -159,23 +163,21 @@ export default defineConfig(({ mode }) => {
                 await import("./src/lib/prompts.js");
 
               try {
-                const response = await fetch(
-                  "https://api.anthropic.com/v1/messages",
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      "x-api-key": process.env.ANTHROPIC_API_KEY,
-                      "anthropic-version": "2023-06-01",
-                    },
-                    body: JSON.stringify({
-                      model: ANTHROPIC_MODEL_ID,
-                      max_tokens: 1000,
-                      system: buildSystemPrompt(filters || {}),
-                      messages: [{ role: "user", content: scenario }],
-                    }),
+                const response = await fetch(ANTHROPIC_MESSAGES_URL, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": process.env.ANTHROPIC_API_KEY,
+                    "anthropic-version": "2023-06-01",
                   },
-                );
+                  body: JSON.stringify({
+                    model: ANTHROPIC_MODEL_ID,
+                    max_tokens: 1000,
+                    system: buildSystemPrompt(filters || {}),
+                    messages: [{ role: "user", content: scenario }],
+                  }),
+                  signal: AbortSignal.timeout(ANTHROPIC_TIMEOUT_MS),
+                });
 
                 const data = await response.json();
 
@@ -272,23 +274,21 @@ export default defineConfig(({ mode }) => {
             const system = `You are a Canadian legal research assistant. Given case metadata and context, produce a concise structured summary. Return ONLY valid JSON with these exact keys: facts, held, ratio, keyQuote, significance. Keep each field to 1-3 sentences. Set keyQuote to null if you cannot cite a verbatim passage from the provided context. Never fabricate holdings, quotes, or outcomes.`;
 
             try {
-              const response = await fetch(
-                "https://api.anthropic.com/v1/messages",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "x-api-key": process.env.ANTHROPIC_API_KEY,
-                    "anthropic-version": "2023-06-01",
-                  },
-                  body: JSON.stringify({
-                    model: ANTHROPIC_MODEL_ID,
-                    max_tokens: 800,
-                    system,
-                    messages: [{ role: "user", content: prompt }],
-                  }),
+              const response = await fetch(ANTHROPIC_MESSAGES_URL, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-api-key": process.env.ANTHROPIC_API_KEY,
+                  "anthropic-version": "2023-06-01",
                 },
-              );
+                body: JSON.stringify({
+                  model: ANTHROPIC_MODEL_ID,
+                  max_tokens: 800,
+                  system,
+                  messages: [{ role: "user", content: prompt }],
+                }),
+                signal: AbortSignal.timeout(ANTHROPIC_TIMEOUT_MS),
+              });
 
               const data = await response.json();
               if (!response.ok) {
@@ -421,6 +421,7 @@ export default defineConfig(({ mode }) => {
                 try {
                   const apiRes = await fetch(
                     buildApiUrl(parsed.apiDbId, caseId, apiKey),
+                    { signal: AbortSignal.timeout(8_000) },
                   );
                   if (apiRes.status === 404) {
                     results[citation] = { status: "not_found", searchUrl };
