@@ -60,7 +60,7 @@ function VerificationBadge({ verification, item, t, type }) {
           display: "inline-flex",
           alignItems: "center",
           gap: 5,
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 10,
           letterSpacing: "0.08em",
           color: t.accentGreen,
@@ -95,7 +95,7 @@ function VerificationBadge({ verification, item, t, type }) {
           display: "inline-flex",
           alignItems: "center",
           gap: 5,
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 10,
           letterSpacing: "0.08em",
           color: t.accentRed,
@@ -129,7 +129,7 @@ function VerificationBadge({ verification, item, t, type }) {
           display: "inline-flex",
           alignItems: "center",
           gap: 5,
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 10,
           letterSpacing: "0.08em",
           color: t.textTertiary,
@@ -160,7 +160,7 @@ function VerificationBadge({ verification, item, t, type }) {
         display: "inline-flex",
         alignItems: "center",
         gap: 5,
-        fontFamily: "'Helvetica Neue', sans-serif",
+        fontFamily: "var(--font-body)",
         fontSize: 10,
         letterSpacing: "0.08em",
         color: t.textTertiary,
@@ -311,7 +311,7 @@ export default function ResultCard({
           {/* Title / Citation heading */}
           <div
             style={{
-              fontFamily: "'Times New Roman', serif",
+              fontFamily: "var(--font-display)",
               fontSize: "clamp(15px, 2.2vw, 17px)",
               color: t.text,
               fontWeight: 700,
@@ -325,7 +325,7 @@ export default function ResultCard({
           {item.title && item.title !== item.citation && (
             <div
               style={{
-                fontFamily: "'Courier New', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: 11,
                 color: t.textTertiary,
                 marginTop: 2,
@@ -348,7 +348,7 @@ export default function ResultCard({
             {type === "case_law" && item.court && (
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textTertiary,
                   letterSpacing: "0.04em",
@@ -361,7 +361,7 @@ export default function ResultCard({
             {type === "civil_law" && verification?.jurisdiction && (
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -391,7 +391,7 @@ export default function ResultCard({
               <div
                 data-testid="report-case-law-success"
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -411,7 +411,7 @@ export default function ResultCard({
                   border: "none",
                   cursor: "pointer",
                   padding: 0,
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -467,7 +467,7 @@ export default function ResultCard({
       {item.summary && (
         <div
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 13,
             color: t.textSecondary,
             lineHeight: 1.65,
@@ -491,7 +491,7 @@ export default function ResultCard({
         >
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 9,
               letterSpacing: "0.2em",
               textTransform: "uppercase",
@@ -505,7 +505,7 @@ export default function ResultCard({
           <label
             style={{
               display: "block",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 11,
               color: t.textSecondary,
               marginBottom: 8,
@@ -522,7 +522,7 @@ export default function ResultCard({
               border: `1px solid ${t.border}`,
               background: t.bg,
               color: t.text,
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 12,
               padding: "10px 12px",
             }}
@@ -538,7 +538,7 @@ export default function ResultCard({
           <label
             style={{
               display: "block",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 11,
               color: t.textSecondary,
               marginTop: 12,
@@ -564,7 +564,7 @@ export default function ResultCard({
               border: `1px solid ${t.border}`,
               background: t.bg,
               color: t.text,
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 12,
               lineHeight: 1.6,
               padding: "10px 12px",
@@ -574,7 +574,7 @@ export default function ResultCard({
 
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               color: t.textTertiary,
               marginTop: 8,
@@ -588,7 +588,7 @@ export default function ResultCard({
             <div
               data-testid="report-case-law-error"
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 color: t.accentRed,
                 marginTop: 10,
@@ -615,7 +615,7 @@ export default function ResultCard({
                 border: `1px solid ${t.border}`,
                 background: t.bg,
                 color: t.text,
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 10,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
@@ -634,7 +634,7 @@ export default function ResultCard({
                 border: "none",
                 background: "none",
                 color: t.textTertiary,
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 10,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
@@ -653,7 +653,7 @@ export default function ResultCard({
         <div style={{ marginTop: 12 }}>
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 9,
               letterSpacing: "0.32em",
               textTransform: "uppercase",
@@ -665,7 +665,7 @@ export default function ResultCard({
           </div>
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 12,
               color: t.textSecondary,
               lineHeight: 1.65,
@@ -685,7 +685,7 @@ export default function ResultCard({
           <div
             style={{
               marginTop: 10,
-              fontFamily: "'Courier New', monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: 11,
               color: t.textTertiary,
               lineHeight: 1.5,

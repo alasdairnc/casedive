@@ -7,7 +7,7 @@ export default function Select({ label, options, value, onChange }) {
       <label
         style={{
           display: "block",
-          fontFamily: "'Helvetica Neue', Helvetica, sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 9,
           letterSpacing: 3,
           textTransform: "uppercase",
@@ -23,7 +23,7 @@ export default function Select({ label, options, value, onChange }) {
         style={{
           width: "100%",
           padding: "10px 12px",
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 13,
           backgroundColor: t.inputBg,
           color: t.text,

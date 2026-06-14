@@ -28,7 +28,7 @@ export default function StagedLoading() {
             <div
               key={i}
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 12,
                 letterSpacing: 2,
                 textTransform: "uppercase",

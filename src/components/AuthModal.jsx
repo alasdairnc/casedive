@@ -119,7 +119,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   }
 
   const labelStyle = {
-    fontFamily: "'Helvetica Neue', sans-serif",
+    fontFamily: "var(--font-body)",
     fontSize: 10,
     letterSpacing: "0.18em",
     textTransform: "uppercase",
@@ -133,7 +133,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
     border: "none",
     borderBottom: `1px solid ${t.border}`,
     padding: "8px 0",
-    fontFamily: "'Helvetica Neue', sans-serif",
+    fontFamily: "var(--font-body)",
     fontSize: 14,
     color: t.text,
     outline: "none",
@@ -153,7 +153,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
     border: "none",
     padding: 0,
     cursor: "pointer",
-    fontFamily: "'Helvetica Neue', sans-serif",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
     letterSpacing: "0.04em",
     color: t.textTertiary,
@@ -223,7 +223,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
 
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 9,
               letterSpacing: "0.38em",
               textTransform: "uppercase",
@@ -236,7 +236,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
 
           <h2
             style={{
-              fontFamily: "'Times New Roman', Times, serif",
+              fontFamily: "var(--font-display)",
               fontSize: 26,
               fontWeight: 400,
               fontStyle: "italic",
@@ -255,7 +255,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                 marginBottom: 18,
                 paddingLeft: 10,
                 borderLeft: `2px solid ${t.accentRed}`,
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 12,
                 lineHeight: 1.6,
                 color: t.accentRed,
@@ -272,7 +272,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                 marginBottom: 18,
                 paddingLeft: 10,
                 borderLeft: `2px solid ${t.accentGreen}`,
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 12,
                 lineHeight: 1.6,
                 color: t.accentGreen,
@@ -334,7 +334,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                 border: `1px solid ${submitting ? t.border : t.accentOlive}`,
                 color: submitting ? t.textFaint : t.accentOlive,
                 padding: "10px 28px",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",

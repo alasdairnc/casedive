@@ -82,7 +82,7 @@ export default function SearchHistory({
         >
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               letterSpacing: 3.5,
               textTransform: "uppercase",
@@ -100,7 +100,7 @@ export default function SearchHistory({
                   border: "none",
                   cursor: "pointer",
                   padding: 0,
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textTertiary,
                   letterSpacing: 1,
@@ -116,7 +116,7 @@ export default function SearchHistory({
                 border: "none",
                 cursor: "pointer",
                 padding: 0,
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 18,
                 color: t.textTertiary,
                 lineHeight: 1,
@@ -133,7 +133,7 @@ export default function SearchHistory({
             <div
               style={{
                 padding: "32px 24px",
-                fontFamily: "'Times New Roman', serif",
+                fontFamily: "var(--font-display)",
                 fontSize: 15,
                 color: t.textTertiary,
                 fontStyle: "italic",
@@ -158,7 +158,7 @@ export default function SearchHistory({
                 <div style={{ flexGrow: 1, minWidth: 0 }}>
                   <div
                     style={{
-                      fontFamily: "'Times New Roman', serif",
+                      fontFamily: "var(--font-display)",
                       fontSize: "clamp(13px, 2vw, 14px)",
                       color: t.textSecondary,
                       whiteSpace: "nowrap",
@@ -173,7 +173,7 @@ export default function SearchHistory({
                   </div>
                   <div
                     style={{
-                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontFamily: "var(--font-body)",
                       fontSize: 10,
                       color: t.textTertiary,
                       marginTop: 3,
@@ -206,7 +206,7 @@ export default function SearchHistory({
                     border: `1px solid ${t.border}`,
                     cursor: "pointer",
                     padding: "6px 14px",
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 11,
                     letterSpacing: 1,
                     textTransform: "uppercase",

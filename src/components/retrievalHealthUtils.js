@@ -79,35 +79,35 @@ export function severityForMetric(
     if (value < threshold)
       return {
         label: "Critical",
-        color: "#c75454",
-        border: "#c75454",
+        color: "#E15B4C",
+        border: "#E15B4C",
         level: "critical",
       };
     if (value < threshold * 1.2)
       return {
         label: "Warning",
-        color: "#d08c2f",
-        border: "#d08c2f",
+        color: "#D8951F",
+        border: "#D8951F",
         level: "warning",
       };
-    return { label: "OK", color: "#3f8d56", border: "#3f8d56", level: "ok" };
+    return { label: "OK", color: "#3E9E63", border: "#3E9E63", level: "ok" };
   }
 
   if (value > threshold)
     return {
       label: "Critical",
-      color: "#c75454",
-      border: "#c75454",
+      color: "#E15B4C",
+      border: "#E15B4C",
       level: "critical",
     };
   if (value > threshold * 0.8)
     return {
       label: "Warning",
-      color: "#d08c2f",
-      border: "#d08c2f",
+      color: "#D8951F",
+      border: "#D8951F",
       level: "warning",
     };
-  return { label: "OK", color: "#3f8d56", border: "#3f8d56", level: "ok" };
+  return { label: "OK", color: "#3E9E63", border: "#3E9E63", level: "ok" };
 }
 
 export function statusFromData(data) {
@@ -120,7 +120,7 @@ export function statusFromData(data) {
   const p95 = oneHour?.latencyMs?.p95;
   const thresholds = data?.thresholds || {};
 
-  if (alerts > 0) return { label: "Alerting", color: "#c75454" };
+  if (alerts > 0) return { label: "Alerting", color: "#E15B4C" };
   if (
     (errorRate != null &&
       thresholds.errorRate1h != null &&
@@ -132,9 +132,9 @@ export function statusFromData(data) {
       thresholds.p95LatencyMs1h != null &&
       p95 > thresholds.p95LatencyMs1h * 0.8)
   ) {
-    return { label: "Warning", color: "#d08c2f" };
+    return { label: "Warning", color: "#D8951F" };
   }
   if ((data?.totalStoredEvents || 0) === 0)
     return { label: "No events", color: "#8c8c8c" };
-  return { label: "Healthy", color: "#3f8d56" };
+  return { label: "Healthy", color: "#3E9E63" };
 }

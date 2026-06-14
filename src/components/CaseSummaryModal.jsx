@@ -26,7 +26,7 @@ function SummarySection({ label, children, t, isQuote = false }) {
     <div style={{ marginBottom: 20 }}>
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 10,
           letterSpacing: 2.5,
           textTransform: "uppercase",
@@ -42,7 +42,7 @@ function SummarySection({ label, children, t, isQuote = false }) {
             margin: 0,
             paddingLeft: 14,
             borderLeft: `3px solid ${t.accent}`,
-            fontFamily: "'Times New Roman', serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(14px, 2.1vw, 15px)",
             color: t.textSecondary,
             lineHeight: 1.7,
@@ -54,7 +54,7 @@ function SummarySection({ label, children, t, isQuote = false }) {
       ) : (
         <div
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 13,
             color: t.textSecondary,
             lineHeight: 1.65,
@@ -201,7 +201,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
           <div>
             <div
               style={{
-                fontFamily: "'Times New Roman', serif",
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(14px, 2.2vw, 16px)",
                 color: t.text,
                 fontWeight: "bold",
@@ -213,7 +213,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
             {(item.court || item.year) && (
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textTertiary,
                   letterSpacing: 0.8,
@@ -254,7 +254,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
           {error && (
             <div
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 13,
                 color: t.accentRed || "#c0392b",
                 padding: "12px 0",
@@ -304,7 +304,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 12,
                 color: t.accentGreen,
                 textDecoration: "none",
@@ -319,7 +319,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
           <button
             onClick={onClose}
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 12,
               color: t.textSecondary,
               background: "none",

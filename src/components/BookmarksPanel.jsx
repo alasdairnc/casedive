@@ -86,7 +86,7 @@ export default function BookmarksPanel({
         >
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               letterSpacing: 3.5,
               textTransform: "uppercase",
@@ -104,7 +104,7 @@ export default function BookmarksPanel({
                   border: "none",
                   cursor: "pointer",
                   padding: 0,
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textTertiary,
                   letterSpacing: 1,
@@ -120,7 +120,7 @@ export default function BookmarksPanel({
                 border: "none",
                 cursor: "pointer",
                 padding: 0,
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 18,
                 color: t.textTertiary,
                 lineHeight: 1,
@@ -137,7 +137,7 @@ export default function BookmarksPanel({
             <div
               style={{
                 padding: "32px 24px",
-                fontFamily: "'Times New Roman', serif",
+                fontFamily: "var(--font-display)",
                 fontSize: 15,
                 color: t.textTertiary,
                 fontStyle: "italic",
@@ -163,7 +163,7 @@ export default function BookmarksPanel({
                   {/* Citation */}
                   <div
                     style={{
-                      fontFamily: "'Times New Roman', serif",
+                      fontFamily: "var(--font-display)",
                       fontSize: "clamp(13px, 2vw, 15px)",
                       color: t.text,
                       fontWeight: "bold",
@@ -185,7 +185,7 @@ export default function BookmarksPanel({
                   >
                     <span
                       style={{
-                        fontFamily: "'Helvetica Neue', sans-serif",
+                        fontFamily: "var(--font-body)",
                         fontSize: 9,
                         letterSpacing: 1.5,
                         textTransform: "uppercase",
@@ -199,7 +199,7 @@ export default function BookmarksPanel({
                     </span>
                     <span
                       style={{
-                        fontFamily: "'Helvetica Neue', sans-serif",
+                        fontFamily: "var(--font-body)",
                         fontSize: 10,
                         color: t.textTertiary,
                         letterSpacing: 0.5,
@@ -213,7 +213,7 @@ export default function BookmarksPanel({
                   {entry.summary && (
                     <div
                       style={{
-                        fontFamily: "'Helvetica Neue', sans-serif",
+                        fontFamily: "var(--font-body)",
                         fontSize: 12,
                         color: t.textSecondary,
                         lineHeight: 1.5,
@@ -238,7 +238,7 @@ export default function BookmarksPanel({
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 4,
-                        fontFamily: "'Helvetica Neue', sans-serif",
+                        fontFamily: "var(--font-body)",
                         fontSize: 11,
                         color: t.textTertiary,
                         textDecoration: "none",
@@ -261,7 +261,7 @@ export default function BookmarksPanel({
                     border: "none",
                     cursor: "pointer",
                     padding: "4px 8px",
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 18,
                     lineHeight: 1,
                     color: t.textTertiary,

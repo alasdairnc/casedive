@@ -77,7 +77,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
           >
             <span
               style={{
-                fontFamily: "'Courier New', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: 13,
                 fontWeight: 700,
                 color: t.accentOlive,
@@ -88,7 +88,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             </span>
             <span
               style={{
-                fontFamily: "'Times New Roman', serif",
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(14px, 2vw, 16px)",
                 color: t.text,
                 lineHeight: 1.4,
@@ -117,7 +117,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               {section.severity && (
                 <span
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     letterSpacing: 1.5,
                     textTransform: "uppercase",
@@ -138,7 +138,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
           {!isExpanded && section.definition && (
             <div
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 12,
                 color: t.textSecondary,
                 lineHeight: 1.5,
@@ -168,7 +168,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 <span
                   key={tag}
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     letterSpacing: 1,
                     color: t.textTertiary,
@@ -192,7 +192,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             <div style={{ marginBottom: 16 }}>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 9,
                   letterSpacing: 2,
                   textTransform: "uppercase",
@@ -204,7 +204,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               </div>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 13,
                   color: t.textSecondary,
                   lineHeight: 1.6,
@@ -226,7 +226,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               <div style={{ marginBottom: 12 }}>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     letterSpacing: 2,
                     textTransform: "uppercase",
@@ -238,7 +238,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textSecondary,
                     lineHeight: 1.5,
@@ -253,7 +253,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               <div style={{ marginBottom: 12 }}>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 9,
                     letterSpacing: 2,
                     textTransform: "uppercase",
@@ -265,7 +265,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textSecondary,
                     lineHeight: 1.5,
@@ -281,7 +281,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             <div style={{ marginBottom: 16, marginTop: 8 }}>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 9,
                   letterSpacing: 2,
                   textTransform: "uppercase",
@@ -302,7 +302,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                   <span
                     key={s}
                     style={{
-                      fontFamily: "'Courier New', monospace",
+                      fontFamily: "var(--font-mono)",
                       fontSize: 11,
                       color: t.accentOlive,
                       background: t.bg,
@@ -330,7 +330,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             {section.partOf && (
               <span
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   color: t.textTertiary,
                   letterSpacing: 0.5,
@@ -345,7 +345,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.accentGreen,
                   textDecoration: "none",
@@ -441,7 +441,7 @@ export default function CriminalCodeExplorer({ onClose }) {
           >
             <span
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 letterSpacing: 2,
                 textTransform: "uppercase",
@@ -459,7 +459,7 @@ export default function CriminalCodeExplorer({ onClose }) {
                 padding: "1px 8px",
                 borderRadius: 10,
                 border: `1px solid ${t.borderLight}`,
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
               }}
             >
               {totalSections} Sections
@@ -473,7 +473,7 @@ export default function CriminalCodeExplorer({ onClose }) {
               border: "none",
               cursor: "pointer",
               padding: "4px 8px",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 24,
               color: t.textTertiary,
               lineHeight: 1,
@@ -501,7 +501,7 @@ export default function CriminalCodeExplorer({ onClose }) {
               style={{
                 width: "100%",
                 padding: "12px 16px",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 14,
                 backgroundColor: t.inputBg,
                 color: t.text,
@@ -559,7 +559,7 @@ export default function CriminalCodeExplorer({ onClose }) {
           <div
             style={{
               padding: "8px 24px",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 11,
               color: t.textTertiary,
               letterSpacing: 0.5,
@@ -581,7 +581,7 @@ export default function CriminalCodeExplorer({ onClose }) {
             <div
               style={{
                 padding: "48px 24px",
-                fontFamily: "'Times New Roman', serif",
+                fontFamily: "var(--font-display)",
                 fontSize: 16,
                 color: t.textTertiary,
                 fontStyle: "italic",
@@ -594,7 +594,7 @@ export default function CriminalCodeExplorer({ onClose }) {
             <div
               style={{
                 padding: "48px 24px",
-                fontFamily: "'Times New Roman', serif",
+                fontFamily: "var(--font-display)",
                 fontSize: 16,
                 color: t.textTertiary,
                 fontStyle: "italic",

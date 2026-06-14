@@ -89,7 +89,7 @@ function EmptyState({ setQuery, t }) {
 
       <h2
         style={{
-          fontFamily: "'Times New Roman', Times, serif",
+          fontFamily: "var(--font-display)",
           fontSize: "clamp(26px, 4.5vw, 38px)",
           fontWeight: 400,
           fontStyle: "italic",
@@ -104,7 +104,7 @@ function EmptyState({ setQuery, t }) {
 
       <p
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: "clamp(12px, 1.8vw, 13px)",
           color: t.textSecondary,
           lineHeight: 1.75,
@@ -120,7 +120,7 @@ function EmptyState({ setQuery, t }) {
       <div>
         <div
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 9,
             letterSpacing: "0.38em",
             textTransform: "uppercase",
@@ -140,7 +140,7 @@ function EmptyState({ setQuery, t }) {
                 border: `1px solid ${t.border}`,
                 padding: "8px 18px",
                 cursor: "pointer",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 letterSpacing: "0.05em",
                 color: t.textTertiary,
@@ -350,7 +350,7 @@ function AppInner() {
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "12px 24px 0" }}>
         <p
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 10,
             lineHeight: 1.5,
             color: t.textSecondary,
@@ -379,7 +379,7 @@ function AppInner() {
               background: "none",
               border: "none",
               cursor: "pointer",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
@@ -482,7 +482,7 @@ function AppInner() {
         >
           <p
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               color: t.textTertiary,
               letterSpacing: "0.14em",
@@ -494,7 +494,7 @@ function AppInner() {
           </p>
           <p
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               color: t.textSecondary,
               lineHeight: 1.6,
@@ -506,7 +506,7 @@ function AppInner() {
           </p>
           <p
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               color: t.textTertiary,
               margin: 0,

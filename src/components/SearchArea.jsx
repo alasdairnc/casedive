@@ -30,7 +30,7 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
             borderTop: `1px solid ${atLimit ? t.accentRed : t.border}`,
             borderBottom: `1px solid ${atLimit ? t.accentRed : t.border}`,
             color: t.text,
-            fontFamily: "'Times New Roman', Times, serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(16px, 2.5vw, 19px)",
             padding: "20px 0",
             resize: "none",
@@ -60,7 +60,7 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
               position: "absolute",
               bottom: 8,
               right: 0,
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               color: atLimit ? t.accentRed : t.textTertiary,
               pointerEvents: "none",
@@ -91,7 +91,7 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
             color:
               loading || !query.trim() || atLimit ? t.textFaint : t.accentOlive,
             padding: "9px 28px",
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 11,
             letterSpacing: "0.22em",
             textTransform: "uppercase",
@@ -120,7 +120,7 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
           style={{
             fontSize: 11,
             color: t.textTertiary,
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             letterSpacing: "0.02em",
           }}
         >

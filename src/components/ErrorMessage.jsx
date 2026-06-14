@@ -7,7 +7,7 @@ export default function ErrorMessage({ message, onRetry }) {
       <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 28 }}>
         <div
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 10,
             letterSpacing: 3,
             textTransform: "uppercase",
@@ -19,7 +19,7 @@ export default function ErrorMessage({ message, onRetry }) {
         </div>
         <p
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 14,
             color: t.textSecondary,
             lineHeight: 1.6,
@@ -39,7 +39,7 @@ export default function ErrorMessage({ message, onRetry }) {
             letterSpacing: 2,
             textTransform: "uppercase",
             cursor: "pointer",
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
           }}
         >
           Try Again

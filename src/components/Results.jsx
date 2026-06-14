@@ -19,7 +19,7 @@ function SectionBreak({ label, count, t }) {
         >
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 9,
               letterSpacing: "0.44em",
               textTransform: "uppercase",
@@ -31,7 +31,7 @@ function SectionBreak({ label, count, t }) {
           {count != null && (
             <div
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 9,
                 letterSpacing: "0.2em",
                 color: t.textTertiary,
@@ -260,7 +260,7 @@ export default function Results({
       >
         <div
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 9,
             letterSpacing: "0.44em",
             textTransform: "uppercase",
@@ -272,7 +272,7 @@ export default function Results({
         </div>
         <p
           style={{
-            fontFamily: "'Times New Roman', serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(17px, 2.5vw, 20px)",
             color: t.text,
             lineHeight: 1.65,
@@ -291,7 +291,7 @@ export default function Results({
           data-testid="export-pdf-btn"
           disabled={pdfState === "loading"}
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 10,
             letterSpacing: "0.2em",
             textTransform: "uppercase",
@@ -327,7 +327,7 @@ export default function Results({
             marginTop: 32,
             borderLeft: `3px solid ${t.border}`,
             paddingLeft: 16,
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 13,
             color: t.textSecondary,
             lineHeight: 1.5,
@@ -371,7 +371,7 @@ export default function Results({
               verificationBanner = (
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 11,
                     color: t.textTertiary,
                     marginBottom: 16,
@@ -386,7 +386,7 @@ export default function Results({
               verificationBanner = (
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 11,
                     color: t.accentGreen,
                     marginBottom: 16,
@@ -406,7 +406,7 @@ export default function Results({
                   <SectionBreak label={label} t={t} />
                   <div
                     style={{
-                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontFamily: "var(--font-body)",
                       fontSize: 12,
                       color: t.textTertiary,
                       lineHeight: 1.5,
@@ -497,7 +497,7 @@ export default function Results({
           >
             <div
               style={{
-                fontFamily: "'Times New Roman', serif",
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(14px, 2vw, 16px)",
                 color: t.textSecondary,
                 lineHeight: 1.6,
@@ -510,7 +510,7 @@ export default function Results({
             {caseLawEmptyGuidance.length > 0 && (
               <ul
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 12,
                   color: t.textTertiary,
                   lineHeight: 1.8,
@@ -531,7 +531,7 @@ export default function Results({
                 rel="noopener noreferrer"
                 style={{
                   display: "inline-block",
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   letterSpacing: "0.08em",
                   color: t.accentOlive,
@@ -552,7 +552,7 @@ export default function Results({
             {showRetrievalStats && (
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   color: t.textTertiary,
                   marginTop: 10,
@@ -575,7 +575,7 @@ export default function Results({
         <SectionBreak label="Legal Analysis" t={t} />
         <div
           style={{
-            fontFamily: "'Times New Roman', serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(15px, 2.3vw, 17px)",
             color: t.text,
             lineHeight: 1.85,
@@ -609,7 +609,7 @@ export default function Results({
       >
         <p
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 11,
             color: t.textSecondary,
             lineHeight: 1.65,

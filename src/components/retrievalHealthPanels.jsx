@@ -16,7 +16,7 @@ export function MetricCard({ label, value, hint, badge, t }) {
     >
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 10,
           letterSpacing: 2.8,
           textTransform: "uppercase",
@@ -32,7 +32,7 @@ export function MetricCard({ label, value, hint, badge, t }) {
             display: "inline-block",
             border: `1px solid ${badge.border}`,
             color: badge.color,
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 10,
             letterSpacing: 1.2,
             textTransform: "uppercase",
@@ -45,7 +45,7 @@ export function MetricCard({ label, value, hint, badge, t }) {
       )}
       <div
         style={{
-          fontFamily: "'Courier New', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 22,
           color: t.text,
           marginBottom: 6,
@@ -55,7 +55,7 @@ export function MetricCard({ label, value, hint, badge, t }) {
       </div>
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 11,
           color: t.textSecondary,
         }}
@@ -73,7 +73,7 @@ function StatusChip({ badge }) {
         display: "inline-block",
         border: `1px solid ${badge.border}`,
         color: badge.color,
-        fontFamily: "'Helvetica Neue', sans-serif",
+        fontFamily: "var(--font-body)",
         fontSize: 10,
         letterSpacing: 1.2,
         textTransform: "uppercase",
@@ -98,7 +98,7 @@ function BarRow({ label, value, max, t, color }) {
       >
         <span
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 11,
             color: t.textSecondary,
           }}
@@ -107,7 +107,7 @@ function BarRow({ label, value, max, t, color }) {
         </span>
         <span
           style={{
-            fontFamily: "'Courier New', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: 11,
             color: t.text,
           }}
@@ -136,7 +136,7 @@ export function TrendlineChart({ trendline, t }) {
       <p
         style={{
           margin: 0,
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 12,
           color: t.textTertiary,
         }}
@@ -214,7 +214,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       <div style={{ border: `1px solid ${t.borderLight}`, padding: 16 }}>
         <div
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 10,
             letterSpacing: 3.5,
             textTransform: "uppercase",
@@ -227,7 +227,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
         <p
           style={{
             margin: 0,
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 12,
             color: t.textTertiary,
           }}
@@ -280,7 +280,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
     >
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 10,
           letterSpacing: 3.5,
           textTransform: "uppercase",
@@ -292,7 +292,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       </div>
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 12,
           color: t.textSecondary,
           lineHeight: 1.6,
@@ -340,7 +340,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       />
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 12,
           color: t.textSecondary,
           marginTop: 12,
@@ -350,7 +350,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       </div>
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 12,
           color: t.textSecondary,
           marginTop: 4,
@@ -360,7 +360,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       </div>
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 12,
           color: t.textSecondary,
           marginTop: 4,
@@ -370,7 +370,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       </div>
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 12,
           color: t.textSecondary,
           marginTop: 4,
@@ -381,7 +381,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       {rates.candidateSourceMix && (
         <div
           style={{
-            fontFamily: "'Helvetica Neue', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 12,
             color: t.textSecondary,
             marginTop: 4,
@@ -394,7 +394,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
       )}
       <div
         style={{
-          fontFamily: "'Helvetica Neue', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 12,
           color: t.textSecondary,
           marginTop: 4,
@@ -409,7 +409,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
           <div style={{ marginTop: 12 }}>
             <div
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 10,
                 letterSpacing: 2.4,
                 textTransform: "uppercase",
@@ -423,7 +423,7 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
               <div
                 key={row.issuePrimary}
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textSecondary,
                   marginBottom: 4,

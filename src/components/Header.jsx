@@ -1,4 +1,4 @@
-import { useTheme, useThemeActions } from "../lib/ThemeContext.jsx";
+import { useTheme } from "../lib/ThemeContext.jsx";
 
 export default function Header({
   bookmarkCount = 0,
@@ -15,7 +15,6 @@ export default function Header({
   activePanel,
 }) {
   const t = useTheme();
-  const { isDark, toggleTheme } = useThemeActions();
 
   // support both old and new prop names
   const handleBookmarks = onOpenBookmarks || onShowBookmarks;
@@ -27,7 +26,7 @@ export default function Header({
     color: t.textTertiary,
     cursor: "pointer",
     padding: 0,
-    fontFamily: "'Helvetica Neue', sans-serif",
+    fontFamily: "var(--font-body)",
     fontSize: 11,
     letterSpacing: "0.18em",
     textTransform: "uppercase",
@@ -62,11 +61,7 @@ export default function Header({
         >
           {/* Wordmark */}
           <img
-            src={
-              isDark
-                ? "/logos/casedive-header-dark.svg"
-                : "/logos/casedive-header.svg"
-            }
+            src="/logos/casedive-header-dark.svg"
             alt="CaseDive"
             style={{ height: "28px", width: "auto", display: "block" }}
           />
@@ -117,7 +112,7 @@ export default function Header({
               >
                 <span
                   style={{
-                    fontFamily: "'Courier New', monospace",
+                    fontFamily: "var(--font-mono)",
                     fontSize: 12,
                   }}
                 >
@@ -136,14 +131,6 @@ export default function Header({
             >
               Coffee
             </a>
-            <button
-              onClick={toggleTheme}
-              style={navItem}
-              onMouseEnter={hover}
-              onMouseLeave={leave}
-            >
-              {isDark ? "Light" : "Dark"}
-            </button>
             {user ? (
               <>
                 <span

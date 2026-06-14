@@ -44,7 +44,7 @@ export default function SuggestionLink({ suggestion }) {
       target="_blank"
       rel="noopener noreferrer"
       style={{
-        fontFamily: "'Helvetica Neue', sans-serif",
+        fontFamily: "var(--font-body)",
         fontSize: 12,
         color: t.tagText,
         background: t.tagBg,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useTheme, useThemeActions } from "../lib/ThemeContext.jsx";
+import { useTheme } from "../lib/ThemeContext.jsx";
 import {
   pct,
   num,
@@ -63,7 +63,6 @@ function healthSummaryFromState({ data, status, oneHourChecks }) {
 
 export default function RetrievalHealthDashboard({ onNavigateHome }) {
   const t = useTheme();
-  const { isDark, toggleTheme } = useThemeActions();
   const [token, setToken] = useState(
     () => sessionStorage.getItem(TOKEN_STORAGE_KEY) || "",
   );
@@ -298,7 +297,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
         <div>
           <h1
             style={{
-              fontFamily: "'Times New Roman', serif",
+              fontFamily: "var(--font-display)",
               fontSize: 22,
               margin: 0,
               fontWeight: 400,
@@ -308,7 +307,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
           </h1>
           <p
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 11,
               color: t.textTertiary,
               margin: "6px 0 0 0",
@@ -326,7 +325,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               border: `1px solid ${t.borderLight}`,
               padding: "8px 14px",
               cursor: "pointer",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 11,
               letterSpacing: 1.5,
               textTransform: "uppercase",
@@ -334,21 +333,6 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             }}
           >
             Back to app
-          </button>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            style={{
-              background: "none",
-              border: `1px solid ${t.borderLight}`,
-              padding: "8px 14px",
-              cursor: "pointer",
-              fontFamily: "'Helvetica Neue', sans-serif",
-              fontSize: 11,
-              color: t.textSecondary,
-            }}
-          >
-            {isDark ? "Light" : "Dark"}
           </button>
         </div>
       </header>
@@ -374,7 +358,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             <div>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: 3.5,
                   textTransform: "uppercase",
@@ -386,7 +370,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               </div>
               <div
                 style={{
-                  fontFamily: "'Times New Roman', serif",
+                  fontFamily: "var(--font-display)",
                   fontSize: 28,
                   color: t.text,
                   lineHeight: 1.1,
@@ -400,7 +384,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 border: `1px solid ${status.color}`,
                 color: status.color,
                 padding: "6px 10px",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 letterSpacing: 1.6,
                 textTransform: "uppercase",
@@ -421,7 +405,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
         >
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               letterSpacing: 3.5,
               textTransform: "uppercase",
@@ -433,7 +417,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
           </div>
           <div
             style={{
-              fontFamily: "'Times New Roman', serif",
+              fontFamily: "var(--font-display)",
               fontSize: 26,
               color: status.color,
               marginBottom: 8,
@@ -444,7 +428,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
           </div>
           <p
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 13,
               color: t.textSecondary,
               margin: "0 0 14px 0",
@@ -476,7 +460,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 >
                   <div
                     style={{
-                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontFamily: "var(--font-body)",
                       fontSize: 12,
                       color: t.text,
                     }}
@@ -487,7 +471,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                     style={{
                       border: `1px solid ${check.badge.border}`,
                       color: check.badge.color,
-                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontFamily: "var(--font-body)",
                       fontSize: 10,
                       letterSpacing: 1.2,
                       textTransform: "uppercase",
@@ -499,7 +483,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Courier New', monospace",
+                    fontFamily: "var(--font-mono)",
                     fontSize: 18,
                     color: t.text,
                     marginBottom: 4,
@@ -509,7 +493,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 11,
                     color: t.textSecondary,
                     marginBottom: 6,
@@ -519,7 +503,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 11,
                     color: t.textTertiary,
                     lineHeight: 1.45,
@@ -600,7 +584,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
           >
             <div
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 10,
                 letterSpacing: 3.5,
                 textTransform: "uppercase",
@@ -622,7 +606,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 >
                   <div
                     style={{
-                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontFamily: "var(--font-body)",
                       fontSize: 12,
                       color: t.text,
                       marginBottom: 4,
@@ -633,7 +617,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                   </div>
                   <div
                     style={{
-                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontFamily: "var(--font-body)",
                       fontSize: 11,
                       color: t.textSecondary,
                     }}
@@ -658,7 +642,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
         >
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               letterSpacing: 3.5,
               textTransform: "uppercase",
@@ -670,7 +654,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
           </div>
           <p
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 12,
               color: t.textSecondary,
               margin: "0 0 12px 0",
@@ -699,7 +683,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 border: `1px solid ${t.borderLight}`,
                 background: t.bg,
                 color: t.text,
-                fontFamily: "'Courier New', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: 12,
               }}
             />
@@ -712,7 +696,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 background: "transparent",
                 color: t.accent,
                 cursor: "pointer",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 letterSpacing: 1.5,
                 textTransform: "uppercase",
@@ -730,7 +714,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                   background: "transparent",
                   color: t.textTertiary,
                   cursor: "pointer",
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                 }}
               >
@@ -747,7 +731,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 background: "transparent",
                 color: t.text,
                 cursor: loading ? "wait" : "pointer",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 letterSpacing: 1.5,
                 textTransform: "uppercase",
@@ -762,7 +746,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 gap: 6,
                 border: `1px solid ${t.borderLight}`,
                 padding: "8px 10px",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 color: t.textSecondary,
               }}
@@ -778,7 +762,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
           {token && (
             <p
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 11,
                 color: t.textTertiary,
                 margin: "12px 0 0 0",
@@ -799,7 +783,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
         >
           <div
             style={{
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 10,
               letterSpacing: 3.5,
               textTransform: "uppercase",
@@ -819,7 +803,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             <div style={{ border: `1px solid ${t.borderLight}`, padding: 10 }}>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.text,
                   marginBottom: 6,
@@ -829,7 +813,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               </div>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textSecondary,
                   lineHeight: 1.4,
@@ -842,7 +826,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             <div style={{ border: `1px solid ${t.borderLight}`, padding: 10 }}>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.text,
                   marginBottom: 6,
@@ -852,7 +836,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               </div>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textSecondary,
                   lineHeight: 1.4,
@@ -865,7 +849,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             <div style={{ border: `1px solid ${t.borderLight}`, padding: 10 }}>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.text,
                   marginBottom: 6,
@@ -875,7 +859,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               </div>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textSecondary,
                   lineHeight: 1.4,
@@ -894,7 +878,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               border: `1px solid ${t.border}`,
               padding: 12,
               marginBottom: 16,
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 13,
               color: t.text,
             }}
@@ -907,7 +891,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
           <>
             <p
               style={{
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: 12,
                 color: t.textSecondary,
                 margin: "0 0 16px 0",
@@ -953,7 +937,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             >
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: 3.5,
                   textTransform: "uppercase",
@@ -965,7 +949,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               </div>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textTertiary,
                   marginBottom: 10,
@@ -986,7 +970,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             >
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: 3.5,
                   textTransform: "uppercase",
@@ -999,7 +983,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               <p
                 style={{
                   margin: "0 0 12px 0",
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 12,
                   color: t.textSecondary,
                 }}
@@ -1026,7 +1010,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                     color:
                       issueSortMode === "risk" ? t.accent : t.textSecondary,
                     cursor: "pointer",
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 10,
                     letterSpacing: 1.2,
                     textTransform: "uppercase",
@@ -1044,7 +1028,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                     color:
                       issueSortMode === "volume" ? t.accent : t.textSecondary,
                     cursor: "pointer",
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 10,
                     letterSpacing: 1.2,
                     textTransform: "uppercase",
@@ -1054,7 +1038,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </button>
                 <span
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 11,
                     color: t.textTertiary,
                   }}
@@ -1076,7 +1060,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                     >
                       <div
                         style={{
-                          fontFamily: "'Helvetica Neue', sans-serif",
+                          fontFamily: "var(--font-body)",
                           fontSize: 12,
                           color: t.text,
                           marginBottom: 6,
@@ -1090,7 +1074,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                           display: "flex",
                           gap: 10,
                           flexWrap: "wrap",
-                          fontFamily: "'Helvetica Neue', sans-serif",
+                          fontFamily: "var(--font-body)",
                           fontSize: 11,
                           color: t.textSecondary,
                         }}
@@ -1109,7 +1093,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 <p
                   style={{
                     margin: 0,
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textTertiary,
                   }}
@@ -1127,7 +1111,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             >
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: 3.5,
                   textTransform: "uppercase",
@@ -1140,7 +1124,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               <p
                 style={{
                   margin: "0 0 12px 0",
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 12,
                   color: t.textSecondary,
                 }}
@@ -1151,7 +1135,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               <p
                 style={{
                   margin: "0 0 12px 0",
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 11,
                   color: t.textTertiary,
                 }}
@@ -1174,7 +1158,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                         {sample.scenarioSnippet && (
                           <div
                             style={{
-                              fontFamily: "'Times New Roman', serif",
+                              fontFamily: "var(--font-display)",
                               fontSize: 15,
                               color: t.text,
                               marginBottom: 6,
@@ -1194,7 +1178,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                         >
                           <div
                             style={{
-                              fontFamily: "'Courier New', monospace",
+                              fontFamily: "var(--font-mono)",
                               fontSize: 11,
                               color: t.text,
                             }}
@@ -1215,7 +1199,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                                   ? t.accentGreen
                                   : t.textSecondary,
                               cursor: "pointer",
-                              fontFamily: "'Helvetica Neue', sans-serif",
+                              fontFamily: "var(--font-body)",
                               fontSize: 10,
                               letterSpacing: 1.2,
                               textTransform: "uppercase",
@@ -1228,7 +1212,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                         </div>
                         <div
                           style={{
-                            fontFamily: "'Helvetica Neue', sans-serif",
+                            fontFamily: "var(--font-body)",
                             fontSize: 12,
                             color: t.textSecondary,
                             lineHeight: 1.5,
@@ -1243,7 +1227,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                             display: "flex",
                             gap: 12,
                             flexWrap: "wrap",
-                            fontFamily: "'Helvetica Neue', sans-serif",
+                            fontFamily: "var(--font-body)",
                             fontSize: 11,
                             color: t.textTertiary,
                           }}
@@ -1262,7 +1246,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                           <div
                             style={{
                               marginTop: 8,
-                              fontFamily: "'Courier New', monospace",
+                              fontFamily: "var(--font-mono)",
                               fontSize: 11,
                               color: t.textTertiary,
                             }}
@@ -1284,7 +1268,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                   >
                     <span
                       style={{
-                        fontFamily: "'Helvetica Neue', sans-serif",
+                        fontFamily: "var(--font-body)",
                         fontSize: 11,
                         color: t.textTertiary,
                       }}
@@ -1304,7 +1288,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                             ? t.textTertiary
                             : t.textSecondary,
                           cursor: loadingMoreFailures ? "default" : "pointer",
-                          fontFamily: "'Helvetica Neue', sans-serif",
+                          fontFamily: "var(--font-body)",
                           fontSize: 10,
                           letterSpacing: 1.2,
                           textTransform: "uppercase",
@@ -1317,7 +1301,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                     ) : (
                       <span
                         style={{
-                          fontFamily: "'Helvetica Neue', sans-serif",
+                          fontFamily: "var(--font-body)",
                           fontSize: 11,
                           color: t.textTertiary,
                         }}
@@ -1331,7 +1315,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 <p
                   style={{
                     margin: 0,
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textTertiary,
                   }}
@@ -1343,7 +1327,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             <div style={{ border: `1px solid ${t.borderLight}`, padding: 16 }}>
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: 3.5,
                   textTransform: "uppercase",
@@ -1366,7 +1350,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                     >
                       <div
                         style={{
-                          fontFamily: "'Helvetica Neue', sans-serif",
+                          fontFamily: "var(--font-body)",
                           fontSize: 12,
                           color: t.textSecondary,
                           marginBottom: 6,
@@ -1379,7 +1363,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                       </div>
                       <div
                         style={{
-                          fontFamily: "'Helvetica Neue', sans-serif",
+                          fontFamily: "var(--font-body)",
                           fontSize: 12,
                           color: t.textSecondary,
                           marginBottom: 4,
@@ -1390,7 +1374,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                       </div>
                       <div
                         style={{
-                          fontFamily: "'Courier New', monospace",
+                          fontFamily: "var(--font-mono)",
                           fontSize: 11,
                           color: t.textTertiary,
                         }}
@@ -1406,7 +1390,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               ) : null}
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: 3.5,
                   textTransform: "uppercase",
@@ -1422,7 +1406,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                     <li
                       key={a.id}
                       style={{
-                        fontFamily: "'Helvetica Neue', sans-serif",
+                        fontFamily: "var(--font-body)",
                         fontSize: 12,
                         color: t.textSecondary,
                         marginBottom: 8,
@@ -1437,7 +1421,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 <p
                   style={{
                     margin: 0,
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textTertiary,
                   }}
@@ -1455,7 +1439,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
             >
               <div
                 style={{
-                  fontFamily: "'Helvetica Neue', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: 10,
                   letterSpacing: 3.5,
                   textTransform: "uppercase",
@@ -1474,7 +1458,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
               >
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textSecondary,
                   }}
@@ -1486,7 +1470,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textSecondary,
                   }}
@@ -1498,7 +1482,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textSecondary,
                   }}
@@ -1510,7 +1494,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textSecondary,
                   }}
@@ -1522,7 +1506,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textSecondary,
                   }}
@@ -1534,7 +1518,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontSize: 12,
                     color: t.textSecondary,
                   }}
