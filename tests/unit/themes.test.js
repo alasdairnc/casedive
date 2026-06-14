@@ -39,15 +39,9 @@ function contrastRatio(foreground, background) {
 }
 
 describe("themes", () => {
-  it("exports both light and dark themes", () => {
-    expect(themes).toHaveProperty("light");
+  it("exports the dark theme (the only theme)", () => {
     expect(themes).toHaveProperty("dark");
-  });
-
-  it("light theme has all required keys", () => {
-    for (const key of REQUIRED_KEYS) {
-      expect(themes.light).toHaveProperty(key);
-    }
+    expect(themes).not.toHaveProperty("light");
   });
 
   it("dark theme has all required keys", () => {
@@ -56,18 +50,7 @@ describe("themes", () => {
     }
   });
 
-  it("accent color is the same in both themes", () => {
-    expect(themes.light.accent).toBe(themes.dark.accent);
-  });
-
-  it("light and dark bg colors are different", () => {
-    expect(themes.light.bg).not.toBe(themes.dark.bg);
-  });
-
-  it.each([
-    ["light", themes.light],
-    ["dark", themes.dark],
-  ])(
+  it.each([["dark", themes.dark]])(
     "%s theme keeps readable text contrast on primary surfaces",
     (_, theme) => {
       for (const surface of [theme.bg, theme.bgAlt, theme.cardBg]) {

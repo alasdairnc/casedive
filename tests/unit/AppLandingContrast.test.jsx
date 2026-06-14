@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import App from "../../src/App.jsx";
 import { themes } from "../../src/lib/themes.js";
 
@@ -39,30 +39,15 @@ function expectReadable(element, background) {
 }
 
 describe("App landing contrast", () => {
-  it("keeps low-emphasis landing text readable in light and dark mode", () => {
+  it("keeps low-emphasis landing text readable on the dark surface", () => {
     render(<App />);
 
     const exampleLabel = screen.getByText("Try an example");
     const helperCopy = screen.getByText(
       "Educational tool only — not legal advice. Always consult a qualified lawyer. Citations verified against CanLII where possible.",
     );
-    const toggleToDark = screen.getByRole("button", { name: "Dark" });
 
-    expectReadable(exampleLabel, themes.light.bg);
-    expectReadable(helperCopy, themes.light.bg);
-    expectReadable(toggleToDark, themes.light.bg);
-
-    fireEvent.click(toggleToDark);
-
-    const toggleToLight = screen.getByRole("button", { name: "Light" });
-
-    expectReadable(screen.getByText("Try an example"), themes.dark.bg);
-    expectReadable(
-      screen.getByText(
-        "Educational tool only — not legal advice. Always consult a qualified lawyer. Citations verified against CanLII where possible.",
-      ),
-      themes.dark.bg,
-    );
-    expectReadable(toggleToLight, themes.dark.bg);
+    expectReadable(exampleLabel, themes.dark.bg);
+    expectReadable(helperCopy, themes.dark.bg);
   });
 });
