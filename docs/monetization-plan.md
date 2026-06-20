@@ -93,9 +93,8 @@ Reuses the existing Supabase + serverless patterns. Nothing about auth changes �
 
 - **DB:** `subscriptions` table (see `supabase/migrations/`): `user_id`, `stripe_customer_id`, `stripe_subscription_id`, `plan` (`free`/`plus`/`student`), `status`, `current_period_end`. RLS so a user reads only their own row; the service key (webhook) writes.
 - **`api/_subscription.js`** (shared module): plan/quota config + `resolveUserPlan(token)` → `{ plan, quota }`; pure, cacheable.
-- **`api/create-checkout-session.js`** (new endpoint): auth required → creates a Stripe Checkout session for Plus/student, returns the URL.
+- **`api/billing.js`** (new endpoint): auth required. `POST {action:"checkout", plan}` → Stripe Checkout session URL; `POST {action:"portal"}` → Customer Portal URL. Checkout + portal share one function to stay within the platform's 12-serverless-function cap.
 - **`api/stripe-webhook.js`** (new endpoint): raw body, signature-verified, upserts `subscriptions` on `checkout.session.completed`, `customer.subscription.updated/deleted`.
-- **`api/billing-portal.js`** (new endpoint, optional v1.1): returns a Customer Portal URL for managing/cancelling.
 - **Frontend:** an `UpgradeModal` + a pricing section (no router — it's a component/modal in `App.jsx`, matching `AuthModal.jsx`). A `usePlan()` hook reads the user's plan for UI gating.
 
 New endpoints follow the `new-api-endpoint` conventions (rate limit, input validation, security headers) and pass `api-invariant-reviewer` + an `advisor()` gate before business logic, per CLAUDE.md.
@@ -127,7 +126,7 @@ Defer, with a trigger: revisit registration as we approach the threshold. If we 
 - **Phase 0 — Legal (blocks launch, not build):** ToS, Privacy, disclaimer copy, CanLII license confirmation.
 - **Phase 1 — Foundation ✅ DONE:** `subscriptions` migration + `api/_subscription.js` plan/quota module. Additive, breaks nothing, testable without Stripe.
 - **Phase 2 — Rate-limit + gating ✅ DONE:** user-id keying via `checkRequestRateLimit` (auth requests key on `user:<id>`, anon stay IP-keyed); `_rateLimit.js` gained an optional per-call `limit`; `analyze`/`case-summary`/`export-pdf`/`verify` now plan-aware. Free hourly limit pinned to 5 (= legacy anon), paid = 100. 11 regression tests; full suite 278/278.
-- **Phase 3 — Stripe ✅ BUILT (test-mode, awaiting owner setup):** `stripe@^22` added; `api/_stripe.js`, `api/create-checkout-session.js`, `api/billing-portal.js`, `api/stripe-webhook.js` (raw body + signature verify + complete-row upserts). Degrades to 503 until env vars exist. 8 regression tests; full suite 286/286; build clean. Needs the owner runbook below before it can run.
+- **Phase 3 — Stripe ✅ BUILT (test-mode):** `stripe@^22` added; `api/_stripe.js`, `api/billing.js` (checkout + portal, one function to respect the 12-function cap), `api/stripe-webhook.js` (raw body + signature verify + complete-row upserts). Degrades to 503 until env vars exist. Deployed to production via PR #22 + the function-cap fix.
 
 ---
 
@@ -164,7 +163,7 @@ Steps only Alasdair can do (accounts, keys, env vars). Code is already done.
 > `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_PLUS`, `STRIPE_PRICE_STUDENT`, `APP_BASE_URL`, plus existing `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`.
 
 ### Still on the code side (assistant) — Phase 4
-- `usePlan()` hook + an Upgrade button/modal calling `create-checkout-session`, a "Manage billing" link calling `billing-portal`, and feature gating (verification depth, PDF limits). Buildable now without keys; the endpoints 503 cleanly until you finish A–C.
+- `usePlan()` hook + an Upgrade button/modal calling `POST /api/billing {action:"checkout"}`, a "Manage billing" link calling `POST /api/billing {action:"portal"}`, and feature gating (verification depth, PDF limits). Buildable now without keys; the endpoints 503 cleanly until env is set.
 - **Phase 4 — Frontend:** `UpgradeModal`, pricing section, `usePlan()` gating, student verification.
 - **Phase 5 — Launch:** Phase 0 complete → flip Stripe to live keys → soft launch to a small cohort → monitor.
 
