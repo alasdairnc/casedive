@@ -2,12 +2,8 @@
 // Batch-verifies AI-generated case citations against the CanLII API.
 // Degrades gracefully when CANLII_API_KEY is not set.
 
-import {
-  redis,
-  checkRateLimit,
-  getClientIp,
-  rateLimitHeaders,
-} from "./_rateLimit.js";
+import { redis, rateLimitHeaders } from "./_rateLimit.js";
+import { checkRequestRateLimit } from "./_subscription.js";
 import { randomUUID, createHash } from "crypto";
 import {
   applyStandardApiHeaders,
@@ -72,8 +68,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  const rlResult = await checkRateLimit(getClientIp(req), "verify");
-  logRateLimitCheck(requestId, "verify", rlResult, getClientIp(req));
+  const { result: rlResult, identity: rlIdentity } =
+    await checkRequestRateLimit(req, "verify");
+  logRateLimitCheck(requestId, "verify", rlResult, rlIdentity);
   const rlHeaders = rateLimitHeaders(rlResult);
   Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
   if (respondRateLimit(res, rlResult)) return;

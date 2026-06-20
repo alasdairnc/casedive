@@ -92,14 +92,21 @@ function updateInMemoryCounter(key, bucketId) {
 }
 
 /**
- * Check whether the given IP is within the rate limit.
- * @param {string|null} ip
+ * Check whether the given identity is within the rate limit.
+ * @param {string|null} ip — identity bucket key (a client IP, or a `user:<id>`
+ *   string for authenticated requests). getClientIp() guarantees real IPs can
+ *   never collide with the `user:` namespace.
  * @param {string} [endpoint] — optional endpoint name for per-route buckets
+ * @param {{ limit?: number }} [options] — optional per-call limit override
+ *   (e.g. a higher quota for a paid plan). Falls back to the endpoint default.
  * @returns {{ allowed: boolean, remaining: number, resetAt?: string, limit: number, reason?: string }}
  */
-export async function checkRateLimit(ip, endpoint) {
+export async function checkRateLimit(ip, endpoint, options = {}) {
   const now = Date.now();
-  const maxRequests = getLimitForEndpoint(endpoint);
+  const maxRequests =
+    Number.isFinite(options.limit) && options.limit > 0
+      ? options.limit
+      : getLimitForEndpoint(endpoint);
   const bucketId = Math.floor(now / WINDOW_MS);
   const key = buildKey(endpoint, ip, bucketId);
   const resetAt = new Date((bucketId + 1) * WINDOW_MS).toISOString();
