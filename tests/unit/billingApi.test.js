@@ -50,9 +50,7 @@ vi.mock("../../api/_cors.js", () => ({
   isOriginAllowed: () => true,
 }));
 
-const { default: checkoutHandler } = await import(
-  "../../api/create-checkout-session.js"
-);
+const { default: billingHandler } = await import("../../api/billing.js");
 const { default: webhookHandler } = await import("../../api/stripe-webhook.js");
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -107,28 +105,44 @@ afterEach(() => {
   delete process.env.STRIPE_WEBHOOK_SECRET;
 });
 
-// ── create-checkout-session ─────────────────────────────────────────────────
-describe("create-checkout-session", () => {
+// ── billing: checkout ───────────────────────────────────────────────────────
+describe("billing (action=checkout)", () => {
   it("503 when Stripe is not configured", async () => {
     mockIsStripeConfigured.mockReturnValue(false);
     const res = createRes();
-    await checkoutHandler(checkoutReq({ body: { plan: "plus" } }), res);
+    await billingHandler(
+      checkoutReq({ body: { action: "checkout", plan: "plus" } }),
+      res,
+    );
     expect(res.statusCode).toBe(503);
   });
 
   it("401 when unauthenticated", async () => {
     mockGetAuthedUser.mockResolvedValue(null);
     const res = createRes();
-    await checkoutHandler(checkoutReq({ body: { plan: "plus" } }), res);
+    await billingHandler(
+      checkoutReq({ body: { action: "checkout", plan: "plus" } }),
+      res,
+    );
     expect(res.statusCode).toBe(401);
   });
 
   it("400 on an invalid plan", async () => {
     mockGetAuthedUser.mockResolvedValue({ id: "u1", email: "a@b.co" });
     const res = createRes();
-    await checkoutHandler(checkoutReq({ body: { plan: "enterprise" } }), res);
+    await billingHandler(
+      checkoutReq({ body: { action: "checkout", plan: "enterprise" } }),
+      res,
+    );
     expect(res.statusCode).toBe(400);
     expect(mockStripe.checkout.sessions.create).not.toHaveBeenCalled();
+  });
+
+  it("400 on an unknown action", async () => {
+    mockGetAuthedUser.mockResolvedValue({ id: "u1", email: "a@b.co" });
+    const res = createRes();
+    await billingHandler(checkoutReq({ body: { action: "wat" } }), res);
+    expect(res.statusCode).toBe(400);
   });
 
   it("creates a session and returns its URL on the happy path", async () => {
@@ -137,7 +151,10 @@ describe("create-checkout-session", () => {
       url: "https://checkout.stripe.com/c/test",
     });
     const res = createRes();
-    await checkoutHandler(checkoutReq({ body: { plan: "plus" } }), res);
+    await billingHandler(
+      checkoutReq({ body: { action: "checkout", plan: "plus" } }),
+      res,
+    );
     expect(res.statusCode).toBe(200);
     expect(res.body.url).toContain("checkout.stripe.com");
     const arg = mockStripe.checkout.sessions.create.mock.calls[0][0];
