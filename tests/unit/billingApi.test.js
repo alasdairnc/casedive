@@ -36,14 +36,9 @@ vi.mock("../../api/_rateLimit.js", () => ({
   rateLimitHeaders: () => ({ "X-RateLimit-Limit": "100" }),
 }));
 
-vi.mock("../../api/_logging.js", () => ({
-  logRequestStart: vi.fn(),
-  logRateLimitCheck: vi.fn(),
-  logValidationError: vi.fn(),
-  logExternalApiCall: vi.fn(),
-  logSuccess: vi.fn(),
-  logError: vi.fn(),
-}));
+// NB: _logging is intentionally NOT mocked. The real logging helpers have
+// strict arg orders (e.g. logRequestStart(req, ...), logSuccess(..., rlResult))
+// that a mock silently swallows — running them for real catches those bugs.
 
 vi.mock("../../api/_cors.js", () => ({
   applyCorsHeaders: vi.fn(),
@@ -79,8 +74,10 @@ function createRes() {
 function checkoutReq({ body = {}, headers = {} } = {}) {
   return {
     method: "POST",
+    url: "/api/billing",
     body,
     headers: { "content-type": "application/json", ...headers },
+    socket: { remoteAddress: "127.0.0.1" },
   };
 }
 
@@ -88,7 +85,9 @@ function checkoutReq({ body = {}, headers = {} } = {}) {
 function webhookReq({ rawBody = "{}", headers = {} } = {}) {
   return {
     method: "POST",
+    url: "/api/stripe-webhook",
     headers: { "stripe-signature": "sig", ...headers },
+    socket: { remoteAddress: "127.0.0.1" },
     async *[Symbol.asyncIterator]() {
       yield Buffer.from(rawBody);
     },

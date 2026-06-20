@@ -45,7 +45,7 @@ function resolveBaseUrl() {
   return process.env.APP_BASE_URL || "https://www.casedive.ca";
 }
 
-async function handleCheckout(req, res, requestId, user) {
+async function handleCheckout(req, res, { requestId, startMs, rlResult, user }) {
   const plan = req.body?.plan;
   if (!CHECKOUT_PLANS.has(plan)) {
     logValidationError(requestId, "billing", "Invalid plan", "plan");
@@ -53,7 +53,13 @@ async function handleCheckout(req, res, requestId, user) {
   }
   const priceId = planToPriceId(plan);
   if (!priceId) {
-    logError(requestId, "billing", "Price id not configured");
+    logError(
+      requestId,
+      "billing",
+      new Error("Price id not configured"),
+      503,
+      Date.now() - startMs,
+    );
     return res.status(503).json({ error: "Billing is not available" });
   }
 
@@ -71,15 +77,15 @@ async function handleCheckout(req, res, requestId, user) {
       success_url: `${baseUrl}/?checkout=success`,
       cancel_url: `${baseUrl}/?checkout=cancelled`,
     });
-    logSuccess(requestId, "billing");
+    logSuccess(requestId, "billing", 200, Date.now() - startMs, rlResult);
     return res.status(200).json({ url: session.url });
   } catch (err) {
-    logError(requestId, "billing", err.message);
+    logError(requestId, "billing", err, 502, Date.now() - startMs);
     return res.status(502).json({ error: "Failed to start checkout" });
   }
 }
 
-async function handlePortal(req, res, requestId, user) {
+async function handlePortal(req, res, { requestId, startMs, rlResult, user }) {
   const supabase = getServiceClient();
   if (!supabase) {
     return res.status(503).json({ error: "Billing is not available" });
@@ -94,7 +100,7 @@ async function handlePortal(req, res, requestId, user) {
       .maybeSingle();
     if (!error) customerId = data?.stripe_customer_id ?? null;
   } catch (err) {
-    logError(requestId, "billing", err.message);
+    logError(requestId, "billing", err, 500, Date.now() - startMs);
   }
   if (!customerId) {
     return res.status(404).json({ error: "No active subscription" });
@@ -106,16 +112,17 @@ async function handlePortal(req, res, requestId, user) {
       customer: customerId,
       return_url: resolveBaseUrl(),
     });
-    logSuccess(requestId, "billing");
+    logSuccess(requestId, "billing", 200, Date.now() - startMs, rlResult);
     return res.status(200).json({ url: session.url });
   } catch (err) {
-    logError(requestId, "billing", err.message);
+    logError(requestId, "billing", err, 502, Date.now() - startMs);
     return res.status(502).json({ error: "Failed to open billing portal" });
   }
 }
 
 export default async function handler(req, res) {
   const requestId = randomUUID();
+  const startMs = Date.now();
   applyStandardApiHeaders(
     req,
     res,
@@ -124,7 +131,7 @@ export default async function handler(req, res) {
   );
   if (handleOptionsAndMethod(req, res, "POST")) return;
 
-  logRequestStart(requestId, "billing", req);
+  logRequestStart(req, "billing", requestId);
 
   if (!isStripeConfigured()) {
     return res.status(503).json({ error: "Billing is not available" });
@@ -156,9 +163,10 @@ export default async function handler(req, res) {
     return;
   }
 
+  const ctx = { requestId, startMs, rlResult, user };
   const action = req.body?.action;
-  if (action === "checkout") return handleCheckout(req, res, requestId, user);
-  if (action === "portal") return handlePortal(req, res, requestId, user);
+  if (action === "checkout") return handleCheckout(req, res, ctx);
+  if (action === "portal") return handlePortal(req, res, ctx);
 
   logValidationError(requestId, "billing", "Invalid action", "action");
   return res.status(400).json({ error: "Invalid action" });
