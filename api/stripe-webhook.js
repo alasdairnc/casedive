@@ -93,6 +93,7 @@ function applyWebhookHeaders(res) {
 
 export default async function handler(req, res) {
   const requestId = randomUUID();
+  const startMs = Date.now();
   applyWebhookHeaders(res);
 
   if (req.method !== "POST") {
@@ -109,7 +110,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing signature" });
   }
 
-  logRequestStart(requestId, "stripe-webhook", req);
+  logRequestStart(req, "stripe-webhook", requestId);
 
   // 1) Verify signature against the raw body. Forged/unsigned -> 400.
   let event;
@@ -121,14 +122,20 @@ export default async function handler(req, res) {
       process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (err) {
-    logError(requestId, "stripe-webhook", `signature: ${err.message}`);
+    logError(requestId, "stripe-webhook", err, 400, Date.now() - startMs);
     return res.status(400).json({ error: "Invalid signature" });
   }
 
   const supabase = getServiceClient();
   if (!supabase) {
     // Can't persist; 500 so Stripe retries once Supabase is configured.
-    logError(requestId, "stripe-webhook", "Supabase not configured");
+    logError(
+      requestId,
+      "stripe-webhook",
+      new Error("Supabase not configured"),
+      500,
+      Date.now() - startMs,
+    );
     return res.status(500).json({ error: "Store unavailable" });
   }
 
@@ -176,11 +183,14 @@ export default async function handler(req, res) {
         break;
     }
   } catch (err) {
-    logError(requestId, "stripe-webhook", err.message);
+    logError(requestId, "stripe-webhook", err, 500, Date.now() - startMs);
     // 500 -> Stripe retries with backoff (writes are idempotent upserts).
     return res.status(500).json({ error: "Failed to process event" });
   }
 
-  logSuccess(requestId, "stripe-webhook");
+  // No rate limiter on this endpoint, so pass a stub rlResult to logSuccess.
+  logSuccess(requestId, "stripe-webhook", 200, Date.now() - startMs, {
+    remaining: null,
+  });
   return res.status(200).json({ received: true });
 }
