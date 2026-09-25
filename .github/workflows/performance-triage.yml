@@ -52,7 +52,7 @@ jobs:
       - name: Create triage issue
         id: create_issue
         if: ${{ steps.monitor.outputs.exit_code == '1' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           result-encoding: string
           script: |
