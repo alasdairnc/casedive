@@ -12,20 +12,17 @@ or delete it when it is done.
 2. **Branch protection on `main`**: require the `Quality Guardrails` and
    `Secret Scan` checks to pass, and require a pull request. GitHub → Settings →
    Branches → Add rule.
-3. **Decide billing**: finish it or park it (see below). If finishing, do the Stripe
-   CLI round-trip against a preview deploy first:
-   `stripe listen --forward-to <preview-url>/api/stripe-webhook` then
-   `stripe trigger checkout.session.completed`, and confirm a row lands in
-   `subscriptions`.
+3. ~~Decide billing~~ Parked on 2026-09-25 (see below). Remove the four `STRIPE_*`
+   variables from Vercel → Settings → Environment Variables so no unused key sits there.
 4. **Review the Dependabot alerts tab** once after this PR merges; anything left is
    dev-tooling only.
 
 ## Product
 
-5. **Billing**: either ship the UI (plan picker → `POST /api/billing`, portal link,
-   plan badge) behind the legal gate in `docs/monetization-plan.md` (Terms,
-   "legal information, not legal advice" disclaimer), or delete `billing.js`,
-   `stripe-webhook.js`, `_stripe.js` and the migration to free three function slots.
+5. **Billing is parked.** The endpoints, Stripe client, tests and one-off scripts were
+   removed; `_subscription.js`, migration `0001` and the docs stay. To revive: restore
+   the files from the commit before `chore(billing): park`, `npm i stripe`, build the UI,
+   and clear the legal gate in `docs/monetization-plan.md` first.
 6. **Case-law corpus**: review and rebase PR #19 (fabricated-citation fixes, family
    law, expanded corpus). Run `npm run test:retrieval-failures` before merging.
 7. **Traffic before telemetry**: the retrieval-health machinery has 57 events all
