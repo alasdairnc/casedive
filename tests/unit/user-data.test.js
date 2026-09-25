@@ -354,4 +354,51 @@ describe("api/user-data.js", () => {
     );
     expect(scopedToUser).toBe(true);
   });
+  it("rate-limits by IP before auth, then by user id with the sync quota", async () => {
+    const res = makeRes();
+    const req = makeReq("GET", null);
+    req.query = { type: "bookmarks" };
+    await handler(req, res);
+
+    expect(res._status).toBe(200);
+    expect(mockCheckRateLimit).toHaveBeenCalledTimes(2);
+    expect(mockCheckRateLimit).toHaveBeenNthCalledWith(
+      1,
+      "127.0.0.1",
+      "user-data-ip",
+      { limit: 300 },
+    );
+    expect(mockCheckRateLimit).toHaveBeenNthCalledWith(
+      2,
+      `user:${VALID_USER.id}`,
+      "user-data",
+      { limit: 120 },
+    );
+  });
+
+  it("returns 429 from the IP pre-auth bucket without calling Supabase auth", async () => {
+    mockCheckRateLimit.mockResolvedValueOnce({ allowed: false });
+    const res = makeRes();
+    const req = makeReq("GET", null, "some-token");
+    req.query = { type: "bookmarks" };
+    await handler(req, res);
+
+    expect(res._status).toBe(429);
+    expect(mockGetUser).not.toHaveBeenCalled();
+    expect(mockCheckRateLimit).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns 429 from the per-user bucket after auth succeeds", async () => {
+    mockCheckRateLimit
+      .mockResolvedValueOnce({ allowed: true })
+      .mockResolvedValueOnce({ allowed: false });
+    const res = makeRes();
+    const req = makeReq("GET", null);
+    req.query = { type: "bookmarks" };
+    await handler(req, res);
+
+    expect(res._status).toBe(429);
+    expect(mockGetUser).toHaveBeenCalledTimes(1);
+    expect(mockFrom).not.toHaveBeenCalled();
+  });
 });

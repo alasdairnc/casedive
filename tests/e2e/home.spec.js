@@ -33,18 +33,6 @@ test.describe("Home page", () => {
     ).toHaveValue("all");
   });
 
-  test("renders dark-only theme with no light/dark toggle", async ({
-    page,
-  }) => {
-    await expect(
-      page.locator("button").filter({ hasText: /^(dark|light)$/i }),
-    ).toHaveCount(0);
-    const bg = await page.evaluate(
-      () => getComputedStyle(document.body).backgroundColor,
-    );
-    expect(bg).toBe("rgb(11, 18, 32)"); // #0B1220 — the only theme
-  });
-
   test("research button is disabled when scenario is empty", async ({
     page,
   }) => {

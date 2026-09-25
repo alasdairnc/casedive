@@ -402,3 +402,38 @@ Full sweep, first audit since Stripe billing (#22–#24) and the caselaw improve
 - Legal data: no placeholders in criminalCodeData/civilLawData/charterData; caselaw corpus entries structurally complete
 - Config: packageManager npm@11.11.0 matches package-lock; manualChunks intact (vite.config.js); playwright mobile profiles intact (:32-34); root .md files clean (CLAUDE/GEMINI/README/SECURITY only); launch.json diff is reformat-only; package.json diff adds only the 3 caselaw scripts
 - Uncommitted caselaw pipeline scripts: propose-only (no corpus writes), CanLII verification gate, no secrets, timeouts on external calls; verify-webhook.mjs uses a placeholder key
+## Audit — 2026-09-25 (return-from-hiatus sweep)
+
+First audit since 2026-06-10. No source commits between 2026-06-19 and this run; only automated weekly digests. Build ✓, unit 287/287 ✓, component 71/71 ✓, retrieval corpus 57/57 ✓. E2E not runnable in the audit container (Playwright 1.60 browser mismatch); last green 2026-06-10. Production runtime logs (1h retention) showed two requests, both from GitHub Actions.
+
+### New findings
+
+- `production-retrieval-autofix.yml` failed every scheduled run since June: `git add` of the gitignored `reports/retrieval-autofix` aborted under `set -e`. Fix existed unmerged in PR #20 for 95 days | High | .github/workflows/production-retrieval-autofix.yml
+- `preview-self-heal.yml` was invalid YAML (no `on:` key); `claude-review.yml` was dispatch-only but read `pull_request.number`; `overnight-security-loop.yml` and `claude-headless-probe.yml` never triggered | Medium | .github/workflows/
+- `stripe-webhook.js` relied on `export const config = { api: { bodyParser: false } }`, which Vercel's Node runtime ignores (body is read and parsed before `(req, res)` handlers run). Raw-body path yielded an empty buffer, so every real Stripe event would fail signature verification. Unit test faked a stream and could not catch it | High | api/stripe-webhook.js
+- `user-data.js` used the 5/h IP-keyed default bucket although cloud sync fires on every bookmark and search; logged-in users silently stopped syncing after five actions. Also skipped the origin 403 check and built a fresh Supabase client per request | High | api/user-data.js
+- RLS on `user_bookmarks`, `user_history`, `user_scenarios` unverifiable: tables were created by hand with no migration; anon key ships in the bundle | High (unverified) | supabase/migrations/
+- `performance-monitor.yml` accepted `RETRIEVAL_HEALTH_TOKEN` as a `workflow_dispatch` input on a public repo (inputs appear in run logs); ran every 30 minutes (5,300+ runs) | Medium | .github/workflows/performance-monitor.yml
+- `billing.js` and `stripe-webhook.js` missing from `vercel.json` functions; project at 12/12 Hobby function cap | Medium | vercel.json
+- npm audit: 27 advisories (1 critical in unused `@vitest/browser`, 16 high, all dev-tooling except one moderate via `@sentry/node`) | Medium | package.json
+- Multi-tool clutter: `GEMINI.md`, `.continue/`, `hooks/hooks.json` (plugin leftover), root `skills/` install notes, `security_audit/` recon dumps; `.claude/mcp.json` tracked yet gitignored; settings allow-list referenced nonexistent `test:integration` | Low | (repo root)
+- Obsolete `X-XSS-Protection: 1; mode=block` header | Low | vercel.json
+
+### Fixed in this run
+
+- Autofix workflow `git add` narrowed to `api/_filterConfig.js`
+- Four dead workflows and the orphaned self-heal agent prompt deleted
+- Webhook rewritten as a Web-standard `POST(request)` handler reading `request.arrayBuffer()`; tests rewritten around `Request`/`Response`, plus a regression test that the exact raw bytes reach `constructEvent`
+- `user-data.js` now authenticates via the shared timeout-guarded helper, rate-limits per user at 120/h, uses the cached service client, and goes through `handleOptionsAndMethod` (which now accepts a method list)
+- `supabase/migrations/0002_user_data_rls.sql` added (idempotent; owner must run it)
+- Performance monitor: token input removed, cron 30m → 6h
+- Billing functions added to `vercel.json`; XSS header set to `0`
+- `@vitest/browser` removed; dependencies updated within semver ranges; `markdownlint-cli2` bumped to 0.23; `.github/dependabot.yml` added (weekly, grouped, majors ignored)
+- Clutter removed; old skills docs archived under `docs/skills/`; README rewritten as a project README; `docs/ROADMAP.md` added; CLAUDE.md gotchas extended
+
+### Still open (owner action)
+
+- Run the RLS migration and confirm in the Supabase dashboard | High
+- Stripe round-trip on a preview deploy, then finish or park billing | High
+- Branch protection on `main` requiring the two CI checks | Medium
+- Review/rebase PR #19 (corpus expansion) | Medium

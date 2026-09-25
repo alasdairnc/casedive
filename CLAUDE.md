@@ -58,6 +58,10 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - `node --check` cannot parse JSX — scope JS syntax checks to `.js` only, never `.jsx`
 - All Redis cache TTLs are 7 days (`604800s`). Changes to filter logic or landmark data won't be visible to cached users until TTL expires — manually purge affected keys in Upstash if a hotfix needs to take effect immediately.
 - context7 MCP is active via global plugin; `.claude/mcp.json` entry is for team/project sharing — don't add it twice
+- Vercel's Node runtime reads and parses the body BEFORE a `(req, res)` handler runs; the Next.js-style `export const config = { api: { bodyParser: false } }` is ignored. Anything that needs raw bytes (the Stripe webhook) must use a Web-standard handler: `export async function POST(request)` + `request.arrayBuffer()`.
+- Hobby plan caps the project at 12 serverless functions and `api/` is at 12/12. A new endpoint means consolidating an existing one first (see how `billing.js` merged checkout + portal).
+- `user-data` (cloud sync) is rate-limited per Supabase user at 120/h, not the 5/h AI default. Sync fires on every bookmark and every search, so the default silently broke sync after five actions.
+- Vercel Hobby keeps about one hour of runtime logs. Anything older is only in Sentry.
 
 ## API Module Structure
 
@@ -77,6 +81,7 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 ## Reference Files (read on demand)
 
 - `docs/README.md` (documentation index)
+- `docs/ROADMAP.md` (current priorities + owner-only setup steps)
 - `docs/architecture.md`, `docs/design-system.md`, `docs/security.md`
 - `docs/filtering/FILTER_TUNING.md`, `docs/filtering/FILTER_TUNING_QUICKSTART.md`
 - `docs/operations/` (runbooks, snapshots, performance plan, audit log)

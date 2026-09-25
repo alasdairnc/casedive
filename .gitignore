@@ -10,7 +10,6 @@ test-results
 .DS_Store
 .env*.local
 .claude/settings.local.json
-.claude/mcp.json
 .claude/worktrees/
 node_modules_old/
 tmp/
@@ -21,3 +20,4 @@ logs/
 reports/*
 !reports/weekly/
 artifacts/html/
+security_audit/

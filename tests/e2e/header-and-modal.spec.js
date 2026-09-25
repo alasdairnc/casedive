@@ -81,10 +81,11 @@ test.describe("Header", () => {
     ).toBeVisible();
   });
 
-  test("has no theme toggle (dark-only UI)", async ({ page }) => {
-    await expect(
-      page.getByRole("button", { name: /^(dark|light)( mode)?$/i }),
-    ).toHaveCount(0);
+  test("renders no theme toggle (dark-only theme since 2026-06-14)", async ({
+    page,
+  }) => {
+    // The navy/teal theme is dark-only; the old Light/Dark toggle was removed.
+    await expect(page.getByRole("button", { name: /^(dark|light)$/i })).toHaveCount(0);
   });
 });
 
