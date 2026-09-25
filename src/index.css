@@ -45,8 +45,68 @@ body {
   color: #e8edf5;
 }
 
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Keyboard focus ring (teal accent). Inline styles must not set outline: none
+   on focusable elements, or this ring never shows. */
+:focus-visible {
+  outline: 2px solid #2dd4bf;
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline-offset: 0;
+}
+
+::placeholder {
+  color: #8492a8;
+  opacity: 1;
+}
+
+select option {
+  background: #0f1a30;
+  color: #e8edf5;
+}
+
 @keyframes cfBlink {
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes cdFadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cd-fade-in {
+  animation: cdFadeSlideIn 0.38s ease-out forwards;
+}
+
+.cd-results-in {
+  animation: cdFadeSlideIn 0.28s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
