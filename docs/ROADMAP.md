@@ -6,17 +6,13 @@ not from archaeology. Delete an item when it is done; the audit log in
 
 ## Owner-only setup
 
-1. **Custom SMTP for Supabase auth.** Supabase's built-in sender is test-only and
-   may deliver only to your own addresses, so confirmation and password-reset
-   emails are not reaching real users today. Follow section 1 of
-   `docs/auth-setup.md` (Resend is the simplest), then send yourself a reset from
-   the live site to prove delivery. This is the one thing on the accounts side
-   that matters before anyone else signs up.
-2. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
+1. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
    Variables. Nothing reads them since billing was parked.
 
 Done on 2026-09-25: RLS verified on the three user tables, branch protection on
-`main`, Dependabot's first batch merged.
+`main`, Dependabot's first batch merged. Supabase auth email now sends through
+Resend SMTP (branded templates, `localhost:5173` redirect added); a live reset
+reached Gmail's inbox with DKIM, SPF and DMARC passing.
 
 ## Product
 

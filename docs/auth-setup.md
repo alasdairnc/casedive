@@ -8,6 +8,14 @@ that adds `AuthContext.jsx` and `authErrors.js` is parked on the
 
 ## 1. Custom SMTP (do this first)
 
+> **Done 2026-09-25 with Resend.** Domain `casedive.ca` verified in Resend
+> (DKIM `resend._domainkey`, SPF/MX on `send.`, DMARC in Cloudflare). Supabase
+> SMTP: host `smtp.resend.com`, port `465`, username `resend`, password = a
+> Resend API key named `supabase-smtp` (Sending access, `casedive.ca` only).
+> Email rate limit 30/hour. Resend's free plan caps sending at 100/day and 3,000/month.
+> To rotate the key: create a new one in Resend, paste it into Supabase SMTP
+> password, save, then delete the old key.
+
 Supabase's built-in email sender is for testing only: it's heavily
 rate-limited and may only deliver to your own team's addresses. If it's
 still in use, confirmation, magic-link, and reset emails won't reach real
@@ -41,6 +49,10 @@ The app passes `window.location.origin` as the redirect for every email link
 and for OAuth, so any origin not on this list falls back to the Site URL.
 
 ## 3. Email templates
+
+> **Done 2026-09-25** for Confirm sign up ("Confirm your CaseDive account") and
+> Reset password ("Reset your CaseDive password"): navy header, teal button,
+> inline-styled tables. Magic Link is left default until `wip/auth-polish` lands.
 
 Supabase → Authentication → Emails → Templates. Brand the **Confirm signup**,
 **Magic Link**, and **Reset Password** templates (subject lines like
