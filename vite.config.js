@@ -13,6 +13,23 @@ import {
 } from "./api/_constants.js";
 
 /**
+ * Read a request body. Resolves null if the client aborted mid-request: an
+ * unguarded `for await` rejects with "aborted", and as an unhandled rejection
+ * that kills the dev server (WebKit e2e runs tear pages down mid-request).
+ * @param {import("http").IncomingMessage} req
+ * @returns {Promise<Buffer | null>}
+ */
+async function readBody(req) {
+  const chunks = [];
+  try {
+    for await (const chunk of req) chunks.push(chunk);
+  } catch {
+    return null;
+  }
+  return Buffer.concat(chunks);
+}
+
+/**
  * A helper function to create a POST-only API handler for the dev server.
  * It handles OPTIONS requests, method validation, and body parsing.
  * @param {(body: any, req: import('http').IncomingMessage, res: import('http').ServerResponse) => Promise<void>} handler
@@ -33,10 +50,10 @@ function createApiMiddleware(handler) {
       return;
     }
 
-    const chunks = [];
-    for await (const chunk of req) chunks.push(chunk);
+    const raw = await readBody(req);
+    if (raw === null) return;
     try {
-      const body = JSON.parse(Buffer.concat(chunks).toString());
+      const body = JSON.parse(raw.toString());
       await handler(body, req, res);
     } catch (err) {
       res.writeHead(400, { "Content-Type": "application/json" });
@@ -233,11 +250,11 @@ export default defineConfig(({ mode }) => {
               return;
             }
 
-            const chunks = [];
-            for await (const chunk of req) chunks.push(chunk);
+            const raw = await readBody(req);
+            if (raw === null) return;
             let body;
             try {
-              body = JSON.parse(Buffer.concat(chunks).toString());
+              body = JSON.parse(raw.toString());
             } catch {
               res.writeHead(400, { "Content-Type": "application/json" });
               res.end(JSON.stringify({ error: "Invalid JSON" }));
@@ -339,11 +356,11 @@ export default defineConfig(({ mode }) => {
               return;
             }
 
-            const chunks = [];
-            for await (const chunk of req) chunks.push(chunk);
+            const raw = await readBody(req);
+            if (raw === null) return;
             let parsedBody;
             try {
-              parsedBody = JSON.parse(Buffer.concat(chunks).toString());
+              parsedBody = JSON.parse(raw.toString());
             } catch {
               res.writeHead(400, { "Content-Type": "application/json" });
               res.end(JSON.stringify({ error: "Invalid JSON" }));
