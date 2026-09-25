@@ -1,4 +1,7 @@
+import { useEffect, useRef } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
+import Button from "./ui/Button.jsx";
+import { CONTENT_MAX_WIDTH, RADIUS } from "../lib/ui.js";
 
 function formatTime(ts) {
   const d = new Date(ts);
@@ -27,6 +30,21 @@ export default function SearchHistory({
   clearHistory,
 }) {
   const t = useTheme();
+  const closeRef = useRef(null);
+
+  // Close on Escape
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  // Move focus into the sheet when it opens
+  useEffect(() => {
+    closeRef.current?.focus();
+  }, []);
 
   const overlayStyle = {
     position: "fixed",
@@ -42,8 +60,10 @@ export default function SearchHistory({
     background: t.bg,
     border: `1px solid ${t.border}`,
     borderBottom: "none",
+    borderRadius: `${RADIUS.lg}px ${RADIUS.lg}px 0 0`,
+    boxShadow: `0 -8px 32px ${t.shadowStrong}`,
     width: "100%",
-    maxWidth: 760,
+    maxWidth: CONTENT_MAX_WIDTH,
     maxHeight: "70vh",
     display: "flex",
     flexDirection: "column",
@@ -51,79 +71,53 @@ export default function SearchHistory({
 
   return (
     <div style={overlayStyle} onClick={onClose}>
-      <div style={sheetStyle} onClick={(e) => e.stopPropagation()}>
-        {/* Drag handle */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "12px 0 4px",
-          }}
-        >
-          <div
-            style={{
-              width: 36,
-              height: 4,
-              background: t.border,
-              borderRadius: 2,
-            }}
-          />
-        </div>
-
+      <div
+        data-testid="search-history-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="search-history-title"
+        style={sheetStyle}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "8px 24px 12px",
+            gap: 12,
+            padding: "12px 16px 12px 24px",
             borderBottom: `1px solid ${t.borderLight}`,
           }}
         >
-          <div
+          <h2
+            id="search-history-title"
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 10,
-              letterSpacing: 3.5,
-              textTransform: "uppercase",
-              color: t.textTertiary,
+              fontSize: 16,
+              fontWeight: 600,
+              color: t.text,
+              margin: 0,
             }}
           >
             Search History
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          </h2>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             {history.length > 0 && (
-              <button
-                onClick={clearHistory}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: t.textTertiary,
-                  letterSpacing: 1,
-                }}
-              >
+              <Button variant="danger" size="sm" onClick={clearHistory}>
                 Clear all
-              </button>
+              </Button>
             )}
-            <button
+            <Button
+              ref={closeRef}
+              variant="ghost"
+              size="icon"
+              aria-label="Close"
               onClick={onClose}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                fontFamily: "var(--font-body)",
-                fontSize: 18,
-                color: t.textTertiary,
-                lineHeight: 1,
-              }}
+              style={{ fontSize: 22 }}
             >
               ×
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -134,8 +128,8 @@ export default function SearchHistory({
               style={{
                 padding: "32px 24px",
                 fontFamily: "var(--font-display)",
-                fontSize: 15,
-                color: t.textTertiary,
+                fontSize: 14,
+                color: t.textSecondary,
                 fontStyle: "italic",
                 textAlign: "center",
               }}
@@ -150,7 +144,7 @@ export default function SearchHistory({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "14px 24px",
+                  padding: "14px 16px 14px 24px",
                   borderBottom: `1px solid ${t.borderLight}`,
                   gap: 12,
                 }}
@@ -158,9 +152,9 @@ export default function SearchHistory({
                 <div style={{ flexGrow: 1, minWidth: 0 }}>
                   <div
                     style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "clamp(13px, 2vw, 14px)",
-                      color: t.textSecondary,
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      color: t.text,
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -174,10 +168,9 @@ export default function SearchHistory({
                   <div
                     style={{
                       fontFamily: "var(--font-body)",
-                      fontSize: 10,
+                      fontSize: 12,
                       color: t.textTertiary,
-                      marginTop: 3,
-                      letterSpacing: 0.5,
+                      marginTop: 2,
                     }}
                   >
                     {formatDate(entry.timestamp)} ·{" "}
@@ -195,26 +188,17 @@ export default function SearchHistory({
                     })()}
                   </div>
                 </div>
-                <button
+                <Button
+                  variant="secondary"
+                  size="sm"
                   onClick={() => {
                     onSelect(entry.id);
                     onClose();
                   }}
-                  style={{
-                    flexShrink: 0,
-                    background: "none",
-                    border: `1px solid ${t.border}`,
-                    cursor: "pointer",
-                    padding: "6px 14px",
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    letterSpacing: 1,
-                    textTransform: "uppercase",
-                    color: t.textSecondary,
-                  }}
+                  style={{ flexShrink: 0 }}
                 >
                   Re-run
-                </button>
+                </Button>
               </div>
             ))
           )}

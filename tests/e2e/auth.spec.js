@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openNavMenuIfCollapsed } from "./helpers/nav.js";
 
 // Sign-in / sign-up flows against a mocked Supabase Auth API.
 //
@@ -197,6 +198,8 @@ test.describe("AuthModal", () => {
     await dialog.getByRole("button", { name: /^sign in$/i }).click();
 
     await expect(dialog).toBeHidden();
+    // On phones the account (email + Sign out) lives in the Menu.
+    await openNavMenuIfCollapsed(page);
     await expect(page.getByRole("button", { name: /sign out/i })).toBeVisible();
     await expect(page.getByText(USER.email)).toBeVisible();
 
@@ -352,15 +355,18 @@ test.describe("Arriving from an email link", () => {
   });
 
   async function authEnabled(page) {
-    // Signed-out or signed-in, an auth-enabled header shows one of these.
-    const accountButton = page.getByRole("button", {
-      name: /^(sign in|sign out)$/i,
-    });
-    await accountButton
+    // Signed out, the header bar shows Sign in. Signed in on a phone, Sign out
+    // sits inside the closed Menu, so the email link's own dialog (reset) or
+    // toast (welcome) is the signal there. Auth-disabled builds show none.
+    const signal = page
+      .getByRole("button", { name: /^(sign in|sign out)$/i })
+      .or(page.getByRole("dialog"))
+      .or(page.getByRole("status"));
+    await signal
       .first()
       .waitFor({ timeout: 5000 })
       .catch(() => {});
-    return (await accountButton.count()) > 0;
+    return (await signal.count()) > 0;
   }
 
   test("an expired link explains itself and offers Sign In", async ({
@@ -396,6 +402,7 @@ test.describe("Arriving from an email link", () => {
     await expect(
       page.getByText("Email confirmed — you're signed in."),
     ).toBeVisible();
+    await openNavMenuIfCollapsed(page);
     await expect(page.getByRole("button", { name: /sign out/i })).toBeVisible();
     // Tokens never linger in the address bar.
     expect(page.url()).not.toContain("access_token");

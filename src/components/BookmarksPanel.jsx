@@ -1,4 +1,7 @@
+import { useEffect, useRef } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
+import Button from "./ui/Button.jsx";
+import { CONTENT_MAX_WIDTH, RADIUS } from "../lib/ui.js";
 
 const TYPE_LABELS = {
   criminal_code: "Criminal Code",
@@ -20,6 +23,28 @@ function formatDate(ts) {
   return d.toLocaleDateString("en-CA", { month: "short", day: "numeric" });
 }
 
+// Outline trash can, so "remove" doesn't look like the panel's close ×.
+function TrashIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 6h18" />
+      <path d="M8 6V4h8v2" />
+      <path d="M19 6l-1 14H6L5 6" />
+      <path d="M10 11v6M14 11v6" />
+    </svg>
+  );
+}
+
 export default function BookmarksPanel({
   bookmarks,
   removeBookmark,
@@ -27,6 +52,21 @@ export default function BookmarksPanel({
   onClose,
 }) {
   const t = useTheme();
+  const closeRef = useRef(null);
+
+  // Close on Escape
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  // Move focus into the sheet when it opens
+  useEffect(() => {
+    closeRef.current?.focus();
+  }, []);
 
   const overlayStyle = {
     position: "fixed",
@@ -42,8 +82,10 @@ export default function BookmarksPanel({
     background: t.bg,
     border: `1px solid ${t.border}`,
     borderBottom: "none",
+    borderRadius: `${RADIUS.lg}px ${RADIUS.lg}px 0 0`,
+    boxShadow: `0 -8px 32px ${t.shadowStrong}`,
     width: "100%",
-    maxWidth: 760,
+    maxWidth: CONTENT_MAX_WIDTH,
     maxHeight: "70vh",
     display: "flex",
     flexDirection: "column",
@@ -53,81 +95,51 @@ export default function BookmarksPanel({
     <div style={overlayStyle} onClick={onClose}>
       <div
         data-testid="bookmarks-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="bookmarks-panel-title"
         style={sheetStyle}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Drag handle */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "12px 0 4px",
-          }}
-        >
-          <div
-            style={{
-              width: 36,
-              height: 4,
-              background: t.border,
-              borderRadius: 2,
-            }}
-          />
-        </div>
-
         {/* Header */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "8px 24px 12px",
+            gap: 12,
+            padding: "12px 16px 12px 24px",
             borderBottom: `1px solid ${t.borderLight}`,
           }}
         >
-          <div
+          <h2
+            id="bookmarks-panel-title"
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 10,
-              letterSpacing: 3.5,
-              textTransform: "uppercase",
-              color: t.textTertiary,
+              fontSize: 16,
+              fontWeight: 600,
+              color: t.text,
+              margin: 0,
             }}
           >
             Saved Citations
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          </h2>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             {bookmarks.length > 0 && (
-              <button
-                onClick={clearBookmarks}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: t.textTertiary,
-                  letterSpacing: 1,
-                }}
-              >
+              <Button variant="danger" size="sm" onClick={clearBookmarks}>
                 Clear all
-              </button>
+              </Button>
             )}
-            <button
+            <Button
+              ref={closeRef}
+              variant="ghost"
+              size="icon"
+              aria-label="Close"
               onClick={onClose}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                fontFamily: "var(--font-body)",
-                fontSize: 18,
-                color: t.textTertiary,
-                lineHeight: 1,
-              }}
+              style={{ fontSize: 22 }}
             >
               ×
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -138,8 +150,8 @@ export default function BookmarksPanel({
               style={{
                 padding: "32px 24px",
                 fontFamily: "var(--font-display)",
-                fontSize: 15,
-                color: t.textTertiary,
+                fontSize: 14,
+                color: t.textSecondary,
                 fontStyle: "italic",
                 textAlign: "center",
               }}
@@ -154,7 +166,7 @@ export default function BookmarksPanel({
                   display: "flex",
                   alignItems: "flex-start",
                   justifyContent: "space-between",
-                  padding: "14px 24px",
+                  padding: "14px 16px 14px 24px",
                   borderBottom: `1px solid ${t.borderLight}`,
                   gap: 12,
                 }}
@@ -164,9 +176,9 @@ export default function BookmarksPanel({
                   <div
                     style={{
                       fontFamily: "var(--font-display)",
-                      fontSize: "clamp(13px, 2vw, 15px)",
+                      fontSize: 15,
                       color: t.text,
-                      fontWeight: "bold",
+                      fontWeight: 600,
                       lineHeight: 1.4,
                     }}
                   >
@@ -179,20 +191,20 @@ export default function BookmarksPanel({
                       display: "flex",
                       alignItems: "center",
                       gap: 8,
-                      marginTop: 4,
+                      marginTop: 6,
                       flexWrap: "wrap",
                     }}
                   >
                     <span
                       style={{
                         fontFamily: "var(--font-body)",
-                        fontSize: 9,
-                        letterSpacing: 1.5,
-                        textTransform: "uppercase",
+                        fontSize: 12,
+                        fontWeight: 500,
                         color: t.tagText,
                         background: t.tagBg,
-                        padding: "1px 6px",
+                        padding: "2px 8px",
                         border: `1px solid ${t.border}`,
+                        borderRadius: RADIUS.pill,
                       }}
                     >
                       {TYPE_LABELS[entry.type] || entry.type}
@@ -200,9 +212,8 @@ export default function BookmarksPanel({
                     <span
                       style={{
                         fontFamily: "var(--font-body)",
-                        fontSize: 10,
+                        fontSize: 12,
                         color: t.textTertiary,
-                        letterSpacing: 0.5,
                       }}
                     >
                       {formatDate(entry.bookmarkedAt)}
@@ -214,7 +225,7 @@ export default function BookmarksPanel({
                     <div
                       style={{
                         fontFamily: "var(--font-body)",
-                        fontSize: 12,
+                        fontSize: 14,
                         color: t.textSecondary,
                         lineHeight: 1.5,
                         marginTop: 6,
@@ -230,50 +241,30 @@ export default function BookmarksPanel({
 
                   {/* CanLII link for case law */}
                   {entry.type === "case_law" && (
-                    <a
-                      href={`https://www.canlii.org/en/#search/text=${encodeURIComponent(entry.citation)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 4,
-                        fontFamily: "var(--font-body)",
-                        fontSize: 11,
-                        color: t.textTertiary,
-                        textDecoration: "none",
-                        marginTop: 6,
-                        letterSpacing: 0.5,
-                      }}
-                    >
-                      Search CanLII ↗
-                    </a>
+                    <div style={{ marginTop: 8 }}>
+                      <Button
+                        variant="link"
+                        size="sm"
+                        href={`https://www.canlii.org/en/#search/text=${encodeURIComponent(entry.citation)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Search CanLII ↗
+                      </Button>
+                    </div>
                   )}
                 </div>
 
                 {/* Remove button */}
-                <button
-                  onClick={() => removeBookmark(entry.id)}
+                <Button
+                  variant="ghost"
+                  size="icon"
                   aria-label="Remove bookmark"
-                  style={{
-                    flexShrink: 0,
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "4px 8px",
-                    fontFamily: "var(--font-body)",
-                    fontSize: 18,
-                    lineHeight: 1,
-                    color: t.textTertiary,
-                    minWidth: 36,
-                    minHeight: 36,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  onClick={() => removeBookmark(entry.id)}
+                  style={{ flexShrink: 0 }}
                 >
-                  ×
-                </button>
+                  <TrashIcon />
+                </Button>
               </div>
             ))
           )}

@@ -2,38 +2,40 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { friendlyAuthError } from "../lib/authErrors.js";
+import { RADIUS } from "../lib/ui.js";
+import Button from "./ui/Button.jsx";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD = 8;
 
 const COPY = {
   signin: {
-    heading: "Sign In",
-    submit: "Sign In",
+    heading: "Sign in",
+    submit: "Sign in",
     intro:
       "Optional. An account keeps your bookmarks and search history in sync across devices.",
   },
   signup: {
-    heading: "Create Account",
-    submit: "Create Account",
+    heading: "Create account",
+    submit: "Create account",
     intro:
       "Optional. An account keeps your bookmarks and search history in sync across devices.",
   },
   magic: {
-    heading: "Email Me a Link",
-    submit: "Send Sign-In Link",
+    heading: "Email me a link",
+    submit: "Send sign-in link",
     intro:
       "No password needed. We'll email you a link that signs you in, and sets up your account if you're new.",
   },
   forgot: {
-    heading: "Reset Password",
-    submit: "Send Reset Link",
+    heading: "Reset password",
+    submit: "Send reset link",
     intro:
       "Enter your account email and we'll send you a link to choose a new password.",
   },
   reset: {
-    heading: "Set New Password",
-    submit: "Update Password",
+    heading: "Set new password",
+    submit: "Update password",
     intro: "Choose a new password for your account.",
   },
 };
@@ -136,9 +138,9 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   const isNewPassword = mode === "signup" || mode === "reset";
   const copy = COPY[mode] || COPY.signin;
   const heading = passwordUpdated
-    ? "Password Updated"
+    ? "Password updated"
     : sent
-      ? "Check Your Email"
+      ? "Check your email"
       : copy.heading;
   const showOAuth =
     authMethods.google && !sent && (mode === "signin" || mode === "signup");
@@ -299,114 +301,58 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   const labelStyle = {
     display: "block",
     fontFamily: "var(--font-body)",
-    fontSize: 10,
-    letterSpacing: "0.18em",
-    textTransform: "uppercase",
-    color: t.textTertiary,
+    fontSize: 13,
+    fontWeight: 600,
+    color: t.textSecondary,
     marginBottom: 6,
   };
 
   const inputStyle = {
     width: "100%",
-    background: "transparent",
-    border: "none",
-    borderBottom: `1px solid ${t.border}`,
-    padding: "8px 0",
+    minHeight: 44,
+    background: t.bgAlt,
+    border: `1px solid ${t.border}`,
+    borderRadius: RADIUS.md,
+    padding: "10px 12px",
     fontFamily: "var(--font-body)",
     fontSize: 16, // 16px stops iOS Safari zooming the page on focus
     color: t.text,
-    outline: "none",
     boxSizing: "border-box",
     transition: "border-color 0.2s",
   };
 
   const focusInput = (e) => {
-    e.target.style.borderBottomColor = t.accent;
+    e.target.style.borderColor = t.accent;
   };
   const blurInput = (e) => {
-    e.target.style.borderBottomColor = t.border;
-  };
-
-  const linkStyle = {
-    background: "none",
-    border: "none",
-    padding: "4px 0",
-    cursor: "pointer",
-    fontFamily: "var(--font-body)",
-    fontSize: 12,
-    letterSpacing: "0.04em",
-    color: t.textTertiary,
-    transition: "color 0.15s",
-  };
-
-  const linkHover = (e) => {
-    e.currentTarget.style.color = t.text;
-  };
-  const linkLeave = (e) => {
-    e.currentTarget.style.color = t.textTertiary;
-  };
-
-  const primaryButtonStyle = {
-    width: "100%",
-    background: "none",
-    border: `1px solid ${submitting ? t.border : t.accentOlive}`,
-    color: submitting ? t.textFaint : t.accentOlive,
-    padding: "12px 28px",
-    fontFamily: "var(--font-body)",
-    fontSize: 11,
-    letterSpacing: "0.22em",
-    textTransform: "uppercase",
-    cursor: submitting ? "wait" : "pointer",
-    transition: "border-color 0.2s, color 0.2s",
-  };
-  const primaryHover = (e) => {
-    if (submitting) return;
-    e.currentTarget.style.borderColor = t.text;
-    e.currentTarget.style.color = t.text;
-  };
-  const primaryLeave = (e) => {
-    if (submitting) return;
-    e.currentTarget.style.borderColor = t.accentOlive;
-    e.currentTarget.style.color = t.accentOlive;
-  };
-
-  const secondaryButtonStyle = {
-    ...primaryButtonStyle,
-    border: `1px solid ${t.border}`,
-    color: submitting ? t.textFaint : t.text,
-  };
-
-  const inlineActionStyle = {
-    background: "none",
-    border: "none",
-    padding: 0,
-    marginLeft: 6,
-    cursor: "pointer",
-    fontFamily: "var(--font-body)",
-    fontSize: 12,
-    color: t.text,
-    textDecoration: "underline",
-    textUnderlineOffset: 3,
+    e.target.style.borderColor = t.border;
   };
 
   const introStyle = {
     fontFamily: "var(--font-body)",
-    fontSize: 12,
+    fontSize: 14,
     lineHeight: 1.6,
     color: t.textSecondary,
     margin: "0 0 20px",
   };
 
+  const calloutStyle = (tone) => ({
+    marginBottom: 18,
+    padding: "10px 12px",
+    background: t.bgAlt,
+    border: `1px solid ${t.border}`,
+    borderLeft: `3px solid ${tone}`,
+    borderRadius: RADIUS.md,
+    fontFamily: "var(--font-body)",
+    fontSize: 13,
+    lineHeight: 1.6,
+    color: tone,
+  });
+
   const bottomLink = (label, onClick) => (
-    <button
-      type="button"
-      onClick={onClick}
-      onMouseEnter={linkHover}
-      onMouseLeave={linkLeave}
-      style={linkStyle}
-    >
+    <Button variant="link" size="sm" onClick={onClick}>
       {label}
-    </button>
+    </Button>
   );
 
   return (
@@ -429,7 +375,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
         position: "fixed",
         inset: 0,
         zIndex: 300,
-        background: "rgba(0,0,0,0.45)",
+        background: "rgba(0,0,0,0.55)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -443,6 +389,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
         style={{
           background: t.bg,
           border: `1px solid ${t.border}`,
+          borderRadius: RADIUS.lg,
           boxShadow: `0 16px 48px ${t.shadowStrong}`,
           width: "100%",
           maxWidth: 400,
@@ -450,45 +397,27 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
           margin: "auto",
         }}
       >
-        {/* Accent top rule — mirrors the site header */}
-        <div style={{ height: 2, background: t.accent }} />
-
-        <div style={{ padding: "26px 28px 28px" }}>
-          <button
-            type="button"
+        <div style={{ padding: "24px 28px 28px" }}>
+          <Button
+            variant="ghost"
+            size="icon"
             aria-label="Close"
             onClick={onClose}
-            onMouseEnter={linkHover}
-            onMouseLeave={linkLeave}
-            style={{
-              position: "absolute",
-              top: 10,
-              right: 10,
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: t.textTertiary,
-              fontSize: 20,
-              lineHeight: 1,
-              width: 36,
-              height: 36,
-              transition: "color 0.15s",
-            }}
+            style={{ position: "absolute", top: 12, right: 12 }}
           >
             ×
-          </button>
+          </Button>
 
           <div
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 9,
-              letterSpacing: "0.38em",
-              textTransform: "uppercase",
+              fontSize: 12,
+              fontWeight: 600,
               color: t.textTertiary,
-              marginBottom: 10,
+              marginBottom: 6,
             }}
           >
-            CaseDive Account
+            CaseDive account
           </div>
 
           <h2
@@ -497,12 +426,11 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
             tabIndex={-1}
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: 26,
-              fontWeight: 400,
-              fontStyle: "italic",
-              letterSpacing: "-0.3px",
+              fontSize: 24,
+              fontWeight: 600,
               color: t.text,
-              margin: "0 0 12px",
+              margin: "0 0 10px",
+              // Programmatic focus target only (tabIndex -1), never tabbed to
               outline: "none",
             }}
           >
@@ -512,45 +440,24 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
           {!sent && !passwordUpdated && <p style={introStyle}>{copy.intro}</p>}
 
           {error && (
-            <div
-              role="alert"
-              style={{
-                marginBottom: 18,
-                paddingLeft: 10,
-                borderLeft: `2px solid ${t.accentRed}`,
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                lineHeight: 1.6,
-                color: t.accentRed,
-              }}
-            >
+            <div role="alert" style={calloutStyle(t.accentRed)}>
               {error.message}
               {actionAvailable(error.action) && (
-                <button
-                  type="button"
+                <Button
+                  variant="link"
+                  size="sm"
                   onClick={() => runAction(error.action)}
                   disabled={submitting}
-                  style={inlineActionStyle}
+                  style={{ marginLeft: 6, textDecoration: "underline" }}
                 >
                   {ACTION_LABELS[error.action]}
-                </button>
+                </Button>
               )}
             </div>
           )}
 
           {(sent || passwordUpdated || notice) && (
-            <div
-              role="status"
-              style={{
-                marginBottom: 18,
-                paddingLeft: 10,
-                borderLeft: `2px solid ${t.accentGreen}`,
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                lineHeight: 1.6,
-                color: t.accentGreen,
-              }}
-            >
+            <div role="status" style={calloutStyle(t.accentGreen)}>
               {passwordUpdated
                 ? "Password updated. You're signed in with your new password."
                 : sent
@@ -562,37 +469,37 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
           )}
 
           {passwordUpdated ? (
-            <button
+            <Button
               ref={continueRef}
-              type="button"
+              variant="primary"
+              size="md"
+              fullWidth
               onClick={onClose}
-              onMouseEnter={primaryHover}
-              onMouseLeave={primaryLeave}
-              style={primaryButtonStyle}
             >
               Continue
-            </button>
+            </Button>
           ) : sent ? (
             <>
               <p style={introStyle}>
                 Nothing after a couple of minutes? Check your spam or promotions
                 folder, then resend.
               </p>
-              <button
-                type="button"
+              <Button
+                variant="secondary"
+                size="md"
+                fullWidth
                 onClick={resend}
                 disabled={submitting}
-                style={secondaryButtonStyle}
               >
-                {submitting ? "Sending…" : "Resend Email"}
-              </button>
+                {submitting ? "Sending…" : "Resend email"}
+              </Button>
               <div
                 style={{
                   marginTop: 16,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: 4,
+                  gap: 10,
                 }}
               >
                 {bottomLink("Use a different email", () => {
@@ -604,7 +511,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                   bottomLink(
                     sent.kind === "signup"
                       ? "Already confirmed? Sign in"
-                      : "Back to Sign In",
+                      : "Back to sign in",
                     () => switchMode("signin"),
                   )}
               </div>
@@ -613,14 +520,15 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
             <>
               {showOAuth && (
                 <>
-                  <button
-                    type="button"
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    fullWidth
                     onClick={googleSignIn}
                     disabled={submitting}
-                    style={secondaryButtonStyle}
                   >
                     Continue with Google
-                  </button>
+                  </Button>
                   <div
                     aria-hidden="true"
                     style={{
@@ -629,9 +537,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                       gap: 12,
                       margin: "18px 0",
                       fontFamily: "var(--font-body)",
-                      fontSize: 10,
-                      letterSpacing: "0.2em",
-                      textTransform: "uppercase",
+                      fontSize: 12,
                       color: t.textTertiary,
                     }}
                   >
@@ -648,7 +554,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
 
               <form onSubmit={handleSubmit} noValidate>
                 {needsEmail && (
-                  <div style={{ marginBottom: 18 }}>
+                  <div style={{ marginBottom: 16 }}>
                     <label htmlFor="auth-email" style={labelStyle}>
                       Email
                     </label>
@@ -672,7 +578,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                 )}
 
                 {needsPassword && (
-                  <div style={{ marginBottom: 24 }}>
+                  <div style={{ marginBottom: 22 }}>
                     <label htmlFor="auth-password" style={labelStyle}>
                       {mode === "reset" ? "New password" : "Password"}
                     </label>
@@ -701,44 +607,36 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                         onChange={(e) => setPassword(e.target.value)}
                         onFocus={focusInput}
                         onBlur={blurInput}
-                        style={{ ...inputStyle, paddingRight: 52 }}
+                        style={{ ...inputStyle, paddingRight: 72 }}
                       />
-                      <button
-                        type="button"
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => setShowPassword((v) => !v)}
                         aria-label={
                           showPassword ? "Hide password" : "Show password"
                         }
-                        aria-pressed={showPassword}
-                        onMouseEnter={linkHover}
-                        onMouseLeave={linkLeave}
+                        pressed={showPassword}
                         style={{
-                          ...linkStyle,
                           position: "absolute",
-                          right: 0,
+                          right: 6,
                           top: "50%",
                           transform: "translateY(-50%)",
-                          fontSize: 10,
-                          letterSpacing: "0.16em",
-                          textTransform: "uppercase",
-                          padding: "8px 0 8px 8px",
                         }}
                       >
                         {showPassword ? "Hide" : "Show"}
-                      </button>
+                      </Button>
                     </div>
                     {mode === "signin" && (
                       // After the field in the DOM so Tab goes email → password.
-                      <div style={{ textAlign: "right", marginTop: 6 }}>
-                        <button
-                          type="button"
+                      <div style={{ textAlign: "right", marginTop: 8 }}>
+                        <Button
+                          variant="link"
+                          size="sm"
                           onClick={() => switchMode("forgot")}
-                          onMouseEnter={linkHover}
-                          onMouseLeave={linkLeave}
-                          style={{ ...linkStyle, fontSize: 11 }}
                         >
                           Forgot password?
-                        </button>
+                        </Button>
                       </div>
                     )}
                     {isNewPassword && (
@@ -747,7 +645,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                         style={{
                           marginTop: 6,
                           fontFamily: "var(--font-body)",
-                          fontSize: 11,
+                          fontSize: 12,
                           color: t.textTertiary,
                         }}
                       >
@@ -760,15 +658,16 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
 
                 {!needsPassword && <div style={{ marginBottom: 6 }} />}
 
-                <button
+                <Button
                   type="submit"
+                  variant="primary"
+                  size="md"
+                  fullWidth
                   disabled={submitting}
-                  style={primaryButtonStyle}
-                  onMouseEnter={primaryHover}
-                  onMouseLeave={primaryLeave}
+                  style={submitting ? { cursor: "wait" } : undefined}
                 >
                   {submitting ? "Please wait…" : copy.submit}
-                </button>
+                </Button>
               </form>
 
               <div
@@ -777,7 +676,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: 4,
+                  gap: 10,
                 }}
               >
                 {mode === "signin" &&
@@ -798,7 +697,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                     switchMode("signin"),
                   )}
                 {mode === "forgot" &&
-                  bottomLink("Back to Sign In", () => switchMode("signin"))}
+                  bottomLink("Back to sign in", () => switchMode("signin"))}
               </div>
             </>
           )}

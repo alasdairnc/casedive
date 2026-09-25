@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { isValidUrl } from "../lib/validateUrl.js";
+import { useMediaQuery } from "../hooks/useMediaQuery.js";
+import { RADIUS } from "../lib/ui.js";
+import Button from "./ui/Button.jsx";
 
 function Skeleton({ width = "100%", height = 14, style = {} }) {
   const t = useTheme();
@@ -27,9 +30,8 @@ function SummarySection({ label, children, t, isQuote = false }) {
       <div
         style={{
           fontFamily: "var(--font-body)",
-          fontSize: 10,
-          letterSpacing: 2.5,
-          textTransform: "uppercase",
+          fontSize: 12,
+          fontWeight: 600,
           color: t.textTertiary,
           marginBottom: 6,
         }}
@@ -43,7 +45,7 @@ function SummarySection({ label, children, t, isQuote = false }) {
             paddingLeft: 14,
             borderLeft: `3px solid ${t.accent}`,
             fontFamily: "var(--font-display)",
-            fontSize: "clamp(14px, 2.1vw, 15px)",
+            fontSize: 15,
             color: t.textSecondary,
             lineHeight: 1.7,
             fontStyle: "italic",
@@ -55,7 +57,7 @@ function SummarySection({ label, children, t, isQuote = false }) {
         <div
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 14,
             color: t.textSecondary,
             lineHeight: 1.65,
           }}
@@ -81,11 +83,32 @@ function LoadingSkeleton({ t }) {
   );
 }
 
+function CloseIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      aria-hidden="true"
+      focusable="false"
+      style={{ display: "block" }}
+    >
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </svg>
+  );
+}
+
 // Module-level cache: citation string → normalized summary object
 const summaryCache = new Map();
 
 export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
   const t = useTheme();
+  const titleId = useId();
+  const closeRef = useRef(null);
   const [summary, setSummary] = useState(
     () => summaryCache.get(item.citation) || null,
   );
@@ -100,6 +123,13 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
+
+  // Move focus into the dialog on open; hand it back to the opener on close
+  useEffect(() => {
+    const opener = document.activeElement;
+    closeRef.current?.focus();
+    return () => opener?.focus?.();
+  }, []);
 
   // Fetch summary (skip if already in module-level cache)
   useEffect(() => {
@@ -147,15 +177,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
   const viewUrl = isValidUrl(canliiUrl) ? canliiUrl : null;
 
   // Mobile: full-width bottom sheet; desktop: centered card
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== "undefined" && window.innerWidth < 640,
-  );
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 639px)");
-    const handler = (e) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
+  const isMobile = useMediaQuery("(max-width: 639px)");
 
   return createPortal(
     <div
@@ -164,7 +186,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
         position: "fixed",
         inset: 0,
         zIndex: 50,
-        background: "rgba(0,0,0,0.55)",
+        background: t.shadow,
         backdropFilter: "blur(3px)",
         display: "flex",
         alignItems: isMobile ? "flex-end" : "center",
@@ -173,23 +195,27 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
       }}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: t.bg,
+          background: t.bgAlt,
           border: `1px solid ${t.border}`,
+          boxShadow: `0 24px 64px ${t.shadowStrong}`,
           width: "100%",
           maxWidth: isMobile ? "100%" : 640,
           maxHeight: isMobile ? "88vh" : "82vh",
           display: "flex",
           flexDirection: "column",
-          borderRadius: isMobile ? "12px 12px 0 0" : 4,
+          borderRadius: isMobile ? "12px 12px 0 0" : RADIUS.lg,
           overflow: "hidden",
         }}
       >
         {/* Header */}
         <div
           style={{
-            padding: "18px 20px 14px",
+            padding: "16px 16px 14px 20px",
             borderBottom: `1px solid ${t.border}`,
             display: "flex",
             justifyContent: "space-between",
@@ -198,25 +224,26 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
             flexShrink: 0,
           }}
         >
-          <div>
-            <div
+          <div style={{ minWidth: 0, paddingTop: 4 }}>
+            <h2
+              id={titleId}
               style={{
+                margin: 0,
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(14px, 2.2vw, 16px)",
+                fontSize: 17,
                 color: t.text,
-                fontWeight: "bold",
+                fontWeight: 600,
                 lineHeight: 1.4,
               }}
             >
               {item.citation}
-            </div>
+            </h2>
             {(item.court || item.year) && (
               <div
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: 11,
+                  fontSize: 12,
                   color: t.textTertiary,
-                  letterSpacing: 0.8,
                   marginTop: 4,
                 }}
               >
@@ -224,26 +251,21 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
               </div>
             )}
           </div>
-          <button
+          <Button
+            ref={closeRef}
+            variant="ghost"
+            size="icon"
             onClick={onClose}
             aria-label="Close"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: t.textTertiary,
-              fontSize: 20,
-              lineHeight: 1,
-              padding: "2px 4px",
-              flexShrink: 0,
-            }}
+            style={{ flexShrink: 0 }}
           >
-            ×
-          </button>
+            <CloseIcon />
+          </Button>
         </div>
 
         {/* Body */}
         <div
+          aria-busy={loading}
           style={{
             padding: "20px 20px 4px",
             overflowY: "auto",
@@ -253,10 +275,11 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
           {loading && <LoadingSkeleton t={t} />}
           {error && (
             <div
+              role="alert"
               style={{
                 fontFamily: "var(--font-body)",
-                fontSize: 13,
-                color: t.accentRed || "#c0392b",
+                fontSize: 14,
+                color: t.accentRed,
                 padding: "12px 0",
               }}
             >
@@ -271,11 +294,11 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
               <SummarySection label="Held" t={t}>
                 {summary.held}
               </SummarySection>
-              <SummarySection label="Ratio Decidendi" t={t}>
+              <SummarySection label="Ratio decidendi" t={t}>
                 {summary.ratio}
               </SummarySection>
               {summary.keyQuote && (
-                <SummarySection label="Key Quote" t={t} isQuote>
+                <SummarySection label="Key quote" t={t} isQuote>
                   {summary.keyQuote}
                 </SummarySection>
               )}
@@ -289,7 +312,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
         {/* Footer */}
         <div
           style={{
-            padding: "14px 20px",
+            padding: "12px 20px",
             borderTop: `1px solid ${t.border}`,
             display: "flex",
             justifyContent: "space-between",
@@ -299,38 +322,21 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
           }}
         >
           {viewUrl ? (
-            <a
+            <Button
+              variant="link"
+              size="sm"
               href={viewUrl}
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                color: t.accentGreen,
-                textDecoration: "none",
-                letterSpacing: 0.5,
-              }}
             >
               View on CanLII ↗
-            </a>
+            </Button>
           ) : (
             <span />
           )}
-          <button
-            onClick={onClose}
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: t.textSecondary,
-              background: "none",
-              border: `1px solid ${t.border}`,
-              padding: "6px 16px",
-              cursor: "pointer",
-              letterSpacing: 0.5,
-            }}
-          >
+          <Button variant="secondary" size="sm" onClick={onClose}>
             Close
-          </button>
+          </Button>
         </div>
       </div>
     </div>,

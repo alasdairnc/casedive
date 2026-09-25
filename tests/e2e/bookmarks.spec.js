@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openNavMenuIfCollapsed } from "./helpers/nav.js";
 
 const MOCK_ANALYZE_RESPONSE = {
   summary:
@@ -96,7 +97,8 @@ test.describe("Bookmarks", () => {
   }) => {
     await runSearch(page);
     await page.locator('[data-testid="bookmark-add"]').first().click();
-    // Badge should show 1
+    // Badge should show 1 (inside the Menu panel on phones)
+    await openNavMenuIfCollapsed(page);
     await expect(page.locator("text=1").first()).toBeVisible();
   });
 
@@ -106,6 +108,7 @@ test.describe("Bookmarks", () => {
     await runSearch(page);
     await page.locator('[data-testid="bookmark-add"]').first().click();
     // Open bookmarks panel via header button
+    await openNavMenuIfCollapsed(page);
     await page.locator("button", { hasText: /saved/i }).click();
     await expect(page.locator("text=s. 348").first()).toBeVisible();
   });
@@ -113,6 +116,7 @@ test.describe("Bookmarks", () => {
   test("removing bookmark from panel updates the list", async ({ page }) => {
     await runSearch(page);
     await page.locator('[data-testid="bookmark-add"]').first().click();
+    await openNavMenuIfCollapsed(page);
     await page.locator("button", { hasText: /saved/i }).click();
     const panel = page.locator('[data-testid="bookmarks-panel"]');
     await expect(panel).toBeVisible();

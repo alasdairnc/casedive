@@ -18,7 +18,10 @@ export const themes = {
     cardBg: "#0F1A30",
     inputBg: "transparent",
     buttonBg: "#2DD4BF",
+    buttonBgHover: "#5EEAD4",
     buttonText: "#06231F",
+    // Teal at ~15% over bg, as a solid colour (no rgba math on tokens)
+    accentSoft: "#102F38",
     shadow: "rgba(0, 0, 0, 0.5)",
     shadowStrong: "rgba(0, 0, 0, 0.75)",
   },

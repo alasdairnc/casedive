@@ -152,7 +152,7 @@ describe("AuthModal component", () => {
   it("shows error when submitting empty email", async () => {
     const AuthModal = await getModal();
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signin" />);
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(/email/i);
     });
@@ -163,7 +163,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signin" />);
     fillEmail("not-an-email");
     fillPassword("SecurePass1!");
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(/valid email/i);
     });
@@ -174,7 +174,7 @@ describe("AuthModal component", () => {
     const AuthModal = await getModal();
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signin" />);
     fillEmail("a@b.com");
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(
         /enter your password/i,
@@ -184,7 +184,7 @@ describe("AuthModal component", () => {
 
     // An older, shorter password still reaches Supabase.
     fillPassword("abc123");
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledWith("a@b.com", "abc123");
     });
@@ -195,7 +195,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signup" />);
     fillEmail("a@b.com");
     fillPassword("abc");
-    submit("Create Account");
+    submit("Create account");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(
         /at least 8 characters/i,
@@ -224,7 +224,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signin" />);
     fillEmail("  a@b.com ");
     fillPassword("SecurePass1!");
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledWith("a@b.com", "SecurePass1!");
     });
@@ -236,7 +236,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={onClose} mode="signin" />);
     fillEmail("a@b.com");
     fillPassword("SecurePass1!");
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(onClose).toHaveBeenCalled();
     });
@@ -248,7 +248,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signin" />);
     fillEmail("a@b.com");
     fillPassword("wrongpass1!");
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(
         /incorrect email or password/i,
@@ -269,7 +269,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signin" />);
     fillEmail("new@b.com");
     fillPassword("SecurePass1!");
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(
         /haven't confirmed your email/i,
@@ -292,14 +292,14 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signin" />);
     fillEmail("a@b.com");
     fillPassword("SecurePass1!");
-    submit("Sign In");
+    submit("Sign in");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(
         /couldn't reach the server/i,
       );
     });
     // The button is usable again.
-    expect(screen.getByRole("button", { name: "Sign In" }).disabled).toBe(
+    expect(screen.getByRole("button", { name: "Sign in" }).disabled).toBe(
       false,
     );
   });
@@ -376,7 +376,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={onClose} mode="signup" />);
     fillEmail("new@b.com");
     fillPassword("SecurePass1!");
-    submit("Create Account");
+    submit("Create account");
     await waitFor(() => {
       expect(
         screen.getByRole("heading", { name: /check your email/i }),
@@ -402,7 +402,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signup" />);
     fillEmail("typo@b.con");
     fillPassword("SecurePass1!");
-    submit("Create Account");
+    submit("Create account");
     await waitFor(() => screen.getByRole("heading", { name: /check your/i }));
     fireEvent.click(
       screen.getByRole("button", { name: /use a different email/i }),
@@ -422,7 +422,7 @@ describe("AuthModal component", () => {
     );
     fillEmail("new@b.com");
     fillPassword("SecurePass1!");
-    submit("Create Account");
+    submit("Create account");
     await waitFor(() => screen.getByRole("heading", { name: /check your/i }));
     expect(onClose).not.toHaveBeenCalled();
 
@@ -438,7 +438,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={onClose} mode="signup" />);
     fillEmail("new@b.com");
     fillPassword("SecurePass1!");
-    submit("Create Account");
+    submit("Create account");
     await waitFor(() => {
       expect(onClose).toHaveBeenCalled();
     });
@@ -453,7 +453,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signup" />);
     fillEmail("taken@b.com");
     fillPassword("SecurePass1!");
-    submit("Create Account");
+    submit("Create account");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(
         /already an account/i,
@@ -473,7 +473,7 @@ describe("AuthModal component", () => {
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signup" />);
     fillEmail("new@b.com");
     fillPassword("SecurePass1!");
-    submit("Create Account");
+    submit("Create account");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(
         /couldn't send the email/i,
@@ -506,7 +506,7 @@ describe("AuthModal component", () => {
     expect(screen.getByLabelText("Email").value).toBe("a@b.com");
     expect(screen.queryByLabelText("Password")).toBeNull();
 
-    submit("Send Sign-In Link");
+    submit("Send sign-in link");
     await waitFor(() => {
       expect(mockSignInWithMagicLink).toHaveBeenCalledWith("a@b.com");
       expect(screen.getByRole("status").textContent).toMatch(
@@ -530,7 +530,7 @@ describe("AuthModal component", () => {
     const AuthModal = await getModal();
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="magic" />);
     fillEmail("a@b.com");
-    submit("Send Sign-In Link");
+    submit("Send sign-in link");
     await waitFor(() => screen.getByRole("heading", { name: /check your/i }));
     fireEvent.click(screen.getByRole("button", { name: /resend email/i }));
     await waitFor(() => {
@@ -589,7 +589,7 @@ describe("AuthModal component", () => {
     expect(screen.queryByLabelText("Password")).toBeNull();
 
     fillEmail("a@b.com");
-    submit("Send Reset Link");
+    submit("Send reset link");
     await waitFor(() => {
       expect(mockResetPassword).toHaveBeenCalledWith("a@b.com");
       expect(screen.getByRole("status").textContent).toMatch(/reset link/i);
@@ -617,7 +617,7 @@ describe("AuthModal component", () => {
     expect(screen.queryByLabelText("Email")).toBeNull();
 
     fillPassword("BrandNewPass1!", "New password");
-    submit("Update Password");
+    submit("Update password");
     await waitFor(() => {
       expect(mockUpdatePassword).toHaveBeenCalledWith("BrandNewPass1!");
       expect(screen.getByRole("status").textContent).toMatch(
@@ -635,7 +635,7 @@ describe("AuthModal component", () => {
     const AuthModal = await getModal();
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="reset" />);
     fillPassword("BrandNewPass1!", "New password");
-    submit("Update Password");
+    submit("Update password");
     await waitFor(() => {
       expect(screen.getByRole("alert").textContent).toMatch(
         /reset link has expired/i,
