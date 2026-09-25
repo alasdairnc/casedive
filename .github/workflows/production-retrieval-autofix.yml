@@ -1,8 +1,9 @@
 name: Production Retrieval Auto-Fix
 
+# Manual-only since 2026-09-25: the retrieval-health store had 57 events all
+# time, so a daily threshold-loosening PR was noise. Re-add a schedule when there
+# is real traffic to learn from.
 on:
-  schedule:
-    - cron: "15 7 * * *"
   workflow_dispatch:
     inputs:
       force_run:

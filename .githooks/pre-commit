@@ -11,7 +11,8 @@ gitleaks git . --pre-commit --staged --redact --no-banner
 
 # Lint staged markdown in actively-authored dirs (non-blocking if tool absent).
 STAGED_MD=$(git diff --cached --name-only --diff-filter=ACM \
-  | grep -E '^(reports|artifacts|docs/superpowers)/.*\.md$' || true)
+  | grep -E '^(reports|artifacts)/.*\.md$|^docs/[^/]+\.md$' \
+  | grep -vE '^docs/(monetization-plan|billing-setup-walkthrough)\.md$' || true)
 if [ -n "$STAGED_MD" ]; then
   if command -v npx >/dev/null 2>&1 && [ -d node_modules/markdownlint-cli2 ]; then
     echo "pre-commit: linting staged markdown..."

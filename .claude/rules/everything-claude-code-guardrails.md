@@ -28,8 +28,7 @@ paths: "**/*"
 ## GIT
 
 - Conventional commits: `feat:`, `fix:`, `test:`, `docs:`, `chore:`
-- Never commit without running `/verify` first
-- Never `git push` without running `pre-push-checklist` agent
+- Never commit without running `/verify` first; add `e2e` when `src/`, `api/` or `tests/e2e/` changed
 
 ## DATA FILES
 

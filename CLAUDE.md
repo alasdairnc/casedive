@@ -15,10 +15,6 @@ AI-powered Canadian legal research tool. Stack: React 18 + Vite, Vercel serverle
 - Pin major version upgrades; do not auto-bump
 - Verify build after any dependency change
 
-## Active Dev Context
-
-Run `npm run security:scan` before any pre-push check.
-
 ## Commands
 
 **Setup (new machine, macOS/Windows/Linux):** `npm install && npm run setup` — see `docs/local-setup.md`.
@@ -31,7 +27,7 @@ Run `npm run security:scan` before any pre-push check.
 
 **Caselaw curation:** `npm run improve:caselaw` (propose-only relevance loop, dated digest), `npm run expand:caselaw` (propose-only corpus expansion), `npm run caselaw:curate` (both in sequence)
 
-**Docs authoring:** `npm run docs:preview` (live-reload preview of docs/reports), `npm run docs:build -- <file.md>` (md → `artifacts/html/`), `npm run docs:lint` (markdownlint over reports + docs/superpowers). Generate digests with the `/weekly-report` skill.
+**Docs authoring:** `npm run docs:preview` (live-reload preview of docs/reports), `npm run docs:build -- <file.md>` (md → `artifacts/html/`), `npm run docs:lint` (markdownlint over reports + top-level docs). Generate digests with the `/weekly-report` skill.
 
 ## Memory & Session
 
@@ -56,7 +52,7 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - `criminalCodeData.js` is ~390KB (import `criminalCodeParts.js` for parts list)
 - Redis falls back to in-memory in dev
 - CanLII API key optional; Sentry no-ops if unset
-- PostToolUse hooks: use `$CLAUDE_TOOL_INPUT_FILE_PATH` env var (shell hooks) or `data.get('tool_input', {}).get('file_path', '')` from stdin (Python hooks) — both patterns exist in `.claude/hooks/`
+- Hooks are Node scripts in `.claude/hooks/*.mjs` reading the JSON payload from stdin (`tool_input.file_path` / `tool_input.command`); exit 2 blocks the tool call. No python3 or sh dependency.
 - `node --check` cannot parse JSX — scope JS syntax checks to `.js` only, never `.jsx`
 - All Redis cache TTLs are 7 days (`604800s`). Changes to filter logic or landmark data won't be visible to cached users until TTL expires — manually purge affected keys in Upstash if a hotfix needs to take effect immediately.
 - context7 MCP is active via global plugin; `.claude/mcp.json` entry is for team/project sharing — don't add it twice
@@ -86,7 +82,9 @@ Billing (Stripe checkout/portal/webhook) was **parked on 2026-09-25**: endpoints
 - `docs/local-setup.md` (macOS & Windows local dev setup)
 - `docs/architecture.md`, `docs/design-system.md`, `docs/security.md`
 - `docs/filtering/FILTER_TUNING.md`, `docs/filtering/FILTER_TUNING_QUICKSTART.md`
-- `docs/operations/` (runbooks, snapshots, performance plan, audit log)
+- `docs/auth-setup.md` (Supabase SMTP, redirect URLs, Google sign-in checklist)
+- `docs/operations/PERFORMANCE_PLAN.md`; audit history in `.claude/skills/casedive-audit/AUDIT_LOG.md`
+- `docs/archive/` (frozen April–June plans and snapshots, reference only)
 - `artifacts/` (generated outputs, including `filter-quality-report.html`)
 
 ## Advisor Checkpoints
@@ -96,24 +94,34 @@ Call `advisor()` (no parameters — forwards full context to a stronger reviewer
 - **New API endpoint:** after `api-invariant-reviewer` passes, before writing business logic
 - **Retrieval/filter changes:** before editing any `_filters.js`, `_filterScoring.js`, `_filterConfig.js`, `_scenarioClassification.js`, or `_retrievalThresholds.js` — retrieval regressions are hard to spot inline
 - **Security-touching changes:** before any change to auth, CORS, rate limiting, or input validation
-- **Pre-push on high-effort tasks:** before `pre-push-checklist`, if the branch touches 4+ files or changes core logic
+- **Pre-push on high-effort tasks:** before `/verify`, if the branch touches 4+ files or changes core logic
 - **Stuck:** after 2 consecutive tool failures, before changing approach
 
-## Agent Skills & Subagents
+## Skills, Commands & Subagents
 
-Auto-loaded from `.claude/skills/` (e.g., `casedive-audit`, `new-api-endpoint`).
+Consolidated 2026-09-25 from 27 pieces to 13. Everything here is referenced by a hook, a rule, a workflow or the roadmap; if you add one, add its reference too.
 
-- `api-invariant-reviewer`: Checks `api/*.js` for rate limiting, input validation, security headers
-- `caching-reviewer`: Checks Redis caching invariants on endpoints making Anthropic/CanLII calls
-- `legal-data-validator`: Validates schema of legal data files
-- `pre-push-checklist`: Chains build + security scan + E2E before any push
-- `retrieval-quality-reviewer`: Reviews filter scoring/threshold consistency after `_filter*`/`_scenarioClassification`/`_retrievalThresholds` changes
-- `retrieval-regression-detector`: Run when `_filters.js`, `_filterScoring.js`, `_filterConfig.js`, `_scenarioClassification.js`, or `_retrievalThresholds.js` change
-- `test-selector`: Determines which test suites to run based on changed files
-- `caselaw-curator` (`.claude/agents/caselaw-curator.md`): Propose-only caselaw relevance + expansion loop; never edits corpus/filter/threshold files
-- `/improve-caselaw` (`.claude/commands/improve-caselaw.md`): Runs the propose-only improvement loop and interprets the digest
+**Skills** (`.claude/skills/`, invoke as `/name`)
 
-**Full skills list:** `casedive-audit`, `new-api-endpoint`, `e2e`, `e2e-verify`, `feature-factory`, `security-audit`, `caching-audit`, `verify-before-push`, `resume-checkpoint`, `filter-tune`, `ops-checklist`, `weekly-report`
+- `verify` — the one pre-push check: build, unit + component, guardrails, gitleaks, optional E2E (`/verify e2e`)
+- `casedive-audit` — full project audit (security, caching, tests, data, config); appends to `AUDIT_LOG.md`
+- `new-api-endpoint` — scaffold an endpoint with rate limit, validation, headers, logging pre-wired (remember the 12-function cap)
+- `filter-tune` — filter calibration pipeline with baseline safety check
+- `ops-checklist` — pre-deploy production checklist (Sentry, env vars, Redis quota)
+- `weekly-report` — Sunday digest in the established format
+
+**Commands** (`.claude/commands/`)
+
+- `/improve-caselaw` — propose-only caselaw relevance loop, interprets the digest
+- `/retrieval-health` — fetch and diagnose the live retrieval health snapshot (needs `RETRIEVAL_HEALTH_TOKEN`)
+
+**Subagents** (`.claude/agents/`)
+
+- `api-invariant-reviewer` — rate limiting, validation, headers, and caching invariants on `api/*.js` (the post-edit hook reminds you)
+- `legal-data-validator` — schema check on `criminalCodeData.js`, `civilLawData.js`, `charterData.js`
+- `retrieval-quality-reviewer` — scoring/threshold consistency after `_filter*`, `_scenarioClassification`, `_retrievalThresholds` changes
+- `retrieval-regression-detector` — runs the retrieval failure corpus after the same files change
+- `caselaw-curator` — propose-only relevance + expansion loop; never edits corpus, filter or threshold files
 
 ## Workflow Rules (from claude-doctor)
 

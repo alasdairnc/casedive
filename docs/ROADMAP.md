@@ -1,36 +1,44 @@
 # CaseDive Roadmap
 
 Kept deliberately short. Each Claude Code session should start from this list,
-not from archaeology. Move an item to `.claude/skills/casedive-audit/AUDIT_LOG.md`
-or delete it when it is done.
+not from archaeology. Delete an item when it is done; the audit log in
+`.claude/skills/casedive-audit/AUDIT_LOG.md` keeps the history.
 
-## Owner-only setup (blocks everything below)
+## Owner-only setup
 
-1. **Run `supabase/migrations/0002_user_data_rls.sql`** in the Supabase SQL editor,
-   then confirm the RLS shield is on for `user_bookmarks`, `user_history` and
-   `user_scenarios` in Table Editor. Until this runs, RLS on those tables is unverified.
-2. **Branch protection on `main`**: require the `Quality Guardrails` and
-   `Secret Scan` checks to pass, and require a pull request. GitHub → Settings →
-   Branches → Add rule.
-3. ~~Decide billing~~ Parked on 2026-09-25 (see below). Remove the four `STRIPE_*`
-   variables from Vercel → Settings → Environment Variables so no unused key sits there.
-4. **Review the Dependabot alerts tab** once after this PR merges; anything left is
-   dev-tooling only.
+1. **Custom SMTP for Supabase auth.** Supabase's built-in sender is test-only and
+   may deliver only to your own addresses, so confirmation and password-reset
+   emails are not reaching real users today. Follow section 1 of
+   `docs/auth-setup.md` (Resend is the simplest), then send yourself a reset from
+   the live site to prove delivery. This is the one thing on the accounts side
+   that matters before anyone else signs up.
+2. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
+   Variables. Nothing reads them since billing was parked.
+
+Done on 2026-09-25: RLS verified on the three user tables, branch protection on
+`main`, Dependabot's first batch merged.
 
 ## Product
 
-5. **Billing is parked.** The endpoints, Stripe client, tests and one-off scripts were
-   removed; `_subscription.js`, migration `0001` and the docs stay. To revive: restore
-   the files from the commit before `chore(billing): park`, `npm i stripe`, build the UI,
-   and clear the legal gate in `docs/monetization-plan.md` first.
-6. **Case-law corpus**: review and rebase PR #19 (fabricated-citation fixes, family
-   law, expanded corpus). Run `npm run test:retrieval-failures` before merging.
-7. **Traffic before telemetry**: the retrieval-health machinery has 57 events all
-   time. Do not add more monitoring until there are users to monitor.
+1. **Traffic before telemetry.** The retrieval-health store has 57 events all time.
+   The daily autofix workflow is manual-only for that reason. Do not add monitoring
+   until there are users to monitor; do get users.
+2. **Legal layer before money.** Terms and a "legal information, not legal advice"
+   page are the gate in `docs/monetization-plan.md`. Write them before reviving
+   billing.
+3. **Billing is parked.** Endpoints, Stripe client, tests and one-off scripts were
+   removed; `_subscription.js`, migration `0001` and the docs stay. To revive:
+   restore the files from the commit before `chore(billing): park`, `npm i stripe`,
+   build the UI, clear the legal gate first.
+4. **Auth polish, low priority.** Branch `wip/auth-polish` holds a half-finished
+   June refactor (friendlier auth errors with follow-up actions, a toast, a
+   provider that handles magic-link arrivals). It needs the matching `supabase.js`
+   exports, modal and app wiring, and tests before it compiles. Worth finishing
+   once accounts have users.
 
 ## Hygiene rules that keep this list short
 
-- One branch per task, `/verify`, draft PR, CI green, squash-merge, delete branch.
-- When the Sunday digest lands, spend 20 minutes on its watch list. Close or merge;
-  never let a PR pass 30 days.
+- One branch per task, `/verify`, PR, CI green, squash-merge, delete branch.
+- When the Sunday digest lands, spend 20 minutes on its watch list and the
+  Dependabot batch. Close or merge; never let a PR pass 30 days.
 - New dependency majors are pinned by policy; Dependabot is configured to skip them.
