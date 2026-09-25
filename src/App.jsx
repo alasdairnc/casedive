@@ -16,7 +16,9 @@ import {
   PAGE_GUTTER,
 } from "./lib/ui.js";
 import { useAuth } from "./hooks/useAuth.js";
+import { AuthProvider } from "./lib/AuthContext.jsx";
 import { useCloudSync } from "./hooks/useCloudSync.js";
+import Toast from "./components/Toast.jsx";
 
 const SearchHistory = lazy(() => import("./components/SearchHistory.jsx"));
 const BookmarksPanel = lazy(() => import("./components/BookmarksPanel.jsx"));
@@ -277,10 +279,24 @@ function AppInner() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  const { user, token, signOut, recovery, clearRecovery, isAuthEnabled } =
-    useAuth();
+  const {
+    user,
+    token,
+    loading: authLoading,
+    signOut,
+    recovery,
+    clearRecovery,
+    isAuthEnabled,
+    authNotice,
+    clearAuthNotice,
+  } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState("signin");
+
+  const openAuthModal = (mode) => {
+    setAuthModalMode(mode);
+    setAuthModalOpen(true);
+  };
 
   // Arriving from a password-reset email link: prompt for the new password.
   useEffect(() => {
@@ -409,11 +425,10 @@ function AppInner() {
         onShowHistory={() => setHistoryOpen(true)}
         user={user}
         onAuthClick={
-          isAuthEnabled
-            ? () => {
-                setAuthModalMode("signin");
-                setAuthModalOpen(true);
-              }
+          // Hidden until the stored session is read, so signed-in users
+          // don't see Sign In flash before their email appears.
+          isAuthEnabled && !authLoading
+            ? () => openAuthModal("signin")
             : undefined
         }
         onSignOut={signOut}
@@ -528,6 +543,17 @@ function AppInner() {
         )}
       </Suspense>
 
+      {authNotice && (
+        <Toast
+          message={authNotice.message}
+          actionLabel={
+            authNotice.kind === "linkError" && !user ? "Sign in" : undefined
+          }
+          onAction={() => openAuthModal("signin")}
+          onDismiss={clearAuthNotice}
+        />
+      )}
+
       <SiteFooter t={t} />
     </div>
   );
@@ -536,7 +562,9 @@ function AppInner() {
 export default function App() {
   return (
     <ThemeProvider>
-      <AppInner />
+      <AuthProvider>
+        <AppInner />
+      </AuthProvider>
     </ThemeProvider>
   );
 }

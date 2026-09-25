@@ -1,0 +1,20 @@
+<!--
+  Supabase → Authentication → Emails → Templates → Reset Password
+  Subject: Reset your CaseDive password
+  Copy of what is live (set up 2026-09-25), kept here so the templates are
+  versioned. Paste everything below this comment into the Message body.
+-->
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#F4F6FA;padding:32px 16px;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;">
+  <tr><td align="center">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#FFFFFF;border-radius:8px;overflow:hidden;">
+      <tr><td style="background:#0B1220;padding:20px 28px;color:#2DD4BF;font-size:20px;font-weight:700;">CaseDive</td></tr>
+      <tr><td style="padding:28px;color:#0B1220;font-size:15px;line-height:1.5;">
+        <p style="margin:0 0 16px;font-size:18px;font-weight:600;">Reset your password</p>
+        <p style="margin:0 0 24px;">Someone asked to reset the password for {{ .Email }}. Click the button below to choose a new one. The link expires in 1 hour.</p>
+        <p style="margin:0 0 24px;"><a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#2DD4BF;color:#06231F;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:6px;">Reset password</a></p>
+        <p style="margin:0;color:#5B6678;font-size:13px;">If you didn't ask for this, ignore this email. Your password won't change.</p>
+      </td></tr>
+    </table>
+    <p style="color:#8A94A6;font-size:12px;margin:16px 0 0;">CaseDive · casedive.ca</p>
+  </td></tr>
+</table>

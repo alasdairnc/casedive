@@ -213,6 +213,99 @@ describe("App auth integration", () => {
     });
   });
 
+  // ── Session restore, email-link arrivals, recovery ─────────────────────────
+
+  it("hides Sign In until the stored session has been read", async () => {
+    vi.doMock("../../src/hooks/useAuth.js", () => ({
+      useAuth: () => ({
+        user: null,
+        token: null,
+        loading: true,
+        isAuthEnabled: true,
+        signOut: mockSignOut,
+      }),
+    }));
+    const App = await getApp();
+    render(<App />);
+    expect(screen.queryByRole("button", { name: /sign in/i })).toBeNull();
+  });
+
+  it("shows an expired-link toast whose Sign In action opens the modal", async () => {
+    const clearAuthNotice = vi.fn();
+    vi.doMock("../../src/hooks/useAuth.js", () => ({
+      useAuth: () => ({
+        user: null,
+        token: null,
+        loading: false,
+        isAuthEnabled: true,
+        signOut: mockSignOut,
+        authNotice: {
+          kind: "linkError",
+          message: "That email link has expired or was already used.",
+        },
+        clearAuthNotice,
+      }),
+    }));
+    const App = await getApp();
+    render(<App />);
+    const toast = screen
+      .getByText(/email link has expired/i)
+      .closest("[role=status]");
+    expect(toast).not.toBeNull();
+    // Two "Sign In" buttons now: the header's and the toast's.
+    const buttons = screen.getAllByRole("button", { name: /^sign in$/i });
+    fireEvent.click(buttons[buttons.length - 1]);
+    await waitFor(() => {
+      expect(screen.getByTestId("auth-modal").dataset.mode).toBe("signin");
+    });
+    expect(clearAuthNotice).toHaveBeenCalled();
+  });
+
+  it("shows a welcome toast after an email link signs the user in", async () => {
+    const clearAuthNotice = vi.fn();
+    vi.doMock("../../src/hooks/useAuth.js", () => ({
+      useAuth: () => ({
+        user: mockAuthUser,
+        token: "tok-abc",
+        loading: false,
+        isAuthEnabled: true,
+        signOut: mockSignOut,
+        authNotice: {
+          kind: "welcome",
+          message: "Email confirmed — you're signed in.",
+        },
+        clearAuthNotice,
+      }),
+    }));
+    const App = await getApp();
+    render(<App />);
+    expect(screen.getByText(/email confirmed/i)).toBeDefined();
+    fireEvent.click(screen.getByRole("button", { name: /dismiss/i }));
+    expect(clearAuthNotice).toHaveBeenCalled();
+  });
+
+  it("opens the modal in reset mode when arriving from a reset link", async () => {
+    const clearRecovery = vi.fn();
+    vi.doMock("../../src/hooks/useAuth.js", () => ({
+      useAuth: () => ({
+        user: mockAuthUser,
+        token: "tok-abc",
+        loading: false,
+        isAuthEnabled: true,
+        signOut: mockSignOut,
+        recovery: true,
+        clearRecovery,
+      }),
+    }));
+    const App = await getApp();
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByTestId("auth-modal").dataset.mode).toBe("reset");
+    });
+    fireEvent.click(screen.getByRole("button", { name: /close/i }));
+    expect(clearRecovery).toHaveBeenCalled();
+  });
+
   // ── useAuth is consumed at App root ────────────────────────────────────────
 
   it("useAuth hook is imported and consumed by App", async () => {

@@ -6,13 +6,18 @@ not from archaeology. Delete an item when it is done; the audit log in
 
 ## Owner-only setup
 
-1. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
+1. **Finish the live smoke test** in section 7 of `docs/auth-setup.md`
+   (sign-up with a `+test` address, wrong password, reset, expired link). The
+   email-link step already passed on 2026-09-25.
+2. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
    Variables. Nothing reads them since billing was parked.
 
 Done on 2026-09-25: RLS verified on the three user tables, branch protection on
-`main`, Dependabot's first batch merged. Supabase auth email now sends through
-Resend SMTP (branded templates, `localhost:5173` redirect added); a live reset
-reached Gmail's inbox with DKIM, SPF and DMARC passing.
+`main`, Dependabot's first batch merged, custom SMTP through Resend (SPF, DKIM
+and DMARC passing; reset email landed in a Gmail inbox), confirm-signup, reset
+and magic-link templates branded (a live sign-in link from the new modal
+landed in the inbox with the branded template), `localhost:5173` added to the
+redirect URLs.
 
 ## Product
 
@@ -26,11 +31,9 @@ reached Gmail's inbox with DKIM, SPF and DMARC passing.
    removed; `_subscription.js`, migration `0001` and the docs stay. To revive:
    restore the files from the commit before `chore(billing): park`, `npm i stripe`,
    build the UI, clear the legal gate first.
-4. **Auth polish, low priority.** Branch `wip/auth-polish` holds a half-finished
-   June refactor (friendlier auth errors with follow-up actions, a toast, a
-   provider that handles magic-link arrivals). It needs the matching `supabase.js`
-   exports, modal and app wiring, and tests before it compiles. Worth finishing
-   once accounts have users.
+4. **Google sign-in, optional.** The code is in; it stays hidden until the
+   OAuth client is set up and `VITE_AUTH_GOOGLE=true` (section 5 of
+   `docs/auth-setup.md`). Worth doing once people are signing up.
 
 ## Hygiene rules that keep this list short
 

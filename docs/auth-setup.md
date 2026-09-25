@@ -1,36 +1,55 @@
 # Auth setup checklist
 
 Everything the sign-in/sign-up code needs from Supabase, Google, and Vercel.
-The code side lives in `src/lib/supabase.js`, `src/hooks/useAuth.js`,
-`src/components/AuthModal.jsx` and `src/App.jsx`. (A friendlier-errors refactor
-that adds `AuthContext.jsx` and `authErrors.js` is parked on the
-`wip/auth-polish` branch; see `docs/ROADMAP.md`.)
 
-## 1. Custom SMTP (do this first)
+The code side:
 
-> **Done 2026-09-25 with Resend.** Domain `casedive.ca` verified in Resend
-> (DKIM `resend._domainkey`, SPF/MX on `send.`, DMARC in Cloudflare). Supabase
-> SMTP: host `smtp.resend.com`, port `465`, username `resend`, password = a
-> Resend API key named `supabase-smtp` (Sending access, `casedive.ca` only).
-> Email rate limit 30/hour. Resend's free plan caps sending at 100/day and 3,000/month.
-> To rotate the key: create a new one in Resend, paste it into Supabase SMTP
-> password, save, then delete the old key.
+- `src/lib/supabase.js`: the client, build flags (`authMethods`), the redirect
+  URL, and `initialAuthParams` (what an email link put in the URL).
+- `src/lib/AuthContext.jsx`: `<AuthProvider>`, the one session subscription.
+  `src/hooks/useAuth.js` reads it.
+- `src/lib/authErrors.js`: Supabase errors → plain language plus a one-click
+  follow-up (resend confirmation, reset password, sign in instead, email link).
+- `src/components/AuthModal.jsx`: sign in, create account, email link, forgot
+  and reset password, and the "check your email" screen with resend.
+- `src/components/Toast.jsx`: the welcome / expired-link message shown after
+  arriving from an email link.
 
-Supabase's built-in email sender is for testing only: it's heavily
-rate-limited and may only deliver to your own team's addresses. If it's
-still in use, confirmation, magic-link, and reset emails won't reach real
-users.
+`tests/e2e/auth.spec.js` exercises every flow against a mocked Supabase; the
+header of that file has the one-line command to run it locally.
 
-1. Create an account with an email provider (Resend is the simplest; Postmark
-   or Amazon SES also work) and verify `casedive.ca` as a sending domain
-   (add the DNS records they give you in Cloudflare).
-2. Supabase → Authentication → Emails → SMTP Settings → enable custom SMTP.
-   - Sender email: `no-reply@casedive.ca`
-   - Sender name: `CaseDive`
-   - Host / port / username / password from the provider.
-3. Supabase → Authentication → Rate Limits: raise the email limit (for
-   example to 30/hour) now that you have your own sender.
-4. Send yourself a password reset from the live site to confirm delivery.
+## 1. Custom SMTP
+
+**Done 2026-09-25.** Supabase hands every auth email to Resend over SMTP:
+
+- Sender: `CaseDive <no-reply@casedive.ca>`
+- `casedive.ca` is verified in Resend; SPF, DKIM and DMARC records live in
+  Cloudflare and all three passed on the first test email (Gmail inbox, not
+  spam).
+- SMTP password: the Resend API key `supabase-smtp`, sending-only and limited
+  to `casedive.ca`.
+- Supabase email rate limit: 30/hour.
+
+Supabase's built-in sender (test-only, team addresses only) is no longer used.
+
+### Replacing the SMTP key
+
+Do this if the key leaks, or on a schedule.
+
+1. Resend → API Keys → Create API key: permission **Sending access**, domain
+   `casedive.ca`. Copy it (Resend shows it once).
+2. Supabase → Authentication → Emails → SMTP Settings → paste it as the
+   password and Save. Host, port and username (`resend`) stay as they are.
+3. Send yourself a password reset from the live site and check it arrives.
+4. Only then delete the old key in Resend, so there is no gap in delivery.
+
+### If emails stop arriving
+
+The modal shows "We couldn't send the email just now" (Supabase's "Error
+sending confirmation email" / "recovery email" / "magic link email"). Check,
+in order: Resend → Logs for the send attempt and bounce reason; that the key
+in Supabase still exists in Resend; that the Cloudflare DNS records are
+still in place; Supabase → Authentication → Rate Limits.
 
 ## 2. URL configuration
 
@@ -40,29 +59,40 @@ Supabase → Authentication → URL Configuration:
 - **Redirect URLs** (add each):
   - `https://www.casedive.ca/**`
   - `https://casedive.ca/**`
-  - `http://localhost:5173/**` (local dev)
-  - Optional, for Vercel previews: a wildcard matching your preview domain,
-    e.g. `https://*-<your-team>.vercel.app/**` (copy the exact domain from a
-    preview deployment in Vercel)
+  - `http://localhost:5173/**` (local dev, added 2026-09-25)
+  - Optional, for Vercel previews: `https://*-alasdairncs-projects.vercel.app/**`.
+    Preview URLs look like
+    `casefinder-project-git-<branch>-alasdairncs-projects.vercel.app`, and only
+    this Vercel team can create hosts ending in `-alasdairncs-projects`.
+    Without it, email links sent from a preview land on the live site.
 
 The app passes `window.location.origin` as the redirect for every email link
 and for OAuth, so any origin not on this list falls back to the Site URL.
 
 ## 3. Email templates
 
-> **Done 2026-09-25** for Confirm sign up ("Confirm your CaseDive account") and
-> Reset password ("Reset your CaseDive password"): navy header, teal button,
-> inline-styled tables. Magic Link is left default until `wip/auth-polish` lands.
+Supabase → Authentication → Emails → Templates. Keep the
+`{{ .ConfirmationURL }}` placeholder in each. The HTML lives in
+`supabase/templates/`; each file's header comment names the template and
+subject, and everything below the comment is what gets pasted into Message
+body.
 
-Supabase → Authentication → Emails → Templates. Brand the **Confirm signup**,
-**Magic Link**, and **Reset Password** templates (subject lines like
-"Confirm your CaseDive account", "Your CaseDive sign-in link"). Keep the
-`{{ .ConfirmationURL }}` placeholder.
+| Template | Sent when | Status |
+| --- | --- | --- |
+| Confirm signup | Sign-up, "Resend confirmation email", first email sign-in link for a new address | Branded: "Confirm your CaseDive account" (not yet copied into the repo) |
+| Reset Password | Forgot password | Branded: "Reset your CaseDive password" (`recovery.html`) |
+| Magic Link | "Email me a sign-in link" for an existing account | Branded: "Your CaseDive sign-in link" (`magic_link.html`) |
 
-> **Sections 4–6 are ahead of the code.** `main` has email + password sign-in only.
-> Magic link, Google sign-in and their `VITE_AUTH_*` flags exist on the parked
-> `wip/auth-polish` branch. Do sections 1–3 now; come back to 4–6 when that
-> branch lands.
+Change Email Address, Invite user and Reauthentication aren't reachable from
+the app, so they can stay default.
+
+Also check **Authentication → Emails → Templates → Confirm signup** points at
+`{{ .ConfirmationURL }}` (the default). The app reads the result from the URL
+when the user lands back on the site and shows "Email confirmed — you're
+signed in", or "That email link has expired or was already used" with a Sign In
+button. Some corporate mail scanners open links before the user does, which
+burns one-time links; the resend button on the "check your email" screen is the
+way back.
 
 ## 4. Magic link
 
@@ -97,3 +127,24 @@ the Email provider being enabled and SMTP working. To hide it, set
 | `VITE_AUTH_MAGIC_LINK` | `false` to hide the email-link option |
 
 `VITE_*` vars are baked in at build time, so redeploy after changing them.
+
+## 7. Live smoke test (five minutes)
+
+Run it once the sign-in polish (PR #36) is deployed; before that the live site
+still has the old modal.
+
+Use an address that is not on your Supabase team, ideally a phone's mail app.
+
+1. **Sign up** on `www.casedive.ca` → "Check Your Email" screen → the email
+   arrives → the link lands you back signed in with "Email confirmed".
+2. **Sign out, sign in** with the same password → your email shows in the header.
+3. **Wrong password** → "Incorrect email or password" with a "Reset your
+   password" link.
+4. **Forgot password** → email arrives → link opens "Set New Password" →
+   Update → Continue → still signed in.
+5. **Email me a sign-in link** → email arrives → link signs you in.
+6. **Open an old link a second time** → "That email link has expired or was
+   already used" with a Sign In button.
+
+If any step says "We couldn't send the email just now", see "If emails stop
+arriving" in section 1.
