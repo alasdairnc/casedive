@@ -6,19 +6,18 @@ not from archaeology. Delete an item when it is done; the audit log in
 
 ## Owner-only setup
 
-1. **Paste the Magic Link email template** into Supabase: the body is
-   `supabase/templates/magic_link.html` (section 3 of `docs/auth-setup.md`).
-   "Email me a sign-in link" is on by default, so returning users get that
-   email; until it's pasted it is Supabase's plain default.
-2. **After the sign-in polish deploys, run the five-minute live smoke test** in
-   section 7 of `docs/auth-setup.md`.
-3. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
+1. **Finish the live smoke test** in section 7 of `docs/auth-setup.md`
+   (sign-up with a `+test` address, wrong password, reset, expired link). The
+   email-link step already passed on 2026-09-25.
+2. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
    Variables. Nothing reads them since billing was parked.
 
 Done on 2026-09-25: RLS verified on the three user tables, branch protection on
 `main`, Dependabot's first batch merged, custom SMTP through Resend (SPF, DKIM
-and DMARC passing; reset email landed in a Gmail inbox), confirm-signup and
-reset templates branded, `localhost:5173` added to the redirect URLs.
+and DMARC passing; reset email landed in a Gmail inbox), confirm-signup, reset
+and magic-link templates branded (a live sign-in link from the new modal
+landed in the inbox with the branded template), `localhost:5173` added to the
+redirect URLs.
 
 ## Product
 

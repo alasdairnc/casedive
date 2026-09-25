@@ -81,7 +81,7 @@ body.
 | --- | --- | --- |
 | Confirm signup | Sign-up, "Resend confirmation email", first email sign-in link for a new address | Branded: "Confirm your CaseDive account" (not yet copied into the repo) |
 | Reset Password | Forgot password | Branded: "Reset your CaseDive password" (`recovery.html`) |
-| Magic Link | "Email me a sign-in link" for an existing account | **Paste `magic_link.html`**, subject "Your CaseDive sign-in link" |
+| Magic Link | "Email me a sign-in link" for an existing account | Branded: "Your CaseDive sign-in link" (`magic_link.html`) |
 
 Change Email Address, Invite user and Reauthentication aren't reachable from
 the app, so they can stay default.
