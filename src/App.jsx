@@ -8,7 +8,13 @@ import StagedLoading from "./components/StagedLoading.jsx";
 import Results from "./components/Results.jsx";
 import ErrorMessage from "./components/ErrorMessage.jsx";
 import RetrievalHealthDashboard from "./components/RetrievalHealthDashboard.jsx";
+import Button from "./components/ui/Button.jsx";
 import { MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH } from "./lib/caseLawReportReasons.js";
+import {
+  CONTENT_MAX_WIDTH,
+  HEADER_MAX_WIDTH,
+  PAGE_GUTTER,
+} from "./lib/ui.js";
 import { useAuth } from "./hooks/useAuth.js";
 import { useCloudSync } from "./hooks/useCloudSync.js";
 
@@ -78,89 +84,184 @@ function toScenarioSnippet(value) {
     .slice(0, MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH);
 }
 
-function EmptyState({ setQuery, t }) {
-  return (
-    <div
-      className="cd-fade-in"
-      style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 0" }}
-    >
-      {/* Thin rule above headline */}
-      <div style={{ borderTop: `1px solid ${t.border}`, marginBottom: 24 }} />
+const DONATE_URL = "https://buymeacoffee.com/alasdairnc";
 
-      <h2
+const contentColumn = {
+  maxWidth: CONTENT_MAX_WIDTH,
+  margin: "0 auto",
+  paddingLeft: PAGE_GUTTER,
+  paddingRight: PAGE_GUTTER,
+};
+
+// Landing headline above the search box. Hidden once there's a result.
+function Hero({ t }) {
+  return (
+    <section
+      className="cd-fade-in"
+      style={{
+        ...contentColumn,
+        paddingTop: "clamp(32px, 7vw, 56px)",
+        paddingBottom: 12,
+      }}
+    >
+      <h1
         style={{
           fontFamily: "var(--font-display)",
-          fontSize: "clamp(26px, 4.5vw, 38px)",
-          fontWeight: 400,
-          fontStyle: "italic",
+          fontSize: "clamp(28px, 5vw, 40px)",
+          fontWeight: 500,
           color: t.text,
-          margin: "0 0 14px 0",
-          lineHeight: 1.2,
-          letterSpacing: "-0.3px",
+          margin: "0 0 12px 0",
+          lineHeight: 1.15,
+          letterSpacing: "-0.02em",
         }}
       >
         Describe your legal scenario.
-      </h2>
+      </h1>
 
       <p
         style={{
           fontFamily: "var(--font-body)",
-          fontSize: "clamp(12px, 1.8vw, 13px)",
+          fontSize: 15,
           color: t.textSecondary,
-          lineHeight: 1.75,
-          margin: "0 0 28px 0",
-          maxWidth: 480,
+          lineHeight: 1.6,
+          margin: 0,
+          maxWidth: 560,
         }}
       >
         Criminal Code sections, verified case law, Charter rights, and civil law
         statutes — drawn from CanLII and the Justice Laws database.
       </p>
+    </section>
+  );
+}
 
-      {/* Example chips */}
-      <div>
-        <div
+// Example chips under the search box. Clicking one fills the textarea.
+function ExampleScenarios({ setQuery, t }) {
+  return (
+    <section
+      className="cd-fade-in"
+      aria-labelledby="cd-examples-label"
+      style={{ ...contentColumn, paddingTop: 32 }}
+    >
+      {/* Colour must stay an inline hex (AppLandingContrast reads it) */}
+      <h2
+        id="cd-examples-label"
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 13,
+          fontWeight: 600,
+          color: t.textSecondary,
+          margin: "0 0 12px 0",
+        }}
+      >
+        Try an example
+      </h2>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        {EXAMPLE_SCENARIOS.map(({ label, text }) => (
+          <Button
+            key={label}
+            variant="secondary"
+            size="sm"
+            pill
+            onClick={() => setQuery(text)}
+          >
+            {label}
+          </Button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function SiteFooter({ t }) {
+  const linkStyle = { color: t.textSecondary, minHeight: 32 };
+
+  return (
+    <footer style={{ borderTop: `1px solid ${t.borderLight}` }}>
+      <div
+        style={{
+          maxWidth: HEADER_MAX_WIDTH,
+          margin: "0 auto",
+          padding: `32px ${PAGE_GUTTER}px`,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: 24,
+        }}
+      >
+        <div style={{ maxWidth: 440 }}>
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 15,
+              fontWeight: 600,
+              color: t.text,
+              margin: "0 0 4px 0",
+            }}
+          >
+            CaseDive
+          </p>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: t.textSecondary,
+              margin: "0 0 12px 0",
+            }}
+          >
+            Canadian legal research
+          </p>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: t.textTertiary,
+              lineHeight: 1.6,
+              margin: 0,
+            }}
+          >
+            Educational tool only. Not legal advice. Always consult a qualified
+            lawyer. Verify all citations with CanLII.
+          </p>
+        </div>
+
+        <nav
+          aria-label="Footer"
           style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 9,
-            letterSpacing: "0.38em",
-            textTransform: "uppercase",
-            color: t.textTertiary,
-            marginBottom: 10,
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            columnGap: 20,
           }}
         >
-          Try an example
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {EXAMPLE_SCENARIOS.slice(0, 3).map(({ label, text }, i) => (
-            <button
-              key={i}
-              onClick={() => setQuery(text)}
-              style={{
-                background: "none",
-                border: `1px solid ${t.border}`,
-                padding: "8px 18px",
-                cursor: "pointer",
-                fontFamily: "var(--font-body)",
-                fontSize: 11,
-                letterSpacing: "0.05em",
-                color: t.textTertiary,
-                transition: "border-color 0.15s, color 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = t.text;
-                e.currentTarget.style.color = t.text;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = t.border;
-                e.currentTarget.style.color = t.textTertiary;
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+          <Button variant="link" size="sm" href="/about.html" style={linkStyle}>
+            About
+          </Button>
+          <Button
+            variant="link"
+            size="sm"
+            href="/privacy.html"
+            style={linkStyle}
+          >
+            Privacy
+          </Button>
+          <Button variant="link" size="sm" href="/terms.html" style={linkStyle}>
+            Terms
+          </Button>
+          <Button
+            variant="link"
+            size="sm"
+            href={DONATE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={linkStyle}
+          >
+            Donate
+          </Button>
+        </nav>
       </div>
-    </div>
+    </footer>
   );
 }
 
@@ -297,34 +398,15 @@ function AppInner() {
         background: t.bg,
         minHeight: "100vh",
         color: t.text,
-        transition: "background 0.3s, color 0.3s",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <style>{`
-        @keyframes cdFadeSlideIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .cd-fade-in {
-          animation: cdFadeSlideIn 0.38s ease-out forwards;
-        }
-        .cd-results-in {
-          animation: cdFadeSlideIn 0.28s ease-out forwards;
-        }
-        ::placeholder {
-          color: ${t.textTertiary};
-          opacity: 1;
-        }
-        select option {
-          background: ${t.bgAlt};
-          color: ${t.text};
-        }
-      `}</style>
-
       <Header
         bookmarkCount={bookmarks.length}
         onOpenBookmarks={() => setBookmarksOpen(true)}
         onOpenCodeExplorer={() => setCodeExplorerOpen(true)}
+        onShowHistory={() => setHistoryOpen(true)}
         user={user}
         onAuthClick={
           isAuthEnabled
@@ -337,97 +419,67 @@ function AppInner() {
         onSignOut={signOut}
       />
 
-      <FiltersPanel filters={filters} setFilters={setFilters} />
-
-      <SearchArea
-        query={query}
-        setQuery={setQuery}
-        onSubmit={analyzeScenario}
-        loading={loading}
-      />
-
-      {/* Disclaimer */}
-      <div style={{ maxWidth: 760, margin: "0 auto", padding: "12px 24px 0" }}>
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 10,
-            lineHeight: 1.5,
-            color: t.textSecondary,
-            letterSpacing: "0.02em",
-            margin: 0,
-          }}
-        >
-          Educational tool only — not legal advice. Always consult a qualified
-          lawyer. Citations verified against CanLII where possible.
-        </p>
-      </div>
-
-      {/* History button */}
-      {history.length > 0 && (
-        <div
-          style={{
-            maxWidth: 760,
-            margin: "0 auto",
-            padding: "10px 24px 0",
-            textAlign: "right",
-          }}
-        >
-          <button
-            onClick={() => setHistoryOpen(true)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: t.textTertiary,
-              padding: 0,
-              transition: "color 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = t.textSecondary;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = t.textTertiary;
-            }}
-          >
-            History ({Math.min(history.length, 10)})
-          </button>
-        </div>
-      )}
-
-      {/* Empty state */}
-      {isEmpty && <EmptyState setQuery={setQuery} t={t} />}
-
-      <div
+      <main
         style={{
-          maxWidth: 760,
-          margin: "0 auto",
-          padding: "24px 24px",
+          flex: "1 0 auto",
+          paddingTop: isEmpty ? 0 : 12,
+          paddingBottom: 48,
         }}
       >
-        <div ref={resultsRef}>
-          {loading && <StagedLoading />}
-          {error && <ErrorMessage message={error} onRetry={analyzeScenario} />}
+        {isEmpty && <Hero t={t} />}
+
+        <SearchArea
+          query={query}
+          setQuery={setQuery}
+          onSubmit={analyzeScenario}
+          loading={loading}
+        />
+
+        <FiltersPanel filters={filters} setFilters={setFilters} />
+
+        {/* Disclaimer (colour must stay an inline hex for AppLandingContrast) */}
+        <div style={{ ...contentColumn, paddingTop: 16 }}>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              lineHeight: 1.5,
+              color: t.textTertiary,
+              margin: 0,
+            }}
+          >
+            Educational tool only — not legal advice. Always consult a qualified
+            lawyer. Citations verified against CanLII where possible.
+          </p>
         </div>
 
-        {result && (
-          <div className="cd-results-in">
-            <Results
-              data={result}
-              scenario={submittedQuery}
-              scenarioSnippet={submittedScenarioSnippet}
-              filters={submittedFilters}
-              addBookmark={addBookmark}
-              removeBookmark={removeBookmark}
-              isBookmarked={isBookmarked}
-            />
+        {isEmpty && <ExampleScenarios setQuery={setQuery} t={t} />}
+
+        {!isEmpty && (
+          <div style={{ ...contentColumn, paddingTop: 32 }}>
+            <div ref={resultsRef}>
+              {loading && <StagedLoading />}
+              {error && (
+                <ErrorMessage message={error} onRetry={analyzeScenario} />
+              )}
+            </div>
+
+            {result && (
+              <div className="cd-results-in">
+                <Results
+                  data={result}
+                  scenario={submittedQuery}
+                  scenarioSnippet={submittedScenarioSnippet}
+                  filters={submittedFilters}
+                  addBookmark={addBookmark}
+                  removeBookmark={removeBookmark}
+                  isBookmarked={isBookmarked}
+                />
+              </div>
+            )}
           </div>
         )}
-      </div>
+      </main>
 
       <Suspense fallback={null}>
         {authModalOpen && (
@@ -476,65 +528,7 @@ function AppInner() {
         )}
       </Suspense>
 
-      <footer style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px" }}>
-        <div
-          style={{ borderTop: `1px solid ${t.borderLight}`, paddingTop: 20 }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              color: t.textTertiary,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              margin: "0 0 10px 0",
-            }}
-          >
-            CaseDive &middot; Canadian Legal Research
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              color: t.textSecondary,
-              lineHeight: 1.6,
-              margin: "0 0 14px 0",
-            }}
-          >
-            Educational tool only. Not legal advice. Always consult a qualified
-            lawyer. Verify all citations with CanLII.
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              color: t.textTertiary,
-              margin: 0,
-            }}
-          >
-            <a
-              href="/about.html"
-              style={{ color: t.textTertiary, textDecoration: "none" }}
-            >
-              About
-            </a>
-            {" \u00B7 "}
-            <a
-              href="/privacy.html"
-              style={{ color: t.textTertiary, textDecoration: "none" }}
-            >
-              Privacy
-            </a>
-            {" \u00B7 "}
-            <a
-              href="/terms.html"
-              style={{ color: t.textTertiary, textDecoration: "none" }}
-            >
-              Terms
-            </a>
-          </p>
-        </div>
-      </footer>
+      <SiteFooter t={t} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openNavMenuIfCollapsed } from "../e2e/helpers/nav.js";
 
 // Live smoke tests against https://www.casedive.ca
 // These hit the real Claude API and CanLII — no mocks.
@@ -118,6 +119,8 @@ test.describe("Live: Criminal Code Explorer", () => {
     await page.goto("/");
 
     // The explorer button is in the header with aria-label "Criminal Code Explorer"
+    // (behind the Menu toggle on phones)
+    await openNavMenuIfCollapsed(page);
     const explorerBtn = page.getByRole("button", {
       name: "Criminal Code Explorer",
     });

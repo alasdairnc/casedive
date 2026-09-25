@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openNavMenuIfCollapsed } from "./helpers/nav.js";
 
 const MOCK_ANALYZE_RESPONSE = {
   summary:
@@ -75,6 +76,7 @@ test.describe("Header", () => {
   });
 
   test("renders navigation actions", async ({ page }) => {
+    await openNavMenuIfCollapsed(page);
     await expect(page.getByRole("button", { name: /saved/i })).toBeVisible();
     await expect(
       page.getByRole("button", { name: /criminal code explorer/i }),
