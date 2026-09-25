@@ -72,13 +72,16 @@ and for OAuth, so any origin not on this list falls back to the Site URL.
 ## 3. Email templates
 
 Supabase → Authentication → Emails → Templates. Keep the
-`{{ .ConfirmationURL }}` placeholder in each.
+`{{ .ConfirmationURL }}` placeholder in each. The HTML lives in
+`supabase/templates/`; each file's header comment names the template and
+subject, and everything below the comment is what gets pasted into Message
+body.
 
 | Template | Sent when | Status |
 | --- | --- | --- |
-| Confirm signup | Sign-up, "Resend confirmation email", first email sign-in link for a new address | Branded: "Confirm your CaseDive account" |
-| Reset Password | Forgot password | Branded: "Reset your CaseDive password" |
-| Magic Link | "Email me a sign-in link" for an existing account | **Still Supabase's default.** Copy the Reset Password layout (navy header, teal button), subject "Your CaseDive sign-in link", button text "Sign in to CaseDive" |
+| Confirm signup | Sign-up, "Resend confirmation email", first email sign-in link for a new address | Branded: "Confirm your CaseDive account" (not yet copied into the repo) |
+| Reset Password | Forgot password | Branded: "Reset your CaseDive password" (`recovery.html`) |
+| Magic Link | "Email me a sign-in link" for an existing account | **Paste `magic_link.html`**, subject "Your CaseDive sign-in link" |
 
 Change Email Address, Invite user and Reauthentication aren't reachable from
 the app, so they can stay default.

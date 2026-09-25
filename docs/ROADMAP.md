@@ -6,9 +6,10 @@ not from archaeology. Delete an item when it is done; the audit log in
 
 ## Owner-only setup
 
-1. **Brand the Magic Link email template** in Supabase (table in section 3 of
-   `docs/auth-setup.md`). "Email me a sign-in link" is on by default, so
-   returning users get that email; it is still Supabase's plain default.
+1. **Paste the Magic Link email template** into Supabase: the body is
+   `supabase/templates/magic_link.html` (section 3 of `docs/auth-setup.md`).
+   "Email me a sign-in link" is on by default, so returning users get that
+   email; until it's pasted it is Supabase's plain default.
 2. **After the sign-in polish deploys, run the five-minute live smoke test** in
    section 7 of `docs/auth-setup.md`.
 3. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
