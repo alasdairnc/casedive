@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
+import { RADIUS } from "../lib/ui.js";
+import Button from "./ui/Button.jsx";
 
 const AUTO_DISMISS_MS = 6000;
 
 /**
  * Small, non-blocking message pinned to the bottom of the viewport.
- * Optional action button (e.g. "Sign In"). Auto-dismisses.
+ * Optional action button (e.g. "Sign in"). Auto-dismisses.
  */
 export default function Toast({ message, actionLabel, onAction, onDismiss }) {
   const t = useTheme();
@@ -34,7 +36,8 @@ export default function Toast({ message, actionLabel, onAction, onDismiss }) {
         maxWidth: 460,
         background: t.bgAlt,
         border: `1px solid ${t.border}`,
-        borderTop: `2px solid ${t.accent}`,
+        borderLeft: `3px solid ${t.accent}`,
+        borderRadius: RADIUS.lg,
         boxShadow: `0 12px 32px ${t.shadowStrong}`,
         padding: "12px 14px 12px 16px",
         display: "flex",
@@ -50,44 +53,25 @@ export default function Toast({ message, actionLabel, onAction, onDismiss }) {
       <span style={{ flex: "1 1 200px" }}>{message}</span>
       <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
         {actionLabel && onAction && (
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => {
               onAction();
               onDismiss?.();
             }}
-            style={{
-              background: "none",
-              border: `1px solid ${t.accentOlive}`,
-              color: t.accentOlive,
-              cursor: "pointer",
-              padding: "6px 12px",
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-            }}
           >
             {actionLabel}
-          </button>
+          </Button>
         )}
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon"
           aria-label="Dismiss"
           onClick={() => onDismiss?.()}
-          style={{
-            background: "none",
-            border: "none",
-            color: t.textTertiary,
-            cursor: "pointer",
-            fontSize: 18,
-            lineHeight: 1,
-            width: 32,
-            height: 32,
-          }}
         >
           ×
-        </button>
+        </Button>
       </span>
     </div>
   );

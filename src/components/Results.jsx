@@ -3,46 +3,108 @@ import { useTypewriter } from "../hooks/useTypewriter.js";
 import ResultCard from "./ResultCard.jsx";
 import CaseSummaryModal from "./CaseSummaryModal.jsx";
 import SuggestionLink from "./SuggestionLink.jsx";
+import Button from "./ui/Button.jsx";
+import { RADIUS } from "../lib/ui.js";
 import { useEffect, useState, useRef, useCallback } from "react";
 
-// Newspaper-style section break: large label + full hairline rule
-function SectionBreak({ label, count, t }) {
+// Section heading: a real <h2> over a hairline rule, with an optional muted
+// count pill beside it and an optional action (e.g. Export PDF) on the right.
+// The label keeps its own element so exact text matches stay stable.
+function SectionHeading({ label, count, action, t, style }) {
   return (
-    <div style={{ marginBottom: 24, marginTop: 56 }}>
-      <div style={{ borderTop: `1px solid ${t.border}`, paddingTop: 10 }}>
-        <div
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap",
+        gap: 10,
+        marginTop: 48,
+        marginBottom: 16,
+        paddingTop: 20,
+        borderTop: `1px solid ${t.borderLight}`,
+        ...style,
+      }}
+    >
+      <h2
+        style={{
+          margin: 0,
+          fontFamily: "var(--font-display)",
+          fontSize: 17,
+          fontWeight: 600,
+          lineHeight: 1.3,
+          color: t.text,
+        }}
+      >
+        {label}
+      </h2>
+      {count != null && (
+        <span
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxSizing: "border-box",
+            minWidth: 24,
+            padding: "1px 8px",
+            borderRadius: RADIUS.pill,
+            background: t.tagBg,
+            color: t.textSecondary,
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 500,
+            lineHeight: 1.5,
           }}
         >
-          <div
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 9,
-              letterSpacing: "0.44em",
-              textTransform: "uppercase",
-              color: t.textTertiary,
-            }}
-          >
-            {label}
-          </div>
-          {count != null && (
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 9,
-                letterSpacing: "0.2em",
-                color: t.textTertiary,
-              }}
-            >
-              {count}
-            </div>
-          )}
-        </div>
-      </div>
+          {count}
+        </span>
+      )}
+      {action && <div style={{ marginLeft: "auto" }}>{action}</div>}
     </div>
+  );
+}
+
+// Bordered callout with a left accent in the semantic colour
+// (teal = info, green = success, amber = warning).
+function Callout({ tone, t, style, children }) {
+  return (
+    <div
+      style={{
+        borderTop: `1px solid ${t.border}`,
+        borderRight: `1px solid ${t.border}`,
+        borderBottom: `1px solid ${t.border}`,
+        borderLeft: `3px solid ${tone}`,
+        borderRadius: RADIUS.lg,
+        background: t.cardBg,
+        padding: "14px 16px",
+        fontFamily: "var(--font-body)",
+        fontSize: 14,
+        lineHeight: 1.6,
+        color: t.textSecondary,
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+      style={{ display: "block" }}
+    >
+      <path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13.5h10" />
+    </svg>
   );
 }
 
@@ -244,98 +306,55 @@ export default function Results({
     },
     [analysisRequestId, caseLawMeta, filters, retrievalMeta, scenarioSnippet],
   );
-
+  // App wraps results in the content column, which supplies the gutter
   return (
-    <section
-      data-testid="results-section"
-      style={{ maxWidth: 760, margin: "0 auto", padding: "0 24px 80px" }}
-    >
-      {/* Summary — first section, top rule built in */}
-      <div
+    <section data-testid="results-section" style={{ paddingBottom: 80 }}>
+      {/* Summary — first section, with the results toolbar (Export PDF) */}
+      <SectionHeading
+        label="Scenario Summary"
+        t={t}
+        style={{ marginTop: 40 }}
+        action={
+          <Button
+            variant={pdfState === "error" ? "danger" : "secondary"}
+            size="sm"
+            data-testid="export-pdf-btn"
+            onClick={handleExportPdf}
+            disabled={pdfState === "loading"}
+            style={
+              pdfState === "loading"
+                ? { cursor: "progress", opacity: 0.7 }
+                : undefined
+            }
+          >
+            {pdfState === "idle" && <DownloadIcon />}
+            {pdfState === "loading"
+              ? "Generating\u2026"
+              : pdfState === "error"
+                ? "Export failed"
+                : "Export PDF"}
+          </Button>
+        }
+      />
+      <p
         style={{
-          borderTop: `1px solid ${t.border}`,
-          paddingTop: 10,
-          marginTop: 40,
+          fontFamily: "var(--font-display)",
+          fontSize: "clamp(17px, 2.5vw, 20px)",
+          color: t.text,
+          lineHeight: 1.65,
+          margin: 0,
+          fontStyle: "italic",
         }}
       >
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 9,
-            letterSpacing: "0.44em",
-            textTransform: "uppercase",
-            color: t.textTertiary,
-            marginBottom: 18,
-          }}
-        >
-          Scenario Summary
-        </div>
-        <p
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(17px, 2.5vw, 20px)",
-            color: t.text,
-            lineHeight: 1.65,
-            margin: 0,
-            fontStyle: "italic",
-          }}
-        >
-          {data.summary}
-        </p>
-      </div>
-
-      {/* Export PDF */}
-      <div style={{ marginTop: 20 }}>
-        <button
-          onClick={handleExportPdf}
-          data-testid="export-pdf-btn"
-          disabled={pdfState === "loading"}
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 10,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            border: "none",
-            background: "none",
-            color: pdfState === "error" ? t.accentRed : t.textTertiary,
-            padding: 0,
-            cursor: pdfState === "loading" ? "default" : "pointer",
-            opacity: pdfState === "loading" ? 0.5 : 1,
-            transition: "color 0.15s",
-          }}
-          onMouseEnter={(e) => {
-            if (pdfState !== "loading")
-              e.currentTarget.style.color = t.textSecondary;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color =
-              pdfState === "error" ? t.accentRed : t.textTertiary;
-          }}
-        >
-          {pdfState === "loading"
-            ? "Generating\u2026"
-            : pdfState === "error"
-              ? "Export failed"
-              : "\u2193 Export PDF"}
-        </button>
-      </div>
+        {data.summary}
+      </p>
 
       {/* Old format notice */}
       {isOldFormat && (
-        <div
-          style={{
-            marginTop: 32,
-            borderLeft: `3px solid ${t.border}`,
-            paddingLeft: 16,
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: t.textSecondary,
-            lineHeight: 1.5,
-          }}
-        >
+        <Callout tone={t.accent} t={t} style={{ marginTop: 32 }}>
           This result uses an older format. Re-run your search to see grouped
           results by law type.
-        </div>
+        </Callout>
       )}
 
       {/* Grouped result sections */}
@@ -369,32 +388,25 @@ export default function Results({
             const removed = rawItems.length - items.length;
             if (removed > 0) {
               verificationBanner = (
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: t.textTertiary,
-                    marginBottom: 16,
-                    letterSpacing: "0.02em",
-                  }}
+                <Callout
+                  tone={t.accentOlive}
+                  t={t}
+                  style={{ fontSize: 13, marginBottom: 12 }}
                 >
                   {verified} of {rawItems.length} verified — {removed}{" "}
                   unconfirmed removed
-                </div>
+                </Callout>
               );
             } else if (verified === rawItems.length && verified > 0) {
               verificationBanner = (
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 11,
-                    color: t.accentGreen,
-                    marginBottom: 16,
-                  }}
+                <Callout
+                  tone={t.accentGreen}
+                  t={t}
+                  style={{ fontSize: 13, marginBottom: 12 }}
                 >
                   {verified} of {verified} citation{verified !== 1 ? "s" : ""}{" "}
                   verified on CanLII
-                </div>
+                </Callout>
               );
             }
           }
@@ -403,18 +415,11 @@ export default function Results({
             if (key === "case_law" && rawItems.length > 0) {
               return (
                 <div key={key}>
-                  <SectionBreak label={label} t={t} />
-                  <div
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 12,
-                      color: t.textTertiary,
-                      lineHeight: 1.5,
-                    }}
-                  >
+                  <SectionHeading label={label} t={t} />
+                  <Callout tone={t.accentOlive} t={t}>
                     None of the suggested case law citations were verified on
                     CanLII.
-                  </div>
+                  </Callout>
                 </div>
               );
             }
@@ -438,7 +443,7 @@ export default function Results({
               <div key={key}>
                 {Object.entries(groups).map(([groupName, groupItems], idx) => (
                   <div key={`${key}-${idx}`}>
-                    <SectionBreak
+                    <SectionHeading
                       label={groupName}
                       count={groupItems.length}
                       t={t}
@@ -463,7 +468,7 @@ export default function Results({
 
           return (
             <div key={key}>
-              <SectionBreak label={label} count={items.length} t={t} />
+              <SectionHeading label={label} count={items.length} t={t} />
               {verificationBanner}
               {items.map((item, i) => (
                 <ResultCard
@@ -488,34 +493,26 @@ export default function Results({
       {/* Case law empty state */}
       {showCaseLawEmptyState && (
         <div>
-          <SectionBreak label="Case Law" t={t} />
-          <div
-            style={{
-              borderLeft: `2px solid ${t.accent}`,
-              paddingLeft: 18,
-            }}
+          <SectionHeading label="Case Law" t={t} />
+          <Callout
+            tone={
+              caseLawMeta?.reason?.startsWith("retrieval_error") ||
+              caseLawMeta?.reason === "missing_api_key"
+                ? t.accentOlive
+                : t.accent
+            }
+            t={t}
           >
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(14px, 2vw, 16px)",
-                color: t.textSecondary,
-                lineHeight: 1.6,
-                fontStyle: "italic",
-              }}
-            >
-              {caseLawEmptyMessage}
-            </div>
+            <div style={{ color: t.text }}>{caseLawEmptyMessage}</div>
 
             {caseLawEmptyGuidance.length > 0 && (
               <ul
                 style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  color: t.textTertiary,
-                  lineHeight: 1.8,
-                  margin: "12px 0 0",
-                  paddingLeft: 16,
+                  fontSize: 13,
+                  color: t.textSecondary,
+                  lineHeight: 1.7,
+                  margin: "10px 0 0",
+                  paddingLeft: 18,
                 }}
               >
                 {caseLawEmptyGuidance.map((item) => (
@@ -525,38 +522,24 @@ export default function Results({
             )}
 
             {canliiSearchUrl && (
-              <a
+              <Button
+                variant="link"
+                size="sm"
                 href={canliiSearchUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  display: "inline-block",
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  letterSpacing: "0.08em",
-                  color: t.accentOlive,
-                  textDecoration: "none",
-                  marginTop: 14,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.textDecoration = "underline";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.textDecoration = "none";
-                }}
+                style={{ marginTop: 12 }}
               >
                 Search CanLII manually {"\u2197"}
-              </a>
+              </Button>
             )}
 
             {showRetrievalStats && (
               <div
                 style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 10,
+                  fontSize: 12,
                   color: t.textTertiary,
-                  marginTop: 10,
-                  letterSpacing: "0.04em",
+                  marginTop: 8,
                 }}
               >
                 {retrievalStats.searchCalls} database
@@ -566,31 +549,31 @@ export default function Results({
                 {retrievalStats.candidateCount !== 1 ? "s" : ""} evaluated
               </div>
             )}
-          </div>
+          </Callout>
         </div>
       )}
 
       {/* Legal Analysis */}
       <div>
-        <SectionBreak label="Legal Analysis" t={t} />
-        <div
+        <SectionHeading label="Legal Analysis" t={t} />
+        <Callout
+          tone={t.accent}
+          t={t}
           style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(15px, 2.3vw, 17px)",
+            padding: "16px 20px",
+            fontSize: 14,
+            lineHeight: 1.75,
             color: t.text,
-            lineHeight: 1.85,
-            borderLeft: `2px solid ${t.accent}`,
-            paddingLeft: 20,
           }}
         >
           {analysisText}
-        </div>
+        </Callout>
       </div>
 
       {/* Suggested Links */}
       {data.suggestions?.length > 0 && (
         <div>
-          <SectionBreak label="Suggested Links" t={t} />
+          <SectionHeading label="Suggested Links" t={t} />
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {data.suggestions.map((suggestion, i) => (
               <SuggestionLink key={i} suggestion={suggestion} />
@@ -610,11 +593,10 @@ export default function Results({
         <p
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: 11,
+            fontSize: 12,
             color: t.textSecondary,
-            lineHeight: 1.65,
+            lineHeight: 1.6,
             margin: 0,
-            letterSpacing: "0.02em",
           }}
         >
           CaseDive is an educational research tool and does not constitute legal

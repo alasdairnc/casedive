@@ -1,70 +1,87 @@
+import { useState } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
+import { useMediaQuery } from "../hooks/useMediaQuery.js";
+import Button from "./ui/Button.jsx";
+import {
+  RADIUS,
+  CONTENT_MAX_WIDTH,
+  PAGE_GUTTER,
+  MOBILE_NAV_QUERY,
+} from "../lib/ui.js";
 
 const MAX_CHARS = 5000;
 
 export default function SearchArea({ query, setQuery, onSubmit, loading }) {
   const t = useTheme();
+  const [focused, setFocused] = useState(false);
+  // Touch-first widths: no keyboard hint, full-width submit
+  const isMobile = useMediaQuery(MOBILE_NAV_QUERY);
   const remaining = MAX_CHARS - query.length;
   const nearLimit = remaining <= 500;
   const atLimit = remaining <= 0;
 
+  const kbdStyle = {
+    display: "inline-block",
+    padding: "1px 6px",
+    fontFamily: "var(--font-body)",
+    fontSize: 12,
+    color: t.textSecondary,
+    background: t.bg,
+    border: `1px solid ${t.border}`,
+    borderRadius: RADIUS.sm,
+  };
+
   return (
     <section
-      style={{ maxWidth: 760, margin: "0 auto", padding: "20px 24px 0" }}
+      style={{
+        maxWidth: CONTENT_MAX_WIDTH,
+        margin: "0 auto",
+        padding: `20px ${PAGE_GUTTER}px 0`,
+      }}
     >
       <div style={{ position: "relative" }}>
         <textarea
           data-testid="scenario-input"
+          aria-label="Legal scenario"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !loading)
               onSubmit();
           }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           maxLength={MAX_CHARS}
           placeholder="Describe your legal scenario in plain language…"
           style={{
             width: "100%",
-            background: "transparent",
-            border: "none",
-            borderTop: `1px solid ${atLimit ? t.accentRed : t.border}`,
-            borderBottom: `1px solid ${atLimit ? t.accentRed : t.border}`,
+            display: "block",
+            boxSizing: "border-box",
+            minHeight: 140,
+            padding: "16px 18px 32px",
+            background: t.bgAlt,
             color: t.text,
+            border: `1px solid ${
+              atLimit ? t.accentRed : focused ? t.accent : t.border
+            }`,
+            borderRadius: RADIUS.lg,
             fontFamily: "var(--font-display)",
             fontSize: "clamp(16px, 2.5vw, 19px)",
-            padding: "20px 0",
-            resize: "none",
-            minHeight: 140,
-            outline: "none",
-            lineHeight: 1.7,
-            boxSizing: "border-box",
-            transition: "border-color 0.2s, box-shadow 0.2s",
-            display: "block",
-          }}
-          onFocus={(e) => {
-            e.target.style.borderTopColor = atLimit ? t.accentRed : t.border;
-            e.target.style.borderBottomColor = atLimit ? t.accentRed : t.border;
-            e.target.style.boxShadow = `inset 3px 0 0 ${atLimit ? t.accentRed : t.accent}`;
-            e.target.style.paddingLeft = "12px";
-          }}
-          onBlur={(e) => {
-            e.target.style.borderTopColor = atLimit ? t.accentRed : t.border;
-            e.target.style.borderBottomColor = atLimit ? t.accentRed : t.border;
-            e.target.style.boxShadow = "none";
-            e.target.style.paddingLeft = "0";
+            lineHeight: 1.6,
+            resize: "vertical",
+            transition: "border-color 0.15s",
           }}
         />
         {nearLimit && (
           <div
             style={{
               position: "absolute",
-              bottom: 8,
-              right: 0,
+              bottom: 10,
+              right: 26,
               fontFamily: "var(--font-body)",
-              fontSize: 10,
+              fontSize: 12,
               color: atLimit ? t.accentRed : t.textTertiary,
               pointerEvents: "none",
-              letterSpacing: "0.04em",
             }}
           >
             {remaining.toLocaleString()}
@@ -75,57 +92,40 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
       <div
         style={{
           display: "flex",
-          gap: 20,
-          marginTop: 14,
           alignItems: "center",
+          justifyContent: "space-between",
           flexWrap: "wrap",
+          gap: 12,
+          marginTop: 12,
         }}
       >
-        <button
+        {!isMobile && (
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              color: t.textTertiary,
+            }}
+          >
+            <kbd style={kbdStyle}>{"⌘"}/Ctrl</kbd> +{" "}
+            <kbd style={kbdStyle}>Enter</kbd>
+          </span>
+        )}
+        <Button
+          variant="primary"
+          size="lg"
           data-testid="research-submit"
           onClick={onSubmit}
           disabled={loading || !query.trim() || atLimit}
+          fullWidth={isMobile}
           style={{
-            background: "none",
-            border: `1px solid ${loading || !query.trim() || atLimit ? t.border : t.accentOlive}`,
-            color:
-              loading || !query.trim() || atLimit ? t.textFaint : t.accentOlive,
-            padding: "9px 28px",
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            cursor: loading
-              ? "wait"
-              : !query.trim() || atLimit
-                ? "default"
-                : "pointer",
-            opacity: !query.trim() || atLimit ? 0.4 : 1,
-            transition: "border-color 0.2s, color 0.2s, opacity 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            if (loading || !query.trim() || atLimit) return;
-            e.currentTarget.style.borderColor = t.text;
-            e.currentTarget.style.color = t.text;
-          }}
-          onMouseLeave={(e) => {
-            if (loading || !query.trim() || atLimit) return;
-            e.currentTarget.style.borderColor = t.accentOlive;
-            e.currentTarget.style.color = t.accentOlive;
+            minWidth: 140,
+            marginLeft: "auto",
+            ...(loading ? { cursor: "wait", opacity: 0.8 } : null),
           }}
         >
-          {loading ? "Analyzing\u2026" : "Research"}
-        </button>
-        <span
-          style={{
-            fontSize: 11,
-            color: t.textTertiary,
-            fontFamily: "var(--font-body)",
-            letterSpacing: "0.02em",
-          }}
-        >
-          {"\u2318"}/Ctrl + Enter
-        </span>
+          {loading ? "Analyzing…" : "Research"}
+        </Button>
       </div>
     </section>
   );

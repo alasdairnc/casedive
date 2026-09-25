@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openNavMenuIfCollapsed } from "./helpers/nav.js";
 
 const MOCK_ANALYZE_RESPONSE = {
   summary:
@@ -55,7 +56,8 @@ test.describe("SearchHistory", () => {
     const scenario = "A person broke into a house at night and stole jewelry";
     await setupAndSearch(page);
 
-    // History button should now appear
+    // History lives in the header nav (behind Menu on phones)
+    await openNavMenuIfCollapsed(page);
     const historyBtn = page.locator("button", { hasText: /history/i });
     await expect(historyBtn).toBeVisible();
     await historyBtn.click();
@@ -88,7 +90,8 @@ test.describe("CriminalCodeExplorer", () => {
   test("opening the explorer and searching returns matching sections", async ({
     page,
   }) => {
-    // Open explorer via the Code button in the header
+    // Open explorer via the Criminal Code button in the header
+    await openNavMenuIfCollapsed(page);
     await page.getByRole("button", { name: /criminal code explorer/i }).click();
 
     // Explorer panel should be visible with its header span (exact match to avoid ambiguity)
@@ -110,6 +113,7 @@ test.describe("CriminalCodeExplorer", () => {
   test("section with enriched data can be expanded to show Definition", async ({
     page,
   }) => {
+    await openNavMenuIfCollapsed(page);
     await page.getByRole("button", { name: /criminal code explorer/i }).click();
     await expect(
       page.locator("span", { hasText: "Criminal Code of Canada" }),
