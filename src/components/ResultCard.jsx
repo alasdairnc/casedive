@@ -1,10 +1,12 @@
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { isValidUrl } from "../lib/validateUrl.js";
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   CASE_LAW_REPORT_REASONS,
   MAX_CASE_LAW_REPORT_NOTE_LENGTH,
 } from "../lib/caseLawReportReasons.js";
+import Button from "./ui/Button.jsx";
+import { RADIUS } from "../lib/ui.js";
 
 export function sanitizeMatchedTextForDisplay(text) {
   const raw = String(text || "").trim();
@@ -36,6 +38,43 @@ export function sanitizeMatchedTextForDisplay(text) {
     .join(" | ");
 }
 
+// One pill-shaped external link for every verification status. Glyphs are
+// aria-hidden so the accessible name is just the label.
+function BadgeLink({ href, color, icon, label, t }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        boxSizing: "border-box",
+        marginTop: 12,
+        padding: "4px 10px",
+        borderRadius: RADIUS.pill,
+        border: `1px solid ${hovered ? color : t.border}`,
+        background: t.tagBg,
+        fontFamily: "var(--font-body)",
+        fontSize: 12,
+        fontWeight: 500,
+        lineHeight: 1.4,
+        color,
+        textDecoration: "none",
+        transition: "border-color 0.15s",
+      }}
+    >
+      {icon && <span aria-hidden="true">{icon}</span>}
+      {label}
+      <span aria-hidden="true">{"\u2197"}</span>
+    </a>
+  );
+}
+
 function VerificationBadge({ verification, item, t, type }) {
   if (!verification) return null;
   const { status, url, searchUrl } = verification;
@@ -52,30 +91,13 @@ function VerificationBadge({ verification, item, t, type }) {
         ? "Confirmed — Justice Laws"
         : "Verified on CanLII";
     return (
-      <a
+      <BadgeLink
         href={safeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 5,
-          fontFamily: "var(--font-body)",
-          fontSize: 10,
-          letterSpacing: "0.08em",
-          color: t.accentGreen,
-          textDecoration: "none",
-          marginTop: 10,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.textDecoration = "underline";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.textDecoration = "none";
-        }}
-      >
-        {"\u2713"}&thinsp;{label}&thinsp;{"\u2197"}
-      </a>
+        color={t.accentGreen}
+        icon={"\u2713"}
+        label={label}
+        t={t}
+      />
     );
   }
 
@@ -87,30 +109,13 @@ function VerificationBadge({ verification, item, t, type }) {
         ? "Section not confirmed — check Justice Laws"
         : "Not found — search CanLII";
     return (
-      <a
+      <BadgeLink
         href={safeSearchUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 5,
-          fontFamily: "var(--font-body)",
-          fontSize: 10,
-          letterSpacing: "0.08em",
-          color: t.accentRed,
-          textDecoration: "none",
-          marginTop: 10,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.textDecoration = "underline";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.textDecoration = "none";
-        }}
-      >
-        {"\u26A0"}&thinsp;{label}&thinsp;{"\u2197"}
-      </a>
+        color={t.accentRed}
+        icon={"\u26A0"}
+        label={label}
+        t={t}
+      />
     );
   }
 
@@ -121,30 +126,13 @@ function VerificationBadge({ verification, item, t, type }) {
       (isValidUrl(url) && url);
     if (!safeUrl) return null;
     return (
-      <a
+      <BadgeLink
         href={safeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 5,
-          fontFamily: "var(--font-body)",
-          fontSize: 10,
-          letterSpacing: "0.08em",
-          color: t.textTertiary,
-          textDecoration: "none",
-          marginTop: 10,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.textDecoration = "underline";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.textDecoration = "none";
-        }}
-      >
-        {"\u2192"}&thinsp;Pre-2000 — verify on CanLII&thinsp;{"\u2197"}
-      </a>
+        color={t.textTertiary}
+        icon={"\u2192"}
+        label="Pre-2000 — verify on CanLII"
+        t={t}
+      />
     );
   }
 
@@ -152,42 +140,28 @@ function VerificationBadge({ verification, item, t, type }) {
     itemUrl || (isValidUrl(url) && url) || (isValidUrl(searchUrl) && searchUrl);
   if (!href) return null;
   return (
-    <a
+    <BadgeLink
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 5,
-        fontFamily: "var(--font-body)",
-        fontSize: 10,
-        letterSpacing: "0.08em",
-        color: t.textTertiary,
-        textDecoration: "none",
-        marginTop: 10,
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.textDecoration = "underline";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.textDecoration = "none";
-      }}
-    >
-      {"\u2192"}&thinsp;Search CanLII&thinsp;{"\u2197"}
-    </a>
+      color={t.textTertiary}
+      icon={"\u2192"}
+      label="Search CanLII"
+      t={t}
+    />
   );
 }
 
-function BookmarkIcon({ filled, color }) {
+function BookmarkIcon({ filled }) {
   return (
     <svg
-      width="14"
-      height="14"
+      width="16"
+      height="16"
       viewBox="0 0 16 16"
-      fill={filled ? color : "none"}
-      stroke={color}
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
       strokeWidth="1.5"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
       style={{ display: "block" }}
     >
       <path d="M3 2h10v12l-5-3-5 3V2z" />
@@ -218,11 +192,26 @@ export default function ResultCard({
     type === "case_law" &&
     typeof onReportCaseLaw === "function" &&
     Boolean(citationId);
+  const [hovered, setHovered] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState("");
   const [reportNote, setReportNote] = useState("");
   const [reportState, setReportState] = useState("idle");
   const [reportError, setReportError] = useState("");
+  const reportPanelId = useId();
+  const reportHeadingId = useId();
+  const reasonId = useId();
+  const noteId = useId();
+  const noteHintId = useId();
+
+  function handleCardKeyDown(e) {
+    // Only the card itself; keys pressed in nested controls bubble up here too
+    if (e.target !== e.currentTarget) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onCardClick(item);
+    }
+  }
 
   function handleBookmarkClick(e) {
     e.stopPropagation();
@@ -275,28 +264,51 @@ export default function ResultCard({
     }
   }
 
+  const eyebrowStyle = {
+    fontFamily: "var(--font-body)",
+    fontSize: 12,
+    fontWeight: 600,
+    color: t.textTertiary,
+  };
+
+  const fieldLabelStyle = {
+    display: "block",
+    fontFamily: "var(--font-body)",
+    fontSize: 13,
+    fontWeight: 500,
+    color: t.textSecondary,
+    marginBottom: 6,
+  };
+
+  const fieldStyle = {
+    display: "block",
+    width: "100%",
+    boxSizing: "border-box",
+    border: `1px solid ${t.border}`,
+    borderRadius: RADIUS.md,
+    background: t.bgAlt,
+    color: t.text,
+    fontFamily: "var(--font-body)",
+    fontSize: 14,
+    padding: "9px 12px",
+  };
+
   return (
     <div
       onClick={clickable ? () => onCardClick(item) : undefined}
+      onKeyDown={clickable ? handleCardKeyDown : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onMouseEnter={clickable ? () => setHovered(true) : undefined}
+      onMouseLeave={clickable ? () => setHovered(false) : undefined}
       style={{
-        borderBottom: `1px solid ${t.borderLight}`,
-        padding: "20px 0",
+        background: t.cardBg,
+        border: `1px solid ${clickable && hovered ? t.textTertiary : t.border}`,
+        borderRadius: RADIUS.lg,
+        padding: "18px 20px",
+        marginBottom: 12,
         cursor: clickable ? "pointer" : "default",
+        transition: "border-color 0.15s",
       }}
-      onMouseEnter={
-        clickable
-          ? (e) => {
-              e.currentTarget.style.opacity = "0.72";
-            }
-          : undefined
-      }
-      onMouseLeave={
-        clickable
-          ? (e) => {
-              e.currentTarget.style.opacity = "1";
-            }
-          : undefined
-      }
     >
       {/* Citation row */}
       <div
@@ -309,26 +321,27 @@ export default function ResultCard({
       >
         <div style={{ flex: 1, minWidth: 0 }}>
           {/* Title / Citation heading */}
-          <div
+          <h3
             style={{
+              margin: 0,
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(15px, 2.2vw, 17px)",
+              fontSize: 16,
               color: t.text,
-              fontWeight: 700,
-              lineHeight: 1.3,
+              fontWeight: 600,
+              lineHeight: 1.35,
             }}
           >
             {item.title || item.citation}
-          </div>
+          </h3>
 
           {/* Neutral citation below title when both present */}
           {item.title && item.title !== item.citation && (
             <div
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: 11,
-                color: t.textTertiary,
-                marginTop: 2,
+                fontSize: 12,
+                color: t.textSecondary,
+                marginTop: 4,
               }}
             >
               {item.citation}
@@ -340,8 +353,8 @@ export default function ResultCard({
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 10,
-              marginTop: 4,
+              gap: 8,
+              marginTop: 6,
               flexWrap: "wrap",
             }}
           >
@@ -349,9 +362,8 @@ export default function ResultCard({
               <div
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: 11,
+                  fontSize: 12,
                   color: t.textTertiary,
-                  letterSpacing: "0.04em",
                 }}
               >
                 {item.court}
@@ -361,14 +373,17 @@ export default function ResultCard({
             {type === "civil_law" && verification?.jurisdiction && (
               <div
                 style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "2px 10px",
+                  borderRadius: RADIUS.pill,
+                  border: `1px solid ${t.border}`,
+                  background: t.tagBg,
                   fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color:
-                    verification.jurisdiction === "Federal"
-                      ? t.accentGreen
-                      : t.accent,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  lineHeight: 1.5,
+                  color: t.tagText,
                 }}
               >
                 {verification.jurisdiction}
@@ -381,8 +396,9 @@ export default function ResultCard({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 10,
+            gap: 4,
             flexShrink: 0,
+            margin: "-6px -8px 0 0",
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -390,75 +406,48 @@ export default function ResultCard({
             (reportState === "success" ? (
               <div
                 data-testid="report-case-law-success"
+                role="status"
                 style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "3px 10px",
+                  borderRadius: RADIUS.pill,
+                  border: `1px solid ${t.border}`,
                   fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: t.textTertiary,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: t.textSecondary,
                 }}
               >
                 Reported
               </div>
             ) : (
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 data-testid="report-case-law-open"
                 onClick={handleReportToggle}
                 aria-label="Report this case law result"
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: t.textTertiary,
-                  transition: "color 0.15s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = t.textSecondary;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = t.textTertiary;
-                }}
+                aria-expanded={reportOpen}
+                aria-controls={reportOpen ? reportPanelId : undefined}
               >
                 Report
-              </button>
+              </Button>
             ))}
 
           {addBookmark && removeBookmark && isBookmarked && citationId && (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               data-testid={bookmarked ? "bookmark-remove" : "bookmark-add"}
               onClick={handleBookmarkClick}
               aria-label={
                 bookmarked ? "Remove bookmark" : "Bookmark this citation"
               }
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: 4,
-                color: bookmarked ? t.accentOlive : t.textTertiary,
-                transition: "color 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = t.accentOlive;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = bookmarked
-                  ? t.accentOlive
-                  : t.textTertiary;
-              }}
+              style={bookmarked ? { color: t.accent } : undefined}
             >
-              <BookmarkIcon
-                filled={bookmarked}
-                color={bookmarked ? t.accentOlive : "currentColor"}
-              />
-            </button>
+              <BookmarkIcon filled={bookmarked} />
+            </Button>
           )}
         </div>
       </div>
@@ -468,9 +457,9 @@ export default function ResultCard({
         <div
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 14,
             color: t.textSecondary,
-            lineHeight: 1.65,
+            lineHeight: 1.6,
             marginTop: 10,
           }}
         >
@@ -480,52 +469,42 @@ export default function ResultCard({
 
       {reportable && reportOpen && reportState !== "success" && (
         <div
+          id={reportPanelId}
           data-testid="report-case-law-panel"
+          role="group"
+          aria-labelledby={reportHeadingId}
           onClick={(e) => e.stopPropagation()}
           style={{
-            marginTop: 12,
-            padding: 14,
+            marginTop: 14,
+            padding: 16,
             border: `1px solid ${t.border}`,
+            borderRadius: RADIUS.lg,
             background: t.bgAlt,
+            cursor: "default",
           }}
         >
           <div
+            id={reportHeadingId}
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 9,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: t.textTertiary,
-              marginBottom: 8,
+              fontSize: 13,
+              fontWeight: 600,
+              color: t.text,
+              marginBottom: 12,
             }}
           >
             Report this result
           </div>
 
-          <label
-            style={{
-              display: "block",
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              color: t.textSecondary,
-              marginBottom: 8,
-            }}
-          >
+          <label htmlFor={reasonId} style={fieldLabelStyle}>
             Reason
           </label>
           <select
+            id={reasonId}
             data-testid="report-case-law-reason"
             value={reportReason}
             onChange={(e) => setReportReason(e.target.value)}
-            style={{
-              width: "100%",
-              border: `1px solid ${t.border}`,
-              background: t.bg,
-              color: t.text,
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              padding: "10px 12px",
-            }}
+            style={{ ...fieldStyle, minHeight: 40 }}
           >
             <option value="">Select a reason</option>
             {CASE_LAW_REPORT_REASONS.map((reason) => (
@@ -536,19 +515,15 @@ export default function ResultCard({
           </select>
 
           <label
-            style={{
-              display: "block",
-              fontFamily: "var(--font-body)",
-              fontSize: 11,
-              color: t.textSecondary,
-              marginTop: 12,
-              marginBottom: 8,
-            }}
+            htmlFor={noteId}
+            style={{ ...fieldLabelStyle, marginTop: 14 }}
           >
             Note (optional)
           </label>
           <textarea
+            id={noteId}
             data-testid="report-case-law-note"
+            aria-describedby={noteHintId}
             value={reportNote}
             onChange={(e) =>
               setReportNote(
@@ -558,26 +533,16 @@ export default function ResultCard({
             rows={3}
             maxLength={MAX_CASE_LAW_REPORT_NOTE_LENGTH}
             placeholder="Add any context that would help improve this match."
-            style={{
-              width: "100%",
-              resize: "vertical",
-              border: `1px solid ${t.border}`,
-              background: t.bg,
-              color: t.text,
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              lineHeight: 1.6,
-              padding: "10px 12px",
-              boxSizing: "border-box",
-            }}
+            style={{ ...fieldStyle, resize: "vertical", lineHeight: 1.5 }}
           />
 
           <div
+            id={noteHintId}
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 10,
+              fontSize: 12,
               color: t.textTertiary,
-              marginTop: 8,
+              marginTop: 6,
             }}
           >
             {MAX_CASE_LAW_REPORT_NOTE_LENGTH - reportNote.length} characters
@@ -587,9 +552,10 @@ export default function ResultCard({
           {reportError && (
             <div
               data-testid="report-case-law-error"
+              role="alert"
               style={{
                 fontFamily: "var(--font-body)",
-                fontSize: 11,
+                fontSize: 13,
                 color: t.accentRed,
                 marginTop: 10,
               }}
@@ -602,74 +568,42 @@ export default function ResultCard({
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 12,
-              marginTop: 12,
+              gap: 8,
+              marginTop: 14,
             }}
           >
-            <button
-              type="button"
+            <Button
+              variant="primary"
+              size="sm"
               data-testid="report-case-law-submit"
               onClick={handleReportSubmit}
               disabled={reportState === "submitting"}
-              style={{
-                border: `1px solid ${t.border}`,
-                background: t.bg,
-                color: t.text,
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                padding: "9px 12px",
-                cursor: reportState === "submitting" ? "default" : "pointer",
-                opacity: reportState === "submitting" ? 0.65 : 1,
-              }}
             >
               {reportState === "submitting" ? "Sending..." : "Submit report"}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleReportCancel}
               disabled={reportState === "submitting"}
-              style={{
-                border: "none",
-                background: "none",
-                color: t.textTertiary,
-                fontFamily: "var(--font-body)",
-                fontSize: 10,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                padding: 0,
-                cursor: reportState === "submitting" ? "default" : "pointer",
-              }}
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {/* Why It Matched */}
       {matchedText && (
-        <div style={{ marginTop: 12 }}>
+        <div style={{ marginTop: 14 }}>
+          <div style={{ ...eyebrowStyle, marginBottom: 6 }}>Why it matched</div>
           <div
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 9,
-              letterSpacing: "0.32em",
-              textTransform: "uppercase",
-              color: t.textTertiary,
-              marginBottom: 5,
-            }}
-          >
-            Why it matched
-          </div>
-          <div
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
+              fontSize: 13,
               color: t.textSecondary,
-              lineHeight: 1.65,
-              borderLeft: `1px solid ${t.border}`,
+              lineHeight: 1.6,
+              borderLeft: `2px solid ${t.border}`,
               paddingLeft: 12,
             }}
           >
@@ -686,7 +620,7 @@ export default function ResultCard({
             style={{
               marginTop: 10,
               fontFamily: "var(--font-mono)",
-              fontSize: 11,
+              fontSize: 12,
               color: t.textTertiary,
               lineHeight: 1.5,
             }}

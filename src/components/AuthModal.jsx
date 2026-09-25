@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { useAuth } from "../hooks/useAuth.js";
+import Button from "./ui/Button.jsx";
+import { RADIUS } from "../lib/ui.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const COPY = {
-  signin: { heading: "Sign In", submit: "Sign In" },
-  signup: { heading: "Create Account", submit: "Sign Up" },
-  forgot: { heading: "Reset Password", submit: "Send Reset Link" },
-  reset: { heading: "Set New Password", submit: "Update Password" },
+  signin: { heading: "Sign in", submit: "Sign in" },
+  signup: { heading: "Create account", submit: "Sign up" },
+  forgot: { heading: "Reset password", submit: "Send reset link" },
+  reset: { heading: "Set new password", submit: "Update password" },
 };
 
 export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
@@ -119,52 +121,36 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   }
 
   const labelStyle = {
+    display: "block",
     fontFamily: "var(--font-body)",
-    fontSize: 10,
-    letterSpacing: "0.18em",
-    textTransform: "uppercase",
-    color: t.textTertiary,
+    fontSize: 13,
+    fontWeight: 600,
+    color: t.textSecondary,
     marginBottom: 6,
   };
 
   const inputStyle = {
     width: "100%",
-    background: "transparent",
-    border: "none",
-    borderBottom: `1px solid ${t.border}`,
-    padding: "8px 0",
+    height: 40,
+    background: t.bgAlt,
+    border: `1px solid ${t.border}`,
+    borderRadius: RADIUS.md,
+    padding: "0 12px",
     fontFamily: "var(--font-body)",
     fontSize: 14,
     color: t.text,
-    outline: "none",
     boxSizing: "border-box",
     transition: "border-color 0.2s",
   };
 
-  const focusInput = (e) => {
-    e.target.style.borderBottomColor = t.accent;
-  };
-  const blurInput = (e) => {
-    e.target.style.borderBottomColor = t.border;
-  };
-
-  const linkStyle = {
-    background: "none",
-    border: "none",
-    padding: 0,
-    cursor: "pointer",
+  const calloutStyle = {
+    marginBottom: 18,
+    padding: "10px 14px",
+    borderRadius: RADIUS.lg,
+    background: t.bgAlt,
     fontFamily: "var(--font-body)",
-    fontSize: 11,
-    letterSpacing: "0.04em",
-    color: t.textTertiary,
-    transition: "color 0.15s",
-  };
-
-  const linkHover = (e) => {
-    e.currentTarget.style.color = t.text;
-  };
-  const linkLeave = (e) => {
-    e.currentTarget.style.color = t.textTertiary;
+    fontSize: 14,
+    lineHeight: 1.5,
   };
 
   return (
@@ -189,227 +175,175 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
         style={{
           background: t.bg,
           border: `1px solid ${t.border}`,
+          borderRadius: RADIUS.lg,
           boxShadow: `0 16px 48px ${t.shadowStrong}`,
           width: "100%",
           maxWidth: 400,
           position: "relative",
+          padding: "24px 28px 28px",
         }}
       >
-        {/* Gold top rule — mirrors the site header */}
-        <div style={{ height: 2, background: t.accent }} />
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Close"
+          onClick={onClose}
+          style={{ position: "absolute", top: 12, right: 12, fontSize: 22 }}
+        >
+          ×
+        </Button>
 
-        <div style={{ padding: "26px 32px 30px" }}>
-          <button
-            aria-label="Close"
-            onClick={onClose}
-            onMouseEnter={linkHover}
-            onMouseLeave={linkLeave}
-            style={{
-              position: "absolute",
-              top: 14,
-              right: 16,
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: t.textTertiary,
-              fontSize: 18,
-              lineHeight: 1,
-              padding: "2px 4px",
-              transition: "color 0.15s",
-            }}
-          >
-            ×
-          </button>
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            fontWeight: 500,
+            color: t.textTertiary,
+            marginBottom: 6,
+          }}
+        >
+          CaseDive account
+        </div>
 
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 24,
+            fontWeight: 600,
+            lineHeight: 1.25,
+            color: t.text,
+            margin: "0 0 22px",
+          }}
+        >
+          {heading}
+        </h2>
+
+        {error && (
           <div
+            role="alert"
             style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 9,
-              letterSpacing: "0.38em",
-              textTransform: "uppercase",
-              color: t.textTertiary,
-              marginBottom: 10,
+              ...calloutStyle,
+              border: `1px solid ${t.accentRed}`,
+              color: t.accentRed,
             }}
           >
-            CaseDive Account
+            {error}
           </div>
+        )}
 
-          <h2
+        {notice && (
+          <div
+            role="status"
             style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 26,
-              fontWeight: 400,
-              fontStyle: "italic",
-              letterSpacing: "-0.3px",
-              color: t.text,
-              margin: "0 0 22px",
+              ...calloutStyle,
+              border: `1px solid ${t.accentGreen}`,
+              color: t.accentGreen,
             }}
           >
-            {heading}
-          </h2>
+            {notice}
+          </div>
+        )}
 
-          {error && (
-            <div
-              role="alert"
-              style={{
-                marginBottom: 18,
-                paddingLeft: 10,
-                borderLeft: `2px solid ${t.accentRed}`,
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                lineHeight: 1.6,
-                color: t.accentRed,
-              }}
-            >
-              {error}
+        <form onSubmit={handleSubmit} noValidate>
+          {needsEmail && (
+            <div style={{ marginBottom: 16 }}>
+              <label htmlFor="auth-email" style={labelStyle}>
+                Email
+              </label>
+              <input
+                id="auth-email"
+                ref={emailRef}
+                aria-label="Email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                placeholder="you@example.com"
+                onChange={(e) => setEmail(e.target.value)}
+                style={inputStyle}
+              />
             </div>
           )}
 
-          {notice && (
-            <div
-              role="status"
-              style={{
-                marginBottom: 18,
-                paddingLeft: 10,
-                borderLeft: `2px solid ${t.accentGreen}`,
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                lineHeight: 1.6,
-                color: t.accentGreen,
-              }}
-            >
-              {notice}
+          {needsPassword && (
+            <div style={{ marginBottom: 24 }}>
+              <label htmlFor="auth-password" style={labelStyle}>
+                {mode === "reset" ? "New password" : "Password"}
+              </label>
+              <input
+                id="auth-password"
+                ref={passwordRef}
+                aria-label="Password"
+                type="password"
+                autoComplete={
+                  mode === "signin" ? "current-password" : "new-password"
+                }
+                value={password}
+                placeholder="8+ characters"
+                onChange={(e) => setPassword(e.target.value)}
+                style={inputStyle}
+              />
             </div>
           )}
 
-          <form onSubmit={handleSubmit} noValidate>
-            {needsEmail && (
-              <div style={{ marginBottom: 18 }}>
-                <div style={labelStyle}>Email</div>
-                <input
-                  ref={emailRef}
-                  aria-label="Email"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  placeholder="you@example.com"
-                  onChange={(e) => setEmail(e.target.value)}
-                  onFocus={focusInput}
-                  onBlur={blurInput}
-                  style={inputStyle}
-                />
-              </div>
-            )}
+          {!needsPassword && <div style={{ marginBottom: 8 }} />}
 
-            {needsPassword && (
-              <div style={{ marginBottom: 26 }}>
-                <div style={labelStyle}>
-                  {mode === "reset" ? "New Password" : "Password"}
-                </div>
-                <input
-                  ref={passwordRef}
-                  aria-label="Password"
-                  type="password"
-                  autoComplete={
-                    mode === "signin" ? "current-password" : "new-password"
-                  }
-                  value={password}
-                  placeholder="8+ characters"
-                  onChange={(e) => setPassword(e.target.value)}
-                  onFocus={focusInput}
-                  onBlur={blurInput}
-                  style={inputStyle}
-                />
-              </div>
-            )}
-
-            {!needsPassword && <div style={{ marginBottom: 26 }} />}
-
-            <button
-              type="submit"
-              disabled={submitting}
-              style={{
-                width: "100%",
-                background: "none",
-                border: `1px solid ${submitting ? t.border : t.accentOlive}`,
-                color: submitting ? t.textFaint : t.accentOlive,
-                padding: "10px 28px",
-                fontFamily: "var(--font-body)",
-                fontSize: 11,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                cursor: submitting ? "wait" : "pointer",
-                transition: "border-color 0.2s, color 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                if (submitting) return;
-                e.currentTarget.style.borderColor = t.text;
-                e.currentTarget.style.color = t.text;
-              }}
-              onMouseLeave={(e) => {
-                if (submitting) return;
-                e.currentTarget.style.borderColor = t.accentOlive;
-                e.currentTarget.style.color = t.accentOlive;
-              }}
-            >
-              {submitting ? "Please wait…" : submit}
-            </button>
-          </form>
-
-          <div
-            style={{
-              marginTop: 18,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 8,
-            }}
+          <Button
+            type="submit"
+            variant="primary"
+            size="md"
+            fullWidth
+            disabled={submitting}
+            style={submitting ? { cursor: "wait" } : undefined}
           >
-            {mode === "signin" && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => switchMode("forgot")}
-                  onMouseEnter={linkHover}
-                  onMouseLeave={linkLeave}
-                  style={linkStyle}
-                >
-                  Forgot password?
-                </button>
-                <button
-                  type="button"
-                  onClick={() => switchMode("signup")}
-                  onMouseEnter={linkHover}
-                  onMouseLeave={linkLeave}
-                  style={linkStyle}
-                >
-                  Don&apos;t have an account? Sign Up
-                </button>
-              </>
-            )}
-            {mode === "signup" && (
-              <button
-                type="button"
-                onClick={() => switchMode("signin")}
-                onMouseEnter={linkHover}
-                onMouseLeave={linkLeave}
-                style={linkStyle}
+            {submitting ? "Please wait…" : submit}
+          </Button>
+        </form>
+
+        <div
+          style={{
+            marginTop: 20,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 12,
+          }}
+        >
+          {mode === "signin" && (
+            <>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => switchMode("forgot")}
               >
-                Already have an account? Sign In
-              </button>
-            )}
-            {mode === "forgot" && (
-              <button
-                type="button"
-                onClick={() => switchMode("signin")}
-                onMouseEnter={linkHover}
-                onMouseLeave={linkLeave}
-                style={linkStyle}
+                Forgot password?
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => switchMode("signup")}
               >
-                Back to Sign In
-              </button>
-            )}
-          </div>
+                Don&apos;t have an account? Sign up
+              </Button>
+            </>
+          )}
+          {mode === "signup" && (
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => switchMode("signin")}
+            >
+              Already have an account? Sign in
+            </Button>
+          )}
+          {mode === "forgot" && (
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => switchMode("signin")}
+            >
+              Back to sign in
+            </Button>
+          )}
         </div>
       </div>
     </div>

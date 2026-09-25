@@ -3,6 +3,8 @@ import { useTheme } from "../lib/ThemeContext.jsx";
 import { CRIMINAL_CODE_PARTS } from "../lib/criminalCodeParts.js";
 import { useCriminalCodeSearch } from "../hooks/useCriminalCodeSearch.js";
 import Select from "./Select.jsx";
+import Button from "./ui/Button.jsx";
+import { CONTENT_MAX_WIDTH, RADIUS } from "../lib/ui.js";
 
 const SEVERITY_OPTIONS = [
   { value: "all", label: "All" },
@@ -17,11 +19,38 @@ const PART_OPTIONS = [
 ];
 
 function SectionRow({ section, isExpanded, onToggle, t }) {
+  const [hovered, setHovered] = useState(false);
   const isEnriched = !!(
     section.definition ||
     section.maxPenalty ||
     section.relatedSections?.length
   );
+
+  // Small section heading inside the expanded details
+  const labelStyle = {
+    fontFamily: "var(--font-body)",
+    fontSize: 12,
+    fontWeight: 600,
+    color: t.textTertiary,
+    marginBottom: 6,
+  };
+
+  const bodyStyle = {
+    fontFamily: "var(--font-body)",
+    fontSize: 14,
+    color: t.textSecondary,
+    lineHeight: 1.6,
+  };
+
+  const pillStyle = {
+    fontFamily: "var(--font-body)",
+    fontSize: 12,
+    fontWeight: 500,
+    lineHeight: 1.5,
+    padding: "1px 8px",
+    borderRadius: RADIUS.pill,
+    whiteSpace: "nowrap",
+  };
 
   return (
     <div
@@ -29,10 +58,16 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
         padding: "14px 24px",
         borderBottom: `1px solid ${t.borderLight}`,
         cursor: isEnriched || section.url ? "pointer" : "default",
-        background: isExpanded ? t.bgAlt : "transparent",
+        background: isExpanded
+          ? t.bgAlt
+          : hovered && isEnriched
+            ? t.bgHover
+            : "transparent",
         transition: "background 0.2s ease",
       }}
       onClick={isEnriched ? onToggle : undefined}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       {/* Top row: section number, title, severity tag */}
       <div
@@ -48,11 +83,12 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             flexDirection: "column",
             alignItems: "center",
             width: 20,
-            marginTop: 2,
+            marginTop: 3,
           }}
         >
           {isEnriched && (
             <span
+              aria-hidden="true"
               style={{
                 fontSize: 10,
                 color: t.textTertiary,
@@ -80,7 +116,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 fontFamily: "var(--font-mono)",
                 fontSize: 13,
                 fontWeight: 700,
-                color: t.accentOlive,
+                color: t.accent,
                 whiteSpace: "nowrap",
               }}
             >
@@ -90,6 +126,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "clamp(14px, 2vw, 16px)",
+                fontWeight: 500,
                 color: t.text,
                 lineHeight: 1.4,
                 flex: 1,
@@ -102,13 +139,9 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               {isEnriched && !isExpanded && (
                 <span
                   style={{
-                    fontSize: 8,
-                    letterSpacing: 1,
-                    textTransform: "uppercase",
-                    color: t.accentGreen,
-                    border: `1px solid ${t.accentGreen}44`,
-                    padding: "0px 4px",
-                    borderRadius: 2,
+                    ...pillStyle,
+                    color: t.accent,
+                    background: t.accentSoft,
                   }}
                 >
                   Enriched
@@ -117,15 +150,10 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               {section.severity && (
                 <span
                   style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 9,
-                    letterSpacing: 1.5,
-                    textTransform: "uppercase",
+                    ...pillStyle,
                     color: t.tagText,
                     background: t.tagBg,
-                    padding: "1px 6px",
                     border: `1px solid ${t.border}`,
-                    whiteSpace: "nowrap",
                   }}
                 >
                   {section.severity}
@@ -139,7 +167,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             <div
               style={{
                 fontFamily: "var(--font-body)",
-                fontSize: 12,
+                fontSize: 14,
                 color: t.textSecondary,
                 lineHeight: 1.5,
                 marginTop: 4,
@@ -147,7 +175,6 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 WebkitLineClamp: 1,
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
-                opacity: 0.8,
               }}
             >
               {section.definition}
@@ -160,20 +187,18 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               style={{
                 display: "flex",
                 flexWrap: "wrap",
-                gap: 4,
-                marginTop: 6,
+                gap: 6,
+                marginTop: 8,
               }}
             >
               {section.topicsTagged.map((tag) => (
                 <span
                   key={tag}
                   style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 9,
-                    letterSpacing: 1,
+                    ...pillStyle,
+                    fontWeight: 400,
                     color: t.textTertiary,
-                    background: t.bgAlt,
-                    padding: "1px 6px",
+                    background: t.bg,
                     border: `1px solid ${t.borderLight}`,
                   }}
                 >
@@ -190,28 +215,8 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
         <div style={{ marginTop: 16, paddingLeft: 32, paddingRight: 8 }}>
           {section.definition && (
             <div style={{ marginBottom: 16 }}>
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 9,
-                  letterSpacing: 2,
-                  textTransform: "uppercase",
-                  color: t.textTertiary,
-                  marginBottom: 6,
-                }}
-              >
-                Definition
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color: t.textSecondary,
-                  lineHeight: 1.6,
-                }}
-              >
-                {section.definition}
-              </div>
+              <div style={labelStyle}>Definition</div>
+              <div style={bodyStyle}>{section.definition}</div>
             </div>
           )}
 
@@ -224,90 +229,37 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
           >
             {section.maxPenalty && (
               <div style={{ marginBottom: 12 }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 9,
-                    letterSpacing: 2,
-                    textTransform: "uppercase",
-                    color: t.textTertiary,
-                    marginBottom: 4,
-                  }}
-                >
-                  Max Penalty
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: t.textSecondary,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {section.maxPenalty}
-                </div>
+                <div style={labelStyle}>Max penalty</div>
+                <div style={bodyStyle}>{section.maxPenalty}</div>
               </div>
             )}
 
             {section.defences?.length > 0 && (
               <div style={{ marginBottom: 12 }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 9,
-                    letterSpacing: 2,
-                    textTransform: "uppercase",
-                    color: t.textTertiary,
-                    marginBottom: 4,
-                  }}
-                >
-                  Common Defences
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 12,
-                    color: t.textSecondary,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {section.defences.join(" · ")}
-                </div>
+                <div style={labelStyle}>Common defences</div>
+                <div style={bodyStyle}>{section.defences.join(" · ")}</div>
               </div>
             )}
           </div>
 
           {section.relatedSections?.length > 0 && (
             <div style={{ marginBottom: 16, marginTop: 8 }}>
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 9,
-                  letterSpacing: 2,
-                  textTransform: "uppercase",
-                  color: t.textTertiary,
-                  marginBottom: 6,
-                }}
-              >
-                Related Sections
-              </div>
+              <div style={labelStyle}>Related sections</div>
               <div
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
-                  gap: 8,
+                  gap: 6,
                 }}
               >
                 {section.relatedSections.map((s) => (
                   <span
                     key={s}
                     style={{
+                      ...pillStyle,
                       fontFamily: "var(--font-mono)",
-                      fontSize: 11,
-                      color: t.accentOlive,
-                      background: t.bg,
-                      padding: "2px 6px",
-                      border: `1px solid ${t.borderLight}`,
+                      color: t.accent,
+                      background: t.accentSoft,
                     }}
                   >
                     s. {s}
@@ -325,35 +277,31 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              gap: 12,
+              flexWrap: "wrap",
             }}
           >
             {section.partOf && (
               <span
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: 10,
+                  fontSize: 12,
                   color: t.textTertiary,
-                  letterSpacing: 0.5,
                 }}
               >
                 {section.partOf}
               </span>
             )}
             {section.url && (
-              <a
+              <Button
+                variant="link"
+                size="sm"
                 href={section.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 11,
-                  color: t.accentGreen,
-                  textDecoration: "none",
-                  fontWeight: 500,
-                }}
               >
-                Full Text on Justice Laws ↗
-              </a>
+                Full text on Justice Laws ↗
+              </Button>
             )}
           </div>
         </div>
@@ -394,6 +342,15 @@ export default function CriminalCodeExplorer({ onClose }) {
     inputRef.current?.focus();
   }, []);
 
+  const messageStyle = {
+    padding: "48px 24px",
+    fontFamily: "var(--font-display)",
+    fontSize: 14,
+    color: t.textSecondary,
+    fontStyle: "italic",
+    textAlign: "center",
+  };
+
   return (
     <div
       style={{
@@ -409,16 +366,20 @@ export default function CriminalCodeExplorer({ onClose }) {
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="code-explorer-title"
         style={{
           background: t.bg,
           border: `1px solid ${t.border}`,
           borderBottom: "none",
+          borderRadius: `${RADIUS.lg}px ${RADIUS.lg}px 0 0`,
           width: "100%",
-          maxWidth: 800,
+          maxWidth: CONTENT_MAX_WIDTH,
           maxHeight: "85vh",
           display: "flex",
           flexDirection: "column",
-          boxShadow: "0 -8px 32px rgba(0,0,0,0.2)",
+          boxShadow: `0 -8px 32px ${t.shadowStrong}`,
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -428,7 +389,8 @@ export default function CriminalCodeExplorer({ onClose }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "16px 24px",
+            gap: 12,
+            padding: "12px 16px 12px 24px",
             borderBottom: `1px solid ${t.borderLight}`,
           }}
         >
@@ -436,15 +398,16 @@ export default function CriminalCodeExplorer({ onClose }) {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 12,
+              gap: 10,
+              flexWrap: "wrap",
+              minWidth: 0,
             }}
           >
             <span
+              id="code-explorer-title"
               style={{
                 fontFamily: "var(--font-body)",
-                fontSize: 11,
-                letterSpacing: 2,
-                textTransform: "uppercase",
+                fontSize: 16,
                 fontWeight: 600,
                 color: t.text,
               }}
@@ -453,34 +416,28 @@ export default function CriminalCodeExplorer({ onClose }) {
             </span>
             <span
               style={{
-                fontSize: 10,
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
                 color: t.textTertiary,
                 background: t.bgAlt,
                 padding: "1px 8px",
-                borderRadius: 10,
+                borderRadius: RADIUS.pill,
                 border: `1px solid ${t.borderLight}`,
-                fontFamily: "var(--font-body)",
+                whiteSpace: "nowrap",
               }}
             >
-              {totalSections} Sections
+              {totalSections} sections
             </span>
           </div>
-          <button
-            onClick={onClose}
+          <Button
+            variant="ghost"
+            size="icon"
             aria-label="Close"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: "4px 8px",
-              fontFamily: "var(--font-body)",
-              fontSize: 24,
-              color: t.textTertiary,
-              lineHeight: 1,
-            }}
+            onClick={onClose}
+            style={{ fontSize: 22, flexShrink: 0 }}
           >
             ×
-          </button>
+          </Button>
         </div>
 
         {/* Search + Filters */}
@@ -488,47 +445,46 @@ export default function CriminalCodeExplorer({ onClose }) {
           style={{
             padding: "16px 24px",
             borderBottom: `1px solid ${t.borderLight}`,
-            background: t.bgAlt + "44",
           }}
         >
           <div style={{ position: "relative" }}>
             <input
               ref={inputRef}
               type="text"
+              aria-label="Search sections"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search section number, title, or keywords (e.g. 'theft', 'assault')..."
+              placeholder="Search section number, title or keyword (e.g. theft, assault)"
               style={{
                 width: "100%",
-                padding: "12px 16px",
+                height: 40,
+                padding: "0 40px 0 12px",
                 fontFamily: "var(--font-body)",
                 fontSize: 14,
-                backgroundColor: t.inputBg,
+                backgroundColor: t.bgAlt,
                 color: t.text,
                 border: `1px solid ${t.border}`,
-                borderRadius: 4,
-                outline: "none",
+                borderRadius: RADIUS.md,
                 boxSizing: "border-box",
-                boxShadow: "inset 0 1px 2px rgba(0,0,0,0.05)",
               }}
             />
             {query && (
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Clear search"
                 onClick={() => setQuery("")}
                 style={{
                   position: "absolute",
-                  right: 12,
+                  right: 4,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  color: t.textTertiary,
-                  cursor: "pointer",
-                  fontSize: 18,
+                  width: 32,
+                  height: 32,
                 }}
               >
                 ×
-              </button>
+              </Button>
             )}
           </div>
           <div
@@ -560,9 +516,8 @@ export default function CriminalCodeExplorer({ onClose }) {
             style={{
               padding: "8px 24px",
               fontFamily: "var(--font-body)",
-              fontSize: 11,
+              fontSize: 12,
               color: t.textTertiary,
-              letterSpacing: 0.5,
               borderBottom: `1px solid ${t.borderLight}`,
               background: t.bg,
             }}
@@ -578,29 +533,9 @@ export default function CriminalCodeExplorer({ onClose }) {
         {/* Results list */}
         <div style={{ overflowY: "auto", flexGrow: 1, background: t.bg }}>
           {isLoading ? (
-            <div
-              style={{
-                padding: "48px 24px",
-                fontFamily: "var(--font-display)",
-                fontSize: 16,
-                color: t.textTertiary,
-                fontStyle: "italic",
-                textAlign: "center",
-              }}
-            >
-              Loading sections…
-            </div>
+            <div style={messageStyle}>Loading sections…</div>
           ) : results.length === 0 ? (
-            <div
-              style={{
-                padding: "48px 24px",
-                fontFamily: "var(--font-display)",
-                fontSize: 16,
-                color: t.textTertiary,
-                fontStyle: "italic",
-                textAlign: "center",
-              }}
-            >
+            <div style={messageStyle}>
               {query || severityFilter !== "all" || partFilter !== "all"
                 ? "No sections match your current filters."
                 : "Type to browse or search the Criminal Code database."}
