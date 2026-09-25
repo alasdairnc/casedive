@@ -70,7 +70,9 @@ Billing (Stripe checkout/portal/webhook) was **parked on 2026-09-25**: endpoints
 
 ## Auth (Optional Login)
 
-- Client-side Supabase auth: `src/lib/supabase.js`, `src/hooks/useAuth.js`, `src/components/AuthModal.jsx`; cloud sync via `api/user-data.js`
+- Client-side Supabase auth: `src/lib/supabase.js`, `src/lib/AuthContext.jsx` (`<AuthProvider>` owns the one session subscription; `useAuth()` reads it and throws outside the provider), `src/lib/authErrors.js`, `src/components/AuthModal.jsx`; cloud sync via `api/user-data.js`
+- Email-link results are read from the URL at module load (`initialAuthParams`) because Supabase clears the hash once it has the session
+- `tests/e2e/auth.spec.js` mocks every `/auth/v1/*` call; it only runs when the dev server has `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` (any values), otherwise it skips
 - There is NO `api/auth.js` — it was deleted; auth runs in the browser via the Supabase SDK
 - Gated on `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`: if missing, auth silently disables (`isAuthEnabled` false, no sign-in button, no error)
 - Server-side sync needs `SUPABASE_URL` + `SUPABASE_SERVICE_KEY`

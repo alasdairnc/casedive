@@ -1,10 +1,22 @@
 # Auth setup checklist
 
 Everything the sign-in/sign-up code needs from Supabase, Google, and Vercel.
-The code side lives in `src/lib/supabase.js`, `src/hooks/useAuth.js`,
-`src/components/AuthModal.jsx` and `src/App.jsx`. (A friendlier-errors refactor
-that adds `AuthContext.jsx` and `authErrors.js` is parked on the
-`wip/auth-polish` branch; see `docs/ROADMAP.md`.)
+
+The code side:
+
+- `src/lib/supabase.js`: the client, build flags (`authMethods`), the redirect
+  URL, and `initialAuthParams` (what an email link put in the URL).
+- `src/lib/AuthContext.jsx`: `<AuthProvider>`, the one session subscription.
+  `src/hooks/useAuth.js` reads it.
+- `src/lib/authErrors.js`: Supabase errors → plain language plus a one-click
+  follow-up (resend confirmation, reset password, sign in instead, email link).
+- `src/components/AuthModal.jsx`: sign in, create account, email link, forgot
+  and reset password, and the "check your email" screen with resend.
+- `src/components/Toast.jsx`: the welcome / expired-link message shown after
+  arriving from an email link.
+
+`tests/e2e/auth.spec.js` exercises every flow against a mocked Supabase; the
+header of that file has the one-line command to run it locally.
 
 ## 1. Custom SMTP (do this first)
 
@@ -23,6 +35,10 @@ users.
 3. Supabase → Authentication → Rate Limits: raise the email limit (for
    example to 30/hour) now that you have your own sender.
 4. Send yourself a password reset from the live site to confirm delivery.
+
+Until this is done, sign-up from any address outside your Supabase team fails
+with "We couldn't send the email just now" (Supabase's "Error sending
+confirmation email"), and so do magic links and resets.
 
 ## 2. URL configuration
 
@@ -47,10 +63,13 @@ Supabase → Authentication → Emails → Templates. Brand the **Confirm signup
 "Confirm your CaseDive account", "Your CaseDive sign-in link"). Keep the
 `{{ .ConfirmationURL }}` placeholder.
 
-> **Sections 4–6 are ahead of the code.** `main` has email + password sign-in only.
-> Magic link, Google sign-in and their `VITE_AUTH_*` flags exist on the parked
-> `wip/auth-polish` branch. Do sections 1–3 now; come back to 4–6 when that
-> branch lands.
+Also check **Authentication → Emails → Templates → Confirm signup** points at
+`{{ .ConfirmationURL }}` (the default). The app reads the result from the URL
+when the user lands back on the site and shows "Email confirmed — you're
+signed in", or "That email link has expired or was already used" with a Sign In
+button. Some corporate mail scanners open links before the user does, which
+burns one-time links; the resend button on the "check your email" screen is the
+way back.
 
 ## 4. Magic link
 
@@ -85,3 +104,21 @@ the Email provider being enabled and SMTP working. To hide it, set
 | `VITE_AUTH_MAGIC_LINK` | `false` to hide the email-link option |
 
 `VITE_*` vars are baked in at build time, so redeploy after changing them.
+
+## 7. Live smoke test (five minutes, after SMTP)
+
+Use an address that is not on your Supabase team, ideally a phone's mail app.
+
+1. **Sign up** on `www.casedive.ca` → "Check Your Email" screen → the email
+   arrives → the link lands you back signed in with "Email confirmed".
+2. **Sign out, sign in** with the same password → your email shows in the header.
+3. **Wrong password** → "Incorrect email or password" with a "Reset your
+   password" link.
+4. **Forgot password** → email arrives → link opens "Set New Password" →
+   Update → Continue → still signed in.
+5. **Email me a sign-in link** → email arrives → link signs you in.
+6. **Open an old link a second time** → "That email link has expired or was
+   already used" with a Sign In button.
+
+If step 1 says "We couldn't send the email just now", SMTP (section 1) is not
+working yet.
