@@ -21,6 +21,14 @@
 - `operations/PERFORMANCE_PLAN.md` — Performance optimization and monitoring plan.
 - `operations/audit-log.md` — Audit findings and remediation history.
 
+## Planning
+
+- `ROADMAP.md` — Current priorities and the owner-only setup steps still outstanding.
+
+## Archived build notes
+
+- `skills/` — Domain notes from the original build (CanLII API patterns, Criminal Code data entry, prompt engineering, prompt-injection testing). Reference only; not auto-loaded skills (those live in `.claude/skills/`).
+
 ## Superpowers
 
 - `superpowers/` — Agent workflow plans and operational notes.

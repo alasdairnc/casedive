@@ -1,10 +1,6 @@
 // /api/case-summary.js — Generate structured case summary via Claude
-import {
-  redis,
-  checkRateLimit,
-  getClientIp,
-  rateLimitHeaders,
-} from "./_rateLimit.js";
+import { redis, rateLimitHeaders } from "./_rateLimit.js";
+import { checkRequestRateLimit } from "./_subscription.js";
 import { randomUUID, createHash } from "crypto";
 import {
   applyStandardApiHeaders,
@@ -153,8 +149,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  const rlResult = await checkRateLimit(getClientIp(req), "case-summary");
-  logRateLimitCheck(requestId, "case-summary", rlResult, getClientIp(req));
+  const { result: rlResult, identity: rlIdentity } =
+    await checkRequestRateLimit(req, "case-summary");
+  logRateLimitCheck(requestId, "case-summary", rlResult, rlIdentity);
   const rlHeaders = rateLimitHeaders(rlResult);
   Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
   if (respondRateLimit(res, rlResult)) return;

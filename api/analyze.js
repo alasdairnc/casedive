@@ -6,12 +6,8 @@ import { initSentry, Sentry } from "./_sentry.js";
 initSentry();
 import { buildSystemPrompt } from "../src/lib/prompts.js";
 import { MASTER_CASE_LAW_DB } from "../src/lib/caselaw/index.js";
-import {
-  checkRateLimit,
-  getClientIp,
-  rateLimitHeaders,
-  redis,
-} from "./_rateLimit.js";
+import { rateLimitHeaders, redis } from "./_rateLimit.js";
+import { checkRequestRateLimit } from "./_subscription.js";
 import { runCaseLawRetrieval } from "./_retrievalOrchestrator.js";
 import { logRetrievalMetrics } from "./_retrievalMetrics.js";
 import {
@@ -656,8 +652,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  const rlResult = await checkRateLimit(getClientIp(req), "analyze");
-  logRateLimitCheck(requestId, "analyze", rlResult, getClientIp(req));
+  const { result: rlResult, identity: rlIdentity } =
+    await checkRequestRateLimit(req, "analyze");
+  logRateLimitCheck(requestId, "analyze", rlResult, rlIdentity);
   const rlHeaders = rateLimitHeaders(rlResult);
   Object.entries(rlHeaders).forEach(([k, v]) => res.setHeader(k, v));
   if (respondRateLimit(res, rlResult)) return;
