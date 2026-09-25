@@ -11,9 +11,13 @@
 -- Idempotent: safe to run against existing tables (the CREATE statements are
 -- no-ops when the table already exists). Run in the Supabase SQL editor, then
 -- confirm in Table Editor that each table shows the RLS shield as enabled.
+--
+-- Verified 2026-09-25 against production: all three tables already exist with
+-- these columns (uuid ids, camelCase timestamp columns) and RLS enabled. This
+-- file exists so a fresh environment reproduces that state.
 
 create table if not exists public.user_bookmarks (
-  id             bigint generated always as identity primary key,
+  id             uuid primary key default gen_random_uuid(),
   user_id        uuid not null references auth.users (id) on delete cascade,
   citation       text not null default '',
   summary        text not null default '',
@@ -24,7 +28,7 @@ create table if not exists public.user_bookmarks (
 );
 
 create table if not exists public.user_history (
-  id             bigint generated always as identity primary key,
+  id             uuid primary key default gen_random_uuid(),
   user_id        uuid not null references auth.users (id) on delete cascade,
   query          text not null default '',
   filters        jsonb not null default '{}'::jsonb,
@@ -34,7 +38,7 @@ create table if not exists public.user_history (
 );
 
 create table if not exists public.user_scenarios (
-  id             bigint generated always as identity primary key,
+  id             uuid primary key default gen_random_uuid(),
   user_id        uuid not null references auth.users (id) on delete cascade,
   name           text not null default '',
   text           text not null default '',
