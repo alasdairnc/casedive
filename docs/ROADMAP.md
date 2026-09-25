@@ -6,17 +6,19 @@ not from archaeology. Delete an item when it is done; the audit log in
 
 ## Owner-only setup
 
-1. **Custom SMTP for Supabase auth.** Supabase's built-in sender is test-only and
-   may deliver only to your own addresses, so confirmation and password-reset
-   emails are not reaching real users today. Follow section 1 of
-   `docs/auth-setup.md` (Resend is the simplest), then send yourself a reset from
-   the live site to prove delivery. This is the one thing on the accounts side
-   that matters before anyone else signs up.
-2. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
+1. **Paste the Magic Link email template** into Supabase: the body is
+   `supabase/templates/magic_link.html` (section 3 of `docs/auth-setup.md`).
+   "Email me a sign-in link" is on by default, so returning users get that
+   email; until it's pasted it is Supabase's plain default.
+2. **After the sign-in polish deploys, run the five-minute live smoke test** in
+   section 7 of `docs/auth-setup.md`.
+3. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
    Variables. Nothing reads them since billing was parked.
 
 Done on 2026-09-25: RLS verified on the three user tables, branch protection on
-`main`, Dependabot's first batch merged.
+`main`, Dependabot's first batch merged, custom SMTP through Resend (SPF, DKIM
+and DMARC passing; reset email landed in a Gmail inbox), confirm-signup and
+reset templates branded, `localhost:5173` added to the redirect URLs.
 
 ## Product
 
@@ -30,11 +32,9 @@ Done on 2026-09-25: RLS verified on the three user tables, branch protection on
    removed; `_subscription.js`, migration `0001` and the docs stay. To revive:
    restore the files from the commit before `chore(billing): park`, `npm i stripe`,
    build the UI, clear the legal gate first.
-4. **Auth polish, low priority.** Branch `wip/auth-polish` holds a half-finished
-   June refactor (friendlier auth errors with follow-up actions, a toast, a
-   provider that handles magic-link arrivals). It needs the matching `supabase.js`
-   exports, modal and app wiring, and tests before it compiles. Worth finishing
-   once accounts have users.
+4. **Google sign-in, optional.** The code is in; it stays hidden until the
+   OAuth client is set up and `VITE_AUTH_GOOGLE=true` (section 5 of
+   `docs/auth-setup.md`). Worth doing once people are signing up.
 
 ## Hygiene rules that keep this list short
 
