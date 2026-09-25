@@ -81,20 +81,11 @@ test.describe("Header", () => {
     ).toBeVisible();
   });
 
-  test("theme toggle button is visible and shows Dark in light mode", async ({
+  test("renders no theme toggle (dark-only theme since 2026-06-14)", async ({
     page,
   }) => {
-    // Default is light mode — button should say "Dark" (clicking will switch TO dark)
-    await expect(page.getByRole("button", { name: /dark/i })).toBeVisible();
-  });
-
-  test("clicking theme toggle switches to dark mode and shows Light", async ({
-    page,
-  }) => {
-    const toggleBtn = page.getByRole("button", { name: /dark/i });
-    await toggleBtn.click();
-    // After toggle, button should now say "Light"
-    await expect(page.getByRole("button", { name: /light/i })).toBeVisible();
+    // The navy/teal theme is dark-only; the old Light/Dark toggle was removed.
+    await expect(page.getByRole("button", { name: /^(dark|light)$/i })).toHaveCount(0);
   });
 });
 

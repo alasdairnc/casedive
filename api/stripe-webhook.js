@@ -1,17 +1,23 @@
-// /api/stripe-webhook.js — Vercel Serverless Function
+// /api/stripe-webhook.js — Vercel Function (Web-standard handler)
 // Stripe webhook: the SOLE writer of the `subscriptions` table and the source
 // of truth for plan/status. Verifies the Stripe signature against the RAW
 // request body, then upserts a COMPLETE row per event (no partial writes, so
 // out-of-order event delivery can't corrupt state).
+//
+// WHY a Web-standard handler (`export async function POST(request)`):
+// Vercel's Node runtime reads and parses the body BEFORE a `(req, res)` handler
+// runs (addHelpers → readBody → lazy `req.body`). The Next.js-only
+// `export const config = { api: { bodyParser: false } }` is ignored there, so
+// the previous stream-reading implementation always saw an already-consumed
+// stream, got an empty buffer, and every real Stripe event failed signature
+// verification with a 400. With the Web signature the runtime hands us the
+// untouched Request, and `arrayBuffer()` returns the exact bytes Stripe signed.
+// Only POST is exported, so the platform answers other methods with 405.
 
 import { getStripe, isStripeConfigured, priceToPlan } from "./_stripe.js";
 import { getServiceClient } from "./_subscription.js";
 import { logRequestStart, logSuccess, logError } from "./_logging.js";
 import { randomUUID } from "crypto";
-
-// Vercel parses JSON bodies by default; Stripe signature verification needs the
-// UNPARSED bytes, so body parsing MUST be disabled for this route.
-export const config = { api: { bodyParser: false } };
 
 // Statuses our table's CHECK constraint permits; anything else (incomplete,
 // unpaid, paused, …) maps to "inactive" so entitlement falls back to free.
@@ -22,22 +28,42 @@ const ALLOWED_STATUSES = new Set([
   "canceled",
 ]);
 
+// Security headers. No CORS: this is a server-to-server endpoint with no
+// browser origin; the Stripe signature is the authentication boundary.
+const RESPONSE_HEADERS = {
+  "content-type": "application/json; charset=utf-8",
+  "cache-control": "no-store",
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "DENY",
+  "referrer-policy": "strict-origin-when-cross-origin",
+  "content-security-policy": "default-src 'none'",
+};
+
 function normalizeStatus(status) {
   return ALLOWED_STATUSES.has(status) ? status : "inactive";
 }
 
-async function readRawBody(req) {
-  // Fast paths for runtimes that hand us the raw body directly. The stream path
-  // only works if body parsing is actually disabled (see config above); if a
-  // platform pre-parses into an object, raw bytes are unrecoverable and the
-  // signature check below will (correctly) fail — verify on a real deploy.
-  if (Buffer.isBuffer(req.body)) return req.body;
-  if (typeof req.body === "string") return Buffer.from(req.body);
-  const chunks = [];
-  for await (const chunk of req) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+function json(status, body) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: RESPONSE_HEADERS,
+  });
+}
+
+// Minimal Node-style request view for the shared structured logger.
+function toLogRequest(request) {
+  let url = "/api/stripe-webhook";
+  try {
+    url = new URL(request.url).pathname;
+  } catch {
+    /* keep default */
   }
-  return Buffer.concat(chunks);
+  return {
+    method: request.method,
+    url,
+    headers: Object.fromEntries(request.headers),
+    socket: {},
+  };
 }
 
 function customerIdOf(sub) {
@@ -81,41 +107,27 @@ async function persistSubscription(supabase, sub) {
   return { error: new Error("no user_id or customer id on subscription") };
 }
 
-// Security headers. No CORS: this is a server-to-server endpoint with no
-// browser origin; the Stripe signature is the authentication boundary.
-function applyWebhookHeaders(res) {
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-  res.setHeader("Content-Security-Policy", "default-src 'none'");
-}
-
-export default async function handler(req, res) {
+export async function POST(request) {
   const requestId = randomUUID();
   const startMs = Date.now();
-  applyWebhookHeaders(res);
 
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
   if (!isStripeConfigured() || !process.env.STRIPE_WEBHOOK_SECRET) {
-    return res.status(503).json({ error: "Billing is not available" });
+    return json(503, { error: "Billing is not available" });
   }
 
   // Cheap pre-filter: reject anything without a signature header before we read
   // the body, so unsigned floods can't make us buffer arbitrary payloads.
-  const sig = req.headers["stripe-signature"];
+  const sig = request.headers.get("stripe-signature");
   if (!sig) {
-    return res.status(400).json({ error: "Missing signature" });
+    return json(400, { error: "Missing signature" });
   }
 
-  logRequestStart(req, "stripe-webhook", requestId);
+  logRequestStart(toLogRequest(request), "stripe-webhook", requestId);
 
   // 1) Verify signature against the raw body. Forged/unsigned -> 400.
   let event;
   try {
-    const raw = await readRawBody(req);
+    const raw = Buffer.from(await request.arrayBuffer());
     event = getStripe().webhooks.constructEvent(
       raw,
       sig,
@@ -123,7 +135,7 @@ export default async function handler(req, res) {
     );
   } catch (err) {
     logError(requestId, "stripe-webhook", err, 400, Date.now() - startMs);
-    return res.status(400).json({ error: "Invalid signature" });
+    return json(400, { error: "Invalid signature" });
   }
 
   const supabase = getServiceClient();
@@ -136,7 +148,7 @@ export default async function handler(req, res) {
       500,
       Date.now() - startMs,
     );
-    return res.status(500).json({ error: "Store unavailable" });
+    return json(500, { error: "Store unavailable" });
   }
 
   // 2) Handle the events that change subscription state.
@@ -185,12 +197,12 @@ export default async function handler(req, res) {
   } catch (err) {
     logError(requestId, "stripe-webhook", err, 500, Date.now() - startMs);
     // 500 -> Stripe retries with backoff (writes are idempotent upserts).
-    return res.status(500).json({ error: "Failed to process event" });
+    return json(500, { error: "Failed to process event" });
   }
 
   // No rate limiter on this endpoint, so pass a stub rlResult to logSuccess.
   logSuccess(requestId, "stripe-webhook", 200, Date.now() - startMs, {
     remaining: null,
   });
-  return res.status(200).json({ received: true });
+  return json(200, { received: true });
 }

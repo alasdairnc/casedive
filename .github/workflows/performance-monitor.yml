@@ -3,17 +3,14 @@ name: Performance Monitor
 on:
   workflow_dispatch:
     inputs:
-      retrieval_health_token:
-        description: Retrieval health bearer token
-        required: false
-        type: string
       perf_health_url:
         description: Retrieval health endpoint URL
         required: false
         default: https://www.casedive.ca/api/retrieval-health
         type: string
   schedule:
-    - cron: "*/30 * * * *"
+    # Every 6 hours. Was every 30 minutes (5,300+ runs against near-zero traffic).
+    - cron: "17 */6 * * *"
 
 jobs:
   retrieval-health-monitor:
@@ -34,18 +31,15 @@ jobs:
 
       - name: Run performance monitor
         env:
-          INPUT_RETRIEVAL_HEALTH_TOKEN: ${{ inputs.retrieval_health_token }}
-          SECRET_RETRIEVAL_HEALTH_TOKEN: ${{ secrets.RETRIEVAL_HEALTH_TOKEN }}
+          # The token is a repository secret only. It used to be accepted as a
+          # workflow_dispatch input, but inputs are visible in run logs on a
+          # public repo.
+          RETRIEVAL_HEALTH_TOKEN: ${{ secrets.RETRIEVAL_HEALTH_TOKEN }}
           INPUT_PERF_HEALTH_URL: ${{ inputs.perf_health_url }}
           SECRET_PERF_HEALTH_URL: ${{ vars.PERF_HEALTH_URL }}
         run: |
           set -euo pipefail
 
-          if [ -n "${INPUT_RETRIEVAL_HEALTH_TOKEN:-}" ]; then
-            export RETRIEVAL_HEALTH_TOKEN="$INPUT_RETRIEVAL_HEALTH_TOKEN"
-          else
-            export RETRIEVAL_HEALTH_TOKEN="$SECRET_RETRIEVAL_HEALTH_TOKEN"
-          fi
           export PERF_HEALTH_URL="${INPUT_PERF_HEALTH_URL:-${SECRET_PERF_HEALTH_URL:-https://www.casedive.ca/api/retrieval-health}}"
 
           # Normalize operator-provided values to avoid hidden whitespace/newline auth failures.

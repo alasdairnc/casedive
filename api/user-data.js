@@ -1,14 +1,26 @@
 // /api/user-data.js — Vercel Serverless Function
 // Cloud sync of bookmarks, history, and scenarios per authenticated user
 
-import { createClient } from "@supabase/supabase-js";
 import {
   applyStandardApiHeaders,
+  handleOptionsAndMethod,
   respondRateLimit,
   validateJsonRequest,
 } from "./_apiCommon.js";
-import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
+import { checkRateLimit, rateLimitHeaders } from "./_rateLimit.js";
+import {
+  getAuthedUser,
+  getBearerToken,
+  getServiceClient,
+} from "./_subscription.js";
 import { logValidationError } from "./_logging.js";
+
+// Cloud sync fires on every bookmark and every search, and it makes no AI or
+// CanLII call, so it gets a far higher ceiling than the 5/hour analyze bucket.
+// It used to share that 5/hour IP-keyed default, which meant a logged-in user's
+// sixth action in an hour silently stopped syncing. Keyed on the Supabase user
+// id (never the IP) so a campus or library NAT can't exhaust it for strangers.
+const USER_DATA_RATE_LIMIT_PER_HOUR = 120;
 
 const TABLE = {
   bookmarks: "user_bookmarks",
@@ -36,46 +48,38 @@ export default async function handler(req, res) {
     "Content-Type, Authorization",
   );
 
-  // OPTIONS preflight already handled by applyStandardApiHeaders via CORS headers;
-  // respond 200 and stop.
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  // Method gate — support GET and POST only
-  if (!["GET", "POST"].includes(req.method)) {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  // Origin allowlist (403), preflight (200), method gate (405).
+  if (handleOptionsAndMethod(req, res, ["GET", "POST"])) return;
 
   // Config guard — fail cleanly (not a crash) when Supabase isn't configured
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
     return res.status(503).json({ error: "Account sync is not available" });
   }
 
-  // Rate limit
-  const rlResult = await checkRateLimit(getClientIp(req), "user-data");
+  // Auth — require a valid Bearer token. Requests without a token are
+  // rejected before any network call; the Supabase check is timeout-guarded.
+  const token = getBearerToken(req);
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  const user = await getAuthedUser(token);
+  if (!user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  // Rate limit — per user, with the sync-specific ceiling.
+  const rlResult = await checkRateLimit(`user:${user.id}`, "user-data", {
+    limit: USER_DATA_RATE_LIMIT_PER_HOUR,
+  });
   const rlHdrs = rateLimitHeaders(rlResult);
   Object.entries(rlHdrs).forEach(([k, v]) => res.setHeader(k, v));
   if (respondRateLimit(res, rlResult)) return;
 
-  // Auth — require Bearer token
-  const authHeader = req.headers.authorization ?? "";
-  if (!authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const token = authHeader.slice(7);
-
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY,
-  );
-
-  const { data: authData, error: authError } =
-    await supabase.auth.getUser(token);
-  const user = authData?.user;
-  if (authError || !user) {
-    return res.status(401).json({ error: "Unauthorized" });
+  // Service-role client (cached across invocations; bypasses RLS by design —
+  // every query below is scoped to user.id explicitly).
+  const supabase = getServiceClient();
+  if (!supabase) {
+    return res.status(503).json({ error: "Account sync is not available" });
   }
 
   // Type validation — prefer query param, fall back to body (POST sends type in body)

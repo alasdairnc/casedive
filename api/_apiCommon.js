@@ -14,7 +14,13 @@ export function applyStandardApiHeaders(
   res.setHeader("Cache-Control", "no-store");
 }
 
+/**
+ * Reject disallowed origins (403), answer preflight (200), and enforce the
+ * allowed method(s) (405). Returns true when the response has been sent.
+ * @param {string|string[]} method — one method or a list, e.g. ["GET", "POST"]
+ */
 export function handleOptionsAndMethod(req, res, method) {
+  const allowedMethods = Array.isArray(method) ? method : [method];
   const origin = req.headers.origin ?? "";
   if (origin && !isOriginAllowed(origin)) {
     res.status(403).json({ error: "Origin not allowed" });
@@ -24,7 +30,7 @@ export function handleOptionsAndMethod(req, res, method) {
     res.status(200).end();
     return true;
   }
-  if (req.method !== method) {
+  if (!allowedMethods.includes(req.method)) {
     res.status(405).json({ error: "Method not allowed" });
     return true;
   }

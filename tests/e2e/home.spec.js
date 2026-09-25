@@ -33,14 +33,6 @@ test.describe("Home page", () => {
     ).toHaveValue("all");
   });
 
-  test("dark/light mode toggle works", async ({ page }) => {
-    const toggle = page.locator("button").filter({ hasText: /dark|light/i });
-    const initialText = await toggle.textContent();
-    await toggle.click();
-    const newText = await toggle.textContent();
-    expect(newText).not.toBe(initialText);
-  });
-
   test("research button is disabled when scenario is empty", async ({
     page,
   }) => {
