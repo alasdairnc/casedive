@@ -13,8 +13,9 @@
 -- confirm in Table Editor that each table shows the RLS shield as enabled.
 --
 -- Verified 2026-09-25 against production: all three tables already exist with
--- these columns (uuid ids, camelCase timestamp columns) and RLS enabled. This
--- file exists so a fresh environment reproduces that state.
+-- these columns (uuid ids, camelCase timestamp columns), RLS enabled, and only
+-- own-row policies. This file reproduces that state in a fresh environment
+-- and, because it resets the policy set, also repairs a drifted one.
 
 create table if not exists public.user_bookmarks (
   id             uuid primary key default gen_random_uuid(),
@@ -57,20 +58,41 @@ alter table public.user_bookmarks enable row level security;
 alter table public.user_history   enable row level security;
 alter table public.user_scenarios enable row level security;
 
--- A signed-in user may read only their own rows. No client INSERT, UPDATE or
--- DELETE policy is granted: all writes go through api/user-data.js with the
--- service role, exactly like the subscriptions table in 0001.
-drop policy if exists "user_bookmarks_select_own" on public.user_bookmarks;
-create policy "user_bookmarks_select_own"
-  on public.user_bookmarks for select
-  using (auth.uid() = user_id);
+-- Make the policy set AUTHORITATIVE (fail closed). Postgres combines
+-- permissive policies with OR, so merely adding own-row policies next to a
+-- pre-existing broad one (e.g. `using (true)`) would leave that hole open.
+-- Drop every existing policy on these three tables, then create exactly one
+-- own-row policy per table covering all commands. The API is unaffected: it
+-- uses the service role, which bypasses RLS and scopes every query itself.
+do $$
+declare
+  p record;
+begin
+  for p in
+    select schemaname, tablename, policyname
+    from pg_policies
+    where schemaname = 'public'
+      and tablename in ('user_bookmarks', 'user_history', 'user_scenarios')
+  loop
+    execute format(
+      'drop policy if exists %I on %I.%I',
+      p.policyname, p.schemaname, p.tablename
+    );
+  end loop;
+end
+$$;
 
-drop policy if exists "user_history_select_own" on public.user_history;
-create policy "user_history_select_own"
-  on public.user_history for select
-  using (auth.uid() = user_id);
+create policy "user_bookmarks_own_rows"
+  on public.user_bookmarks for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
 
-drop policy if exists "user_scenarios_select_own" on public.user_scenarios;
-create policy "user_scenarios_select_own"
-  on public.user_scenarios for select
-  using (auth.uid() = user_id);
+create policy "user_history_own_rows"
+  on public.user_history for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create policy "user_scenarios_own_rows"
+  on public.user_scenarios for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);

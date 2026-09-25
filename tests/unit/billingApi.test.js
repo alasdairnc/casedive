@@ -272,4 +272,19 @@ describe("stripe-webhook", () => {
     expect(res.headers.get("x-content-type-options")).toBe("nosniff");
     expect(await res.json()).toEqual({ error: "Missing signature" });
   });
+  it("413 when the declared Content-Length exceeds the cap, without reading", async () => {
+    const res = await webhookHandler(
+      webhookReq({ headers: { "content-length": String(2 * 1024 * 1024) } }),
+    );
+    expect(res.status).toBe(413);
+    expect(mockStripe.webhooks.constructEvent).not.toHaveBeenCalled();
+  });
+
+  it("413 when a streamed body grows past the cap", async () => {
+    const res = await webhookHandler(
+      webhookReq({ rawBody: "x".repeat(1_048_576 + 1) }),
+    );
+    expect(res.status).toBe(413);
+    expect(mockStripe.webhooks.constructEvent).not.toHaveBeenCalled();
+  });
 });

@@ -39,6 +39,12 @@ const RESPONSE_HEADERS = {
   "content-security-policy": "default-src 'none'",
 };
 
+// Stripe event payloads are small (tens of KB; a few hundred KB at the very
+// largest). Anything bigger is not from Stripe, so refuse it before buffering:
+// a forged request with a fake stripe-signature header must not be able to
+// make the function hold an arbitrarily large body in memory.
+const MAX_WEBHOOK_BODY_BYTES = 1_048_576; // 1 MiB
+
 function normalizeStatus(status) {
   return ALLOWED_STATUSES.has(status) ? status : "inactive";
 }
@@ -64,6 +70,30 @@ function toLogRequest(request) {
     headers: Object.fromEntries(request.headers),
     socket: {},
   };
+}
+
+// Read the raw body, or return null once it exceeds maxBytes. Checks the
+// declared Content-Length first, then enforces the cap chunk by chunk so a
+// chunked or lying request can't get around it.
+async function readBoundedBody(request, maxBytes) {
+  const declared = Number(request.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > maxBytes) return null;
+  if (!request.body) return Buffer.alloc(0);
+
+  const reader = request.body.getReader();
+  const chunks = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      await reader.cancel().catch(() => {});
+      return null;
+    }
+    chunks.push(Buffer.from(value));
+  }
+  return Buffer.concat(chunks);
 }
 
 function customerIdOf(sub) {
@@ -124,10 +154,28 @@ export async function POST(request) {
 
   logRequestStart(toLogRequest(request), "stripe-webhook", requestId);
 
-  // 1) Verify signature against the raw body. Forged/unsigned -> 400.
+  // 1) Read the raw body under a hard size cap. Oversized -> 413, unread.
+  let raw;
+  try {
+    raw = await readBoundedBody(request, MAX_WEBHOOK_BODY_BYTES);
+  } catch (err) {
+    logError(requestId, "stripe-webhook", err, 400, Date.now() - startMs);
+    return json(400, { error: "Invalid body" });
+  }
+  if (raw === null) {
+    logError(
+      requestId,
+      "stripe-webhook",
+      new Error("Webhook body exceeds size limit"),
+      413,
+      Date.now() - startMs,
+    );
+    return json(413, { error: "Payload too large" });
+  }
+
+  // 2) Verify signature against the raw body. Forged/unsigned -> 400.
   let event;
   try {
-    const raw = Buffer.from(await request.arrayBuffer());
     event = getStripe().webhooks.constructEvent(
       raw,
       sig,
@@ -151,7 +199,7 @@ export async function POST(request) {
     return json(500, { error: "Store unavailable" });
   }
 
-  // 2) Handle the events that change subscription state.
+  // 3) Handle the events that change subscription state.
   try {
     switch (event.type) {
       case "checkout.session.completed": {

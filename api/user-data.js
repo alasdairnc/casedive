@@ -7,7 +7,7 @@ import {
   respondRateLimit,
   validateJsonRequest,
 } from "./_apiCommon.js";
-import { checkRateLimit, rateLimitHeaders } from "./_rateLimit.js";
+import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import {
   getAuthedUser,
   getBearerToken,
@@ -21,6 +21,12 @@ import { logValidationError } from "./_logging.js";
 // sixth action in an hour silently stopped syncing. Keyed on the Supabase user
 // id (never the IP) so a campus or library NAT can't exhaust it for strangers.
 const USER_DATA_RATE_LIMIT_PER_HOUR = 120;
+
+// Pre-auth abuse ceiling, keyed on IP, checked BEFORE the Supabase auth lookup
+// so a client spraying invalid-but-present bearer tokens can't trigger an
+// unbounded number of auth.getUser calls. Deliberately generous because a
+// campus or library NAT shares it; the per-user bucket above is the real quota.
+const USER_DATA_IP_RATE_LIMIT_PER_HOUR = 300;
 
 const TABLE = {
   bookmarks: "user_bookmarks",
@@ -62,6 +68,17 @@ export default async function handler(req, res) {
   if (!token) {
     return res.status(401).json({ error: "Unauthorized" });
   }
+
+  // IP-keyed pre-auth limiter (abuse ceiling only; headers are overwritten by
+  // the per-user bucket below once auth succeeds).
+  const ipResult = await checkRateLimit(getClientIp(req), "user-data-ip", {
+    limit: USER_DATA_IP_RATE_LIMIT_PER_HOUR,
+  });
+  Object.entries(rateLimitHeaders(ipResult)).forEach(([k, v]) =>
+    res.setHeader(k, v),
+  );
+  if (respondRateLimit(res, ipResult)) return;
+
   const user = await getAuthedUser(token);
   if (!user) {
     return res.status(401).json({ error: "Unauthorized" });
