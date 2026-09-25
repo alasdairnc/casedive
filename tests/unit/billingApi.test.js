@@ -46,7 +46,7 @@ vi.mock("../../api/_cors.js", () => ({
 }));
 
 const { default: billingHandler } = await import("../../api/billing.js");
-const { default: webhookHandler } = await import("../../api/stripe-webhook.js");
+const { POST: webhookHandler } = await import("../../api/stripe-webhook.js");
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function createRes() {
@@ -81,17 +81,23 @@ function checkoutReq({ body = {}, headers = {} } = {}) {
   };
 }
 
-// Webhook req is an async-iterable stream (handler reads the raw body).
+// Webhook handler uses the Web-standard signature (see api/stripe-webhook.js
+// for why), so it receives a real Request and returns a Response. Passing
+// `undefined` for a header removes it.
 function webhookReq({ rawBody = "{}", headers = {} } = {}) {
-  return {
+  const h = new Headers({
+    "stripe-signature": "sig",
+    "content-type": "application/json",
+  });
+  for (const [k, v] of Object.entries(headers)) {
+    if (v === undefined) h.delete(k);
+    else h.set(k, v);
+  }
+  return new Request("https://www.casedive.ca/api/stripe-webhook", {
     method: "POST",
-    url: "/api/stripe-webhook",
-    headers: { "stripe-signature": "sig", ...headers },
-    socket: { remoteAddress: "127.0.0.1" },
-    async *[Symbol.asyncIterator]() {
-      yield Buffer.from(rawBody);
-    },
-  };
+    headers: h,
+    body: rawBody,
+  });
 }
 
 beforeEach(() => {
@@ -167,12 +173,10 @@ describe("billing (action=checkout)", () => {
 // ── stripe-webhook ────────────────────────────────────────────────────────────
 describe("stripe-webhook", () => {
   it("400 when the signature header is missing", async () => {
-    const res = createRes();
-    await webhookHandler(
+    const res = await webhookHandler(
       webhookReq({ headers: { "stripe-signature": undefined } }),
-      res,
     );
-    expect(res.statusCode).toBe(400);
+    expect(res.status).toBe(400);
     expect(mockStripe.webhooks.constructEvent).not.toHaveBeenCalled();
   });
 
@@ -180,9 +184,8 @@ describe("stripe-webhook", () => {
     mockStripe.webhooks.constructEvent.mockImplementation(() => {
       throw new Error("bad sig");
     });
-    const res = createRes();
-    await webhookHandler(webhookReq(), res);
-    expect(res.statusCode).toBe(400);
+    const res = await webhookHandler(webhookReq());
+    expect(res.status).toBe(400);
   });
 
   it("upserts a complete row and 200s on checkout.session.completed", async () => {
@@ -208,11 +211,9 @@ describe("stripe-webhook", () => {
       items: { data: [{ price: { id: "price_plus" } }] },
       metadata: { supabase_user_id: "u1", plan: "plus" },
     });
+    const res = await webhookHandler(webhookReq());
 
-    const res = createRes();
-    await webhookHandler(webhookReq(), res);
-
-    expect(res.statusCode).toBe(200);
+    expect(res.status).toBe(200);
     expect(upsert).toHaveBeenCalledTimes(1);
     const [row, opts] = upsert.mock.calls[0];
     expect(opts).toEqual({ onConflict: "user_id" });
@@ -240,9 +241,50 @@ describe("stripe-webhook", () => {
         },
       },
     });
-    const res = createRes();
-    await webhookHandler(webhookReq(), res);
-    expect(res.statusCode).toBe(200);
+    const res = await webhookHandler(webhookReq());
+    expect(res.status).toBe(200);
     expect(upsert.mock.calls[0][0].status).toBe("inactive");
+  });
+
+  it("passes the exact raw request bytes to signature verification", async () => {
+    const rawBody = '{"id":"evt_1","type":"ping","data":{"object":{}}}';
+    mockStripe.webhooks.constructEvent.mockReturnValue({
+      type: "ping",
+      data: { object: {} },
+    });
+    mockGetServiceClient.mockReturnValue({ from: () => ({}) });
+    const res = await webhookHandler(webhookReq({ rawBody }));
+    expect(res.status).toBe(200);
+    const [payload, sig, secret] =
+      mockStripe.webhooks.constructEvent.mock.calls[0];
+    expect(Buffer.isBuffer(payload)).toBe(true);
+    expect(payload.toString("utf8")).toBe(rawBody);
+    expect(sig).toBe("sig");
+    expect(secret).toBe("whsec_test");
+  });
+
+  it("sets no-store and nosniff headers on the JSON response", async () => {
+    const res = await webhookHandler(
+      webhookReq({ headers: { "stripe-signature": undefined } }),
+    );
+    expect(res.status).toBe(400);
+    expect(res.headers.get("cache-control")).toBe("no-store");
+    expect(res.headers.get("x-content-type-options")).toBe("nosniff");
+    expect(await res.json()).toEqual({ error: "Missing signature" });
+  });
+  it("413 when the declared Content-Length exceeds the cap, without reading", async () => {
+    const res = await webhookHandler(
+      webhookReq({ headers: { "content-length": String(2 * 1024 * 1024) } }),
+    );
+    expect(res.status).toBe(413);
+    expect(mockStripe.webhooks.constructEvent).not.toHaveBeenCalled();
+  });
+
+  it("413 when a streamed body grows past the cap", async () => {
+    const res = await webhookHandler(
+      webhookReq({ rawBody: "x".repeat(1_048_576 + 1) }),
+    );
+    expect(res.status).toBe(413);
+    expect(mockStripe.webhooks.constructEvent).not.toHaveBeenCalled();
   });
 });
