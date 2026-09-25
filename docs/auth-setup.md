@@ -18,27 +18,38 @@ The code side:
 `tests/e2e/auth.spec.js` exercises every flow against a mocked Supabase; the
 header of that file has the one-line command to run it locally.
 
-## 1. Custom SMTP (do this first)
+## 1. Custom SMTP
 
-Supabase's built-in email sender is for testing only: it's heavily
-rate-limited and may only deliver to your own team's addresses. If it's
-still in use, confirmation, magic-link, and reset emails won't reach real
-users.
+**Done 2026-09-25.** Supabase hands every auth email to Resend over SMTP:
 
-1. Create an account with an email provider (Resend is the simplest; Postmark
-   or Amazon SES also work) and verify `casedive.ca` as a sending domain
-   (add the DNS records they give you in Cloudflare).
-2. Supabase → Authentication → Emails → SMTP Settings → enable custom SMTP.
-   - Sender email: `no-reply@casedive.ca`
-   - Sender name: `CaseDive`
-   - Host / port / username / password from the provider.
-3. Supabase → Authentication → Rate Limits: raise the email limit (for
-   example to 30/hour) now that you have your own sender.
-4. Send yourself a password reset from the live site to confirm delivery.
+- Sender: `CaseDive <no-reply@casedive.ca>`
+- `casedive.ca` is verified in Resend; SPF, DKIM and DMARC records live in
+  Cloudflare and all three passed on the first test email (Gmail inbox, not
+  spam).
+- SMTP password: the Resend API key `supabase-smtp`, sending-only and limited
+  to `casedive.ca`.
+- Supabase email rate limit: 30/hour.
 
-Until this is done, sign-up from any address outside your Supabase team fails
-with "We couldn't send the email just now" (Supabase's "Error sending
-confirmation email"), and so do magic links and resets.
+Supabase's built-in sender (test-only, team addresses only) is no longer used.
+
+### Replacing the SMTP key
+
+Do this if the key leaks, or on a schedule.
+
+1. Resend → API Keys → Create API key: permission **Sending access**, domain
+   `casedive.ca`. Copy it (Resend shows it once).
+2. Supabase → Authentication → Emails → SMTP Settings → paste it as the
+   password and Save. Host, port and username (`resend`) stay as they are.
+3. Send yourself a password reset from the live site and check it arrives.
+4. Only then delete the old key in Resend, so there is no gap in delivery.
+
+### If emails stop arriving
+
+The modal shows "We couldn't send the email just now" (Supabase's "Error
+sending confirmation email" / "recovery email" / "magic link email"). Check,
+in order: Resend → Logs for the send attempt and bounce reason; that the key
+in Supabase still exists in Resend; that the Cloudflare DNS records are
+still in place; Supabase → Authentication → Rate Limits.
 
 ## 2. URL configuration
 
@@ -48,20 +59,29 @@ Supabase → Authentication → URL Configuration:
 - **Redirect URLs** (add each):
   - `https://www.casedive.ca/**`
   - `https://casedive.ca/**`
-  - `http://localhost:5173/**` (local dev)
-  - Optional, for Vercel previews: a wildcard matching your preview domain,
-    e.g. `https://*-<your-team>.vercel.app/**` (copy the exact domain from a
-    preview deployment in Vercel)
+  - `http://localhost:5173/**` (local dev, added 2026-09-25)
+  - Optional, for Vercel previews: `https://*-alasdairncs-projects.vercel.app/**`.
+    Preview URLs look like
+    `casefinder-project-git-<branch>-alasdairncs-projects.vercel.app`, and only
+    this Vercel team can create hosts ending in `-alasdairncs-projects`.
+    Without it, email links sent from a preview land on the live site.
 
 The app passes `window.location.origin` as the redirect for every email link
 and for OAuth, so any origin not on this list falls back to the Site URL.
 
 ## 3. Email templates
 
-Supabase → Authentication → Emails → Templates. Brand the **Confirm signup**,
-**Magic Link**, and **Reset Password** templates (subject lines like
-"Confirm your CaseDive account", "Your CaseDive sign-in link"). Keep the
-`{{ .ConfirmationURL }}` placeholder.
+Supabase → Authentication → Emails → Templates. Keep the
+`{{ .ConfirmationURL }}` placeholder in each.
+
+| Template | Sent when | Status |
+| --- | --- | --- |
+| Confirm signup | Sign-up, "Resend confirmation email", first email sign-in link for a new address | Branded: "Confirm your CaseDive account" |
+| Reset Password | Forgot password | Branded: "Reset your CaseDive password" |
+| Magic Link | "Email me a sign-in link" for an existing account | **Still Supabase's default.** Copy the Reset Password layout (navy header, teal button), subject "Your CaseDive sign-in link", button text "Sign in to CaseDive" |
+
+Change Email Address, Invite user and Reauthentication aren't reachable from
+the app, so they can stay default.
 
 Also check **Authentication → Emails → Templates → Confirm signup** points at
 `{{ .ConfirmationURL }}` (the default). The app reads the result from the URL
@@ -105,7 +125,10 @@ the Email provider being enabled and SMTP working. To hide it, set
 
 `VITE_*` vars are baked in at build time, so redeploy after changing them.
 
-## 7. Live smoke test (five minutes, after SMTP)
+## 7. Live smoke test (five minutes)
+
+Run it once the sign-in polish (PR #36) is deployed; before that the live site
+still has the old modal.
 
 Use an address that is not on your Supabase team, ideally a phone's mail app.
 
@@ -120,5 +143,5 @@ Use an address that is not on your Supabase team, ideally a phone's mail app.
 6. **Open an old link a second time** → "That email link has expired or was
    already used" with a Sign In button.
 
-If step 1 says "We couldn't send the email just now", SMTP (section 1) is not
-working yet.
+If any step says "We couldn't send the email just now", see "If emails stop
+arriving" in section 1.
