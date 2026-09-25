@@ -34,6 +34,7 @@ vi.mock("../../src/lib/supabase.js", () => ({
       signInWithOtp: mockSignInWithOtp,
       signInWithOAuth: mockSignInWithOAuth,
       resend: mockResend,
+      storageKey: "sb-test-auth-token",
     },
   },
   isAuthEnabled: true,
@@ -482,6 +483,36 @@ describe("useAuth hook (via AuthProvider)", () => {
     });
     expect(result.current.user).toBeNull();
     expect(result.current.token).toBeNull();
+  });
+
+  it("signOut removes the stored session when the SDK throws before clearing it", async () => {
+    // A reload must not restore a session the user just signed out of.
+    window.localStorage.setItem("sb-test-auth-token", '{"access_token":"x"}');
+    window.localStorage.setItem("unrelated", "keep");
+    mockSignOut.mockRejectedValueOnce(
+      new Error("Acquiring an exclusive Navigator LockManager lock timed out"),
+    );
+    const { result } = await renderAuth();
+    await act(async () => {});
+    await act(async () => {
+      await result.current.signOut();
+    });
+    expect(window.localStorage.getItem("sb-test-auth-token")).toBeNull();
+    expect(window.localStorage.getItem("unrelated")).toBe("keep");
+    window.localStorage.clear();
+  });
+
+  it("signOut leaves storage to the SDK when it succeeds", async () => {
+    window.localStorage.setItem("sb-test-auth-token", '{"access_token":"x"}');
+    const { result } = await renderAuth();
+    await act(async () => {});
+    await act(async () => {
+      await result.current.signOut();
+    });
+    expect(mockSignOut).toHaveBeenCalled();
+    // The real SDK clears its own key; the provider doesn't second-guess it.
+    expect(window.localStorage.getItem("sb-test-auth-token")).not.toBeNull();
+    window.localStorage.clear();
   });
 
   // ── Auth state change listener ──────────────────────────────────────────────

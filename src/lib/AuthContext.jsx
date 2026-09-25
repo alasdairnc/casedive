@@ -220,7 +220,15 @@ export function AuthProvider({ children }) {
       // Supabase drops the stored session even when the revoke call fails.
       if (supabase) await supabase.auth.signOut();
     } catch {
-      /* offline or SDK error: still sign out of this tab */
+      // It can still throw before reaching that cleanup (e.g. timing out on
+      // the cross-tab storage lock). Drop the stored session ourselves so a
+      // reload doesn't sign the user straight back in.
+      try {
+        const key = supabase?.auth?.storageKey;
+        if (key) window.localStorage.removeItem(key);
+      } catch {
+        /* storage blocked: nothing more we can do */
+      }
     }
     setUser(null);
     setToken(null);
