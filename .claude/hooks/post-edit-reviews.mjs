@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // PostToolUse — emits reviewer reminders based on the edited file. Combines the
-// api-invariant, caching, and legal-data reminders into a single systemMessage.
+// api-invariant (incl. caching) and legal-data reminders into a single systemMessage.
 import { readPayload, filePathFrom } from './_lib.mjs';
 import { readFileSync } from 'node:fs';
 
@@ -22,7 +22,7 @@ if (isApiEndpoint) {
       '_caseLawRetrieval',
     ];
     if (externalCallMarkers.some((t) => src.includes(t))) {
-      reminders.push(`api/${filename} makes an external call — run caching-reviewer before committing.`);
+      reminders.push(`api/${filename} makes an external call — api-invariant-reviewer must also pass its caching invariants (4 and 5).`);
     }
   } catch {
     /* file may have been moved/removed since the edit */

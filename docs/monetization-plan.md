@@ -167,6 +167,7 @@ Steps only Alasdair can do (accounts, keys, env vars). Code is already done.
 > `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_PLUS`, `STRIPE_PRICE_STUDENT`, `APP_BASE_URL`, plus existing `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`.
 
 ### Still on the code side (assistant) — Phase 4
+
 - `usePlan()` hook + an Upgrade button/modal calling `POST /api/billing {action:"checkout"}`, a "Manage billing" link calling `POST /api/billing {action:"portal"}`, and feature gating (verification depth, PDF limits). Buildable now without keys; the endpoints 503 cleanly until env is set.
 - **Phase 4 — Frontend:** `UpgradeModal`, pricing section, `usePlan()` gating, student verification.
 - **Phase 5 — Launch:** Phase 0 complete → flip Stripe to live keys → soft launch to a small cohort → monitor.

@@ -1,8 +1,13 @@
 # Documentation Map
 
+## Start here
+
+- `ROADMAP.md` — Current priorities and the owner-only setup steps still outstanding.
+- `local-setup.md` — Local dev setup for macOS & Windows (one-command `npm run setup`).
+- `auth-setup.md` — Supabase auth checklist: custom SMTP, redirect URLs, Google sign-in.
+
 ## Core
 
-- `local-setup.md` — Local dev setup for macOS & Windows (one-command `npm run setup`).
 - `architecture.md` — System architecture and component boundaries.
 - `design-system.md` — UI patterns, tokens, and design conventions.
 - `security.md` — Security posture and safeguards.
@@ -14,37 +19,26 @@
 
 ## Operations
 
-- `operations/MODE1_BALANCED_BACKLOG.md` — Backlog and sequencing for Mode 1 work.
-- `operations/MODE1_DISCOVERY_RUNBOOK.md` — Discovery execution guide.
-- `operations/MODE4_EVALUATION_SNAPSHOT_2026-04-04.md` — Mode 4 evaluation snapshot.
-- `operations/MODE5_CANARY_CHECKLIST.md` — Canary rollout checklist.
-- `operations/MODE5_CANARY_SNAPSHOT_2026-04-04.md` — Canary status snapshot.
 - `operations/PERFORMANCE_PLAN.md` — Performance optimization and monitoring plan.
-- `operations/audit-log.md` — Audit findings and remediation history.
+- Audit history lives in `.claude/skills/casedive-audit/AUDIT_LOG.md` (append-only, written by the `casedive-audit` skill).
 
-## Planning
+## Parked
 
-- `ROADMAP.md` — Current priorities and the owner-only setup steps still outstanding.
+- `monetization-plan.md`, `billing-setup-walkthrough.md` — Billing plan and setup steps. Code parked 2026-09-25; see the status note at the top of each.
 
-## Archived build notes
+## Archive (frozen, reference only)
 
-- `skills/` — Domain notes from the original build (CanLII API patterns, Criminal Code data entry, prompt engineering, prompt-injection testing). Reference only; not auto-loaded skills (those live in `.claude/skills/`).
+- `archive/operations/` — April 2026 mode snapshots, runbook and canary checklist.
+- `archive/superpowers/` — Agent workflow plans from April–June 2026.
+- `skills/` — Domain notes from the original build (CanLII API patterns, Criminal Code data entry, prompt engineering, prompt-injection testing). Not auto-loaded skills; those live in `.claude/skills/`.
 
-## Superpowers
+## Generated
 
-- `superpowers/` — Agent workflow plans and operational notes.
-
-## Generated Artifacts
-
-- `../artifacts/` — Generated reports and temporary run outputs (for example `filter-quality-report.html`).
+- `../artifacts/` — Generated reports and run outputs (for example `filter-quality-report.html`). Git-ignored except where noted.
 
 ## Authoring docs & reports
 
-- **Preview:** `npm run docs:preview` — serves `docs/`, `reports/`, `artifacts/`
-  with live reload; `.md` renders to styled HTML on the fly.
-- **Build:** `npm run docs:build -- <file.md>` — writes standalone HTML to
-  `artifacts/html/` (git-ignored).
-- **Lint:** `npm run docs:lint` — runs markdownlint over `reports/**` and
-  `docs/superpowers/**`. Also runs on staged `.md` in pre-commit. `artifacts/`
-  contains generated reports (not hand-authored) and is excluded.
-- **Generate:** the `/weekly-report` skill produces a digest in the standard format.
+- **Preview:** `npm run docs:preview` — serves `docs/`, `reports/`, `artifacts/` with live reload.
+- **Build:** `npm run docs:build -- <file.md>` — standalone HTML into `artifacts/html/`.
+- **Lint:** `npm run docs:lint` — markdownlint over `reports/**` and the top-level `docs/*.md`, except the two parked billing docs. Also runs on staged `.md` in pre-commit. Archived and generated files are excluded on purpose.
+- **Digest:** the `/weekly-report` skill produces the Sunday digest in the standard format.

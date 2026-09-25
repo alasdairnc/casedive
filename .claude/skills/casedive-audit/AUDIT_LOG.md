@@ -443,3 +443,11 @@ First audit since 2026-06-10. No source commits between 2026-06-19 and this run;
 - Removed `api/billing.js`, `api/stripe-webhook.js`, `api/_stripe.js`, `tests/unit/billingApi.test.js`, `scripts/stripe-setup.mjs`, `scripts/fix-webhook-host.mjs`, `scripts/verify-webhook.mjs`, the `stripe` dependency and the two Vercel function entries. Decision: no UI called billing, no traffic, legal gate unmet.
 - Kept `api/_subscription.js` (plan-aware rate limiting still reads the `subscriptions` table), migration `0001`, and the monetization docs (marked parked).
 - `api/` is now 10/12 Hobby functions.
+
+## Audit — 2026-09-25 (consolidation)
+
+- Claude tooling 27 → 13. Removed skills `verify-before-push`, `e2e`, `e2e-verify`, `security-audit`, `caching-audit`, `feature-factory`, `resume-checkpoint`; commands `verify`, `new-endpoint`, `click-path-audit`, `prompt-optimizer`, `security-scan`; agents `caching-reviewer`, `pre-push-checklist`, `test-selector`. Added one `verify` skill covering the six verification variants; folded the caching invariants into `api-invariant-reviewer`.
+- Workflows: `performance-triage.yml` deleted (auto-filed Copilot issues on a quality threshold no traffic can trip); `production-retrieval-autofix.yml` is manual-only. AgentShield baseline removed with its command.
+- Docs: April–June snapshots and plans moved to `docs/archive/`; duplicate `docs/operations/audit-log.md` removed in favour of this file; `docs/auth-setup.md` recovered from the parked `wip/auth-polish` branch. Lint scope is now `reports/**` plus top-level `docs/*.md`.
+- Scripts left in place on purpose: 13 of 22 resolve paths relative to their own location and are referenced by workflows, tests and `package.json`; a folder reorg was all risk and no function. Only `setup-git-hooks.sh` removed (replaced by `setup.mjs`).
+- Owner finding: custom SMTP was never configured in Supabase, so auth emails may only reach the owner's own addresses. Roadmap item 1.
