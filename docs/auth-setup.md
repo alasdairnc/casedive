@@ -1,8 +1,10 @@
 # Auth setup checklist
 
 Everything the sign-in/sign-up code needs from Supabase, Google, and Vercel.
-The code side lives in `src/lib/AuthContext.jsx`, `src/lib/supabase.js`,
-`src/lib/authErrors.js`, and `src/components/AuthModal.jsx`.
+The code side lives in `src/lib/supabase.js`, `src/hooks/useAuth.js`,
+`src/components/AuthModal.jsx` and `src/App.jsx`. (A friendlier-errors refactor
+that adds `AuthContext.jsx` and `authErrors.js` is parked on the
+`wip/auth-polish` branch; see `docs/ROADMAP.md`.)
 
 ## 1. Custom SMTP (do this first)
 
@@ -44,6 +46,11 @@ Supabase → Authentication → Emails → Templates. Brand the **Confirm signup
 **Magic Link**, and **Reset Password** templates (subject lines like
 "Confirm your CaseDive account", "Your CaseDive sign-in link"). Keep the
 `{{ .ConfirmationURL }}` placeholder.
+
+> **Sections 4–6 are ahead of the code.** `main` has email + password sign-in only.
+> Magic link, Google sign-in and their `VITE_AUTH_*` flags exist on the parked
+> `wip/auth-polish` branch. Do sections 1–3 now; come back to 4–6 when that
+> branch lands.
 
 ## 4. Magic link
 

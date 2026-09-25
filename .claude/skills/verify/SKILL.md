@@ -11,10 +11,10 @@ minute; everything else finishes in under a minute.
 
 ## Steps
 
-1. **Build**
+1. **Build** (no pipe: a pipe to `tail` would hide a non-zero exit)
 
    ```bash
-   npm run build 2>&1 | tail -3
+   npm run build
    ```
 
 2. **Unit + component tests**
