@@ -387,7 +387,11 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add api/_filterConfig.js reports/retrieval-autofix scripts/apply-retrieval-autofix.js scripts/collect-production-no-caselaw.js
+          # Only _filterConfig.js is written by --apply. reports/retrieval-autofix
+          # is gitignored; adding it aborted `git add` under `set -e` and failed
+          # every scheduled run from June to September 2026. The report is
+          # embedded in the PR body instead.
+          git add api/_filterConfig.js
           git commit -m "fix(retrieval): daily no-case-law autofix $(date +%Y-%m-%d)"
           git push origin "$BRANCH"
 

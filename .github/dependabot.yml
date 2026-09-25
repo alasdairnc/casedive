@@ -1,0 +1,25 @@
+# Dependabot: weekly, grouped, so bot PRs arrive as one reviewable batch
+# instead of one stale PR per package.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+      time: "09:00"
+      timezone: America/Toronto
+    open-pull-requests-limit: 3
+    groups:
+      dev-dependencies:
+        dependency-type: development
+      production-dependencies:
+        dependency-type: production
+    ignore:
+      # Majors are pinned by policy (CLAUDE.md: "Pin major version upgrades").
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

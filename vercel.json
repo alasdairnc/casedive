@@ -16,7 +16,9 @@
     "api/retrieval-health.js": { "memory": 256, "maxDuration": 15 },
     "api/report-case-law.js": { "memory": 256, "maxDuration": 15 },
     "api/status.js": { "memory": 128, "maxDuration": 5 },
-    "api/user-data.js": { "memory": 256, "maxDuration": 15 }
+    "api/user-data.js": { "memory": 256, "maxDuration": 15 },
+    "api/billing.js": { "memory": 256, "maxDuration": 15 },
+    "api/stripe-webhook.js": { "memory": 256, "maxDuration": 15 }
   },
   "headers": [
     {
@@ -42,7 +44,7 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "X-XSS-Protection", "value": "0" },
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"

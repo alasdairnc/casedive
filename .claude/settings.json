@@ -3,7 +3,7 @@
     "allow": [
       "Bash(npm run test:unit)",
       "Bash(npm run test:component)",
-      "Bash(npm run test:integration)",
+      "Bash(npm run test:retrieval-failures)",
       "Bash(npm run build)",
       "Bash(npm audit)"
     ],
@@ -62,12 +62,12 @@
           },
           {
             "type": "command",
-            "command": "python3 -c \"\nimport sys, json\ndata = json.load(sys.stdin)\npath = data.get('tool_input', {}).get('file_path', '')\nfilename = path.split('/')[-1]\nif '/api/' in path and path.endswith('.js') and not filename.startswith('_'):\n    print(json.dumps({'systemMessage': f'api/{filename} edited — run api-invariant-reviewer before committing.'}))\n\"",
+            "command": "python3 -c \"\nimport sys, json\ndata = json.load(sys.stdin)\npath = data.get('tool_input', {}).get('file_path', '')\nfilename = path.split('/')[-1]\nif '/api/' in path and path.endswith('.js') and not filename.startswith('_'):\n    print(json.dumps({'systemMessage': f'api/{filename} edited \u2014 run api-invariant-reviewer before committing.'}))\n\"",
             "statusMessage": "Checking api/ invariants..."
           },
           {
             "type": "command",
-            "command": "python3 -c \"\nimport sys, json\ndata = json.load(sys.stdin)\npath = data.get('tool_input', {}).get('file_path', '')\nfilename = path.split('/')[-1]\nif '/api/' in path and path.endswith('.js') and not filename.startswith('_'):\n    try:\n        with open(path) as f:\n            src = f.read()\n        if any(t in src for t in ('anthropic.', 'messages.create', 'api.canlii.org', 'fetch(', '_retrievalOrchestrator', '_caseLawRetrieval')):\n            print(json.dumps({'systemMessage': f'api/{filename} makes an external call — run caching-reviewer before committing.'}))\n    except OSError:\n        pass\n\"",
+            "command": "python3 -c \"\nimport sys, json\ndata = json.load(sys.stdin)\npath = data.get('tool_input', {}).get('file_path', '')\nfilename = path.split('/')[-1]\nif '/api/' in path and path.endswith('.js') and not filename.startswith('_'):\n    try:\n        with open(path) as f:\n            src = f.read()\n        if any(t in src for t in ('anthropic.', 'messages.create', 'api.canlii.org', 'fetch(', '_retrievalOrchestrator', '_caseLawRetrieval')):\n            print(json.dumps({'systemMessage': f'api/{filename} makes an external call \u2014 run caching-reviewer before committing.'}))\n    except OSError:\n        pass\n\"",
             "statusMessage": "Checking cache coverage..."
           },
           {
@@ -82,7 +82,7 @@
           },
           {
             "type": "command",
-            "command": "python3 -c \"\nimport sys, json\ndata = json.load(sys.stdin)\npath = data.get('tool_input', {}).get('file_path', '')\nlegal_files = ['criminalCodeData.js', 'civilLawData.js', 'charterData.js']\nif any(f in path for f in legal_files):\n    print(json.dumps({'systemMessage': 'Legal data file edited — run legal-data-validator before committing.'}))\n\"",
+            "command": "python3 -c \"\nimport sys, json\ndata = json.load(sys.stdin)\npath = data.get('tool_input', {}).get('file_path', '')\nlegal_files = ['criminalCodeData.js', 'civilLawData.js', 'charterData.js']\nif any(f in path for f in legal_files):\n    print(json.dumps({'systemMessage': 'Legal data file edited \u2014 run legal-data-validator before committing.'}))\n\"",
             "statusMessage": "Checking legal data files..."
           }
         ]
