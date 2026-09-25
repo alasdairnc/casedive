@@ -1,5 +1,9 @@
 # CaseDive Monetization Plan
 
+> **Status (2026-09-25): parked.** The billing endpoints were removed from `api/` because no UI
+> called them and the legal launch gate was not met. This document is kept as the plan for
+> reviving them; the code is in git history before commit `chore(billing): park`.
+
 _Status: draft — approved direction, build in progress. Last updated 2026-06-19._
 
 ## Decisions locked (with the user)

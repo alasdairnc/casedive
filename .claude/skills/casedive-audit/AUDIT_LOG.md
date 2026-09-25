@@ -437,3 +437,9 @@ First audit since 2026-06-10. No source commits between 2026-06-19 and this run;
 - Stripe round-trip on a preview deploy, then finish or park billing | High
 - Branch protection on `main` requiring the two CI checks | Medium
 - Review/rebase PR #19 (corpus expansion) | Medium
+
+## Audit — 2026-09-25 (billing parked)
+
+- Removed `api/billing.js`, `api/stripe-webhook.js`, `api/_stripe.js`, `tests/unit/billingApi.test.js`, `scripts/stripe-setup.mjs`, `scripts/fix-webhook-host.mjs`, `scripts/verify-webhook.mjs`, the `stripe` dependency and the two Vercel function entries. Decision: no UI called billing, no traffic, legal gate unmet.
+- Kept `api/_subscription.js` (plan-aware rate limiting still reads the `subscriptions` table), migration `0001`, and the monetization docs (marked parked).
+- `api/` is now 10/12 Hobby functions.

@@ -1,5 +1,9 @@
 # CaseDive Billing — Plain-English Setup Walkthrough
 
+> **Status (2026-09-25): parked.** The billing endpoints were removed from `api/` because no UI
+> called them and the legal launch gate was not met. This document is kept as the plan for
+> reviving them; the code is in git history before commit `chore(billing): park`.
+
 Everything the code can't do for you, click by click. Do these in order.
 You'll collect **6 values** along the way and paste them into Vercel at the end:
 

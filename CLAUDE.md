@@ -58,8 +58,8 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - `node --check` cannot parse JSX — scope JS syntax checks to `.js` only, never `.jsx`
 - All Redis cache TTLs are 7 days (`604800s`). Changes to filter logic or landmark data won't be visible to cached users until TTL expires — manually purge affected keys in Upstash if a hotfix needs to take effect immediately.
 - context7 MCP is active via global plugin; `.claude/mcp.json` entry is for team/project sharing — don't add it twice
-- Vercel's Node runtime reads and parses the body BEFORE a `(req, res)` handler runs; the Next.js-style `export const config = { api: { bodyParser: false } }` is ignored. Anything that needs raw bytes (the Stripe webhook) must use a Web-standard handler: `export async function POST(request)` + `request.arrayBuffer()`.
-- Hobby plan caps the project at 12 serverless functions and `api/` is at 12/12. A new endpoint means consolidating an existing one first (see how `billing.js` merged checkout + portal).
+- Vercel's Node runtime reads and parses the body BEFORE a `(req, res)` handler runs; the Next.js-style `export const config = { api: { bodyParser: false } }` is ignored. Anything that needs raw bytes (e.g. a payment webhook) must use a Web-standard handler: `export async function POST(request)` + `request.arrayBuffer()`.
+- Hobby plan caps the project at 12 serverless functions; `api/` is at 10/12 since billing was parked (2026-09-25). Combine actions into one endpoint before adding a new file.
 - `user-data` (cloud sync) is rate-limited per Supabase user at 120/h, not the 5/h AI default. Sync fires on every bookmark and every search, so the default silently broke sync after five actions.
 - Vercel Hobby keeps about one hour of runtime logs. Anything older is only in Sentry.
 
@@ -67,8 +67,7 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 
 `api/_*.js` = shared modules (rate limit, CORS, constants, filters, etc.)
 `api/*.js` = endpoint handlers (analyze, case-summary, export-pdf, etc.)
-`api/billing.js` = merged Stripe checkout + portal (12-fn cap); `validateJsonRequest` maxBytes 1000; plan-aware rate limiting via `_subscription.js`
-`api/stripe-webhook.js` = signature-verified raw-body endpoint; deliberately exempt from rate limiting/CORS; sole writer of the `subscriptions` table
+Billing (Stripe checkout/portal/webhook) was **parked on 2026-09-25**: endpoints removed, `_subscription.js` and the `subscriptions` table kept so plan-aware rate limiting still works. Revive from git history (commit before `chore(billing): park`) and `docs/monetization-plan.md`.
 `.claude/rules/` = auto-loaded guardrails (import rules, citation rules, git rules)
 
 ## Auth (Optional Login)
