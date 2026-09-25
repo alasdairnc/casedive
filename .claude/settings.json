@@ -79,11 +79,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/lint-on-save.mjs",
-            "statusMessage": "Linting..."
-          },
-          {
-            "type": "command",
             "command": "node .claude/hooks/post-edit-reviews.mjs",
             "statusMessage": "Checking review triggers..."
           },
@@ -91,11 +86,6 @@
             "type": "command",
             "command": "node .claude/hooks/js-syntax-check.mjs",
             "statusMessage": "Checking JS syntax..."
-          },
-          {
-            "type": "command",
-            "command": "git status --short",
-            "statusMessage": "Checking git status..."
           }
         ]
       }

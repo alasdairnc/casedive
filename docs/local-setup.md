@@ -71,7 +71,7 @@ behave identically on macOS, Windows, and CI. No extra setup is needed beyond ha
 Node on your PATH. Hook scripts:
 
 - `block-protected-writes.mjs` / `block-dangerous-bash.mjs` — PreToolUse guards
-- `lint-on-save.mjs` / `js-syntax-check.mjs` / `post-edit-reviews.mjs` — PostToolUse checks
+- `js-syntax-check.mjs` / `post-edit-reviews.mjs` — PostToolUse checks
 - `precompact-context.mjs` — PreCompact git snapshot
 - `stop-sensitive-check.mjs` — Stop-time sensitive-file warning
 
