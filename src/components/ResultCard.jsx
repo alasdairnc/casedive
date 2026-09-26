@@ -40,6 +40,9 @@ export function sanitizeMatchedTextForDisplay(text) {
 
 // One pill-shaped external link for every verification status. Glyphs are
 // aria-hidden so the accessible name is just the label.
+// The card around it opens the case summary on click/Enter, so the link keeps
+// its activation to itself. Only Enter/Space stop at the link: Escape still has
+// to reach the window listeners that close open panels.
 function BadgeLink({ href, color, icon, label, t }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -47,6 +50,10 @@ function BadgeLink({ href, color, icon, label, t }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") e.stopPropagation();
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
