@@ -19,7 +19,7 @@ AI-powered Canadian legal research tool. Stack: React 18 + Vite, Vercel serverle
 
 **Setup (new machine, macOS/Windows/Linux):** `npm install && npm run setup` — see `docs/local-setup.md`.
 
-`npm run dev` (frontend), `npm run dev:api` (full stack), `npm run build`, `npm test`, `npm run test:unit`, `npm run test:component`, `npm run test:guardrails` (pre-PR: sanitizer + retrieval-failures + filter), `npm run test:retrieval-failures`
+`npm run dev` (frontend), `npm run dev:api` (full stack), `npm run build`, `npm run lint` (ESLint + react-hooks; runs in CI), `npm test`, `npm run test:unit`, `npm run test:component`, `npm run test:guardrails` (pre-PR: sanitizer + retrieval-failures + filter), `npm run test:retrieval-failures`
 
 **Filter tuning:** `npm run test:filter` (report), `npm run test:filter:calibrate` (recalibrate thresholds), `npm run test:filter:compare` (before/after diff)
 
