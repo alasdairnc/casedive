@@ -41,7 +41,7 @@ casedive/
 |  |  |- constants.js         # Frontend constants
 |  |  |- prompts.js           # System prompt builder
 |  |  |- canlii.js            # CanLII API client
-|  |  |- criminalCodeData.js  # 1516 sections (316KB — use criminalCodeParts.js for parts only)
+|  |  |- criminalCodeData.js  # 1568 sections (402KB — use criminalCodeParts.js for parts only)
 |  |  |- civilLawData.js      # 191 entries
 |  |  |- charterData.js       # 55 entries
 |  |  |- landmarkCases.js     # Seeds for retrieval fallback/query enrichment

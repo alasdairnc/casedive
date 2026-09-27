@@ -1,7 +1,7 @@
 // src/lib/criminalCodeData.js
 // Complete Criminal Code (RSC 1985, c C-46) section lookup.
 // Auto-generated from Justice Laws XML (laws-lois.justice.gc.ca/eng/XML/C-46.xml)
-// Generated: March 2026 | Sections: 1516
+// Source current as of: 2026-07-21 (Justice Laws lims:current-date) | Sections: 1568
 // Includes all numbered sections from the Criminal Code.
 // 46 high-priority sections are enriched with definitions, defences, and related sections.
 //
@@ -69,6 +69,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-3.html`,
+      partOf: "Part I — General",
+    },
+  ],
+  [
+    "3.01",
+    {
+      title: "Violence in commission of offence, including against intimate partner",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-3.01.html`,
       partOf: "Part I — General",
     },
   ],
@@ -143,16 +153,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
-    "9.1",
-    {
-      title: "Mature minors, advance requests and mental illness",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-9.1.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
     "10",
     {
       title: "Appeal",
@@ -169,6 +169,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-11.html`,
+      partOf: "Part I — General",
+    },
+  ],
+  [
+    "11.1",
+    {
+      title: "Non-disclosure agreement — no effect",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-11.1.html`,
       partOf: "Part I — General",
     },
   ],
@@ -199,26 +209,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-14.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "14.1",
-    {
-      title: "Unlawfully manufactured firearms",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-14.1.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "14.2",
-    {
-      title: "Review by House of Commons committee",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-14.2.html`,
       partOf: "Part I — General",
     },
   ],
@@ -279,16 +269,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-20.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "20.1",
-    {
-      title: "Review",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-20.1.html`,
       partOf: "Part I — General",
     },
   ],
@@ -483,16 +463,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
-    "31.1",
-    {
-      title: "Review",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-31.1.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
     "32",
     {
       title: "Use of force to suppress riot",
@@ -531,7 +501,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       url: `${JUSTICE_LAWS_BASE}/section-34.html`,
       definition:
         "A person is not guilty of an offence if (a) they believe on reasonable grounds that force is being used against them or another person or that a threat of force is being made against them or another person; (b) the act that constitutes the offence is committed for the purpose of defending or protecting themselves or the other person from that use or threat of force; and (c) the act committed is reasonable in the circumstances.",
-      relatedSections: ["35", "37", "265"],
+      relatedSections: ["35", "265"],
       defences: [],
       topicsTagged: ["self-defence", "force", "reasonable"],
       partOf: "Part I — General",
@@ -553,102 +523,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
-    "36",
-    {
-      title: "Qualified technician — breath samples",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-36.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "37",
-    {
-      title: "Hearing — subsection 278.3(5)",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-37.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "38",
-    {
-      title: "Restitution requests — section 380.3",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-38.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "39",
-    {
-      title: "Community impact statements — section 380.4",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-39.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "40",
-    {
-      title: "Section 423.1",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-40.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "41",
-    {
-      title: "Victim impact statements — section 672.5",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-41.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "42",
-    {
-      title: "Section 718",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-42.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "42.1",
-    {
-      title: "Paragraph 718.2(e)",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-42.1.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
     "43",
     {
       title: "Correction of child by force",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-43.html`,
-      partOf: "Part I — General",
-    },
-  ],
-  [
-    "44",
-    {
-      title: "Sections 737.1 and 739.1 to 739.4",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-44.html`,
       partOf: "Part I — General",
     },
   ],
@@ -660,15 +540,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-45.html`,
       partOf: "Part I — General",
-    },
-  ],
-  [
-    "45.1",
-    {
-      title: "Review",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-45.1.html`,
     },
   ],
 
@@ -706,8 +577,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "50",
     {
-      title:
-        "Assisting alien enemy to leave Canada, or omitting to prevent treason",
+      title: "Assisting alien enemy to leave Canada, or omitting to prevent treason",
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-50.html`,
@@ -1035,16 +905,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
-    "78.2",
-    {
-      title: "Review by committee",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-78.2.html`,
-      partOf: "Part II — Offences Against Public Order",
-    },
-  ],
-  [
     "79",
     {
       title: "Duty of care re explosive",
@@ -1107,8 +967,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "82.3",
     {
-      title:
-        "Possession, etc., of nuclear material, radioactive material or device",
+      title: "Possession, etc., of nuclear material, radioactive material or device",
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-82.3.html`,
@@ -1118,8 +977,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "82.4",
     {
-      title:
-        "Use or alteration of nuclear material, radioactive material or device",
+      title: "Use or alteration of nuclear material, radioactive material or device",
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-82.4.html`,
@@ -1129,8 +987,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "82.5",
     {
-      title:
-        "Commission of indictable offence to obtain nuclear material, etc.",
+      title: "Commission of indictable offence to obtain nuclear material, etc.",
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-82.5.html`,
@@ -1192,8 +1049,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "83.03",
     {
-      title:
-        "Providing, making available, etc., property or services for terrorist purposes",
+      title: "Providing, making available, etc., property or services for terrorist purposes",
       severity: "Indictable",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.03.html`,
@@ -1687,8 +1543,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Using firearm in commission of offence",
       severity: "Indictable",
-      maxPenalty:
-        "14 years; minimum 1 year (1st offence) / 3 years (subsequent); consecutive to other sentence",
+      maxPenalty: "14 years; minimum 1 year (1st offence) / 3 years (subsequent); consecutive to other sentence",
       url: `${JUSTICE_LAWS_BASE}/section-85.html`,
       definition:
         "Every person commits an offence who uses a firearm, whether or not the person causes or means to cause bodily harm to any person as a result, while committing or attempting to commit an indictable offence, during flight after committing or attempting to commit an indictable offence, or while attempting to resist or prevent the lawful arrest of the person or another person.",
@@ -1703,8 +1558,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Careless use of firearm, etc.",
       severity: "Hybrid",
-      maxPenalty:
-        "5 years indictable; minimum 1 year (indictable) if criminal org. / 2 years less a day summary",
+      maxPenalty: "5 years indictable; minimum 1 year (indictable) if criminal org. / 2 years less a day summary",
       url: `${JUSTICE_LAWS_BASE}/section-86.html`,
       definition:
         "Every person commits an offence who, without lawful excuse, uses, carries, handles, ships, transports or stores a firearm, a prohibited weapon, a restricted weapon, a prohibited device or any ammunition or prohibited ammunition in a careless manner or without reasonable precautions for the safety of other persons.",
@@ -1774,10 +1628,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       definition:
         "Subject to subsection (4), every person commits an offence who possesses a prohibited firearm, a restricted firearm or a non-restricted firearm without being the holder of a licence under which the person may possess it and, in the case of a prohibited firearm or a restricted firearm, a registration certificate for it.",
       relatedSections: ["92", "95", "86"],
-      defences: [
-        "valid licence and registration",
-        "inherited firearm (grace period)",
-      ],
+      defences: ["valid licence and registration", "inherited firearm (grace period)"],
       topicsTagged: ["firearm", "unauthorized possession", "licence"],
       partOf: "Part III — Firearms and Other Weapons",
     },
@@ -1787,8 +1638,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of firearm knowing its possession is unauthorized",
       severity: "Indictable",
-      maxPenalty:
-        "10 years; minimum 1 year (1st offence) / 3 years (subsequent)",
+      maxPenalty: "10 years; minimum 1 year (1st offence) / 3 years (subsequent)",
       url: `${JUSTICE_LAWS_BASE}/section-92.html`,
       definition:
         "Every person commits an offence who possesses a prohibited firearm, a restricted firearm or a non-restricted firearm knowing that the person is not the holder of a licence under which the person may possess it and, in the case of a prohibited firearm or a restricted firearm, a registration certificate for it.",
@@ -1823,8 +1673,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of prohibited or restricted firearm with ammunition",
       severity: "Hybrid",
-      maxPenalty:
-        "14 years indictable; minimum 3 years (1st offence) / 5 years (subsequent)",
+      maxPenalty: "14 years indictable; minimum 3 years (1st offence) / 5 years (subsequent)",
       url: `${JUSTICE_LAWS_BASE}/section-95.html`,
       definition:
         "Subject to subsection (3), every person commits an offence who, without being the holder of an authorization or a licence under which the person may possess it and a registration certificate for it, possesses a loaded prohibited firearm or restricted firearm, or an unloaded prohibited firearm or restricted firearm together with readily accessible ammunition that is capable of being discharged from it.",
@@ -1879,8 +1728,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession for purpose of weapons trafficking",
       severity: "Indictable",
-      maxPenalty:
-        "14 years; minimum 1 year (1st offence) / 3 years (subsequent)",
+      maxPenalty: "14 years; minimum 1 year (1st offence) / 3 years (subsequent)",
       url: `${JUSTICE_LAWS_BASE}/section-100.html`,
       definition:
         "Every person commits an offence who possesses any firearm, cross-bow, prohibited weapon, restricted weapon, prohibited device, ammunition, prohibited ammunition or explosive substance for the purpose of transferring it to any person, whether or not such person is in Canada, without being authorized to transfer it under the Firearms Act, any other Act of Parliament or any regulations made under any Act of Parliament.",
@@ -2073,8 +1921,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "112",
     {
-      title:
-        "Revocation of prohibition order under subsection 110.1(3) or 111(5)",
+      title: "Revocation of prohibition order under subsection 110.1(3) or 111(5)",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-112.html`,
@@ -2274,8 +2121,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "117.08",
     {
-      title:
-        "Individuals acting for police force, Canadian Forces and visiting forces",
+      title: "Individuals acting for police force, Canadian Forces and visiting forces",
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.08.html`,
@@ -2353,7 +2199,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
 
-  // ── Part IV — Offences Against Administration of Law and Justice ──
+  // ── Part IV — Offences Against the Administration of Law and Justice ──
   [
     "118",
     {
@@ -2361,7 +2207,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-118.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2371,7 +2217,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-119.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2381,7 +2227,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-120.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2391,7 +2237,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-121.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2401,7 +2247,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-121.1.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2411,7 +2257,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-122.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2421,7 +2267,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-123.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2431,7 +2277,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-124.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2441,7 +2287,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-125.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2451,7 +2297,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-126.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2461,7 +2307,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-127.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2471,7 +2317,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-128.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2481,7 +2327,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-129.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2491,7 +2337,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-130.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2501,7 +2347,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-130.1.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2511,7 +2357,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-131.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2521,7 +2367,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-132.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2531,7 +2377,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-133.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2541,7 +2387,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-134.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2551,7 +2397,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-136.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2561,7 +2407,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-137.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2571,7 +2417,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-138.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2581,7 +2427,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-139.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2591,7 +2437,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-140.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2601,7 +2447,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-141.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2611,7 +2457,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-142.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2621,7 +2467,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-144.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2631,7 +2477,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-145.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2641,7 +2487,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-146.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2651,7 +2497,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-147.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2661,7 +2507,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-148.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
   [
@@ -2671,7 +2517,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-149.html`,
-      partOf: "Part IV — Offences Against Administration of Law and Justice",
+      partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
 
@@ -2701,31 +2547,29 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sexual interference",
       severity: "Hybrid",
-      maxPenalty:
-        "14 years indictable; mandatory minimum 1 year (indictable) / 90 days (summary)",
+      maxPenalty: "14 years indictable; mandatory minimum 1 year (indictable) / 90 days (summary)",
       url: `${JUSTICE_LAWS_BASE}/section-151.html`,
       definition:
         "Every person who, for a sexual purpose, touches, directly or indirectly, with a part of the body or with an object, any part of the body of a person under the age of 16 years is guilty of an offence.",
       relatedSections: ["152", "153", "271"],
       defences: ["mistaken belief in age (s. 150.1)"],
       topicsTagged: ["sexual offence", "child", "minor"],
-      partOf: "Part V — Sexual Offences",
+      partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
   [
     "152",
     {
-      title: "Invitation to sexual touching",
+      title: "Invitation to sexual touching or exposure",
       severity: "Hybrid",
-      maxPenalty:
-        "14 years indictable; mandatory minimum 1 year (indictable) / 90 days (summary)",
+      maxPenalty: "14 years indictable; mandatory minimum 1 year (indictable) / 90 days (summary)",
       url: `${JUSTICE_LAWS_BASE}/section-152.html`,
       definition:
         "Every person who, for a sexual purpose, invites, counsels or incites a person under the age of 16 years to touch, directly or indirectly, with a part of the body or with an object, the body of any person, including the body of the person who so invites, counsels or incites and the body of the person under the age of 16 years, is guilty of an offence.",
       relatedSections: ["151", "153", "271"],
       defences: ["mistaken belief in age (s. 150.1)"],
       topicsTagged: ["sexual offence", "child", "minor"],
-      partOf: "Part V — Sexual Offences",
+      partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
   [
@@ -2733,15 +2577,14 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sexual exploitation",
       severity: "Hybrid",
-      maxPenalty:
-        "14 years indictable; mandatory minimum 1 year (indictable) / 90 days (summary)",
+      maxPenalty: "14 years indictable; mandatory minimum 1 year (indictable) / 90 days (summary)",
       url: `${JUSTICE_LAWS_BASE}/section-153.html`,
       definition:
         "Every person commits an offence who is in a position of trust or authority towards a young person, who is a person with whom the young person is in a relationship of dependency or who is in a relationship with a young person that is exploitative of the young person, and who for a sexual purpose touches, directly or indirectly, with a part of the body or with an object, any part of the body of the young person, or invites, counsels or incites the young person to touch, directly or indirectly, with a part of the body or with an object, the body of any person.",
       relatedSections: ["151", "152", "153.1"],
       defences: [],
       topicsTagged: ["sexual offence", "exploitation", "trust", "young person"],
-      partOf: "Part V — Sexual Offences",
+      partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
   [
@@ -2775,31 +2618,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
-    "157",
-    {
-      title: "No report for year before coming into force",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-157.html`,
-      partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
-    },
-  ],
-  [
-    "157.1",
-    {
-      title: "Application",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-157.1.html`,
-      partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
-    },
-  ],
-  [
     "160",
     {
       title: "Bestiality",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "10 years (general, s. 160(1)-(2)); 14 years, minimum 1 year indictable / minimum 6 months summary (if committed in presence of or by a person under 16, s. 160(3)); 5 years (representation of bestiality, s. 160(3.4))",
       url: `${JUSTICE_LAWS_BASE}/section-160.html`,
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
@@ -2857,9 +2680,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "163.1",
     {
-      title: "Definition of",
+      title: "Definition of child sexual abuse and exploitation material",
       severity: "Hybrid",
-      maxPenalty: "14 years (minimum 14 years)",
+      maxPenalty: "14 years, minimum 1 year (making/distributing, s. 163.1(2)-(3)); 10 years indictable minimum 1 year / 2 years less a day summary minimum 6 months (possession/accessing, s. 163.1(4)-(4.1))",
       url: `${JUSTICE_LAWS_BASE}/section-163.1.html`,
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
@@ -2877,7 +2700,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "164.1",
     {
-      title: "Warrant of seizure",
+      title: "Warrant of seizure — material on computer system",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-164.1.html`,
@@ -2901,16 +2724,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-164.3.html`,
-      partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
-    },
-  ],
-  [
-    "165",
-    {
-      title: "Pardons in effect — references in other legislation",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-165.html`,
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -2945,6 +2758,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "169.1",
+    {
+      title: "Recruitment — young person",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-169.1.html`,
+      partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
+    },
+  ],
+  [
     "170",
     {
       title: "Parent or guardian procuring sexual activity",
@@ -2969,7 +2792,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Making sexually explicit material available to child",
       severity: "Hybrid",
-      maxPenalty: "14 years (minimum 14 years)",
+      maxPenalty: "14 years, minimum 6 months indictable / 2 years less a day, minimum 90 days summary",
       url: `${JUSTICE_LAWS_BASE}/section-171.1.html`,
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
@@ -3189,8 +3012,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "186.1",
     {
-      title:
-        "Time limitation in relation to criminal organizations and terrorism offences",
+      title: "Time limitation in relation to criminal organizations and terrorism offences",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-186.1.html`,
@@ -3290,8 +3112,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "193.1",
     {
-      title:
-        "Disclosure of information received from interception of radio-based telephone communications",
+      title: "Disclosure of information received from interception of radio-based telephone communications",
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-193.1.html`,
@@ -3552,13 +3373,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       definition:
         "A person commits homicide when, directly or indirectly, by any means, he causes the death of a human being. Homicide is culpable or not culpable. Culpable homicide is murder or manslaughter or infanticide. A person commits culpable homicide when he causes the death of a human being by means of an unlawful act, by criminal negligence, by causing that human being by threats or fear of violence or by deception to do anything that causes his death, or by wilfully frightening that human being in the case of a child or sick person.",
       relatedSections: ["229", "231", "234", "235", "236"],
-      defences: [
-        "self-defence (s. 34)",
-        "provocation (s. 232)",
-        "not criminally responsible (s. 16)",
-      ],
+      defences: ["self-defence (s. 34)", "provocation (s. 232)", "not criminally responsible (s. 16)"],
       topicsTagged: ["homicide", "death", "culpable"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -3631,14 +3448,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       definition:
         "Culpable homicide is murder (a) where the person who causes the death of a human being means to cause his death, or means to cause him bodily harm that he knows is likely to cause his death and is reckless whether death ensues or not; (b) where a person, meaning to cause death to a human being or meaning to cause him bodily harm that he knows is likely to cause his death, and being reckless whether death ensues or not, by accident or mistake causes death to another human being, notwithstanding that he does not mean to cause death or bodily harm to that human being; or (c) where a person, for an unlawful object, does anything that he knows or ought to know is likely to cause death, and thereby causes death to a human being, notwithstanding that he desires to effect his object without causing death or bodily harm to any human being.",
       relatedSections: ["222", "231", "232", "235"],
-      defences: [
-        "provocation (s. 232)",
-        "self-defence (s. 34)",
-        "intoxication",
-        "not criminally responsible (s. 16)",
-      ],
+      defences: ["provocation (s. 232)", "self-defence (s. 34)", "intoxication", "not criminally responsible (s. 16)"],
       topicsTagged: ["murder", "intent", "death"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -3646,18 +3458,14 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Classification of murder",
       severity: "Indictable",
-      maxPenalty:
-        "Life imprisonment (minimum 25 years parole ineligibility for 1st degree)",
+      maxPenalty: "Life imprisonment (minimum 25 years parole ineligibility for 1st degree)",
       url: `${JUSTICE_LAWS_BASE}/section-231.html`,
       definition:
         "Murder is first degree murder or second degree murder. Murder is first degree murder when it is planned and deliberate, when the victim is a peace officer, prison employee, or similar person acting in the course of duties, or when death is caused while committing or attempting to commit hijacking, sexual assault, kidnapping, hostage taking, criminal harassment, intimidation, terrorist activity, or using explosives in association with a criminal organization.",
       relatedSections: ["229", "232", "235", "745"],
-      defences: [
-        "provocation reduces to manslaughter (s. 232)",
-        "intoxication (negating planning/deliberation)",
-      ],
+      defences: ["provocation reduces to manslaughter (s. 232)", "intoxication (negating planning/deliberation)"],
       topicsTagged: ["murder", "first degree", "second degree", "planned"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -3672,7 +3480,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       relatedSections: ["229", "231", "234", "236"],
       defences: [],
       topicsTagged: ["provocation", "manslaughter", "heat of passion"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -3697,7 +3505,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       relatedSections: ["222", "229", "232", "236"],
       defences: ["self-defence (s. 34)", "not criminally responsible (s. 16)"],
       topicsTagged: ["manslaughter", "homicide"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -3712,13 +3520,13 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       relatedSections: ["229", "231", "745", "745.4"],
       defences: [],
       topicsTagged: ["murder", "sentencing", "life imprisonment"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
     "236",
     {
-      title: "Punishment for manslaughter",
+      title: "Manslaughter",
       severity: "Indictable",
       maxPenalty: "Life imprisonment; minimum 4 years if firearm used",
       url: `${JUSTICE_LAWS_BASE}/section-236.html`,
@@ -3727,7 +3535,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       relatedSections: ["234", "232", "222"],
       defences: [],
       topicsTagged: ["manslaughter", "sentencing", "firearm"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -3951,6 +3759,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "263.1",
+    {
+      title: "Violence against intimate partner",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-263.1.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
     "264",
     {
       title: "Criminal harassment",
@@ -3982,7 +3800,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       relatedSections: ["266", "267", "268", "269"],
       defences: ["consent (s. 265(3))", "self-defence (s. 34)"],
       topicsTagged: ["violence", "person", "force", "consent"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -3995,13 +3813,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       definition:
         "Every one who commits an assault is guilty of (a) an indictable offence and is liable to imprisonment for a term not exceeding five years; or (b) an offence punishable on summary conviction.",
       relatedSections: ["265", "267", "268"],
-      defences: [
-        "consent",
-        "self-defence (s. 34)",
-        "defence of property (s. 35)",
-      ],
+      defences: ["consent", "self-defence (s. 34)", "defence of property (s. 35)"],
       topicsTagged: ["violence", "person"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -4013,10 +3827,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       url: `${JUSTICE_LAWS_BASE}/section-267.html`,
       definition:
         "Every one who, in committing an assault, (a) carries, uses or threatens to use a weapon or an imitation thereof, or (b) causes bodily harm to the complainant, is guilty of an indictable offence and liable to imprisonment for a term not exceeding ten years or an offence punishable on summary conviction.",
-      relatedSections: ["265", "266", "268", "2 (bodily harm)"],
+      relatedSections: ["265", "266", "268", "2"],
       defences: ["consent", "self-defence (s. 34)"],
       topicsTagged: ["violence", "weapon", "bodily harm"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -4031,7 +3845,17 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       relatedSections: ["265", "267", "269"],
       defences: ["self-defence (s. 34)"],
       topicsTagged: ["violence", "serious injury", "wounding"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "268.1",
+    {
+      title: "Sterilization",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-268.1.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -4047,8 +3871,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "269.01",
     {
-      title:
-        "Aggravating circumstance — assault against a public transit operator",
+      title: "Aggravating circumstance — assault against a public transit employee",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-269.01.html`,
@@ -4120,22 +3943,20 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sexual assault",
       severity: "Hybrid",
-      maxPenalty:
-        "14 years indictable; mandatory minimum 1 year (indictable) / 6 months (summary)",
+      maxPenalty: "10 years indictable / 2 years less a day summary (general); if complainant under 16: 14 years indictable minimum 1 year / 2 years less a day summary minimum 6 months",
       url: `${JUSTICE_LAWS_BASE}/section-271.html`,
       definition:
         "Every one who commits a sexual assault is guilty of (a) an indictable offence and is liable to imprisonment for a term not exceeding fourteen years and to a minimum punishment of imprisonment for a term of one year; or (b) an offence punishable on summary conviction and is liable to imprisonment for a term not exceeding two years less a day and to a minimum punishment of imprisonment for a term of six months.",
       relatedSections: ["265", "272", "273", "273.1"],
       defences: ["consent (s. 273.1)", "mistaken belief in consent (s. 273.2)"],
       topicsTagged: ["sexual offence", "assault", "consent"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
     "272",
     {
-      title:
-        "Sexual assault with a weapon, threats to a third party or causing bodily harm",
+      title: "Sexual assault with a weapon, threats to a third party or causing bodily harm",
       severity: "Indictable",
       maxPenalty: "Life imprisonment; minimum 4 years",
       url: `${JUSTICE_LAWS_BASE}/section-272.html`,
@@ -4144,7 +3965,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       relatedSections: ["271", "273", "265"],
       defences: ["consent (s. 273.1)", "mistaken belief in consent (s. 273.2)"],
       topicsTagged: ["sexual offence", "weapon", "bodily harm"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -4159,13 +3980,13 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       relatedSections: ["271", "272", "268"],
       defences: [],
       topicsTagged: ["sexual offence", "aggravated", "serious injury"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
     "273.1",
     {
-      title: "Meaning of",
+      title: "Meaning of consent",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-273.1.html`,
@@ -4223,6 +4044,136 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "276.01",
+    {
+      title: "Application for hearing",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.01.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.02",
+    {
+      title: "Hearing — jury and public excluded",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.02.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.03",
+    {
+      title: "Publication prohibited",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.03.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.04",
+    {
+      title: "Instruction to jury — use of evidence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.04.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.05",
+    {
+      title: "Appeal",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.05.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.06",
+    {
+      title: "Application",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.06.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.07",
+    {
+      title: "Publication prohibited",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.07.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.08",
+    {
+      title: "Instruction to jury — use of evidence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.08.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.09",
+    {
+      title: "Appeal",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.09.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.1",
+    {
+      title: "Admissibility of sexual activity evidence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.1.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.11",
+    {
+      title: "Publication prohibited",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.11.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.12",
+    {
+      title: "Instruction to jury — use of evidence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.12.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "276.13",
+    {
+      title: "Appeal",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-276.13.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
     "277",
     {
       title: "Reputation evidence",
@@ -4245,7 +4196,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "278.1",
     {
-      title: "Definition of record",
+      title: "Definitions",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.1.html`,
@@ -4253,9 +4204,99 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "278.11",
+    {
+      title: "Records and therapeutic records possessed by third party",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.11.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.12",
+    {
+      title: "Application for production",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.12.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.13",
+    {
+      title: "Hearing in camera",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.13.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.14",
+    {
+      title: "Order — production to judge",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.14.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.15",
+    {
+      title: "Review of record by judge",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.15.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.16",
+    {
+      title: "Order — Production of record to accused",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.16.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.17",
+    {
+      title: "Reasons for decision",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.17.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.18",
+    {
+      title: "Publication prohibited",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.18.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.19",
+    {
+      title: "Appeal",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.19.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
     "278.2",
     {
-      title: "Production of record to accused",
+      title: "Records and therapeutic records possessed by prosecutor",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.2.html`,
@@ -4263,9 +4304,99 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
-    "278.3",
+    "278.21",
     {
       title: "Application for production",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.21.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.22",
+    {
+      title: "Hearing in camera",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.22.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.23",
+    {
+      title: "Order — production to judge",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.23.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.24",
+    {
+      title: "Review by judge",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.24.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.25",
+    {
+      title: "Order — production of record to accused",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.25.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.26",
+    {
+      title: "Reasons for decision",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.26.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.27",
+    {
+      title: "Publication prohibited",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.27.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.28",
+    {
+      title: "Appeal",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.28.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.29",
+    {
+      title: "Admissibility — possession by accused",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.29.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.3",
+    {
+      title: "Application for hearing",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.3.html`,
@@ -4273,133 +4404,82 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
-    "278.4",
-    {
-      title: "Hearing in camera",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.4.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.5",
-    {
-      title: "Judge may order production of record for review",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.5.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.6",
-    {
-      title: "Review of record by judge",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.6.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.7",
-    {
-      title: "Judge may order production of record to accused",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.7.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.8",
-    {
-      title: "Reasons for decision",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.8.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.9",
-    {
-      title: "Publication prohibited",
-      severity: "Summary",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.9.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.91",
-    {
-      title: "Appeal",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.91.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.92",
-    {
-      title:
-        "Admissibility — accused in possession of records relating to complainant",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.92.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.93",
-    {
-      title: "Application for hearing — sections 276 and 278.92",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.93.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.94",
+    "278.31",
     {
       title: "Hearing — jury and public excluded",
       severity: "",
       maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.94.html`,
+      url: `${JUSTICE_LAWS_BASE}/section-278.31.html`,
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
-    "278.95",
+    "278.32",
     {
       title: "Publication prohibited",
-      severity: "Summary",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.95.html`,
-      partOf: "Part VIII — Offences Against the Person and Reputation",
-    },
-  ],
-  [
-    "278.96",
-    {
-      title: "Judge to instruct jury — re use of evidence",
       severity: "",
       maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.96.html`,
+      url: `${JUSTICE_LAWS_BASE}/section-278.32.html`,
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
-    "278.97",
+    "278.33",
+    {
+      title: "Instruction to jury — use of evidence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.33.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.34",
     {
       title: "Appeal",
       severity: "",
       maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-278.97.html`,
+      url: `${JUSTICE_LAWS_BASE}/section-278.34.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.35",
+    {
+      title: "Admissibility of record",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.35.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.36",
+    {
+      title: "Publication prohibited",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.36.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.37",
+    {
+      title: "Instruction to jury — use of evidence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.37.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
+    "278.38",
+    {
+      title: "Appeal",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-278.38.html`,
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4418,15 +4498,14 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Kidnapping",
       severity: "Hybrid",
-      maxPenalty:
-        "Life imprisonment; minimum 4 years (with firearm / criminal org.)",
+      maxPenalty: "Life imprisonment; minimum 4 years (with firearm / criminal org.)",
       url: `${JUSTICE_LAWS_BASE}/section-279.html`,
       definition:
         "Every one who kidnaps a person with intent to cause the person to be confined or imprisoned against the person's will, to cause the person to be unlawfully sent or transported out of Canada against the person's will, or to hold the person for ransom or to service against the person's will is guilty of an indictable offence.",
       relatedSections: ["279.01", "279.011", "280", "281"],
       defences: ["consent"],
       topicsTagged: ["kidnapping", "confinement", "liberty"],
-      partOf: "Part VIII — Offences Against the Person",
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -4564,7 +4643,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Obtaining sexual services for consideration",
       severity: "Hybrid",
-      maxPenalty: "10 years (minimum 18 years)",
+      maxPenalty: "5 years indictable + minimum fine / summary fine or 2 years less a day (general, s. 286.1(1)); 14 years, minimum 6 months (first offence) / 1 year (subsequent), if the person is under 18 (s. 286.1(2))",
       url: `${JUSTICE_LAWS_BASE}/section-286.1.html`,
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
@@ -4904,7 +4983,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Advocating genocide",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-318.html`,
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
@@ -4940,12 +5019,23 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "320.1001",
+    {
+      title: "Offence motivated by hatred",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-320.1001.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
+    },
+  ],
+  [
     "320.101",
     {
       title: "Definition of conversion therapy",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.101.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -4955,6 +5045,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.102.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -4964,6 +5055,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.103.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
   [
@@ -4973,6 +5065,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.104.html`,
+      partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
 
@@ -5012,16 +5105,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Operation while impaired",
       severity: "Hybrid",
-      maxPenalty:
-        "2 years less a day (no bodily harm) / 10 years (bodily harm) / life (death); mandatory minimum $1,000",
+      maxPenalty: "2 years less a day (no bodily harm) / 10 years (bodily harm) / life (death); mandatory minimum $1,000",
       url: `${JUSTICE_LAWS_BASE}/section-320.14.html`,
       definition:
         "Everyone commits an offence who operates a conveyance while the person's ability to operate it is impaired to any degree by alcohol or a drug or by a combination of alcohol and a drug; has, within two hours after ceasing to operate a conveyance, a blood alcohol concentration that is equal to or exceeds 80 mg of alcohol in 100 mL of blood; or has, within two hours after ceasing to operate a conveyance, a blood drug concentration that is equal to or exceeds the blood drug concentration for the drug that is prescribed by regulation.",
       relatedSections: ["320.15", "320.16", "320.17", "320.13"],
-      defences: [
-        "bolus drinking defence (limited)",
-        "consumption after driving",
-      ],
+      defences: ["bolus drinking defence (limited)", "consumption after driving"],
       topicsTagged: ["impaired driving", "alcohol", "drug", "BAC"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
@@ -5036,10 +5125,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       definition:
         "Everyone commits an offence who, without reasonable excuse, fails or refuses to comply with a demand made under sections 320.27 or 320.28 (breath/blood demands).",
       relatedSections: ["320.14", "320.27", "320.28"],
-      defences: [
-        "reasonable excuse (e.g., medical condition)",
-        "incapability of providing sample",
-      ],
+      defences: ["reasonable excuse (e.g., medical condition)", "incapability of providing sample"],
       topicsTagged: ["breathalyzer", "refusal", "demand"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
@@ -5049,8 +5135,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Failure to stop after accident",
       severity: "Hybrid",
-      maxPenalty:
-        "10 years (bodily harm) / life (death) / 2 years less a day (property damage)",
+      maxPenalty: "10 years (bodily harm) / life (death) / 2 years less a day (property damage)",
       url: `${JUSTICE_LAWS_BASE}/section-320.16.html`,
       definition:
         "Everyone commits an offence who operates a conveyance and who at the time of, or after, the accident, with intent to escape civil or criminal liability fails to stop the conveyance, give their name and address and, if any person has been injured or appears to require assistance, offer assistance.",
@@ -5065,8 +5150,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Flight from peace officer",
       severity: "Hybrid",
-      maxPenalty:
-        "14 years (bodily harm) / life (death) / 5 years (no bodily harm)",
+      maxPenalty: "14 years (bodily harm) / life (death) / 5 years (no bodily harm)",
       url: `${JUSTICE_LAWS_BASE}/section-320.17.html`,
       definition:
         "Everyone commits an offence who operates a conveyance while being pursued by a peace officer and who fails, without reasonable excuse, to stop the conveyance as soon as is reasonable in the circumstances.",
@@ -5141,7 +5225,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Mandatory prohibition order",
       severity: "",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.24.html`,
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
@@ -5376,8 +5460,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "327",
     {
-      title:
-        "Possession of device to obtain use of telecommunication facility or service",
+      title: "Possession of device to obtain use of telecommunication facility or service",
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-327.html`,
@@ -5445,6 +5528,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "333.11",
+    {
+      title: "Sentences to be served consecutively — breaking and entering",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-333.11.html`,
+      partOf: "Part IX — Offences Against Rights of Property",
+    },
+  ],
+  [
     "333.2",
     {
       title: "Possession of device for purpose of committing theft",
@@ -5459,14 +5552,23 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment for theft",
       severity: "Hybrid",
-      maxPenalty:
-        "10 years (over $5,000 indictable) / 2 years less a day (under $5,000 summary)",
+      maxPenalty: "10 years (over $5,000 indictable) / 2 years less a day (under $5,000 summary)",
       url: `${JUSTICE_LAWS_BASE}/section-334.html`,
       definition:
         "Except where otherwise provided by law, every one who commits theft is guilty of (a) an indictable offence and liable to imprisonment for a term not exceeding ten years, where the property stolen is a testamentary instrument or the value of what is stolen exceeds five thousand dollars; or (b) an offence punishable on summary conviction, where the value of what is stolen does not exceed five thousand dollars.",
       relatedSections: ["322", "343", "354"],
       defences: ["colour of right", "claim of right"],
       topicsTagged: ["theft", "sentencing", "property value"],
+      partOf: "Part IX — Offences Against Rights of Property",
+    },
+  ],
+  [
+    "334.1",
+    {
+      title: "Aggravating circumstance — stolen property",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-334.1.html`,
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -5543,8 +5645,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "342.01",
     {
-      title:
-        "Instruments for copying credit card data or forging or falsifying credit cards",
+      title: "Instruments for copying credit card data or forging or falsifying credit cards",
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-342.01.html`,
@@ -5564,8 +5665,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "342.2",
     {
-      title:
-        "Possession of device to obtain unauthorized use of computer system or to commit mischief",
+      title: "Possession of device to obtain unauthorized use of computer system or to commit mischief",
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-342.2.html`,
@@ -5590,10 +5690,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "344",
     {
-      title: "Punishment for robbery",
+      title: "Robbery",
       severity: "Indictable",
-      maxPenalty:
-        "Life imprisonment; minimum 4 years (firearm) or 5 years (restricted/prohibited firearm)",
+      maxPenalty: "Life imprisonment; minimum 4 years (firearm) or 5 years (restricted/prohibited firearm)",
       url: `${JUSTICE_LAWS_BASE}/section-344.html`,
       definition:
         "Every person who commits robbery is guilty of an indictable offence and liable to imprisonment for life and to a minimum punishment of imprisonment for a term of four years if a restricted firearm or prohibited firearm is used in the commission of the offence.",
@@ -5618,8 +5717,18 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Extortion",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment (minimum 10 years)",
+      maxPenalty: "Life imprisonment; if a firearm is used, minimum 5 years (first offence) / 7 years (subsequent offence)",
       url: `${JUSTICE_LAWS_BASE}/section-346.html`,
+      partOf: "Part IX — Offences Against Rights of Property",
+    },
+  ],
+  [
+    "346.1",
+    {
+      title: "Sentences to be served consecutively",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-346.1.html`,
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -5656,8 +5765,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "348",
     {
-      title:
-        "Breaking and entering with intent, committing offence or breaking out",
+      title: "Breaking and entering with intent, committing offence or breaking out",
       severity: "Hybrid",
       maxPenalty: "Life imprisonment (dwelling-house) / 10 years (other place)",
       url: `${JUSTICE_LAWS_BASE}/section-348.html`,
@@ -5717,8 +5825,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "352",
     {
-      title:
-        "Possession of instruments for breaking into coin-operated or currency exchange devices",
+      title: "Possession of instruments for breaking into coin-operated or currency exchange devices",
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-352.html`,
@@ -5750,8 +5857,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of property obtained by crime",
       severity: "Hybrid",
-      maxPenalty:
-        "10 years (over $5,000 indictable) / 2 years less a day (under $5,000 summary)",
+      maxPenalty: "10 years (over $5,000 indictable) / 2 years less a day (under $5,000 summary)",
       url: `${JUSTICE_LAWS_BASE}/section-354.html`,
       definition:
         "Every one commits an offence who has in his possession any property or thing or any proceeds of any property or thing knowing that all or part of the property or thing or of the proceeds was obtained by or derived directly or indirectly from the commission in Canada of an offence punishable by indictment or an act or omission anywhere that, if it had occurred in Canada, would have constituted an offence punishable by indictment.",
@@ -5848,26 +5954,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-358.html`,
-      partOf: "Part IX — Offences Against Rights of Property",
-    },
-  ],
-  [
-    "359",
-    {
-      title: "Right to re-elect",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-359.html`,
-      partOf: "Part IX — Offences Against Rights of Property",
-    },
-  ],
-  [
-    "360",
-    {
-      title: "Limitation period for summary offences",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-360.html`,
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -5969,8 +6055,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "368.2",
     {
-      title:
-        "Public officers acting in the course of their duties or employment",
+      title: "Public officers acting in the course of their duties or employment",
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-368.2.html`,
@@ -6056,8 +6141,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-379.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6065,15 +6149,14 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraud",
       severity: "Hybrid",
-      maxPenalty:
-        "14 years (over $1,000,000 minimum 2 years) / 14 years (over $5,000) / 2 years less a day (under $5,000)",
+      maxPenalty: "14 years (over $1,000,000 minimum 2 years) / 14 years (over $5,000) / 2 years less a day (under $5,000)",
       url: `${JUSTICE_LAWS_BASE}/section-380.html`,
       definition:
         "Every one who, by deceit, falsehood or other fraudulent means, whether or not it is a false pretence within the meaning of this Act, defrauds the public or any person, whether ascertained or not, of any property, money or valuable security or any service, is guilty of an indictable offence and liable to a term of imprisonment not exceeding fourteen years, where the subject-matter of the offence is a testamentary instrument or the value of the subject-matter of the offence exceeds five thousand dollars.",
       relatedSections: ["362", "366", "368", "382"],
       defences: ["honest belief in entitlement", "no intent to defraud"],
       topicsTagged: ["fraud", "deceit", "property"],
-      partOf: "Part IX — Offences Against Rights of Property",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6083,8 +6166,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-380.1.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6094,8 +6176,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-380.2.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6105,8 +6186,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-381.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6116,8 +6196,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-382.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6127,8 +6206,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-382.1.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6138,8 +6216,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-383.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6149,8 +6226,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-384.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6160,8 +6236,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-385.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6171,8 +6246,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-386.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6182,8 +6256,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-387.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6193,8 +6266,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-388.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6204,19 +6276,17 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-389.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
     "390",
     {
-      title: "Fraudulent receipts under",
+      title: "Fraudulent receipts under Bank Act",
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-390.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6226,8 +6296,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-391.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6237,8 +6306,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-392.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6248,8 +6316,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-393.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6259,8 +6326,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-394.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6270,8 +6336,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-394.1.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6281,8 +6346,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-395.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6292,8 +6356,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-396.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6303,8 +6366,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-397.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6314,8 +6376,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-398.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6325,8 +6386,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-399.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6336,8 +6396,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-400.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6347,8 +6406,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-401.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6358,8 +6416,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-402.1.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6369,8 +6426,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-402.2.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6380,8 +6436,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-403.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6391,8 +6446,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-405.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6402,8 +6456,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-406.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6413,8 +6466,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-407.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6424,8 +6476,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-408.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6435,8 +6486,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-409.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6446,8 +6496,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-410.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6457,8 +6506,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-411.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6468,8 +6516,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-412.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6479,8 +6526,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-414.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6490,8 +6536,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-415.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6501,8 +6546,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-416.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6512,8 +6556,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-417.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6523,8 +6566,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-418.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6534,8 +6576,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-419.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6545,8 +6586,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-420.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6556,8 +6596,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-421.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6567,8 +6606,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-422.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6578,8 +6616,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-423.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6589,8 +6626,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-423.1.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6600,8 +6636,17 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-423.2.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+    },
+  ],
+  [
+    "423.3",
+    {
+      title: "Intimidation — building used for religious worship, etc.",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-423.3.html`,
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6611,8 +6656,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-424.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6622,8 +6666,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-424.1.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6633,8 +6676,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-425.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6644,8 +6686,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-425.1.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
   [
@@ -6655,8 +6696,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-426.html`,
-      partOf:
-        "Part X — Fraudulent Transactions Relating to Contracts and Trade",
+      partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
 
@@ -6668,8 +6708,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-428.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6679,8 +6718,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-429.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6688,40 +6726,34 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Mischief",
       severity: "Hybrid",
-      maxPenalty:
-        "Life imprisonment (property endangering life) / 10 years (over $5,000 or data) / 2 years less a day (under $5,000)",
+      maxPenalty: "Life imprisonment (property endangering life) / 10 years (over $5,000 or data) / 2 years less a day (under $5,000)",
       url: `${JUSTICE_LAWS_BASE}/section-430.html`,
       definition:
         "Every one commits mischief who wilfully destroys or damages property; renders property dangerous, useless, inoperative or ineffective; obstructs, interrupts or interferes with the lawful use, enjoyment or operation of property; or obstructs, interrupts or interferes with any person in the lawful use, enjoyment or operation of property.",
       relatedSections: ["431", "432", "433", "434"],
       defences: ["colour of right", "consent of owner"],
       topicsTagged: ["mischief", "property damage", "destruction"],
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
     "431",
     {
-      title:
-        "Attack on premises, residence or transport of internationally protected person",
+      title: "Attack on premises, residence or transport of internationally protected person",
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-431.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
     "431.1",
     {
-      title:
-        "Attack on premises, accommodation or transport of United Nations or associated personnel",
+      title: "Attack on premises, accommodation or transport of United Nations or associated personnel",
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-431.1.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6731,8 +6763,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-431.2.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6742,8 +6773,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-432.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6753,8 +6783,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-433.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6764,8 +6793,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-434.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6775,8 +6803,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-434.1.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6786,8 +6813,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-435.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6797,8 +6823,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-436.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6808,8 +6833,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-436.1.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6819,8 +6843,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-437.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6830,8 +6853,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-438.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6841,8 +6863,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-439.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6852,8 +6873,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-440.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6863,8 +6883,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-441.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6874,8 +6893,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-442.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6885,8 +6903,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-443.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6896,8 +6913,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-445.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6907,8 +6923,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-445.01.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6918,19 +6933,17 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years indictable / 18 months summary",
       url: `${JUSTICE_LAWS_BASE}/section-445.1.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
     "445.2",
     {
-      title: "Definition of",
+      title: "Definition of cetacean",
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-445.2.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6940,8 +6953,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-446.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6951,8 +6963,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-447.html`,
-      partOf:
-        "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
   [
@@ -6962,6 +6973,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-447.1.html`,
+      partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
 
@@ -7231,7 +7243,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "462.371",
     {
-      title: "Definition of",
+      title: "Definition of order",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.371.html`,
@@ -7281,8 +7293,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "462.42",
     {
-      title:
-        "Application by person claiming interest for relief from forfeiture",
+      title: "Application by person claiming interest for relief from forfeiture",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.42.html`,
@@ -7292,8 +7303,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "462.43",
     {
-      title:
-        "Residual disposal of property seized or dealt with under special warrants or restraint orders",
+      title: "Residual disposal of property seized or dealt with under special warrants or restraint orders",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.43.html`,
@@ -7701,6 +7711,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-482.1.html`,
+      partOf: "Part XIV — Jurisdiction",
     },
   ],
 
@@ -7768,7 +7779,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "486.1",
     {
-      title: "Support person — witnesses under 18 or who have a disability",
+      title: "Support person or animal — witnesses under 18 or who have a disability",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.1.html`,
@@ -7778,8 +7789,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "486.2",
     {
-      title:
-        "Testimony outside court room — witnesses under 18 or who have a disability",
+      title: "Testimony outside court room — witnesses under 18 or who have a disability",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.2.html`,
@@ -7853,6 +7863,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.7.html`,
+      partOf: "Part XV — Special Procedure and Powers",
+    },
+  ],
+  [
+    "486.71",
+    {
+      title: "For greater certainty",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-486.71.html`,
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -8029,8 +8049,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "487.0194",
     {
-      title:
-        "Destruction of preserved computer data and documents — preservation demand",
+      title: "Destruction of preserved computer data and documents — preservation demand",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0194.html`,
@@ -8120,8 +8139,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "487.05",
     {
-      title:
-        "Information for warrant to take bodily substances for forensic DNA analysis",
+      title: "Information for warrant to take bodily substances for forensic DNA analysis",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.05.html`,
@@ -9061,8 +9079,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "491.1",
     {
-      title:
-        "Order for restitution or forfeiture of property obtained by crime",
+      title: "Order for restitution or forfeiture of property obtained by crime",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-491.1.html`,
@@ -9110,7 +9127,119 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
 
-  // ── Part XVI — Compelling Appearance and Interim Release ──
+  // ── Part XV.1 — Unreasonable Delay ──
+  [
+    "492.21",
+    {
+      title: "Definitions",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.21.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.22",
+    {
+      title: "Jurisdiction not lost",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.22.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.23",
+    {
+      title: "Stay of proceedings",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.23.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.24",
+    {
+      title: "Common law rules and principles",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.24.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.25",
+    {
+      title: "Reasonable steps to inform",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.25.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.26",
+    {
+      title: "Case complexity — factors",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.26.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.27",
+    {
+      title: "Exclusions — sexual offence proceedings",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.27.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.28",
+    {
+      title: "Exclusions — Canada Evidence Act",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.28.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.29",
+    {
+      title: "Exclusion — Canadian Security Intelligence Service Act",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.29.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.3",
+    {
+      title: "Actions not made in good faith",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.3.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+  [
+    "492.31",
+    {
+      title: "Alternative remedies to be considered",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-492.31.html`,
+      partOf: "Part XV.1 — Unreasonable Delay",
+    },
+  ],
+
+  // ── Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release ──
   [
     "493",
     {
@@ -9118,7 +9247,17 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-493.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
+    },
+  ],
+  [
+    "493.01",
+    {
+      title: "Clarification — indictable offence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-493.01.html`,
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9128,7 +9267,17 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-493.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
+    },
+  ],
+  [
+    "493.11",
+    {
+      title: "Clarification",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-493.11.html`,
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9138,7 +9287,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-493.2.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9148,7 +9297,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-494.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9158,17 +9307,17 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-495.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
     "495.1",
     {
-      title: "Arrest without warrant – application of section 524",
+      title: "Arrest without warrant — application of section 524",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-495.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9178,7 +9327,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-496.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9188,7 +9337,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-497.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9198,7 +9347,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-498.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9208,7 +9357,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-499.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9218,7 +9367,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-500.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9228,7 +9377,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-501.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9238,7 +9387,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-502.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9248,7 +9397,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-502.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9258,7 +9407,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-503.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9268,7 +9417,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-504.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9278,7 +9427,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-505.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9288,7 +9437,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-506.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9298,7 +9447,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-507.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9308,7 +9457,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-507.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9318,7 +9467,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-508.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9328,7 +9477,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-508.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9338,7 +9487,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-509.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9348,7 +9497,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-511.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9358,7 +9507,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-512.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9368,18 +9517,17 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-512.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
     "512.2",
     {
-      title:
-        "Arrest warrant — failure to appear under appearance notice or undertaking",
+      title: "Arrest warrant — failure to appear under appearance notice or undertaking",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-512.2.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9389,7 +9537,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-512.3.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9399,7 +9547,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-513.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9409,7 +9557,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-514.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9419,7 +9567,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-515.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9429,7 +9577,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-515.01.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9439,17 +9587,27 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-515.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
     "516",
     {
-      title: "Remand in custody",
+      title: "Adjournment of proceedings",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-516.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
+    },
+  ],
+  [
+    "516.1",
+    {
+      title: "Remand in custody — non-communication order",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-516.1.html`,
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9459,7 +9617,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-517.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9469,7 +9627,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-518.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9479,7 +9637,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-519.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9489,7 +9647,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-519.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9499,7 +9657,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-520.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9509,7 +9667,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-521.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9519,7 +9677,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-522.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9529,7 +9687,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-523.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9539,7 +9697,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-523.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9549,7 +9707,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-524.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9559,7 +9717,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-525.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9569,7 +9727,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-526.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9579,7 +9737,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-527.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9589,7 +9747,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-528.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9599,7 +9757,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9609,7 +9767,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.1.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9619,7 +9777,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.2.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9629,7 +9787,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.3.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9639,7 +9797,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.4.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
   [
@@ -9649,7 +9807,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.5.html`,
-      partOf: "Part XVI — Compelling Appearance and Interim Release",
+      partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
 
@@ -9829,8 +9987,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "539",
     {
-      title:
-        "Order restricting publication of evidence taken at preliminary inquiry",
+      title: "Order restricting publication of evidence taken at preliminary inquiry",
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-539.html`,
@@ -9870,8 +10027,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "543",
     {
-      title:
-        "Order that accused appear or be taken before justice where offence alleged to have been committed",
+      title: "Order that accused appear or be taken before justice where offence alleged to have been committed",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-543.html`,
@@ -10003,8 +10159,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "551.4",
     {
-      title:
-        "Information relevant to presentation of evidence on merits to be part of court record",
+      title: "Information relevant to presentation of evidence on merits to be part of court record",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.4.html`,
@@ -10186,8 +10341,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "563",
     {
-      title:
-        "Proceedings on re-election to be tried by provincial court judge without jury",
+      title: "Proceedings on re-election to be tried by provincial court judge without jury",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-563.html`,
@@ -10197,8 +10351,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "563.1",
     {
-      title:
-        "Proceedings on re-election to be tried by judge without jury — Nunavut",
+      title: "Proceedings on re-election to be tried by judge without jury — Nunavut",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-563.1.html`,
@@ -10412,8 +10565,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "579.1",
     {
-      title:
-        "Intervention by Attorney General of Canada or Director of Public Prosecutions",
+      title: "Intervention by Attorney General of Canada or Director of Public Prosecutions",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-579.1.html`,
@@ -10707,26 +10859,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-613.html`,
-      partOf: "Part XX — Procedure in Jury Trials and General Provisions",
-    },
-  ],
-  [
-    "614",
-    {
-      title: "Subsection 347(1) of Criminal Code",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-614.html`,
-      partOf: "Part XX — Procedure in Jury Trials and General Provisions",
-    },
-  ],
-  [
-    "615",
-    {
-      title: "Paragraph 347.1(2)(a.1) of Criminal Code",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-615.html`,
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -11191,6 +11323,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "657.4",
+    {
+      title: "Proof of absence of consent — identity information",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-657.4.html`,
+      partOf: "Part XX — Procedure in Jury Trials and General Provisions",
+    },
+  ],
+  [
     "658",
     {
       title: "Testimony as to date of birth",
@@ -11605,8 +11747,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "672.34",
     {
-      title:
-        "Verdict of not criminally responsible on account of mental disorder",
+      title: "Verdict of not criminally responsible on account of mental disorder",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.34.html`,
@@ -11616,8 +11757,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "672.35",
     {
-      title:
-        "Effect of verdict of not criminally responsible on account of mental disorder",
+      title: "Effect of verdict of not criminally responsible on account of mental disorder",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.35.html`,
@@ -11637,7 +11777,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "672.37",
     {
-      title: "Definition of",
+      title: "Definition of application for federal employment",
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.37.html`,
@@ -11781,6 +11921,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.501.html`,
+      partOf: "Part XX.1 — Mental Disorder",
+    },
+  ],
+  [
+    "672.5011",
+    {
+      title: "Variation or revocation of order",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-672.5011.html`,
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -12207,8 +12357,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "672.92",
     {
-      title:
-        "Release or delivery of accused subject to paragraph 672.54(b) disposition order",
+      title: "Release or delivery of accused subject to paragraph 672.54(b) disposition order",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.92.html`,
@@ -12440,8 +12589,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "692",
     {
-      title:
-        "Appeal against affirmation of verdict of not criminally responsible on account of mental disorder",
+      title: "Appeal against affirmation of verdict of not criminally responsible on account of mental disorder",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-692.html`,
@@ -12517,8 +12665,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.1.html`,
-      partOf:
-        "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
+      partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
   [
@@ -12528,8 +12675,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.2.html`,
-      partOf:
-        "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
+      partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
   [
@@ -12539,8 +12685,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.3.html`,
-      partOf:
-        "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
+      partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
   [
@@ -12550,8 +12695,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.4.html`,
-      partOf:
-        "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
+      partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
   [
@@ -12561,8 +12705,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.5.html`,
-      partOf:
-        "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
+      partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
   [
@@ -12572,28 +12715,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.6.html`,
-      partOf:
-        "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
+      partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
-  [
-    "696.61",
-    {
-      title: "Reference",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-696.61.html`,
-    },
-  ],
-  [
-    "696.62",
-    {
-      title: "Review of this Part and Part XXI.2",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-696.62.html`,
-    },
-  ],
+
+  // ── Part XXI.2 — Miscarriage of Justice Review Commission ──
   [
     "696.7",
     {
@@ -12601,6 +12727,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.7.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12610,6 +12737,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.71.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12619,6 +12747,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.72.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12628,6 +12757,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.73.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12637,6 +12767,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.74.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12646,6 +12777,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.75.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12655,6 +12787,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.76.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12664,6 +12797,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.77.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12673,6 +12807,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.78.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12682,6 +12817,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.79.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12691,6 +12827,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.8.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12700,6 +12837,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.81.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12709,6 +12847,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.82.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12718,6 +12857,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.83.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12727,6 +12867,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.84.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12736,6 +12877,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.85.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12745,6 +12887,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.86.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
   [
@@ -12754,6 +12897,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.87.html`,
+      partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
 
@@ -12885,6 +13029,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-705.html`,
+      partOf: "Part XXII — Procuring Attendance",
+    },
+  ],
+  [
+    "705.1",
+    {
+      title: "Release — undertaking",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-705.1.html`,
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -13091,8 +13245,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "715",
     {
-      title:
-        "Evidence at preliminary inquiry may be read at trial in certain cases",
+      title: "Evidence at preliminary inquiry may be read at trial in certain cases",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.html`,
@@ -13106,6 +13259,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.01.html`,
+      partOf: "Part XXII — Procuring Attendance",
     },
   ],
   [
@@ -13115,6 +13269,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.1.html`,
+      partOf: "Part XXII — Procuring Attendance",
     },
   ],
   [
@@ -13124,6 +13279,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.2.html`,
+      partOf: "Part XXII — Procuring Attendance",
     },
   ],
 
@@ -13171,8 +13327,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "715.23",
     {
-      title:
-        "Considerations — appearance by audioconference or videoconference",
+      title: "Considerations — appearance by audioconference or videoconference",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.23.html`,
@@ -13296,6 +13451,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.27.html`,
+      partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
 
@@ -13441,6 +13597,178 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
 
+  // ── Part XXII.2 — Alternative Measures and Restorative Justice Processes ──
+  [
+    "715.44",
+    {
+      title: "Definitions",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.44.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.45",
+    {
+      title: "Purpose",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.45.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.46",
+    {
+      title: "Principles",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.46.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.47",
+    {
+      title: "Warnings and referrals — police",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.47.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.48",
+    {
+      title: "Warnings and referrals — prosecutor",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.48.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.49",
+    {
+      title: "Conditions",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.49.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.5",
+    {
+      title: "Restrictions",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.5.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.51",
+    {
+      title: "Admissions not admissible in evidence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.51.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.52",
+    {
+      title: "No bar to proceedings",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.52.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.53",
+    {
+      title: "Principles",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.53.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.54",
+    {
+      title: "Application",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.54.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.55",
+    {
+      title: "Conference may be convened",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.55.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.56",
+    {
+      title: "Records — warnings or referrals",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.56.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.57",
+    {
+      title: "Record keeping",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.57.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.58",
+    {
+      title: "Police records",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.58.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.59",
+    {
+      title: "Government records",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.59.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+  [
+    "715.6",
+    {
+      title: "Disclosure of records",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-715.6.html`,
+      partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
+    },
+  ],
+
   // ── Part XXIII — Sentencing ──
   [
     "716",
@@ -13449,56 +13777,6 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-716.html`,
-      partOf: "Part XXIII — Sentencing",
-    },
-  ],
-  [
-    "717",
-    {
-      title: "When alternative measures may be used",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-717.html`,
-      partOf: "Part XXIII — Sentencing",
-    },
-  ],
-  [
-    "717.1",
-    {
-      title: "Records of persons dealt with",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-717.1.html`,
-      partOf: "Part XXIII — Sentencing",
-    },
-  ],
-  [
-    "717.2",
-    {
-      title: "Police records",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-717.2.html`,
-      partOf: "Part XXIII — Sentencing",
-    },
-  ],
-  [
-    "717.3",
-    {
-      title: "Government records",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-717.3.html`,
-      partOf: "Part XXIII — Sentencing",
-    },
-  ],
-  [
-    "717.4",
-    {
-      title: "Disclosure of records",
-      severity: "",
-      maxPenalty: "",
-      url: `${JUSTICE_LAWS_BASE}/section-717.4.html`,
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -13525,8 +13803,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "718.02",
     {
-      title:
-        "Objectives — offence against peace officer or other justice system participant",
+      title: "Objectives — offence against peace officer or other justice system participant",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.02.html`,
@@ -13550,6 +13827,36 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.04.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "718.05",
+    {
+      title: "Objectives — offence of motor vehicle theft when violence used",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-718.05.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "718.06",
+    {
+      title: "Objectives — offence of breaking and entering",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-718.06.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "718.07",
+    {
+      title: "Objectives — offence for the benefit of a criminal organization",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-718.07.html`,
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -13600,6 +13907,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.3.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "718.4",
+    {
+      title: "Shorter term of imprisonment than minimum punishment",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-718.4.html`,
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -13714,12 +14031,42 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "726.11",
+    {
+      title: "Endorsement — offence under subsection 263.1(1)",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-726.11.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
     "726.2",
     {
       title: "Reasons for sentence",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-726.2.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "726.21",
+    {
+      title: "Endorsement — intimate partner violence",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-726.21.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "726.22",
+    {
+      title: "Endorsement — offence under subsection 320.1001(1)",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-726.22.html`,
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -13770,6 +14117,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-729.1.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "729.2",
+    {
+      title: "Order prohibiting contact",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-729.2.html`,
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -13924,6 +14281,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
   [
+    "734.51",
+    {
+      title: "Compensation agreements",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-734.51.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
     "734.6",
     {
       title: "Civil enforcement of fines, forfeiture",
@@ -14060,6 +14427,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-740.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "740.1",
+    {
+      title: "Deemed restitution order",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-740.1.html`,
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -14236,8 +14613,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "743.5",
     {
-      title:
-        "Transfer of jurisdiction when person already sentenced under Youth Criminal Justice Act",
+      title: "Transfer of jurisdiction when person already sentenced under Youth Criminal Justice Act",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-743.5.html`,
@@ -14287,7 +14663,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "745.1",
     {
-      title: "Persons under eighteen",
+      title: "Persons under 18",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.1.html`,
@@ -14351,6 +14727,16 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.51.html`,
+      partOf: "Part XXIII — Sentencing",
+    },
+  ],
+  [
+    "745.52",
+    {
+      title: "Manslaughter in certain circumstances",
+      severity: "",
+      maxPenalty: "",
+      url: `${JUSTICE_LAWS_BASE}/section-745.52.html`,
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -14485,7 +14871,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     },
   ],
 
-  // ── Part XXIV — Dangerous Offenders and Long-Term Offenders ──
+  // ── Part XXIV — Dangerous Offenders and Long-term Offenders ──
   [
     "752",
     {
@@ -14493,7 +14879,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-752.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14503,7 +14889,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-752.01.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14513,7 +14899,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-752.1.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14523,7 +14909,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14533,7 +14919,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.01.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14543,7 +14929,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.02.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14553,7 +14939,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.1.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14563,7 +14949,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.2.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14573,7 +14959,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-753.3.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14583,7 +14969,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.4.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14593,7 +14979,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-754.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14603,7 +14989,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-755.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14613,7 +14999,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-757.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14623,7 +15009,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-758.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14633,7 +15019,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-759.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14643,7 +15029,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-760.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
   [
@@ -14653,11 +15039,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-761.html`,
-      partOf: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
+      partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
 
-  // ── Part XXV — Effect and Enforcement of Recognizances ──
+  // ── Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances ──
   [
     "762",
     {
@@ -14665,7 +15051,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-762.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14675,7 +15061,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-763.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14685,7 +15071,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-764.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14695,7 +15081,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-765.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14705,7 +15091,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-766.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14715,7 +15101,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-767.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14725,7 +15111,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-767.1.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14735,7 +15121,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-768.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14745,7 +15131,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-769.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14755,7 +15141,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-770.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14765,7 +15151,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-771.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14775,7 +15161,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-772.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
   [
@@ -14785,7 +15171,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-773.html`,
-      partOf: "Part XXV — Effect and Enforcement of Recognizances",
+      partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
 
@@ -15165,7 +15551,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
   [
     "810.1",
     {
-      title: "Where fear of sexual offence",
+      title: "Fear of sexual offence",
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.1.html`,
@@ -15621,64 +16007,39 @@ export const CRIMINAL_CODE_PARTS = [
   { id: "II", label: "Part II — Offences Against Public Order" },
   { id: "II.1", label: "Part II.1 — Terrorism" },
   { id: "III", label: "Part III — Firearms and Other Weapons" },
-  {
-    id: "IV",
-    label: "Part IV — Offences Against Administration of Law and Justice",
-  },
-  {
-    id: "V",
-    label: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
-  },
+  { id: "IV", label: "Part IV — Offences Against the Administration of Law and Justice" },
+  { id: "V", label: "Part V — Sexual Offences, Public Morals and Disorderly Conduct" },
   { id: "VI", label: "Part VI — Invasion of Privacy" },
   { id: "VII", label: "Part VII — Disorderly Houses, Gaming and Betting" },
-  {
-    id: "VIII",
-    label: "Part VIII — Offences Against the Person and Reputation",
-  },
+  { id: "VIII", label: "Part VIII — Offences Against the Person and Reputation" },
   { id: "VIII.1", label: "Part VIII.1 — Offences Relating to Conveyances" },
   { id: "IX", label: "Part IX — Offences Against Rights of Property" },
-  {
-    id: "X",
-    label: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
-  },
-  {
-    id: "XI",
-    label: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
-  },
+  { id: "X", label: "Part X — Fraudulent Transactions Relating to Contracts and Trade" },
+  { id: "XI", label: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property" },
   { id: "XII", label: "Part XII — Offences Relating to Currency" },
   { id: "XII.2", label: "Part XII.2 — Proceeds of Crime" },
   { id: "XIII", label: "Part XIII — Attempts — Conspiracies — Accessories" },
   { id: "XIV", label: "Part XIV — Jurisdiction" },
   { id: "XV", label: "Part XV — Special Procedure and Powers" },
-  { id: "XVI", label: "Part XVI — Compelling Appearance and Interim Release" },
+  { id: "XV.1", label: "Part XV.1 — Unreasonable Delay" },
+  { id: "XVI", label: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release" },
   { id: "XVII", label: "Part XVII — Language of Accused" },
   { id: "XVIII", label: "Part XVIII — Procedure on Preliminary Inquiry" },
   { id: "XVIII.1", label: "Part XVIII.1 — Case Management Judge" },
   { id: "XIX", label: "Part XIX — Indictable Offences — Trial Without Jury" },
   { id: "XIX.1", label: "Part XIX.1 — Nunavut Court of Justice" },
-  {
-    id: "XX",
-    label: "Part XX — Procedure in Jury Trials and General Provisions",
-  },
+  { id: "XX", label: "Part XX — Procedure in Jury Trials and General Provisions" },
   { id: "XX.1", label: "Part XX.1 — Mental Disorder" },
   { id: "XXI", label: "Part XXI — Appeals — Indictable Offences" },
-  {
-    id: "XXI.1",
-    label:
-      "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
-  },
+  { id: "XXI.1", label: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice" },
+  { id: "XXI.2", label: "Part XXI.2 — Miscarriage of Justice Review Commission" },
   { id: "XXII", label: "Part XXII — Procuring Attendance" },
-  {
-    id: "XXII.01",
-    label: "Part XXII.01 — Remote Attendance by Certain Persons",
-  },
+  { id: "XXII.01", label: "Part XXII.01 — Remote Attendance by Certain Persons" },
   { id: "XXII.1", label: "Part XXII.1 — Remediation Agreements" },
+  { id: "XXII.2", label: "Part XXII.2 — Alternative Measures and Restorative Justice Processes" },
   { id: "XXIII", label: "Part XXIII — Sentencing" },
-  {
-    id: "XXIV",
-    label: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
-  },
-  { id: "XXV", label: "Part XXV — Effect and Enforcement of Recognizances" },
+  { id: "XXIV", label: "Part XXIV — Dangerous Offenders and Long-term Offenders" },
+  { id: "XXV", label: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances" },
   { id: "XXVI", label: "Part XXVI — Extraordinary Remedies" },
   { id: "XXVII", label: "Part XXVII — Summary Convictions" },
   { id: "XXVIII", label: "Part XXVIII — Miscellaneous" },

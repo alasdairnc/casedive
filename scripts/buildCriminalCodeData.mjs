@@ -5,229 +5,37 @@
 //
 // Usage: node scripts/buildCriminalCodeData.mjs
 
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const XML_URL = "https://laws-lois.justice.gc.ca/eng/XML/C-46.xml";
+// Node's fetch can't resolve DNS through the sandbox proxy that curl uses.
+// Pre-download with curl and point this at the local file to work around it:
+//   curl -o /tmp/C-46.xml https://laws-lois.justice.gc.ca/eng/XML/C-46.xml
+//   XML_LOCAL_PATH=/tmp/C-46.xml node scripts/buildCriminalCodeData.mjs
+const XML_LOCAL_PATH = process.env.XML_LOCAL_PATH;
 
-// Criminal Code Part boundaries (section number ranges)
-// Used to assign partOf to each section
-const PARTS = [
-  { id: "I", label: "Part I — General", min: 2, max: 45 },
-  {
-    id: "II",
-    label: "Part II — Offences Against Public Order",
-    min: 46,
-    max: 83.9,
-  },
-  { id: "II.1", label: "Part II.1 — Terrorism", min: 83.01, max: 83.33 },
-  {
-    id: "III",
-    label: "Part III — Firearms and Other Weapons",
-    min: 84,
-    max: 117.15,
-  },
-  {
-    id: "IV",
-    label: "Part IV — Offences Against Administration of Law and Justice",
-    min: 118,
-    max: 149,
-  },
-  {
-    id: "V",
-    label: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
-    min: 150,
-    max: 182,
-  },
-  { id: "VI", label: "Part VI — Invasion of Privacy", min: 183, max: 196.1 },
-  {
-    id: "VII",
-    label: "Part VII — Disorderly Houses, Gaming and Betting",
-    min: 197,
-    max: 213,
-  },
-  {
-    id: "VIII",
-    label: "Part VIII — Offences Against the Person and Reputation",
-    min: 214,
-    max: 320.1,
-  },
-  {
-    id: "VIII.1",
-    label: "Part VIII.1 — Offences Relating to Conveyances",
-    min: 320.11,
-    max: 320.4,
-  },
-  {
-    id: "IX",
-    label: "Part IX — Offences Against Rights of Property",
-    min: 321,
-    max: 378,
-  },
-  {
-    id: "X",
-    label: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
-    min: 379,
-    max: 427,
-  },
-  {
-    id: "XI",
-    label: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
-    min: 428,
-    max: 447,
-  },
-  {
-    id: "XII",
-    label: "Part XII — Offences Relating to Currency",
-    min: 448,
-    max: 462,
-  },
-  {
-    id: "XII.1",
-    label: "Part XII.1 — Instruments and Literature for Illicit Drug Use",
-    min: 462.1,
-    max: 462.2,
-  },
-  {
-    id: "XII.2",
-    label: "Part XII.2 — Proceeds of Crime",
-    min: 462.3,
-    max: 462.5,
-  },
-  {
-    id: "XIII",
-    label: "Part XIII — Attempts — Conspiracies — Accessories",
-    min: 463,
-    max: 467.2,
-  },
-  { id: "XIV", label: "Part XIV — Jurisdiction", min: 468, max: 482 },
-  {
-    id: "XV",
-    label: "Part XV — Special Procedure and Powers",
-    min: 483,
-    max: 492.2,
-  },
-  {
-    id: "XVI",
-    label: "Part XVI — Compelling Appearance and Interim Release",
-    min: 493,
-    max: 529.5,
-  },
-  {
-    id: "XVII",
-    label: "Part XVII — Language of Accused",
-    min: 530,
-    max: 533.1,
-  },
-  {
-    id: "XVIII",
-    label: "Part XVIII — Procedure on Preliminary Inquiry",
-    min: 535,
-    max: 551,
-  },
-  {
-    id: "XVIII.1",
-    label: "Part XVIII.1 — Case Management Judge",
-    min: 551.1,
-    max: 551.7,
-  },
-  {
-    id: "XIX",
-    label: "Part XIX — Indictable Offences — Trial Without Jury",
-    min: 552,
-    max: 572,
-  },
-  {
-    id: "XIX.1",
-    label: "Part XIX.1 — Nunavut Court of Justice",
-    min: 573,
-    max: 573.2,
-  },
-  {
-    id: "XX",
-    label: "Part XX — Procedure in Jury Trials and General Provisions",
-    min: 574,
-    max: 672,
-  },
-  { id: "XX.1", label: "Part XX.1 — Mental Disorder", min: 672.1, max: 672.95 },
-  {
-    id: "XXI",
-    label: "Part XXI — Appeals — Indictable Offences",
-    min: 673,
-    max: 696,
-  },
-  {
-    id: "XXI.1",
-    label:
-      "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
-    min: 696.1,
-    max: 696.6,
-  },
-  { id: "XXII", label: "Part XXII — Procuring Attendance", min: 697, max: 715 },
-  {
-    id: "XXII.01",
-    label: "Part XXII.01 — Remote Attendance by Certain Persons",
-    min: 715.21,
-    max: 715.26,
-  },
-  {
-    id: "XXII.1",
-    label: "Part XXII.1 — Remediation Agreements",
-    min: 715.3,
-    max: 715.43,
-  },
-  { id: "XXIII", label: "Part XXIII — Sentencing", min: 716, max: 751.1 },
-  {
-    id: "XXIV",
-    label: "Part XXIV — Dangerous Offenders and Long-Term Offenders",
-    min: 752,
-    max: 761,
-  },
-  {
-    id: "XXV",
-    label: "Part XXV — Effect and Enforcement of Recognizances",
-    min: 762,
-    max: 773,
-  },
-  {
-    id: "XXVI",
-    label: "Part XXVI — Extraordinary Remedies",
-    min: 774,
-    max: 784,
-  },
-  {
-    id: "XXVII",
-    label: "Part XXVII — Summary Convictions",
-    min: 785,
-    max: 840,
-  },
-  { id: "XXVIII", label: "Part XXVIII — Miscellaneous", min: 841, max: 849 },
-];
-
-function assignPart(sectionNum) {
-  const num = parseFloat(sectionNum);
-  if (isNaN(num)) return "";
-
-  // Terrorism sections (83.xx) belong to Part II.1
-  if (sectionNum.startsWith("83.") && num >= 83.01) {
-    return "Part II.1 — Terrorism";
-  }
-  // Conveyances (320.1x) belong to Part VIII.1
-  if (num >= 320.11 && num <= 320.4) {
-    return "Part VIII.1 — Offences Relating to Conveyances";
-  }
-
-  for (const part of PARTS) {
-    if (num >= part.min && num <= part.max) {
-      return part.label;
-    }
-  }
-  return "";
-}
+// Part assignment is derived from the XML's own <Heading level="1"> markers
+// in document order, not hardcoded section-number ranges — ranges silently
+// drift every time a bill inserts decimal-numbered sections.
+//
+// Part I is a special case in the statute's own structure: the "PART I"
+// label never actually appears — the document has a "Short Title" heading,
+// then an "Interpretation" heading, then a bare "Part I" heading followed by
+// a "General" sub-heading. By long-standing convention (matching Justice
+// Laws' own table of contents), sections 2 through 45.1 are all "Part I —
+// General"; section 1 (Short title) itself is treated as outside any Part.
+const PART_I_LABEL = "Part I — General";
 
 async function fetchXML() {
+  if (XML_LOCAL_PATH) {
+    console.log(`Reading local ${XML_LOCAL_PATH}...`);
+    const text = readFileSync(XML_LOCAL_PATH, "utf-8");
+    console.log(`Read ${(text.length / 1024 / 1024).toFixed(1)} MB`);
+    return text;
+  }
   console.log(`Fetching ${XML_URL}...`);
   const res = await fetch(XML_URL);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -236,24 +44,87 @@ async function fetchXML() {
   return text;
 }
 
-function extractSections(xml) {
+// Restrict extraction to the live, in-force text: everything after </Body>
+// (schedules, amendment-history annexes) reuses real-looking section labels
+// for its own purposes — e.g. a transitional clause quoting old s. 254 text
+// happens to be numbered "36", which would misread as redefining live s. 36.
+// <AmendedText> blocks inside <Body> are inline previews of not-yet-in-force
+// bills (flagged include-in-TableOfProvisions="no") and get stripped too.
+function extractLiveBody(xml) {
+  const bodyStart = xml.indexOf("<Body");
+  const bodyEnd = xml.indexOf("</Body>");
+  if (bodyStart === -1 || bodyEnd === -1) {
+    throw new Error("Could not find <Body>...</Body> in the XML");
+  }
+  const body = xml.slice(bodyStart, bodyEnd + "</Body>".length);
+  return body.replace(/<AmendedText[^>]*>[\s\S]*?<\/AmendedText>/g, "");
+}
+
+// Walk Heading(level=1) and Section blocks in document order, tracking the
+// most recently seen Part heading, so every section is assigned to whatever
+// Part it actually appears under in the statute — no numeric ranges to keep
+// in sync by hand.
+function extractSections(xmlRaw) {
+  const xml = extractLiveBody(xmlRaw);
   const sections = [];
   const seen = new Set();
-  // Match each <Section ...>...</Section> block
-  const sectionRegex = /<Section[^>]*>([\s\S]*?)<\/Section>/g;
+  const partsSeen = [];
+
+  const nodeRegex =
+    /<Heading[^>]*level="(\d)"[^>]*>(?:<Label>([^<]*)<\/Label>)?<TitleText>([^<]*)<\/TitleText>|<Section([^>]*)>([\s\S]*?)<\/Section>/g;
+
+  let currentPart = "";
+  let pendingPartI = false; // saw the bare "Part I" heading, waiting for "General"
   let match;
 
-  while ((match = sectionRegex.exec(xml)) !== null) {
-    const block = match[1];
+  while ((match = nodeRegex.exec(xml)) !== null) {
+    const [, level, label, headingTitle, sectionAttrs, sectionBlock] = match;
 
-    // Extract Label (section number)
+    if (level) {
+      // The "General" sub-heading that completes the Part I special case is
+      // level="2" — check it before the level-1-only filter below.
+      if (pendingPartI && level === "2" && headingTitle.trim() === "General") {
+        currentPart = PART_I_LABEL;
+        partsSeen.push(currentPart);
+        pendingPartI = false;
+        continue;
+      }
+      if (level !== "1") continue; // other level-2+ sub-headings don't change currentPart
+      pendingPartI = false;
+
+      if (label && /^PART\s/i.test(label)) {
+        const romanLabel = label.replace(/^PART/i, "Part");
+        const title = headingTitle.trim();
+        // A Part heading whose title is "[Repealed, ...]" has no live
+        // sections under it — don't add it to the Parts list, but do clear
+        // currentPart so nothing downstream is mis-tagged.
+        if (/^\[Repealed/i.test(title)) {
+          currentPart = "";
+          continue;
+        }
+        currentPart = `${romanLabel} — ${title}`;
+        partsSeen.push(currentPart);
+      } else if (headingTitle.trim() === "Part I") {
+        pendingPartI = true;
+      } else if (headingTitle.trim() === "Interpretation") {
+        // Precedes the literal "Part I"/"General" heading pair in the
+        // document, but ss. 2–3.01 are conventionally treated as Part I.
+        currentPart = PART_I_LABEL;
+        partsSeen.push(currentPart);
+      }
+      // The "Short Title" heading (before "Interpretation") doesn't change
+      // currentPart — s. 1 alone is left with no Part, matching convention.
+      continue;
+    }
+
+    // Section block
+    const block = sectionBlock;
     const labelMatch = block.match(/<Label>(\d+(?:\.\d+)?)<\/Label>/);
     if (!labelMatch) continue;
     const sectionNum = labelMatch[1];
 
     // Skip if the entire section is repealed
     if (block.includes("[Repealed") && !block.match(/<Text>[^<]*[A-Za-z]/)) {
-      // Check if there's meaningful text beyond just "[Repealed...]"
       const textBlocks = block.match(/<Text>([\s\S]*?)<\/Text>/g) || [];
       const hasContent = textBlocks.some((t) => {
         const stripped = t
@@ -265,7 +136,6 @@ function extractSections(xml) {
       if (!hasContent) continue;
     }
 
-    // Extract MarginalNote (title)
     const mnMatch = block.match(
       /<MarginalNote[^>]*>([\s\S]*?)<\/MarginalNote>/,
     );
@@ -273,13 +143,10 @@ function extractSections(xml) {
     if (mnMatch) {
       title = mnMatch[1].replace(/<[^>]+>/g, "").trim();
     }
+    if (!title) continue; // sub-provisions without their own marginal note
 
-    if (!title) {
-      // Some sections don't have a marginal note — skip them (usually sub-provisions)
-      continue;
-    }
-
-    const partOf = assignPart(sectionNum);
+    const dateMatch = sectionAttrs.match(/lims:lastAmendedDate="([^"]*)"/);
+    const lastAmendedDate = dateMatch ? dateMatch[1] : "";
 
     // Deduplicate: keep the first occurrence of each section number
     // (first in document order is the main provision; later ones are transitional/review)
@@ -288,19 +155,33 @@ function extractSections(xml) {
       sections.push({
         section: sectionNum,
         title,
-        partOf,
+        partOf: sectionNum === "1" ? "" : currentPart,
+        lastAmendedDate,
       });
     }
   }
 
-  return sections;
+  return { sections, partsSeen };
 }
 
 async function main() {
   const xml = await fetchXML();
-  const sections = extractSections(xml);
+  const { sections, partsSeen } = extractSections(xml);
 
   console.log(`Extracted ${sections.length} sections`);
+
+  // lims:current-date is the XML's own consolidation date — more precise
+  // than "generated this month" for judging how stale the data has gotten.
+  const currentDateMatch = xml.match(/lims:current-date="([^"]*)"/);
+  const metaOutPath = resolve(__dirname, "criminal-code-meta.json");
+  writeFileSync(
+    metaOutPath,
+    JSON.stringify(
+      { sourceCurrentDate: currentDateMatch ? currentDateMatch[1] : null },
+      null,
+      2,
+    ),
+  );
 
   // Sort by numeric section number
   sections.sort((a, b) => {
@@ -314,15 +195,28 @@ async function main() {
   writeFileSync(outPath, JSON.stringify(sections, null, 2));
   console.log(`Written to ${outPath}`);
 
+  // Write the ordered, deduplicated Parts list (only Parts with >=1 live
+  // section end up here — a repealed Part like the old XII.1 is dropped).
+  const livePartLabels = new Set(sections.map((s) => s.partOf).filter(Boolean));
+  const orderedParts = [...new Set(partsSeen)].filter((p) =>
+    livePartLabels.has(p),
+  );
+  const partsOutPath = resolve(__dirname, "criminal-code-parts.json");
+  writeFileSync(partsOutPath, JSON.stringify(orderedParts, null, 2));
+  console.log(`Written ${orderedParts.length} live Parts to ${partsOutPath}`);
+
   // Print summary by Part
   const partCounts = {};
   for (const s of sections) {
     const p = s.partOf || "(no part)";
     partCounts[p] = (partCounts[p] || 0) + 1;
   }
-  console.log("\nSections by Part:");
-  for (const [part, count] of Object.entries(partCounts).sort()) {
-    console.log(`  ${part}: ${count}`);
+  console.log("\nSections by Part (in document order):");
+  for (const part of orderedParts) {
+    console.log(`  ${part}: ${partCounts[part] || 0}`);
+  }
+  if (partCounts["(no part)"]) {
+    console.log(`  (no part): ${partCounts["(no part)"]}`);
   }
 }
 
