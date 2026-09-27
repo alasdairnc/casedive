@@ -91,7 +91,7 @@ test.describe("Results", () => {
     await expect(
       page
         .locator('[data-testid="results-section"]')
-        .getByText("Criminal Code", { exact: true }),
+        .getByRole("heading", { name: "Criminal Code", exact: true }),
     ).toBeVisible();
     await expect(page.locator('[data-testid="export-pdf-btn"]')).toBeVisible();
   });
