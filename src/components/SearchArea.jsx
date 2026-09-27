@@ -11,7 +11,14 @@ import {
 
 const MAX_CHARS = 5000;
 
-export default function SearchArea({ query, setQuery, onSubmit, loading }) {
+export default function SearchArea({
+  query,
+  setQuery,
+  onSubmit,
+  loading,
+  inputRef,
+  maxWidth = CONTENT_MAX_WIDTH,
+}) {
   const t = useTheme();
   const [focused, setFocused] = useState(false);
   // Touch-first widths: no keyboard hint, full-width submit
@@ -34,13 +41,14 @@ export default function SearchArea({ query, setQuery, onSubmit, loading }) {
   return (
     <section
       style={{
-        maxWidth: CONTENT_MAX_WIDTH,
+        maxWidth,
         margin: "0 auto",
         padding: `20px ${PAGE_GUTTER}px 0`,
       }}
     >
       <div style={{ position: "relative" }}>
         <textarea
+          ref={inputRef}
           data-testid="scenario-input"
           aria-label="Legal scenario"
           value={query}

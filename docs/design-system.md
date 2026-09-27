@@ -57,8 +57,15 @@ Non-colour tokens live in `src/lib/ui.js` (a plain module, safe for node-env tes
 
 - `RADIUS` — `md` (8) buttons/inputs/selects, `lg` (12) cards/panels/modals/callouts,
   `pill` chips/toggles/badges
-- `CONTENT_MAX_WIDTH` (760) for the page column, `HEADER_MAX_WIDTH` (1040) for the
-  header and footer, `PAGE_GUTTER` (24)
+- `CONTENT_MAX_WIDTH` (760) for the page column, `HEADER_MAX_WIDTH` (1200, equal to
+  `WIDE_MAX_WIDTH`) for the header and footer, `PAGE_GUTTER` (24)
+- `WIDE_LAYOUT_QUERY` — at 1080px and up, once a result has loaded, the results page
+  widens to `WIDE_MAX_WIDTH`: cards in a main column, and a sticky
+  `RESULTS_SIDEBAR_WIDTH` (320) sidebar with jump links, Export PDF, Legal Analysis
+  and Suggested Links. The search form collapses into `SearchSummaryBar` until "Edit
+  search". Below 1080px, and on the landing page, everything stays in the 760 column.
+  Results render each piece once per layout (conditional render, never a hidden
+  duplicate), so e2e locators stay unique.
 - `MOBILE_NAV_QUERY` — at or below 719px the header collapses into a Menu toggle;
   read it with `useMediaQuery` (`src/hooks/useMediaQuery.js`). Render one DOM copy of
   each nav item, never a hidden duplicate. Sign in stays in the bar on phones.
