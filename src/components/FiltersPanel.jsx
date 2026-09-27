@@ -13,7 +13,11 @@ import {
 
 // Filter bar under the search box: a row of native selects, then the law-type
 // toggle chips. Always visible (tests locate the selects and chips directly).
-export default function FiltersPanel({ filters, setFilters }) {
+export default function FiltersPanel({
+  filters,
+  setFilters,
+  maxWidth = CONTENT_MAX_WIDTH,
+}) {
   const t = useTheme();
   const includeLabelId = useId();
 
@@ -28,7 +32,7 @@ export default function FiltersPanel({ filters, setFilters }) {
   return (
     <div
       style={{
-        maxWidth: CONTENT_MAX_WIDTH,
+        maxWidth,
         margin: "0 auto",
         padding: `16px ${PAGE_GUTTER}px 0`,
         display: "flex",
@@ -69,7 +73,9 @@ export default function FiltersPanel({ filters, setFilters }) {
 
         <SelectControl
           value={filters.dateRange}
-          onChange={(e) => setFilters({ ...filters, dateRange: e.target.value })}
+          onChange={(e) =>
+            setFilters({ ...filters, dateRange: e.target.value })
+          }
           style={selectStyle}
           aria-label="Date range"
         >

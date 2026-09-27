@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { expandSearchIfCollapsed } from "./helpers/search.js";
 
 function makeAnalyzeResponse(requestId = "analysis-1") {
   return {
@@ -62,6 +63,7 @@ async function runSearch(
   page,
   query = "A person broke into a house at night and stole jewelry",
 ) {
+  await expandSearchIfCollapsed(page);
   await page.locator('[data-testid="scenario-input"]').fill(query);
   await page.locator('[data-testid="research-submit"]').click();
   await expect(page.locator('[data-testid="results-section"]')).toBeVisible({

@@ -521,10 +521,7 @@ export default function ResultCard({
             ))}
           </select>
 
-          <label
-            htmlFor={noteId}
-            style={{ ...fieldLabelStyle, marginTop: 14 }}
-          >
+          <label htmlFor={noteId} style={{ ...fieldLabelStyle, marginTop: 14 }}>
             Note (optional)
           </label>
           <textarea

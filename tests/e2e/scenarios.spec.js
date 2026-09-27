@@ -129,7 +129,7 @@ test.describe("Scenario: Impaired Driving", () => {
     await expect(
       page
         .locator('[data-testid="results-section"]')
-        .getByText("Charter Rights", { exact: true }),
+        .getByRole("heading", { name: "Charter Rights", exact: true }),
     ).toBeVisible();
     await expect(
       page.getByText(
@@ -344,7 +344,7 @@ test.describe("Scenario: Drug Trafficking (CDSA)", () => {
     await expect(
       page
         .locator('[data-testid="results-section"]')
-        .getByText("Charter Rights", { exact: true }),
+        .getByRole("heading", { name: "Charter Rights", exact: true }),
     ).toBeVisible();
     await expect(
       page.getByText(

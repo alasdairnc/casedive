@@ -6,6 +6,7 @@ import FiltersPanel from "./components/FiltersPanel.jsx";
 import SearchArea from "./components/SearchArea.jsx";
 import StagedLoading from "./components/StagedLoading.jsx";
 import Results from "./components/Results.jsx";
+import SearchSummaryBar from "./components/SearchSummaryBar.jsx";
 import ErrorMessage from "./components/ErrorMessage.jsx";
 import RetrievalHealthDashboard from "./components/RetrievalHealthDashboard.jsx";
 import Button from "./components/ui/Button.jsx";
@@ -13,9 +14,13 @@ import { MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH } from "./lib/caseLawReport
 import {
   CONTENT_MAX_WIDTH,
   HEADER_MAX_WIDTH,
+  WIDE_MAX_WIDTH,
+  WIDE_LAYOUT_QUERY,
   PAGE_GUTTER,
 } from "./lib/ui.js";
 import { useAuth } from "./hooks/useAuth.js";
+import { useMediaQuery } from "./hooks/useMediaQuery.js";
+import { scrollBehavior } from "./lib/scroll.js";
 import { AuthProvider } from "./lib/AuthContext.jsx";
 import { useCloudSync } from "./hooks/useCloudSync.js";
 import Toast from "./components/Toast.jsx";
@@ -320,6 +325,30 @@ function AppInner() {
     createDefaultFilters(),
   );
   const resultsRef = useRef(null);
+  // Desktop results view: wide two-column layout, search collapsed to a bar.
+  // Stays wide after the first result so a re-search doesn't snap back to
+  // the narrow landing column while it loads.
+  const isWide = useMediaQuery(WIDE_LAYOUT_QUERY);
+  const [hasShownResult, setHasShownResult] = useState(false);
+  const [searchCollapsed, setSearchCollapsed] = useState(false);
+  const searchInputRef = useRef(null);
+  const focusSearchOnExpand = useRef(false);
+  // Latest draft, read after the analyze await to tell whether the user kept
+  // typing a new scenario while the last one was running.
+  const queryRef = useRef(query);
+  useEffect(() => {
+    queryRef.current = query;
+  }, [query]);
+  const wideLayout = isWide && hasShownResult;
+  const showSummaryBar = wideLayout && searchCollapsed;
+
+  // "Edit search" reveals the form; move focus into the textarea once shown.
+  useEffect(() => {
+    if (showSummaryBar || !focusSearchOnExpand.current) return;
+    focusSearchOnExpand.current = false;
+    searchInputRef.current?.focus();
+  }, [showSummaryBar]);
+
   const {
     bookmarks,
     addBookmark,
@@ -384,14 +413,44 @@ function AppInner() {
       setSubmittedQuery(activeQuery.trim());
       setSubmittedScenarioSnippet(toScenarioSnippet(activeQuery));
       setSubmittedFilters(cloneSubmittedFilters(activeFilters));
+      // Desktop collapses the search over the results, unless the user is
+      // still typing a new draft into it.
+      const form = document.getElementById("cd-search-form");
+      // Focus is "unplaced" if it was in the search form or already dropped to
+      // <body> (the Research button disables while loading, which blurs it).
+      const isUnplaced = (el) =>
+        !el || el === document.body || !!form?.contains(el);
+      const focusWasUnplaced = isUnplaced(document.activeElement);
+      const stillEditing =
+        document.activeElement === searchInputRef.current &&
+        queryRef.current.trim() !== activeQuery.trim();
+
       setResult(data);
+      setHasShownResult(true);
+      if (!stillEditing) setSearchCollapsed(true);
       addToHistory(activeQuery.trim(), activeFilters, data);
 
+      // On desktop the search sits collapsed above the results, so go to the
+      // top of the page; otherwise bring the results into view. The breakpoint
+      // is read now because the window may have been resized mid-request.
       setTimeout(() => {
-        resultsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+        const behavior = scrollBehavior();
+        if (!window.matchMedia?.(WIDE_LAYOUT_QUERY).matches) {
+          resultsRef.current?.scrollIntoView?.({ behavior, block: "start" });
+          return;
+        }
+        if (window.scrollY > 0) window.scrollTo?.({ top: 0, behavior });
+        // With the form hidden, keyboard and screen-reader users would
+        // otherwise start again from <body>; hand focus to the results.
+        if (
+          focusWasUnplaced &&
+          form?.hidden &&
+          isUnplaced(document.activeElement)
+        ) {
+          document
+            .getElementById("cd-results-heading")
+            ?.focus({ preventScroll: true });
+        }
       }, 100);
     } catch (err) {
       const isInternalParse =
@@ -407,6 +466,12 @@ function AppInner() {
   };
 
   const isEmpty = !result && !loading && !error;
+  const formWidth = wideLayout ? WIDE_MAX_WIDTH : CONTENT_MAX_WIDTH;
+
+  const expandSearch = () => {
+    focusSearchOnExpand.current = true;
+    setSearchCollapsed(false);
+  };
 
   return (
     <div
@@ -443,36 +508,67 @@ function AppInner() {
       >
         {isEmpty && <Hero t={t} />}
 
-        <SearchArea
-          query={query}
-          setQuery={setQuery}
-          onSubmit={analyzeScenario}
-          loading={loading}
-        />
+        {showSummaryBar && (
+          <SearchSummaryBar
+            query={result ? submittedQuery : query}
+            filters={result ? submittedFilters : filters}
+            onEdit={expandSearch}
+          />
+        )}
 
-        <FiltersPanel filters={filters} setFilters={setFilters} />
+        {/* Kept mounted while collapsed so the draft and history re-runs
+            still land in the textarea. */}
+        <div id="cd-search-form" hidden={showSummaryBar}>
+          <SearchArea
+            query={query}
+            setQuery={setQuery}
+            onSubmit={analyzeScenario}
+            loading={loading}
+            inputRef={searchInputRef}
+            maxWidth={formWidth}
+          />
 
-        {/* Disclaimer (colour must stay an inline hex for AppLandingContrast) */}
-        <div style={{ ...contentColumn, paddingTop: 16 }}>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              lineHeight: 1.5,
-              color: t.textTertiary,
-              margin: 0,
-            }}
+          <FiltersPanel
+            filters={filters}
+            setFilters={setFilters}
+            maxWidth={formWidth}
+          />
+
+          {/* Disclaimer (colour must stay an inline hex for AppLandingContrast) */}
+          <div
+            style={{ ...contentColumn, maxWidth: formWidth, paddingTop: 16 }}
           >
-            Educational tool only — not legal advice. Always consult a qualified
-            lawyer. Citations verified against CanLII where possible.
-          </p>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                lineHeight: 1.5,
+                color: t.textTertiary,
+                margin: 0,
+              }}
+            >
+              Educational tool only — not legal advice. Always consult a
+              qualified lawyer. Citations verified against CanLII where
+              possible.
+            </p>
+          </div>
         </div>
 
         {isEmpty && <ExampleScenarios setQuery={setQuery} t={t} />}
 
         {!isEmpty && (
-          <div style={{ ...contentColumn, paddingTop: 32 }}>
-            <div ref={resultsRef}>
+          <div
+            style={{
+              ...contentColumn,
+              maxWidth: wideLayout ? WIDE_MAX_WIDTH : CONTENT_MAX_WIDTH,
+              paddingTop: showSummaryBar ? 8 : 32,
+            }}
+          >
+            {/* Loading and errors keep the reading width in the wide layout */}
+            <div
+              ref={resultsRef}
+              style={wideLayout ? { maxWidth: CONTENT_MAX_WIDTH } : undefined}
+            >
               {loading && <StagedLoading />}
               {error && (
                 <ErrorMessage message={error} onRetry={analyzeScenario} />
