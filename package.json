@@ -36,7 +36,7 @@
     "perf:monitor": "node scripts/performance-monitor.js",
     "docs:build": "node scripts/docs-build.js",
     "docs:preview": "node scripts/docs-preview.js",
-    "docs:lint": "markdownlint-cli2 \"reports/**/*.md\" \"docs/*.md\" \"!docs/monetization-plan.md\" \"!docs/billing-setup-walkthrough.md\"",
+    "docs:lint": "markdownlint-cli2 \"reports/**/*.md\" \"docs/*.md\" \"docs/adr/*.md\"\"!docs/monetization-plan.md\" \"!docs/billing-setup-walkthrough.md\"",
     "security:scan": "gitleaks git . --log-opts='--branches --tags' --redact --no-banner",
     "security:scan:all": "gitleaks git . --log-opts='--all' --redact --no-banner",
     "security:hooks": "git config core.hooksPath .githooks"
