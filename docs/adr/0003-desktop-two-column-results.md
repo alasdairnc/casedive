@@ -6,9 +6,10 @@
 
 ## Context
 
-Results rendered in one column capped at 760px (`CONTENT_MAX_WIDTH` in
-`src/lib/ui.js`) at every screen width. The owner wanted desktop screens to
-use more of the page (session notes, 2026-09-25).
+Results rendered in a single column capped at 760px (`CONTENT_MAX_WIDTH` in
+`src/lib/ui.js`) at every screen width (PR #43). The owner asked for desktop
+screens to use more of the page. That request isn't written down anywhere in
+the repo.
 
 ## Decision
 
@@ -25,8 +26,8 @@ The landing page and narrower screens are unchanged (PR #43, `e162f30`).
 
 ## Options considered
 
-The owner chose the sidebar layout with collapsed search and chose to leave
-the landing page alone. The other candidates weren't recorded.
+The record describes only the chosen layout. Any alternatives weren't written
+down.
 
 ## Consequences
 

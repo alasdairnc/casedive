@@ -54,8 +54,7 @@ dependency.
 ## Consequences
 
 - `api/` went from 12 functions to 10.
-- Nobody can subscribe, so every signed-in user resolves to the free plan's
-  limits.
+- There is no longer any way to subscribe.
 - Four `STRIPE_*` variables are still set in Vercel with nothing reading
   them (ROADMAP, owner-only item 2).
 - Reviving billing means restoring the files from the commit before
