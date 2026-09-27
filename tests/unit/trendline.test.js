@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("../..", () => ({}));
 vi.mock("../../api/_rateLimit.js", () => ({ redis: null }));
 
-const { getTrendlineSnapshots, recordRetrievalMetricsEvent } =
+const { getTrendlineSnapshots } =
   await import("../../api/_retrievalHealthStore.js");
 
 const BASE_NOW = 1_700_000_000_000;

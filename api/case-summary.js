@@ -223,7 +223,9 @@ export default async function handler(req, res) {
           .status(200)
           .json(typeof cached === "string" ? JSON.parse(cached) : cached);
       }
-    } catch (err) {}
+    } catch {
+      // Best-effort cache: on a Redis error, carry on without it.
+    }
   }
 
   const caseText = [
@@ -304,7 +306,9 @@ export default async function handler(req, res) {
           ),
           API_REDIS_TIMEOUT_MS,
         );
-      } catch (err) {}
+      } catch {
+        // Best-effort cache: on a Redis error, carry on without it.
+      }
     }
 
     logSuccess(requestId, "case-summary", 200, Date.now() - startMs, rlResult);

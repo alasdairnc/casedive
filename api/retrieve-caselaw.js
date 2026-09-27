@@ -102,7 +102,9 @@ export default async function handler(req, res) {
         );
         return res.status(200).json(parsed);
       }
-    } catch (err) {}
+    } catch {
+      // Best-effort cache: on a Redis error, carry on without it.
+    }
   }
 
   if (!apiKey) {
@@ -193,7 +195,9 @@ export default async function handler(req, res) {
           ),
           API_REDIS_TIMEOUT_MS,
         );
-      } catch (err) {}
+      } catch {
+        // Best-effort cache: on a Redis error, carry on without it.
+      }
     }
 
     return res.status(200).json({ case_law: cases, meta });

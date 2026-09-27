@@ -780,7 +780,7 @@ export default async function handler(req, res) {
     }
 
     const anthropicStartMs = Date.now();
-    const { result, raw, retryRaw, matchedLandmarks } = await analyzeWithRetry(
+    const { result, retryRaw, matchedLandmarks } = await analyzeWithRetry(
       scenario,
       filters,
       apiKey,

@@ -101,7 +101,7 @@ export function buildSystemPrompt(filters = {}) {
     {
       "type": "canlii",
       "label": "The display text for the link (e.g., 'R v Jordan - 11(b) delay')",
-      "term": "Highly targeted boolean search query matching CanLII's engine (e.g., 'assault AND \"bodily harm\" AND self-defence')"
+      "term": "Highly targeted boolean search query matching CanLII's engine (e.g., 'assault AND "bodily harm" AND self-defence')"
     }
   ]
 }

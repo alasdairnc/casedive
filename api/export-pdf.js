@@ -16,13 +16,11 @@ import {
   logRateLimitCheck,
   logValidationError,
   logSuccess,
-  logError,
 } from "./_logging.js";
 import { API_REDIS_TIMEOUT_MS } from "./_constants.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
 
 const ACCENT = "#d4a040";
-const BG = "#FAF7F2";
 const TEXT = "#2c2825";
 const TEXT_SECONDARY = "#6b6258";
 const BORDER = "#d8d0c4";
@@ -32,6 +30,7 @@ const BORDER = "#d8d0c4";
 function sanitizePdfText(str) {
   if (typeof str !== "string") return "";
   return str
+    // eslint-disable-next-line no-control-regex -- stripping control chars is the point
     .replace(/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]/g, "") // control chars (keep \n \t)
     .replace(/%%EOF/gi, "") // PDF end-of-file marker
     .slice(0, 20_000); // hard cap per field
@@ -132,7 +131,9 @@ export default async function handler(req, res) {
         );
         return res.status(200).send(pdfBuffer);
       }
-    } catch (err) {}
+    } catch {
+      // Best-effort cache: on a Redis error, carry on without it.
+    }
   }
 
   let {
@@ -378,7 +379,9 @@ export default async function handler(req, res) {
         redis.setex(cacheKey, 7 * 24 * 60 * 60, pdfBuffer.toString("base64")),
         API_REDIS_TIMEOUT_MS,
       );
-    } catch (err) {}
+    } catch {
+      // Best-effort cache: on a Redis error, carry on without it.
+    }
   }
 
   res.setHeader("Content-Type", "application/pdf");
