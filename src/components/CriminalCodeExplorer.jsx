@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { CRIMINAL_CODE_PARTS } from "../lib/criminalCodeParts.js";
 import { useCriminalCodeSearch } from "../hooks/useCriminalCodeSearch.js";
+import { useMediaQuery } from "../hooks/useMediaQuery.js";
 import Select from "./Select.jsx";
 import Button from "./ui/Button.jsx";
 import { CONTENT_MAX_WIDTH, RADIUS } from "../lib/ui.js";
@@ -336,6 +337,8 @@ export default function CriminalCodeExplorer({ onClose }) {
   const t = useTheme();
   const inputRef = useRef(null);
   const [expandedSection, setExpandedSection] = useState(null);
+  // Mobile: full-width bottom sheet; desktop: centered card (matches CaseSummaryModal)
+  const isMobile = useMediaQuery("(max-width: 639px)");
 
   const {
     query,
@@ -382,8 +385,9 @@ export default function CriminalCodeExplorer({ onClose }) {
         background: "rgba(0,0,0,0.45)",
         backdropFilter: "blur(2px)",
         display: "flex",
-        alignItems: "flex-end",
+        alignItems: isMobile ? "flex-end" : "center",
         justifyContent: "center",
+        padding: isMobile ? 0 : "24px 16px",
       }}
       onClick={onClose}
     >
@@ -394,14 +398,18 @@ export default function CriminalCodeExplorer({ onClose }) {
         style={{
           background: t.bg,
           border: `1px solid ${t.border}`,
-          borderBottom: "none",
-          borderRadius: `${RADIUS.lg}px ${RADIUS.lg}px 0 0`,
+          borderBottom: isMobile ? "none" : `1px solid ${t.border}`,
+          borderRadius: isMobile
+            ? `${RADIUS.lg}px ${RADIUS.lg}px 0 0`
+            : RADIUS.lg,
           width: "100%",
           maxWidth: CONTENT_MAX_WIDTH,
-          maxHeight: "85vh",
+          maxHeight: isMobile ? "85vh" : "82vh",
           display: "flex",
           flexDirection: "column",
-          boxShadow: `0 -8px 32px ${t.shadowStrong}`,
+          boxShadow: isMobile
+            ? `0 -8px 32px ${t.shadowStrong}`
+            : `0 24px 64px ${t.shadowStrong}`,
         }}
         onClick={(e) => e.stopPropagation()}
       >
