@@ -21,8 +21,14 @@ const PART_OPTIONS = [
 
 function SectionRow({ section, isExpanded, onToggle, t }) {
   const [hovered, setHovered] = useState(false);
-  const isEnriched = !!(
+  // "Enriched" (the pill) means hand-curated: definition + defences +
+  // relatedSections written and reviewed by a person. `summary` is a
+  // separately-generated, independently-verified plain-language summary —
+  // it gets its own "Summary" pill so the two are never conflated.
+  const isCurated = !!section.definition;
+  const hasDetails = !!(
     section.definition ||
+    section.summary ||
     section.maxPenalty ||
     section.relatedSections?.length
   );
@@ -68,18 +74,18 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
       style={{
         padding: "14px 24px",
         borderBottom: `1px solid ${t.borderLight}`,
-        cursor: isEnriched ? "pointer" : "default",
+        cursor: hasDetails ? "pointer" : "default",
         background: isExpanded
           ? t.bgAlt
-          : hovered && isEnriched
+          : hovered && hasDetails
             ? t.bgHover
             : "transparent",
         transition: "background 0.2s ease",
       }}
-      tabIndex={isEnriched ? 0 : undefined}
-      aria-expanded={isEnriched ? isExpanded : undefined}
-      onClick={isEnriched ? onToggle : undefined}
-      onKeyDown={isEnriched ? handleKeyDown : undefined}
+      tabIndex={hasDetails ? 0 : undefined}
+      aria-expanded={hasDetails ? isExpanded : undefined}
+      onClick={hasDetails ? onToggle : undefined}
+      onKeyDown={hasDetails ? handleKeyDown : undefined}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -100,7 +106,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             marginTop: 3,
           }}
         >
-          {isEnriched && (
+          {hasDetails && (
             <span
               aria-hidden="true"
               style={{
@@ -150,7 +156,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
               {section.title}
             </span>
             <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-              {isEnriched && !isExpanded && (
+              {isCurated && !isExpanded && (
                 <span
                   style={{
                     ...pillStyle,
@@ -159,6 +165,18 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                   }}
                 >
                   Enriched
+                </span>
+              )}
+              {!isCurated && section.summary && !isExpanded && (
+                <span
+                  style={{
+                    ...pillStyle,
+                    color: t.textTertiary,
+                    background: t.bg,
+                    border: `1px solid ${t.borderLight}`,
+                  }}
+                >
+                  Summary
                 </span>
               )}
               {section.severity && (
@@ -176,8 +194,8 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             </div>
           </div>
 
-          {/* Definition preview (collapsed) */}
-          {!isExpanded && section.definition && (
+          {/* Definition/summary preview (collapsed) */}
+          {!isExpanded && (section.definition || section.summary) && (
             <div
               style={{
                 fontFamily: "var(--font-body)",
@@ -191,7 +209,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 overflow: "hidden",
               }}
             >
-              {section.definition}
+              {section.definition || section.summary}
             </div>
           )}
 
@@ -226,7 +244,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
 
       {/* Expanded details */}
       {/* Clicks in here (including the Justice Laws link) must not collapse the row */}
-      {isExpanded && isEnriched && (
+      {isExpanded && hasDetails && (
         <div
           onClick={(e) => e.stopPropagation()}
           style={{
@@ -240,6 +258,13 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             <div style={{ marginBottom: 16 }}>
               <div style={labelStyle}>Definition</div>
               <div style={bodyStyle}>{section.definition}</div>
+            </div>
+          )}
+
+          {!section.definition && section.summary && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={labelStyle}>Summary</div>
+              <div style={bodyStyle}>{section.summary}</div>
             </div>
           )}
 
