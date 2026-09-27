@@ -1,14 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { expandSearchIfCollapsed } from "./helpers/search.js";
+import { analyzeResponse } from "./helpers/analyzeFixture.js";
 
 // Matches WIDE_LAYOUT_QUERY in src/lib/ui.js
 const WIDE_MIN_WIDTH = 1080;
 
 const SCENARIO = "A person broke into a house at night and stole jewelry";
 
-const MOCK_ANALYZE_RESPONSE = {
-  summary:
-    "A person entered a residential property at night without permission and stole jewelry.",
+const MOCK_ANALYZE_RESPONSE = analyzeResponse({
   criminal_code: [
     {
       citation: "s. 348(1)(b)",
@@ -43,8 +42,6 @@ const MOCK_ANALYZE_RESPONSE = {
       year: "2014",
     },
   ],
-  civil_law: [],
-  charter: [],
   analysis:
     "This scenario involves a residential break and enter with theft of jewelry.",
   suggestions: [
@@ -54,7 +51,7 @@ const MOCK_ANALYZE_RESPONSE = {
       term: "residential break and enter",
     },
   ],
-};
+});
 
 async function search(page, scenario = SCENARIO) {
   await page.getByTestId("scenario-input").fill(scenario);
