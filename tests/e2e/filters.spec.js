@@ -1,7 +1,13 @@
 import { test, expect } from "@playwright/test";
-import { analyzeResponse } from "./helpers/analyzeFixture.js";
+import {
+  analyzeResponse,
+  CASE_LAW_FILTER_OFF_META,
+} from "./helpers/analyzeFixture.js";
 
 const MOCK_ANALYZE_RESPONSE = analyzeResponse();
+const CASE_LAW_OFF_RESPONSE = analyzeResponse({
+  meta: CASE_LAW_FILTER_OFF_META,
+});
 
 test.describe("FiltersPanel", () => {
   test.beforeEach(async ({ page }) => {
@@ -30,7 +36,7 @@ test.describe("FiltersPanel", () => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(MOCK_ANALYZE_RESPONSE),
+        body: JSON.stringify(CASE_LAW_OFF_RESPONSE),
       });
     });
 

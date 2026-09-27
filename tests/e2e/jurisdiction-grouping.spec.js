@@ -7,22 +7,18 @@ const MOCK_ANALYZE_RESPONSE = analyzeResponse({
   civil_law: [
     {
       citation: "Highway Traffic Act, s. 53",
-      title: "Highway Traffic Act",
       summary: "Ontario traffic statute.",
     },
     {
       citation: "Motor Vehicle Act, s. 144",
-      title: "Motor Vehicle Act",
       summary: "BC traffic statute.",
     },
     {
       citation: "Traffic Safety Act, s. 115",
-      title: "Traffic Safety Act",
       summary: "Alberta traffic statute.",
     },
     {
       citation: "Controlled Drugs and Substances Act, s. 4",
-      title: "CDSA",
       summary: "Federal drug statute.",
     },
   ],

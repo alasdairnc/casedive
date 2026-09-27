@@ -11,24 +11,20 @@ const MOCK_ANALYZE_RESPONSE = analyzeResponse({
   criminal_code: [
     {
       citation: "s. 348(1)(b)",
-      title: "Breaking and Entering",
       summary:
         "Breaking and entering a place with intent to commit an indictable offence.",
     },
     {
       citation: "s. 349(1)",
-      title: "Being Unlawfully in a Dwelling-house",
       summary:
         "Entering or being in a dwelling-house without lawful excuse with intent to commit an indictable offence.",
     },
     {
       citation: "s. 334(b)",
-      title: "Theft Under $5,000",
       summary: "Theft of property valued under $5,000.",
     },
     {
       citation: "s. 354(1)",
-      title: "Possession of Property Obtained by Crime",
       summary:
         "Possessing property knowing it was obtained by an indictable offence.",
     },

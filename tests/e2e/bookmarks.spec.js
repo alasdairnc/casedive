@@ -7,7 +7,7 @@ const MOCK_ANALYZE_RESPONSE = analyzeResponse({
     {
       citation: "R v Dorfer, 2014 BCCA 449",
       title: "R v Dorfer",
-      description: "Sentencing principles for residential break and enter.",
+      summary: "Sentencing principles for residential break and enter.",
     },
   ],
   analysis:
