@@ -21,3 +21,4 @@ reports/*
 !reports/weekly/
 artifacts/html/
 security_audit/
+coverage/

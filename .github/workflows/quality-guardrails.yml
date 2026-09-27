@@ -29,11 +29,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Unit tests
-        run: npm run test:unit
-
-      - name: Component tests
-        run: npm run test:component
+      # Unit + component tests in one run, failing if coverage drops below
+      # the floor in vitest.config.js.
+      - name: Unit and component tests with coverage
+        run: npm run test:coverage
 
   sanitizer-and-filter-gate:
     runs-on: ubuntu-latest
