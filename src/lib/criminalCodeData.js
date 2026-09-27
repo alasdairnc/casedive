@@ -3,7 +3,11 @@
 // Auto-generated from Justice Laws XML (laws-lois.justice.gc.ca/eng/XML/C-46.xml)
 // Source current as of: 2026-07-21 (Justice Laws lims:current-date) | Sections: 1568
 // Includes all numbered sections from the Criminal Code.
-// 46 high-priority sections are enriched with definitions, defences, and related sections.
+// 46 high-priority sections are enriched with hand-curated definitions,
+// defences, and related sections. Other sections may carry a `summary` field:
+// an independently-verified, plain-language summary generated from statute
+// text only (see scripts/prepareEnrichmentBatch.mjs) — distinct from `definition`,
+// which is only ever hand-curated.
 //
 // This file is used by api/verify.js to confirm AI-suggested Criminal Code
 // sections are real and by CriminalCodeExplorer for browsing/searching.
@@ -3280,6 +3284,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-214.html`,
+      summary:
+        "Defines terms used in this Part, including 'abandon or expose', 'form of marriage', and 'guardian'; several other defined terms in this section have been repealed.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3288,8 +3294,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Duty of persons to provide necessaries",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable / 2 years summary",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-215.html`,
+      summary:
+        "Imposes a legal duty on parents, guardians, and others to provide necessaries of life to children under 16, to a spouse or common-law partner, and to a dependant who cannot care for themselves. Makes it an offence to fail without lawful excuse to perform that duty where it leaves the person in destitute or necessitous circumstances, endangers their life, or permanently endangers or injures their health, and sets out evidentiary presumptions, including about parentage and failure to provide maintenance.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3300,6 +3308,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-216.html`,
+      summary:
+        "Imposes a legal duty on anyone who undertakes surgical or medical treatment, or any other lawful act that may endanger life, to use reasonable knowledge, skill, and care in doing it, except in cases of necessity.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3310,6 +3320,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-217.html`,
+      summary:
+        "Imposes a legal duty on anyone who undertakes to do an act to actually do it, where failing to do so is or may be dangerous to life.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3320,6 +3332,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-217.1.html`,
+      summary:
+        "Imposes a legal duty on anyone who undertakes, or has authority, to direct how another person does work or performs a task, to take reasonable steps to prevent bodily harm to that person or others arising from it.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3328,8 +3342,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Abandoning child",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-218.html`,
+      summary:
+        "Makes it an offence to unlawfully abandon or expose a child under 10 years old in a way that endangers, or is likely to endanger, the child's life, or is likely to permanently injure the child's health.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3340,6 +3356,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "See s. 220-221",
       url: `${JUSTICE_LAWS_BASE}/section-219.html`,
+      summary:
+        "Defines a person as criminally negligent when, in doing something or in omitting to do something they have a legal duty to do, they show wanton or reckless disregard for the lives or safety of others, and defines 'duty' for this purpose as one imposed by law.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3350,6 +3368,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-220.html`,
+      summary:
+        "Makes it an offence to cause the death of another person by criminal negligence.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3358,8 +3378,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Causing bodily harm by criminal negligence",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-221.html`,
+      summary:
+        "Makes it an offence to cause bodily harm to another person by criminal negligence.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3385,6 +3407,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-223.html`,
+      summary:
+        "Defines when a child becomes a human being for purposes of this Act: when it has completely proceeded, in a living state, from its mother's body, whether or not it has breathed, has independent circulation, or the umbilical cord is severed. States that a person commits homicide if they cause injury to a child before or during birth that results in the child's death after it becomes a human being.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3395,6 +3419,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-224.html`,
+      summary:
+        "Provides that causing a person's death by an act or omission constitutes causing that death, even if the death might have been prevented by resorting to proper means.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3405,6 +3431,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-225.html`,
+      summary:
+        "Provides that causing a human being a bodily injury that is dangerous in itself and results in death constitutes causing that person's death, even if the immediate cause of death was proper or improper treatment applied in good faith.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3415,6 +3443,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-226.html`,
+      summary:
+        "Provides that causing a bodily injury to a human being that results in death is causing that person's death, even if the injury's effect was only to accelerate death from a disease or disorder that arose from some other cause.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3425,6 +3455,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-227.html`,
+      summary:
+        "Provides that a medical or nurse practitioner does not commit culpable homicide by providing medical assistance in dying in accordance with section 241.2, and that a person assisting such a practitioner is likewise not a party to culpable homicide. The exemption applies even where there is a reasonable but mistaken belief about a fact underlying it, is not barred by section 14, and its key terms take the same meaning as in section 241.1.",
+      relatedSections: ["241.2", "14", "241.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3435,6 +3468,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-228.html`,
+      summary:
+        "Provides that no one commits culpable homicide by causing a person's death solely through influence on the mind, or through a disorder or disease resulting from such influence, except where the death of a child or sick person is caused by wilfully frightening them.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3490,6 +3525,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-233.html`,
+      summary:
+        "A female person commits infanticide when, by a wilful act or omission, she causes the death of her newly-born child, at a time when she has not fully recovered from giving birth and her mind is disturbed as a result of that or of lactation following the birth.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3545,6 +3582,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-237.html`,
+      summary:
+        "Provides that infanticide may be prosecuted either as an indictable offence or as an offence punishable on summary conviction.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3555,6 +3594,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-238.html`,
+      summary:
+        "Makes it an offence to cause the death of a child during the act of birth, before the child has become a human being, in a manner that would constitute murder if the child were already a human being. Does not apply to a person who causes such a death using means they consider, in good faith, necessary to preserve the life of the child's mother.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3565,6 +3606,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment (minimum 10 years)",
       url: `${JUSTICE_LAWS_BASE}/section-239.html`,
+      summary:
+        "Makes it an offence to attempt, by any means, to commit murder. Provides that for determining whether a person has committed a repeat offence under this section, certain firearms-related, robbery, or violence offences involving a firearm count as an earlier offence based only on the sequence of convictions — not the sequence in which the offences were actually committed — and that sufficiently old prior convictions are not counted.",
+      relatedSections: ["85", "244", "244.2", "220", "236", "272"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3575,6 +3619,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-240.html`,
+      summary:
+        "Makes it an offence to be an accessory after the fact to murder.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3585,6 +3631,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-240.1.html`,
+      summary:
+        "Makes it an offence to obtain, or to carry out, participate in, or facilitate the removal of, a human organ for transplant knowing — or being reckless as to whether — the person it came from (or someone lawfully authorized to consent on their behalf) did not give informed consent to its removal, including doing so on behalf of or in association with the person removing the organ. Also makes it an offence to obtain, participate in, or facilitate obtaining an organ for transplant knowing, or being reckless as to whether, it was obtained in exchange for payment or other consideration.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3595,6 +3643,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-241.html`,
+      summary:
+        "Makes it an offence to counsel, abet, or aid a person to die by suicide, whether or not suicide occurs. Exempts medical and nurse practitioners, people who help them, pharmacists dispensing a prescribed substance, and people aiding a patient at that patient's explicit request, when acting in accordance with the medical assistance in dying provisions in section 241.2 — an exemption that applies even with a reasonable but mistaken belief about a fact underlying it — and clarifies that health care professionals who merely provide information about lawful medical assistance in dying commit no offence.",
+      relatedSections: ["241.2", "241.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3605,6 +3656,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-241.1.html`,
+      summary:
+        "Defines terms used in this section and in sections 241.2 to 241.4, including 'medical assistance in dying,' 'medical practitioner,' 'nurse practitioner,' and 'pharmacist.'",
+      relatedSections: ["241.2", "241.3", "241.4"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3615,6 +3669,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-241.2.html`,
+      summary:
+        "Sets out the eligibility criteria a person must meet to receive medical assistance in dying — including age, decision-making capacity, having a grievous and irremediable medical condition, and giving informed, voluntary consent — and the safeguards a medical or nurse practitioner must follow before providing it, which differ depending on whether the person's natural death is reasonably foreseeable. Also addresses who may sign a request on a person's behalf, who may act as an independent witness, and how advance consent and waiver of final consent operate in specified circumstances.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3623,8 +3679,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Failure to comply with safeguards",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years imprisonment (indictable); or summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-241.3.html`,
+      summary:
+        "Makes it an offence for a medical practitioner or nurse practitioner providing medical assistance in dying to knowingly fail to comply with the safeguards in section 241.2 or the requirement to inform the pharmacist.",
+      relatedSections: ["241.2"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3635,6 +3694,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-241.31.html`,
+      summary:
+        "Requires medical practitioners, nurse practitioners, persons responsible for preliminary assessments, and pharmacists or pharmacy technicians to report specified information about medical assistance in dying requests to a recipient designated by regulations, and directs the Minister of Health to make those regulations governing what information is collected, used, and disclosed. Knowingly failing to file the required information, or knowingly contravening the regulations, is an offence.",
+      relatedSections: ["241.2"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3643,8 +3705,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Forgery",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years imprisonment (indictable); or summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-241.4.html`,
+      summary:
+        "Makes it an offence to commit forgery in relation to a request for medical assistance in dying, or to destroy a document relating to such a request with intent to interfere with another person's access to medical assistance in dying, the assessment of the request, a related exemption, or the filing of information under section 241.31.",
+      relatedSections: ["227", "241", "245", "241.31", "321"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3653,8 +3718,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Neglect to obtain assistance in childbirth",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years imprisonment (indictable); or summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-242.html`,
+      summary:
+        "Makes it an offence for a pregnant person who intends that the child not live, or intends to conceal the birth, to fail to arrange reasonable assistance for her delivery, where that failure results in the child being permanently injured, or dying immediately before, during, or shortly after birth.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3663,8 +3730,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Concealing body of child",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years imprisonment (indictable); or summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-243.html`,
+      summary:
+        "Makes it an offence to dispose of a dead child's body in any manner with intent to conceal that its mother gave birth to it, regardless of whether the child died before, during, or after birth.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3675,6 +3744,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years (minimum 14 years)",
       url: `${JUSTICE_LAWS_BASE}/section-244.html`,
+      summary:
+        "Makes it an offence to discharge a firearm at a person with intent to wound, maim, disfigure, endanger life, or prevent arrest or detention, whether or not that person is the one actually shot at. Also sets out how earlier convictions under this or related firearm offences are counted toward treating a conviction as a repeat offence, based on the order in which convictions occurred.",
+      relatedSections: ["85", "244.2", "220", "236", "239", "272"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3683,8 +3755,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Causing bodily harm with intent — air gun or pistol",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-244.1.html`,
+      summary:
+        "Makes it an offence to discharge an air or compressed-gas gun or pistol at a person with intent to wound, maim, disfigure, endanger life, or prevent arrest or detention, whether or not that person is the one actually shot at.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3695,6 +3769,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years (minimum 14 years)",
       url: `${JUSTICE_LAWS_BASE}/section-244.2.html`,
+      summary:
+        "Makes it an offence to intentionally discharge a firearm into or at a place while knowing or being reckless as to whether another person is present there, or to intentionally discharge a firearm while reckless as to another person's life or safety. The section also defines \"place\" for this purpose and sets out how an earlier related conviction is counted when determining whether a later offence is a second or subsequent one.",
+      relatedSections: ["85", "244", "220", "236", "239", "272"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3705,6 +3782,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-245.html`,
+      summary:
+        "Makes it an offence to administer, or cause to be administered or taken, poison or another destructive or noxious thing to another person, either with intent to endanger life or cause bodily harm, or with intent to aggrieve or annoy that person. It exempts a medical practitioner or nurse practitioner providing medical assistance in dying under section 241.2, and anyone who helps them do so.",
+      relatedSections: ["241.2", "241.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3715,6 +3795,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-246.html`,
+      summary:
+        "Makes it an offence, when done with intent to help oneself or another person commit an indictable offence, to attempt to choke, suffocate, or strangle a person, or by any means try to render a person insensible, unconscious, or unable to resist. It is likewise an offence, for that same purpose, to administer or attempt to administer, or cause or attempt to cause a person to take, a stupefying or overpowering drug, matter, or thing.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3725,6 +3807,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-247.html`,
+      summary:
+        "Makes it an offence, with intent to cause death or bodily harm to a person, to set or place a trap, device, or other thing likely to cause death or bodily harm, or to knowingly allow such a trap to remain in a place one occupies or possesses. It also addresses the same conduct where it actually causes bodily harm or death, or takes place in a location kept or used for committing another indictable offence.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -3735,6 +3819,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-248.html`,
+      summary:
+        "Makes it an offence to place anything on, or do anything to, property used for transporting people or goods by land, water, or air, when done with intent to endanger a person's safety and the act is likely to cause death or bodily harm to people.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -6985,6 +7071,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-448.html`,
+      summary:
+        "Defines terms used in this Part, including what qualifies as counterfeit money, what counts as a counterfeit token of value, what makes money 'current', and what 'utter' includes.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -6993,8 +7081,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Making",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-449.html`,
+      summary:
+        "Makes it an offence to make or begin to make counterfeit money.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7005,6 +7095,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-450.html`,
+      summary:
+        "Makes it an offence, without lawful justification or excuse, to buy, receive, or offer to buy or receive counterfeit money, to have counterfeit money in one's custody or possession, or to bring counterfeit money into Canada.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7013,8 +7105,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Having clippings, etc.",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-451.html`,
+      summary:
+        "Makes it an offence to possess, without lawful justification or excuse, gold or silver filings, clippings, bullion, or dust produced by impairing or diminishing a current gold or silver coin, knowing it was produced that way.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7025,6 +7119,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-452.html`,
+      summary:
+        "Makes it an offence, without lawful justification or excuse, to utter or offer to utter counterfeit money or use it as if genuine, or to export, send, or take counterfeit money out of Canada.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7033,8 +7129,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Uttering coin",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-453.html`,
+      summary:
+        "Makes it an offence to knowingly utter, with intent to defraud, a coin that is not current or a piece of metal that resembles a current coin in size, shape, or colour.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7043,8 +7141,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Slugs and tokens",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-454.html`,
+      summary:
+        "Makes it an offence, without lawful excuse, to manufacture, produce, sell, or possess anything intended to be fraudulently substituted for a coin or token that a coin- or token-operated device is designed to accept.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7053,8 +7153,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Clipping and uttering clipped coin",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-455.html`,
+      summary:
+        "Makes it an offence to impair, diminish, or lighten a current gold or silver coin with intent that it still pass as a current coin, or to utter a coin knowing it has been altered in that way.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7063,8 +7165,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Defacing current coins",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-456.html`,
+      summary:
+        "Makes it an offence to deface a current coin, or to utter a current coin that has been defaced.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7073,8 +7177,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Likeness of bank-notes",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-457.html`,
+      summary:
+        "Prohibits making, publishing, printing, or distributing, including electronically, anything in the likeness of a current bank-note or of an obligation or security of a government or bank, subject to exceptions for the Bank of Canada, the RCMP, and their authorized contractors or licensees. Provides a defence where a printed likeness of a Canadian bank-note is smaller or larger than a specified size range and is either black-and-white or shows the bank-note on only one side.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7085,6 +7191,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-458.html`,
+      summary:
+        "Makes it an offence, without lawful justification or excuse, to make, repair, buy, sell, or possess any machine, tool, or instrument known to have been used or adapted for making counterfeit money or counterfeit tokens of value.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7095,6 +7203,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-459.html`,
+      summary:
+        "Makes it an offence, without lawful justification or excuse, to knowingly convey out of a Canadian mint a machine, tool, or instrument used in manufacturing coins, a useful part of such an item, or coin, bullion, or metal.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7103,8 +7213,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Advertising and dealing in counterfeit money, etc.",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-460.html`,
+      summary:
+        "Makes it an offence to advertise the sale, procurement, or disposal of counterfeit money or counterfeit tokens of value, or information on how to do so, or to purchase, obtain, negotiate, or otherwise deal with counterfeit tokens of value. States that a person cannot be convicted under this section for dealing in genuine but valueless money unless they knew it had no value and acted with fraudulent intent.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7115,6 +7227,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-461.html`,
+      summary:
+        "States that an offence involving counterfeit money or counterfeit tokens of value is complete even if the item is unfinished or does not exactly copy what it is meant to resemble. Sets out rules for using a certificate from a designated examiner of counterfeit as evidence, including advance notice requirements and the ability, with leave of the court, to require the certificate-signer's attendance for cross-examination.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -7125,6 +7239,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.html`,
+      summary:
+        "States that counterfeit money, counterfeit tokens of value, and items used or intended to make them belong to Her Majesty, and allows a peace officer to seize and detain them. Requires seized items to be sent to the Minister of Finance, except that anything still required as evidence is withheld until it is no longer needed in those proceedings.",
       partOf: "Part XII — Offences Relating to Currency",
     },
   ],
@@ -9135,6 +9251,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.21.html`,
+      summary:
+        "Defines terms used in this Part: 'court' means a court seized of an application for a determination of unreasonable delay, and 'unreasonable delay' means a delay exceeding the reasonable time to be tried under paragraph 11(b) of the Charter.",
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9145,6 +9263,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.22.html`,
+      summary:
+        "States that a finding of unreasonable delay does not deprive the court seized of the proceedings of jurisdiction over the offence, the accused, or the offender.",
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9155,6 +9275,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.23.html`,
+      summary:
+        "Provides that a court cannot order a stay of proceedings based on a finding of unreasonable delay except in accordance with this Part.",
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9165,6 +9287,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.24.html`,
+      summary:
+        "States that common law rules and principles for determining unreasonable delay continue to apply except where they are altered by or inconsistent with this Part.",
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9175,6 +9299,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.25.html`,
+      summary:
+        "Requires the prosecutor to take reasonable steps to inform any victim of the offence that an unreasonable delay application has been filed and, later, of the court's decision on it, and requires the court to ask whether the victims were informed of the filing. States that a prosecutor's failure to inform the victims does not prevent the court from deciding the application.",
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9185,6 +9311,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.26.html`,
+      summary:
+        "Directs the court, in determining whether there has been or will be unreasonable delay, to consider factors that make the case complex, including, where applications or motions are involved, their number, scheduling, required adjournments, judicial decisions needed, cumulative court time, and resulting need for trial continuation dates.",
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9195,6 +9323,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.27.html`,
+      summary:
+        "Sets out periods that a court must exclude from its delay calculation when an application under section 276.01, 278.12, 278.21, or 278.3 was filed or served less than 60 days before its scheduled hearing, covering the time taken to hear the application and any other period attributable to the late filing or service.",
+      relatedSections: ["492.3", "276.01", "276.02", "278.12", "278.21", "278.13"],
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9205,6 +9336,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.28.html`,
+      summary:
+        "Sets out periods relating to objections and applications under sections 37 and 38.01 to 38.04 of the Canada Evidence Act that a court must exclude when calculating delay, running from when the objection or application was made until it was finally determined.",
+      relatedSections: ["492.3"],
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9215,6 +9349,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.29.html`,
+      summary:
+        "States that a court must exclude, from its delay calculation, the period beginning when an application under subsection 18.1(4) of the Canadian Security Intelligence Service Act was made and ending when it was finally determined.",
+      relatedSections: ["492.3"],
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9225,6 +9362,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.3.html`,
+      summary:
+        "States that, in determining which days are excluded under sections 492.27 to 492.29, the court must take into account any frivolous or dilatory action, or action not made in good faith, taken by the prosecutor or those acting for the prosecutor or the Attorney General of Canada.",
+      relatedSections: ["492.27", "492.28", "492.29"],
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],
@@ -9235,6 +9375,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.31.html`,
+      summary:
+        "Provides that a court cannot order a stay of proceedings for unreasonable delay unless satisfied that no other remedy would be appropriate and just, and sets out the factors the court must weigh in choosing an alternative remedy, including the stage of proceedings, impact on victims, prejudice to the accused or offender, public confidence in the administration of justice, and society's interest in a final decision on the merits.",
       partOf: "Part XV.1 — Unreasonable Delay",
     },
   ],

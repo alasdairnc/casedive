@@ -1,0 +1,1516 @@
+{
+  "50": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "51": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "52": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "53": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "54": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "56": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "58": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "61": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "62": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "68": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "69": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "70": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "73": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "74": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "75": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "76": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "77": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "78": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "82": {
+    "severity": "Hybrid",
+    "maxPenalty": "14 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "83": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "85": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "86": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "87": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "88": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "89": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "90": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "91": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "92": {
+    "severity": "Indictable",
+    "maxPenalty": "10 years indictable",
+    "relatedSections": []
+  },
+  "93": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "94": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "95": {
+    "severity": "Hybrid",
+    "maxPenalty": "14 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "96": {
+    "severity": "Hybrid",
+    "maxPenalty": "14 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "98": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "101": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "102": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available; minimum one year",
+    "relatedSections": []
+  },
+  "104": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "105": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "106": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "107": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "108": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "119": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "120": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "121": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "122": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "124": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "125": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "126": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "127": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "128": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "129": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "130": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "132": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "134": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "136": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "137": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "138": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "140": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "141": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "142": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "144": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "146": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "147": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "148": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "155": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable; minimum five years",
+    "relatedSections": []
+  },
+  "161": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "162": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "169": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "170": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable; minimum one year",
+    "relatedSections": []
+  },
+  "171": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable; minimum one year",
+    "relatedSections": []
+  },
+  "172": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "174": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "175": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "177": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "180": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "182": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "184": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "191": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "193": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "204": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "209": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "215": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "218": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "221": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "237": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "238": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "240": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "241": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "242": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "243": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "245": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "246": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "248": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "262": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "263": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "264": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "266": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "267": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "268": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "269": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "270": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "280": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "281": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "282": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "283": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "291": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "292": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "293": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "294": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "295": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "300": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "301": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "302": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "318": {
+    "severity": "Indictable",
+    "maxPenalty": "5 years indictable",
+    "relatedSections": []
+  },
+  "327": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "335": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "336": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "340": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "341": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "345": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "347": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "348": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "349": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "352": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "356": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "357": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "363": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "364": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "367": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "368": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "369": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "372": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "374": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "375": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "377": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "378": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "380": {
+    "severity": "Hybrid",
+    "maxPenalty": "14 years indictable; summary conviction available; minimum two years",
+    "relatedSections": []
+  },
+  "381": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "382": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "383": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "384": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "385": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "386": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "387": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "388": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "389": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "390": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "391": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "392": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "394": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "396": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "398": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "399": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "400": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "401": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "403": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "405": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "412": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "415": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "419": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "420": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "422": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "423": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "424": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "425": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "426": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "431": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "433": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "434": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "435": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "436": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "437": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "440": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "441": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "442": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "443": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "445": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "446": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "447": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "449": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "450": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "451": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "452": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "453": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "454": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "455": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "456": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "457": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "458": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "459": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "460": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "495": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "497": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "517": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "539": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "542": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "648": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "649": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "787": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "811": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "52.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "52.2": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "56.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "82.3": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "82.4": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "82.5": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "82.6": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "83.02": {
+    "severity": "Indictable",
+    "maxPenalty": "10 years indictable",
+    "relatedSections": []
+  },
+  "83.04": {
+    "severity": "Indictable",
+    "maxPenalty": "10 years indictable",
+    "relatedSections": []
+  },
+  "83.18": {
+    "severity": "Indictable",
+    "maxPenalty": "10 years indictable",
+    "relatedSections": []
+  },
+  "83.181": {
+    "severity": "Indictable",
+    "maxPenalty": "10 years indictable",
+    "relatedSections": []
+  },
+  "83.19": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "83.191": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "83.2": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "83.201": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "83.202": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "83.21": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "83.22": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "83.221": {
+    "severity": "Indictable",
+    "maxPenalty": "5 years indictable",
+    "relatedSections": []
+  },
+  "83.23": {
+    "severity": "Indictable",
+    "maxPenalty": "10 years indictable",
+    "relatedSections": []
+  },
+  "102.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "104.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "117.01": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "121.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "153.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "162.2": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "169.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "184.5": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "193.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "240.1": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "241.3": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "241.4": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "244.1": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "263.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "269.1": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "270.01": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "270.02": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "270.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "273.3": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "276.03": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "276.07": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "276.11": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "278.18": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "278.27": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "278.32": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "278.36": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "279.02": {
+    "severity": "Hybrid",
+    "maxPenalty": "14 years indictable; summary conviction available; minimum two years",
+    "relatedSections": []
+  },
+  "279.03": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available; minimum one year",
+    "relatedSections": []
+  },
+  "286.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "14 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "286.2": {
+    "severity": "Hybrid",
+    "maxPenalty": "14 years indictable; summary conviction available; minimum two years",
+    "relatedSections": []
+  },
+  "286.4": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "293.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "293.2": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "320.1001": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "320.102": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "320.103": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "320.104": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "320.2": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "320.36": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "333.2": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "342.01": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "342.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "342.2": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "353.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "368.1": {
+    "severity": "Hybrid",
+    "maxPenalty": "14 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "380.2": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "394.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "402.2": {
+    "severity": "Hybrid",
+    "maxPenalty": "5 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "423.1": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "423.2": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "423.3": {
+    "severity": "Hybrid",
+    "maxPenalty": "10 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "424.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "425.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "431.1": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "431.2": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "434.1": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "436.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "445.01": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated); minimum six months",
+    "relatedSections": []
+  },
+  "445.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "445.2": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "447.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "462.33": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "467.11": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "467.12": {
+    "severity": "Indictable",
+    "maxPenalty": "14 years indictable",
+    "relatedSections": []
+  },
+  "467.13": {
+    "severity": "Indictable",
+    "maxPenalty": "Life imprisonment",
+    "relatedSections": []
+  },
+  "486.6": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "487.0197": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": [
+      "487.012"
+    ]
+  },
+  "487.0198": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "487.0199": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": [
+      "487.0194"
+    ]
+  },
+  "487.0552": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "487.2": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "490.0312": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "490.8": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "669.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "672.37": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "672.501": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "729.2": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "732.11": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "733.1": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "742.31": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "743.21": {
+    "severity": "Hybrid",
+    "maxPenalty": "2 years indictable; summary conviction available",
+    "relatedSections": []
+  },
+  "753.3": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  },
+  "810.4": {
+    "severity": "Summary",
+    "maxPenalty": "summary conviction (s. 787 default penalty applies unless otherwise stated)",
+    "relatedSections": []
+  }
+}
