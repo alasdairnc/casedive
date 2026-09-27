@@ -228,6 +228,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Failed to save data" });
   }
 
+  // `lte`, not `lt`: every row of the previous save came from one insert and
+  // shares this timestamp, so `lt` would leave that whole list behind.
   const cutoff = newest?.[0]?.created_at;
   if (cutoff) {
     const { error: cleanupError } = await supabase
