@@ -17,13 +17,15 @@ test.describe("Live: UI Smoke", () => {
     ).toBeDisabled();
   });
 
-  test("dark mode toggle works", async ({ page }) => {
+  test("renders no theme toggle (dark-only theme since 2026-06-14)", async ({
+    page,
+  }) => {
     await page.goto("/");
-    const toggle = page.locator("button").filter({ hasText: /dark|light/i });
-    const before = await toggle.textContent();
-    await toggle.click();
-    const after = await toggle.textContent();
-    expect(after).not.toBe(before);
+    // Wait for the header so the zero-count check runs against a rendered page.
+    await expect(page.getByAltText("CaseDive")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /^(dark|light)$/i }),
+    ).toHaveCount(0);
   });
 
   test("filters controls are visible and interactive", async ({ page }) => {

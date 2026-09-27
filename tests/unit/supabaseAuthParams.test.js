@@ -1,9 +1,5 @@
-import { describe, expect, it } from "vitest";
-import {
-  parseAuthParams,
-  authMethods,
-  isAuthEnabled,
-} from "../../src/lib/supabase.js";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { parseAuthParams } from "../../src/lib/supabase.js";
 
 describe("parseAuthParams", () => {
   it("returns null for an ordinary page load", () => {
@@ -59,7 +55,25 @@ describe("parseAuthParams", () => {
 });
 
 describe("auth build flags", () => {
-  it("is disabled without Supabase env vars and keeps safe defaults", () => {
+  // supabase.js reads import.meta.env at module load, and Vitest fills that
+  // from the developer's .env/.env.local. Clear the vars and load a fresh
+  // copy so the result doesn't depend on whose machine runs the suite.
+  beforeEach(() => {
+    vi.stubEnv("VITE_SUPABASE_URL", undefined);
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", undefined);
+    vi.stubEnv("VITE_AUTH_MAGIC_LINK", undefined);
+    vi.stubEnv("VITE_AUTH_GOOGLE", undefined);
+    vi.resetModules();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("is disabled without Supabase env vars and keeps safe defaults", async () => {
+    const { isAuthEnabled, authMethods } = await import(
+      "../../src/lib/supabase.js"
+    );
     expect(isAuthEnabled).toBe(false);
     expect(authMethods.magicLink).toBe(true);
     expect(authMethods.google).toBe(false);

@@ -52,12 +52,22 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
     whiteSpace: "nowrap",
   };
 
+  function handleKeyDown(e) {
+    // Only the row itself; keys pressed on the Justice Laws link bubble up here too
+    if (e.target !== e.currentTarget) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onToggle();
+    }
+  }
+
   return (
     <div
+      // Keep this padding first: tests/e2e/ui-states.spec.js finds the row by it
       style={{
         padding: "14px 24px",
         borderBottom: `1px solid ${t.borderLight}`,
-        cursor: isEnriched || section.url ? "pointer" : "default",
+        cursor: isEnriched ? "pointer" : "default",
         background: isExpanded
           ? t.bgAlt
           : hovered && isEnriched
@@ -65,7 +75,10 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             : "transparent",
         transition: "background 0.2s ease",
       }}
+      tabIndex={isEnriched ? 0 : undefined}
+      aria-expanded={isEnriched ? isExpanded : undefined}
       onClick={isEnriched ? onToggle : undefined}
+      onKeyDown={isEnriched ? handleKeyDown : undefined}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -211,8 +224,17 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
       </div>
 
       {/* Expanded details */}
+      {/* Clicks in here (including the Justice Laws link) must not collapse the row */}
       {isExpanded && isEnriched && (
-        <div style={{ marginTop: 16, paddingLeft: 32, paddingRight: 8 }}>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            marginTop: 16,
+            paddingLeft: 32,
+            paddingRight: 8,
+            cursor: "default",
+          }}
+        >
           {section.definition && (
             <div style={{ marginBottom: 16 }}>
               <div style={labelStyle}>Definition</div>
