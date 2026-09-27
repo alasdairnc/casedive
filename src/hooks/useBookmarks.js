@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
+import { GUEST_BOOKMARK_LIMIT } from "../lib/syncMerge.js";
 
 const STORAGE_KEY = "casedive-bookmarks";
-const MAX_ENTRIES = 50;
 const TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 function loadFromStorage() {
@@ -24,26 +24,41 @@ function saveToStorage(entries) {
   }
 }
 
-export function useBookmarks() {
+// Signed in, useCloudSync passes the account limit instead of the guest one.
+export function useBookmarks(limit = GUEST_BOOKMARK_LIMIT) {
   const [bookmarks, setBookmarks] = useState(() => loadFromStorage());
 
-  const addBookmark = useCallback((item, type, verification) => {
-    const id = item.citation || item.section || "";
-    if (!id) return;
+  const addBookmark = useCallback(
+    (item, type, verification) => {
+      const id = item.citation || item.section || "";
+      if (!id) return;
 
+      setBookmarks((prev) => {
+        // Remove existing entry with same id (re-add to front with fresh timestamp)
+        const filtered = prev.filter((b) => b.id !== id);
+        const entry = {
+          id,
+          citation: id,
+          summary: item.summary || item.description || "",
+          type,
+          bookmarkedAt: Date.now(),
+          verification: verification || null,
+        };
+        // Enforce max — trim oldest from the end
+        const updated = [entry, ...filtered].slice(0, limit);
+        saveToStorage(updated);
+        return updated;
+      });
+    },
+    [limit],
+  );
+
+  // Set the whole list from the current one, e.g. to merge in the account's
+  // copy. `update` receives the latest list, so changes queued in the same
+  // tick aren't lost.
+  const replaceBookmarks = useCallback((update) => {
     setBookmarks((prev) => {
-      // Remove existing entry with same id (re-add to front with fresh timestamp)
-      const filtered = prev.filter((b) => b.id !== id);
-      const entry = {
-        id,
-        citation: id,
-        summary: item.summary || item.description || "",
-        type,
-        bookmarkedAt: Date.now(),
-        verification: verification || null,
-      };
-      // Enforce max — trim oldest from the end
-      const updated = [entry, ...filtered].slice(0, MAX_ENTRIES);
+      const updated = update(prev);
       saveToStorage(updated);
       return updated;
     });
@@ -79,5 +94,6 @@ export function useBookmarks() {
     removeBookmark,
     isBookmarked,
     clearBookmarks,
+    replaceBookmarks,
   };
 }
