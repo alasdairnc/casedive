@@ -20,6 +20,7 @@
 ## Operations
 
 - `operations/PERFORMANCE_PLAN.md` — Performance optimization and monitoring plan.
+- `breach-response.md` — What to do if personal information may have been exposed (PIPEDA steps and record template).
 - Audit history lives in `.claude/skills/casedive-audit/AUDIT_LOG.md` (append-only, written by the `casedive-audit` skill).
 
 ## Parked
