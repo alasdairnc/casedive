@@ -1,6 +1,7 @@
 export const RETRIEVAL_FAILURE_SET = [
   {
     id: "stolen_chair_not_socan",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "My chair was stolen from outside my apartment.",
     expectedPrimary: "theft",
     expectedResult: "zero_expected",
@@ -113,6 +114,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "mugging_not_jordan",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "I was mugged for $50 while walking home.",
     expectedPrimary: "robbery",
     expectedResult: "zero_expected",
@@ -140,6 +142,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "search_not_jordan",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "Police took my phone and searched messages without a warrant.",
     expectedPrimary: "charter_search_seizure",
     expectedResult: "zero_expected",
@@ -161,6 +164,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "robbery_not_hunter",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "Someone robbed me and took my cash while threatening me.",
     expectedPrimary: "robbery",
     expectedResult: "zero_expected",
@@ -182,6 +186,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "counsel_not_oakes",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "I was detained and denied access to a lawyer for two hours.",
     expectedPrimary: "charter_counsel",
     expectedResult: "zero_expected",
@@ -203,6 +208,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "traffic_minor_hape",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I was pulled over for going 1 km/h over the speed limit. What case law applies?",
     expectedPrimary: "minor_traffic_stop",
@@ -225,6 +231,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "traffic_minor_grant",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "Routine speeding stop. I got a ticket but there was no search or arrest.",
     expectedPrimary: "minor_traffic_stop",
@@ -247,6 +254,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "traffic_minor_oakes",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I was stopped for a tiny speed overage and want to know if an old SCC landmark applies.",
     expectedPrimary: "minor_traffic_stop",
@@ -382,6 +390,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "traffic_ticket_only_zero",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I got a simple speeding ticket and there was no detention, search, or arrest.",
     expectedPrimary: "minor_traffic_stop",
@@ -404,6 +413,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "camera_ticket_zero",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "A speed camera mailed me a ticket. No officer stopped me and there was no search.",
     expectedPrimary: "minor_traffic_stop",
@@ -426,6 +436,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "neighbor_noise_zero",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "My neighbor keeps blasting loud music late at night and I want legal options.",
     expectedPrimary: "general_criminal",
@@ -448,6 +459,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "landlord_deposit_zero",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "My landlord will not return my rent deposit and I want to know what to file.",
     expectedPrimary: "general_criminal",
@@ -470,6 +482,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "peace_bond_neighbor_zero",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "My ex keeps showing up outside my building. I want to know if I can get a peace bond.",
     expectedPrimary: "general_criminal",
@@ -492,6 +505,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "jaywalking_ticket_zero",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I got a jaywalking ticket downtown. There was no search, detention, or force.",
     expectedPrimary: "minor_traffic_stop",
@@ -515,6 +529,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "lost_wallet_zero",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I lost my wallet on the subway and I am wondering what legal process applies.",
     expectedPrimary: "general_criminal",
@@ -805,6 +820,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "mixed_delay_plus_counsel_positive",
+    knownFailure: "analyze.js's issue filter drops the expected case, 2026-09-27",
     scenario:
       "My case has taken three years and I was also denied access to counsel right after arrest.",
     expectedPrimary: "charter_counsel",
@@ -879,6 +895,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "impaired_minor_ticket_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I got a speeding ticket for 5 km over and there was no detention, search, or breath demand.",
     expectedPrimary: "minor_traffic_stop",
@@ -901,6 +918,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "simple_possession_not_trafficking_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I had a tiny amount of cannabis for personal use and no evidence of selling.",
     expectedPrimary: "general_criminal",
@@ -923,6 +941,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "bar_fight_self_defence_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I pushed someone away in a bar fight because they swung first and I left immediately.",
     expectedPrimary: "assault_bodily_harm",
@@ -945,6 +964,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "detention_mislabeled_as_search_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "An officer asked me for ID briefly on the sidewalk and then let me continue walking.",
     expectedPrimary: "charter_detention",
@@ -967,6 +987,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "landlord_repair_dispute_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "My landlord will not fix mold and I want to file at the housing board.",
     expectedPrimary: "general_criminal",
@@ -989,6 +1010,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "workplace_harassment_policy_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "My manager is bullying me and HR has not enforced workplace policy.",
     expectedPrimary: "general_criminal",
@@ -1011,6 +1033,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "online_defamation_civil_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "Someone posted false statements about me online and I want a civil remedy.",
     expectedPrimary: "general_criminal",
@@ -1033,6 +1056,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "neighbor_tree_damage_civil_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "A neighbor's tree branch damaged my fence and we are arguing about costs.",
     expectedPrimary: "general_criminal",
@@ -1055,6 +1079,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "lost_phone_found_property_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "I lost my phone at a cafe and someone turned it in later.",
     expectedPrimary: "general_criminal",
     expectedResult: "zero_expected",
@@ -1076,6 +1101,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "ambulance_bill_dispute_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I disagree with an ambulance bill and want to challenge the charge.",
     expectedPrimary: "general_criminal",
@@ -1098,6 +1124,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "student_plagiarism_policy_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "My college flagged plagiarism and I need to appeal the academic decision.",
     expectedPrimary: "general_criminal",
@@ -1120,6 +1147,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "parking_ticket_late_fee_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I paid a parking ticket late and now there is an extra municipal fee.",
     expectedPrimary: "minor_traffic_stop",
@@ -1142,6 +1170,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "ambiguous_can_i_be_charged_negative",
+    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "Can I be charged for what happened yesterday if things got heated?",
     expectedPrimary: "general_criminal",
@@ -1187,6 +1216,7 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "counsel_no_detention_positive",
+    knownFailure: "analyze.js's issue filter drops the expected case, 2026-09-27",
     scenario:
       "After my arrest at the station, officers kept questioning me for two hours and refused to let me speak to a lawyer.",
     expectedPrimary: "charter_counsel",

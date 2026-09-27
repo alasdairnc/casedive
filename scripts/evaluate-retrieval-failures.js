@@ -3,11 +3,19 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { retrieveVerifiedCaseLaw } from "../api/_caseLawRetrieval.js";
+import { __testables as analyzeTestables } from "../api/analyze.js";
 import { RETRIEVAL_FAILURE_SET } from "../tests/unit/retrievalFailureSet.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_DIR = path.join(__dirname, "..");
 const BASELINE_FILE = ".retrieval-failure-baseline.json";
+
+// Mirror api/analyze.js: retrieval returns up to 10 cases, then analyze's
+// issue filter keeps the top 3. That is what users see. Until 2026-09-27
+// this passed each case's maxResults straight to retrieval, so every case
+// that expects no case law asked for 0 results and could never fail.
+const PRODUCTION_RETRIEVAL_MAX = 10;
+const PRODUCTION_SHOWN_MAX = 3;
 
 function createRetrievalFn() {
   return async (scenario, testCase = {}) => {
@@ -18,11 +26,24 @@ function createRetrievalFn() {
       landmarkMatches: Array.isArray(testCase.landmarkMatches)
         ? testCase.landmarkMatches
         : [],
-      maxResults: testCase.maxResults ?? 3,
+      maxResults: PRODUCTION_RETRIEVAL_MAX,
     });
 
-    return { cases, meta };
+    const shown = analyzeTestables.selectTopRetrievedCases(
+      scenario,
+      cases,
+      PRODUCTION_SHOWN_MAX,
+    );
+    return { cases: shown, meta };
   };
+}
+
+// PASS, FAIL, or for cases marked knownFailure in the corpus: KNOWN while
+// they still fail, FIXED once they pass (then remove the mark).
+function rowStatus(row) {
+  if (row.skipped) return `SKIP (${row.skip_reason || "skipped"})`;
+  if (row.knownFailure) return row.passed ? "FIXED" : "KNOWN";
+  return row.passed ? "PASS" : "FAIL";
 }
 
 function evaluateFailureScenario(testCase, cases) {
@@ -69,22 +90,32 @@ function printSummary(results) {
     scenario: row.scenario_summary,
     issue: row.issuePrimary || "unknown",
     results: row.total_returned,
-    status: row.skipped
-      ? `SKIP (${row.skip_reason || "skipped"})`
-      : row.passed
-        ? "PASS"
-        : "FAIL",
+    status: rowStatus(row),
     reason: row.reason || "n/a",
   }));
 
   console.table(rows);
 
-  const failures = results.results.filter((row) => !row.skipped && !row.passed);
+  const byStatus = (status) =>
+    results.results.filter((row) => rowStatus(row) === status);
+  const known = byStatus("KNOWN");
+  const fixed = byStatus("FIXED");
+  const failures = byStatus("FAIL");
+
+  if (known.length > 0) {
+    console.log(
+      `\nKnown failures: ${known.length} (marked knownFailure in tests/unit/retrievalFailureSet.js; they don't fail the run)`,
+    );
+  }
+  if (fixed.length > 0) {
+    console.log("\nNow passing — remove their knownFailure mark:");
+    for (const row of fixed) console.log(`- ${row.id}`);
+  }
   if (failures.length > 0) {
-    console.log("\nFailing scenarios:");
+    console.log("\nNew failures:");
     for (const failure of failures) {
       console.log(
-        `- ${failure.scenario_summary} (${failure.reason || "unknown"})`,
+        `- ${failure.id}: ${failure.scenario_summary} (${failure.reason || "unknown"})`,
       );
     }
   }
@@ -155,6 +186,8 @@ async function main() {
     if (skippedRow) {
       skipped += 1;
       rows.push({
+        id: testCase.id,
+        knownFailure: testCase.knownFailure || null,
         scenario_summary: testCase.scenario.substring(0, 80),
         skipped: true,
         skip_reason: retrievalResult?.skipReason || "skipped",
@@ -171,6 +204,8 @@ async function main() {
     totalReturned += cases.length;
 
     rows.push({
+      id: testCase.id,
+      knownFailure: testCase.knownFailure || null,
       scenario_summary: testCase.scenario.substring(0, 80),
       skipped: false,
       total_returned: cases.length,
@@ -215,10 +250,11 @@ async function main() {
     writeBaseline(evaluated);
   }
 
-  const hasFailures = evaluated.results.some(
-    (row) => !row.skipped && !row.passed,
+  // Only failures that aren't marked knownFailure fail the run.
+  const hasNewFailures = evaluated.results.some(
+    (row) => rowStatus(row) === "FAIL",
   );
-  process.exitCode = hasFailures ? 1 : 0;
+  process.exitCode = hasNewFailures ? 1 : 0;
 }
 
 main().catch((error) => {
