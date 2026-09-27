@@ -109,6 +109,12 @@ test.describe("CriminalCodeExplorer", () => {
       .locator('input[placeholder*="Search section number"]')
       .fill("348");
 
+    // The list updates 100ms after typing. Wait for the filtered list, or
+    // the click below can land on a row from the list before it updated.
+    await expect(page.getByText("s. 348", { exact: true })).toBeVisible({
+      timeout: 3000,
+    });
+
     // Wait for an Enriched tag to appear
     const enrichedTag = page.locator("text=Enriched").first();
     await expect(enrichedTag).toBeVisible({ timeout: 3000 });
