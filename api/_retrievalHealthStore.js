@@ -758,7 +758,7 @@ export async function recordRetrievalMetricsEvent(metricsPayload = {}) {
 }
 
 export async function getRetrievalEvents({ nowMs = Date.now() } = {}) {
-  let events = [];
+  let events;
   if (redis) {
     try {
       events = await readRedisEvents();
