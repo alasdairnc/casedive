@@ -22,3 +22,4 @@ reports/*
 artifacts/html/
 security_audit/
 coverage/
+.vitest/
