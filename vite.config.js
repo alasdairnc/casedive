@@ -461,10 +461,18 @@ export default defineConfig(() => {
       },
     ],
     build: {
-      rollupOptions: {
+      // Vite 6's default. Vite 8's default (Safari 16.4, Chrome 111) would
+      // drop older iPhones and other browsers the site supports today.
+      target: ["es2020", "edge88", "firefox78", "chrome87", "safari14"],
+      rolldownOptions: {
         output: {
-          manualChunks: {
-            vendor: ["react", "react-dom"],
+          codeSplitting: {
+            groups: [
+              {
+                name: "vendor",
+                test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+              },
+            ],
           },
         },
       },
