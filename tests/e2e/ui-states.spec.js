@@ -1,23 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { openNavMenuIfCollapsed } from "./helpers/nav.js";
+import { analyzeResponse } from "./helpers/analyzeFixture.js";
 
-const MOCK_ANALYZE_RESPONSE = {
-  summary:
-    "A person entered a residential property at night without permission and stole jewelry.",
-  criminal_code: [
-    {
-      citation: "s. 348(1)(b)",
-      title: "Breaking and Entering",
-      summary:
-        "Breaking and entering a place with intent to commit an indictable offence.",
-    },
-  ],
-  case_law: [],
-  civil_law: [],
-  charter: [],
-  analysis: "This scenario involves a residential break and enter.",
-  suggestions: [],
-};
+const MOCK_ANALYZE_RESPONSE = analyzeResponse();
 
 async function setupAndSearch(page) {
   await page.route("/api/analyze", async (route) => {
@@ -123,6 +108,12 @@ test.describe("CriminalCodeExplorer", () => {
     await page
       .locator('input[placeholder*="Search section number"]')
       .fill("348");
+
+    // The list updates 100ms after typing. Wait for the filtered list, or
+    // the click below can land on a row from the list before it updated.
+    await expect(page.getByText("s. 348", { exact: true })).toBeVisible({
+      timeout: 3000,
+    });
 
     // Wait for an Enriched tag to appear
     const enrichedTag = page.locator("text=Enriched").first();
