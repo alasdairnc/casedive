@@ -309,8 +309,7 @@ describe("App auth integration", () => {
   // ── useAuth is consumed at App root ────────────────────────────────────────
 
   it("useAuth hook is imported and consumed by App", async () => {
-    const { useAuth: mockUseAuthFn } =
-      await import("../../src/hooks/useAuth.js");
+    await import("../../src/hooks/useAuth.js");
     // If this import resolves without error, the mock is wired correctly.
     // The actual test is that App renders without throwing when useAuth is present.
     const App = await getApp();

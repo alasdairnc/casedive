@@ -31,7 +31,6 @@ ctx.textBaseline = "top";
 ctx.fillText("casedive", PADDING, 220);
 
 // Gold rule
-const titleWidth = ctx.measureText("casedive").width;
 ctx.fillStyle = "#d4a040";
 ctx.fillRect(PADDING, 220 + 72 + 20, 200, 2);
 

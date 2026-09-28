@@ -241,7 +241,6 @@ function renderDigest({
   gapTopics,
   discoveryNote,
   candidates,
-  verified,
   rejected,
   unresolved,
   duplicates,

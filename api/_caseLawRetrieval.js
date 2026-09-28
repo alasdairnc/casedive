@@ -3,7 +3,6 @@
 // and return only citations that verify through the existing lookup pipeline.
 
 import {
-  COURT_API_MAP,
   parseCitation,
   buildSearchUrl,
   buildCaseUrl,
@@ -29,11 +28,6 @@ import {
 } from "./_legalConcepts.js";
 import { cachedLookupCase } from "./_canliiCache.js";
 
-// SECURITY TESTING: Set CANLII_API_BASE_URL env var to redirect to a mock server.
-// Also update the matching constant in src/lib/canlii.js (where HTTP calls originate).
-// Revert both after testing. See scripts/README-security-testing.md.
-const CANLII_API_BASE =
-  process.env.CANLII_API_BASE_URL ?? "https://api.canlii.org/v1";
 const MAX_TERMS = 4;
 const MAX_DATABASES = 3;
 
@@ -90,8 +84,6 @@ const COURT_LEVEL_DB_IDS = {
   ],
 };
 
-const FEDERAL_DATABASE_IDS = ["csc-scc", "fca", "fct"];
-
 /** Lower rank = verify / display earlier (deterministic ordering). */
 const DATABASE_VERIFY_RANK = (() => {
   const order = [
@@ -131,32 +123,6 @@ const DATABASE_VERIFY_RANK = (() => {
   order.forEach((id, i) => map.set(id, i));
   return map;
 })();
-
-const DB_TO_COURT_CODE = (() => {
-  const map = new Map();
-  for (const [code, dbId] of Object.entries(COURT_API_MAP)) {
-    if (!dbId) continue;
-    if (!map.has(dbId)) {
-      map.set(dbId, code);
-      continue;
-    }
-    // Prefer the shorter/common code where there are aliases (e.g., SCC over CSC).
-    const existing = map.get(dbId);
-    if (code.length < existing.length) {
-      map.set(dbId, code);
-    }
-  }
-  if (map.has("csc-scc")) map.set("csc-scc", "SCC");
-  return map;
-})();
-
-function getString(value) {
-  if (typeof value === "string") return value.trim();
-  if (!value || typeof value !== "object") return "";
-  if (typeof value.en === "string") return value.en.trim();
-  if (typeof value.fr === "string") return value.fr.trim();
-  return "";
-}
 
 function sanitizeTerm(term) {
   if (typeof term !== "string") return "";
@@ -2331,7 +2297,7 @@ function pickDatabaseTargets(filters = {}) {
 
   if (courtLevel === "scc") return ["csc-scc"];
 
-  let ids = [];
+  let ids;
   if (jurisdiction !== "all" && JURISDICTION_DB_IDS[jurisdiction]) {
     ids = [...JURISDICTION_DB_IDS[jurisdiction], "csc-scc"]; // Always include SCC as fallback
   } else {
