@@ -49,7 +49,7 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 
 - `npm run dev` ≠ `npm run dev:api` (use `dev:api` for `/api/`)
 - `test:unit` excludes `.test.jsx` (use `test:component` for JSX)
-- `criminalCodeData.js` is ~390KB (import `criminalCodeParts.js` for parts list)
+- `criminalCodeData.js` is ~915KB, all 1568 sections enriched (import `criminalCodeParts.js` for parts list)
 - Redis falls back to in-memory in dev
 - CanLII API key optional; Sentry no-ops if unset
 - Hooks are Node scripts in `.claude/hooks/*.mjs` reading the JSON payload from stdin (`tool_input.file_path` / `tool_input.command`); exit 2 blocks the tool call. No python3 or sh dependency.
