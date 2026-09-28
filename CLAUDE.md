@@ -57,7 +57,7 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - All Redis cache TTLs are 7 days (`604800s`). Changes to filter logic or landmark data won't be visible to cached users until TTL expires — manually purge affected keys in Upstash if a hotfix needs to take effect immediately.
 - Project MCP servers load only from a root `.mcp.json`; `.claude/mcp.json` is never read (removed 2026-09-25). Use the `gh` CLI for GitHub and the claude.ai Vercel connector for deploys/logs.
 - Vercel's Node runtime reads and parses the body BEFORE a `(req, res)` handler runs; the Next.js-style `export const config = { api: { bodyParser: false } }` is ignored. Anything that needs raw bytes (e.g. a payment webhook) must use a Web-standard handler: `export async function POST(request)` + `request.arrayBuffer()`.
-- Hobby plan caps the project at 12 serverless functions; `api/` is at 10/12 since billing was parked (2026-09-25). Combine actions into one endpoint before adding a new file.
+- Hobby plan caps the project at 12 serverless functions; `api/` is at 9/12 since billing was parked (2026-09-25) and the unused `retrieve-caselaw` endpoint was removed (2026-09-28). Combine actions into one endpoint before adding a new file.
 - `user-data` (cloud sync) is rate-limited per Supabase user at 120/h, not the 5/h AI default. Sync fires on every bookmark and every search, so the default silently broke sync after five actions.
 - Vercel Hobby keeps about one hour of runtime logs. Anything older is only in Sentry.
 
