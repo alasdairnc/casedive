@@ -11,6 +11,7 @@
 - `architecture.md` — System architecture and component boundaries.
 - `design-system.md` — UI patterns, tokens, and design conventions.
 - `security.md` — Security posture and safeguards.
+- `adr/` — Architecture decision records: why the function cap, parked billing and the desktop layout are the way they are.
 
 ## Filtering
 

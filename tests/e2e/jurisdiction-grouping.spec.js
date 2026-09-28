@@ -1,39 +1,34 @@
 import { test, expect } from "@playwright/test";
+import { analyzeResponse } from "./helpers/analyzeFixture.js";
 
-const MOCK_ANALYZE_RESPONSE = {
+const MOCK_ANALYZE_RESPONSE = analyzeResponse({
   summary: "A multi-jurisdictional scenario.",
   criminal_code: [],
-  case_law: [],
   civil_law: [
     {
       citation: "Highway Traffic Act, s. 53",
-      title: "Highway Traffic Act",
       summary: "Ontario traffic statute.",
     },
     {
       citation: "Motor Vehicle Act, s. 144",
-      title: "Motor Vehicle Act",
       summary: "BC traffic statute.",
     },
     {
       citation: "Traffic Safety Act, s. 115",
-      title: "Traffic Safety Act",
       summary: "Alberta traffic statute.",
     },
     {
       citation: "Controlled Drugs and Substances Act, s. 4",
-      title: "CDSA",
       summary: "Federal drug statute.",
     },
   ],
-  charter: [],
   analysis:
     "This scenario involves statutes from ON, BC, AB, and Federal jurisdictions.",
   suggestions: [
     { type: "canlii", label: "traffic safety act", term: "traffic safety act" },
     { type: "canlii", label: "motor vehicle act", term: "motor vehicle act" },
   ],
-};
+});
 
 const MOCK_VERIFY_RESPONSE = {
   "Highway Traffic Act, s. 53": {
