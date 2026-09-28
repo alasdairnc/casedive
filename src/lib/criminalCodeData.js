@@ -3703,6 +3703,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-187.html`,
+      summary:
+        "Requires that all documents relating to an application under this Part be kept confidential in a sealed packet held by the court, and sets out the limited circumstances and procedures under which the packet may be opened, copied, or resealed.",
+      relatedSections: ["185", "186", "196", "552", "184.2", "188"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3713,6 +3716,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-188.html`,
+      summary:
+        "Allows a peace officer specially designated by the federal Minister of Public Safety and Emergency Preparedness, or by a provincial Attorney General, to apply ex parte to a specially designated judge for authorization to intercept private communications when the urgency of the situation means the normal process under section 186 could not be used with reasonable diligence, and lets that judge grant a written authorization for up to 36 hours.",
+      relatedSections: ["185", "186", "552", "487", "492.1", "492.2"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3723,6 +3729,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-188.1.html`,
+      summary:
+        "States that an authorization given under sections 184.2, 186 or 188 may be executed anywhere in Canada, provided the executing peace officer has authority to act as a peace officer in the place of execution.",
+      relatedSections: ["184.2", "186", "188"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3733,6 +3742,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-188.2.html`,
+      summary:
+        "Shields from civil or criminal liability anyone who acts in accordance with an authorization or under section 184.1 or 184.4, or who in good faith helps someone they reasonably believe is acting under such an authorization or those sections.",
+      relatedSections: ["184.1", "184.4"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3743,6 +3755,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-189.html`,
+      summary:
+        "Sets conditions for admitting the contents of an intercepted private communication into evidence, including advance notice and particulars to the accused, and preserves any privilege that would otherwise attach to the communication.",
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3753,6 +3767,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-190.html`,
+      summary:
+        "Allows a judge of the trial court, after notice has been given under subsection 189(5), to order that further particulars be provided about the private communication intended to be used as evidence.",
+      relatedSections: ["189"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3761,8 +3778,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession, etc.",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Not more than 2 years imprisonment on indictment, or punishable on summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-191.html`,
+      summary:
+        "Makes it an offence to possess, sell or purchase a device or component known to be designed primarily for secretly intercepting private communications, subject to exemptions for police, authorized interceptions, government/military duties, and licensed possession.",
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3773,6 +3792,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-192.html`,
+      summary:
+        "Allows a court to order forfeiture to the Crown of a device used to commit an offence under section 184 or 191, but bars forfeiture of communication facilities or equipment owned by a public telephone/telegraph service provider who was not a party to the offence.",
+      relatedSections: ["184", "191"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3781,8 +3803,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Disclosure of information",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Not more than 2 years imprisonment on indictment, or punishable on summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-193.html`,
+      summary:
+        "Makes it an offence to knowingly use or disclose an unlawfully intercepted private communication, or disclose its existence, without the consent of the originator or intended recipient, subject to listed exemptions such as giving evidence or conducting a lawful investigation.",
+      relatedSections: ["189", "190", "184", "342.1"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3791,8 +3816,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Disclosure of information received from interception of radio-based telephone communications",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Not more than 2 years imprisonment on indictment, or punishable on summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-193.1.html`,
+      summary:
+        "Makes it an offence to knowingly use or disclose a radio-based telephone communication, or disclose its existence, where the originator or intended recipient was in Canada, the communication was intercepted without consent, and the discloser lacks consent, applying the same exemptions as section 193.",
+      relatedSections: ["193"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3803,6 +3831,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-194.html`,
+      summary:
+        "Allows a court that convicts a person of specified interception-related offences to order the accused to pay an aggrieved person up to $5,000 in punitive damages, bars this where the person has already commenced a civil action, and allows the order to be registered and enforced as a civil judgment or taken from money seized from the accused.",
+      relatedSections: ["184", "184.5", "193", "193.1"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3813,6 +3844,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-195.html`,
+      summary:
+        "Requires the Minister of Public Safety and Emergency Preparedness to prepare an annual report on interception authorizations applied for and interceptions made in the preceding year, and sets out the statistical information the report must include.",
+      relatedSections: ["185", "188", "184.4", "196", "196.1", "184"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3823,6 +3857,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-196.html`,
+      summary:
+        "Requires the Attorney General or federal Minister to notify, within 90 days, the person who was the subject of an interception under an authorization, and sets out how that period can be extended by court order and the process for seeking such an extension.",
+      relatedSections: ["185", "552", "183", "52", "52.1", "52.2"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3833,6 +3870,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-196.1.html`,
+      summary:
+        "Requires written notice within 90 days to a person who was the subject of an interception carried out under section 184.4, and sets out the process, grounds, and conditions for extending that notification period by court order.",
+      relatedSections: ["184.4", "552", "52", "52.1", "52.2", "467.11"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3845,6 +3885,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-197.html`,
+      summary:
+        "Defines terms used in this Part, including bet, common betting house, common gaming house, disorderly house, game, gaming equipment and keeper, and sets out an exception for incorporated social clubs, an onus provision, and rules on when a place still counts as a common gaming house.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3855,6 +3897,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-199.html`,
+      summary:
+        "Authorizes a justice to issue a warrant to search a place believed to be used for specified gaming or betting offences, seize evidence and take persons found there into custody, and sets out rules for search without warrant and for disposing of or forfeiting seized property.",
+      relatedSections: ["201", "202", "203", "206", "207", "489"],
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3865,6 +3910,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-201.html`,
+      summary:
+        "Makes it an offence to keep a common gaming house or common betting house, and separately makes it an offence to be found without lawful excuse in such a house or to knowingly permit a place to be used for that purpose.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3875,6 +3922,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-202.html`,
+      summary:
+        "Makes it an offence to engage in a wide range of activities connected to unlawful betting, book-making and pool-selling — including using premises, equipment, records, information or advertising for these purposes — and sets escalating penalties for first, second and subsequent offences.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3885,6 +3934,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-203.html`,
+      summary:
+        "Makes it an offence to place a bet on behalf of another person for consideration, to engage in the business of placing bets for others, or to hold oneself out as doing so, with escalating penalties for repeat offences.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3895,6 +3946,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-204.html`,
+      summary:
+        "Exempts certain activities from sections 201 and 202, including acting as custodian of staked property, private bets between individuals, and pari-mutuel betting on horse races conducted under specified conditions and regulatory approval.",
+      relatedSections: ["201", "202"],
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3905,6 +3959,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-206.html`,
+      summary:
+        "Makes it an offence to create, advertise, sell, transport or manage lottery schemes or other property-disposal-by-chance arrangements, makes buying such a ticket an offence, voids related property transactions (with a bona fide purchaser exception), extends the section to foreign lotteries, and exempts certain lot-based divisions of jointly held property and specified recallable securities.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3915,6 +3971,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-207.html`,
+      summary:
+        "Lists the circumstances in which provincial governments, charities, fairs, and licensed operators may lawfully conduct or manage lottery schemes, sets out what licence terms may cover, and defines what counts as a lottery scheme, a slot machine, and related exceptions.",
+      relatedSections: ["206", "204"],
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3925,6 +3984,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-207.1.html`,
+      summary:
+        "Permits a lottery scheme to be conducted on an international cruise ship during a voyage if all participants are on the ship, it is not linked to any off-ship gambling, it stays outside a five-nautical-mile zone of Canadian ports, and the ship's registration and voyage meet specified conditions; conducting or participating in a lottery scheme outside these terms is an offence.",
+      relatedSections: ["207", "206"],
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3933,8 +3995,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Cheating at play",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-209.html`,
+      summary:
+        "Makes it an offence to cheat while playing a game, holding stakes for a game, or betting, with intent to defraud.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3943,8 +4007,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Stopping or impeding traffic",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-213.html`,
+      summary:
+        "Makes it an offence to stop or attempt to stop a vehicle, or to impede pedestrian or vehicular traffic or access to nearby premises, in a public place, for the purpose of offering, providing, or obtaining sexual services for consideration; separately makes it an offence to communicate, for the purpose of offering or providing sexual services for consideration, in a public place next to a school, playground, or daycare centre; also defines \"public place\" for this section.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -4504,6 +4570,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-262.html`,
+      summary:
+        "Makes it an offence to prevent or impede, or attempt to prevent or impede, a person attempting to save their own life, or to do so without reasonable cause to a person attempting to save another person's life.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4514,6 +4582,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-263.html`,
+      summary:
+        "Imposes a legal duty on anyone who makes an opening in ice open to or frequented by the public, or who leaves an excavation on land they own or control, to guard it adequately against accidental falls and to warn of its existence; failing this duty is an offence, with the specific offence depending on whether death or bodily harm results.",
+      relatedSections: ["269"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4524,6 +4595,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-263.1.html`,
+      summary:
+        "Makes it an offence to commit any offence involving violence used, threatened, or attempted against one's intimate partner, sets limits on how such charges may be prosecuted based on how the underlying offence could be prosecuted, and sets punishment tiers and applicable procedures tied to the maximum sentence for the underlying offence.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4534,6 +4607,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-264.html`,
+      summary:
+        "Makes it an offence to engage, without lawful authority and with intent to harass or reckless as to whether it would harass, in specified conduct (such as repeated following, monitoring, communicating, watching a residence or workplace, or threatening conduct) toward another person or someone known to them, where this could reasonably be expected to make that person fear for their safety, including psychological safety; also directs courts to treat breach of certain existing orders as an aggravating factor at sentencing.",
+      relatedSections: ["161", "810", "810.03", "810.1", "810.2"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4544,6 +4620,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-264.1.html`,
+      summary:
+        "Makes it an offence to knowingly utter, convey, or cause a person to receive a threat to cause death or bodily harm, to damage property, or to kill, poison, or injure an animal or bird belonging to someone.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4614,6 +4692,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-268.1.html`,
+      summary:
+        "Confirms that a sterilization procedure is an act that wounds or maims a person for purposes of the aggravated assault provision, and defines \"sterilization procedure\" as severing, clipping, tying, or cauterizing reproductive organs or any other procedure that permanently prevents reproduction.",
+      relatedSections: ["268"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4624,6 +4705,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-269.html`,
+      summary:
+        "Makes it an offence to unlawfully cause bodily harm to any person.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4634,6 +4717,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-269.01.html`,
+      summary:
+        "Requires a court sentencing for uttering a threat of death or bodily harm, or for certain assault offences, to treat it as an aggravating factor that the victim was a public transit employee performing their duty, and defines \"public transit employee\" and \"vehicle\" for this purpose.",
+      relatedSections: ["264.1", "266", "267", "268", "269"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4644,6 +4730,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-269.1.html`,
+      summary:
+        "Makes it an offence for an official, or someone acting with an official's consent or at their instigation, to inflict torture on another person, defines \"official\" and \"torture,\" states that superior orders or exceptional circumstances are no defence, and makes statements obtained through such torture inadmissible except to prove the torture occurred.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4654,6 +4742,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-270.html`,
+      summary:
+        "Makes it an offence to assault a public officer or peace officer performing their duty (or someone assisting them), to assault someone with intent to resist or prevent a lawful arrest or detention, or to assault someone carrying out a lawful seizure or distress or to rescue property taken under lawful process.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4664,6 +4754,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-270.01.html`,
+      summary:
+        "Makes it an offence to carry, use, or threaten to use a weapon, or to cause bodily harm to the complainant, while committing an assault described in section 270.",
+      relatedSections: ["270"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4674,6 +4767,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-270.02.html`,
+      summary:
+        "Makes it an offence to wound, maim, disfigure, or endanger the life of the complainant while committing an assault described in section 270.",
+      relatedSections: ["270"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4684,6 +4780,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-270.03.html`,
+      summary:
+        "Requires that a sentence for certain assault offences against a law enforcement officer be served consecutively to any other sentence imposed for an offence arising from the same event or series of events.",
+      relatedSections: ["270", "270.01", "270.02", "445.01"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4692,8 +4791,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Disarming a peace officer",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-270.1.html`,
+      summary:
+        "Makes it an offence to take or attempt to take a weapon from a peace officer's possession without consent while the officer is performing their duty, and defines \"weapon\" for this purpose.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4749,6 +4850,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-273.1.html`,
+      summary:
+        "Defines \"consent\" for certain sexual offences as the voluntary agreement to engage in the sexual activity at the time it occurs, and sets out circumstances in which no consent is obtained, such as when agreement is expressed by someone other than the complainant, the complainant is unconscious or otherwise incapable, agreement was induced by abuse of a position of trust or authority, or the complainant expresses a lack of agreement.",
+      relatedSections: ["271", "272", "273", "265"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4759,6 +4863,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-273.2.html`,
+      summary:
+        "Provides that an accused's belief that the complainant consented is not a defence to certain sexual offences where the belief arose from self-induced intoxication, recklessness, or wilful blindness, where certain no-consent circumstances applied, where the accused failed to take reasonable steps to ascertain consent, or where there is no evidence the complainant affirmatively expressed agreement.",
+      relatedSections: ["271", "272", "273", "265", "273.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4767,8 +4874,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Removal of child from Canada",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-273.3.html`,
+      summary:
+        "Prohibits doing anything to remove a Canadian resident under 18 from Canada with the intention that specified sexual or related offences be committed against them outside Canada, with the applicable offences varying by the person's age, and makes contravention an offence.",
+      relatedSections: ["151", "152", "160", "173", "153", "155"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4779,6 +4889,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-274.html`,
+      summary:
+        "States that no corroboration is required to convict an accused charged with specified sexual and related offences, and that a judge must not instruct a jury that a conviction is unsafe without corroboration.",
+      relatedSections: ["151", "152", "153", "153.1", "155", "160"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4789,6 +4902,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-275.html`,
+      summary:
+        "Abolishes the common law rules relating to evidence of recent complaint for specified sexual offences.",
+      relatedSections: ["151", "152", "153", "153.1", "155", "160"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4799,6 +4915,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.html`,
+      summary:
+        "Prohibits using evidence that a complainant engaged in sexual activity to support an inference that they were more likely to have consented or are less credible, and sets out the procedure and factors a judge must consider before admitting evidence of a complainant's other sexual activity in proceedings for specified sexual offences.",
+      relatedSections: ["151", "152", "153", "153.1", "155", "160"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4809,6 +4928,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.01.html`,
+      summary:
+        "Sets out the procedure for an accused to apply, in writing with a supporting affidavit, for a hearing to determine whether evidence of a complainant's sexual activity is admissible, including timing, service on the prosecutor and complainant, and exclusion of the jury and public from considering the application.",
+      relatedSections: ["276.02", "276"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4819,6 +4941,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.02.html`,
+      summary:
+        "Requires that a hearing to determine admissibility of a complainant's sexual activity evidence exclude the jury and public, provides that the complainant is not compellable but may appear and make submissions with a right to counsel, and requires the judge to determine admissibility and give recorded reasons.",
+      relatedSections: ["276"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4826,9 +4951,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "276.03",
     {
       title: "Publication prohibited",
-      severity: "",
-      maxPenalty: "",
+      severity: "Summary",
+      maxPenalty: "summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-276.03.html`,
+      summary:
+        "Prohibits publishing, broadcasting, or transmitting the contents of an application, evidence, submissions, or decisions related to a section 276.01/276.02 hearing, subject to listed exceptions such as disclosures made in the administration of justice or by the complainant or a witness themselves; contravention is an offence.",
+      relatedSections: ["276.01", "276.02"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4839,6 +4967,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.04.html`,
+      summary:
+        "Requires the judge to instruct the jury on the permitted and prohibited uses of sexual activity evidence admitted at trial following a section 276.02 determination.",
+      relatedSections: ["276.02"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4849,6 +4980,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.05.html`,
+      summary:
+        "Deems a determination made under subsection 276.02(4) to be a question of law for purposes of the appeal provisions in sections 675 and 676.",
+      relatedSections: ["276.02", "675", "676"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4859,6 +4993,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.06.html`,
+      summary:
+        "Sets out the procedure for the prosecutor to apply, in writing, for a determination of whether a complainant's sexual activity evidence is admissible, including that no affidavit or complainant testimony is required, timing of service on the accused, and exclusion of the jury, public, and complainant compellability at the hearing.",
+      relatedSections: ["276"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4866,9 +5003,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "276.07",
     {
       title: "Publication prohibited",
-      severity: "",
-      maxPenalty: "",
+      severity: "Summary",
+      maxPenalty: "summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-276.07.html`,
+      summary:
+        "Prohibits publishing, broadcasting, or transmitting the contents of an application or hearing under section 276.06 or its determination and reasons, subject to listed exceptions; contravention is an offence.",
+      relatedSections: ["276.06"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4879,6 +5019,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.08.html`,
+      summary:
+        "Requires the judge to instruct the jury on the permitted and prohibited uses of sexual activity evidence admitted at trial following a section 276.06 determination.",
+      relatedSections: ["276.06"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4889,6 +5032,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.09.html`,
+      summary:
+        "Deems a determination made under subsection 276.06(7) to be a question of law for purposes of the appeal provisions in sections 675 and 676.",
+      relatedSections: ["276.06", "675", "676"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4899,6 +5045,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.1.html`,
+      summary:
+        "Allows the prosecutor, accused, and complainant to jointly apply in writing for a judge to determine, without a hearing, whether a complainant's sexual activity evidence is admissible, sets out the application's required content and timing, and provides that the judge either grants the application or holds a hearing if not satisfied of admissibility.",
+      relatedSections: ["276", "276.02"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4906,9 +5055,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "276.11",
     {
       title: "Publication prohibited",
-      severity: "",
-      maxPenalty: "",
+      severity: "Summary",
+      maxPenalty: "summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-276.11.html`,
+      summary:
+        "Prohibits publishing, broadcasting, or transmitting the contents of an application under section 276.1 or its determination and reasons, subject to listed exceptions; contravention is an offence.",
+      relatedSections: ["276.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4919,6 +5071,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.12.html`,
+      summary:
+        "Requires the judge to instruct the jury on the permitted and prohibited uses of sexual activity evidence admitted at trial following a determination under subsection 276.1(4).",
+      relatedSections: ["276.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4929,6 +5084,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-276.13.html`,
+      summary:
+        "Deems a determination made under subsection 276.1(4) or (5) to be a question of law for purposes of the appeal provisions in sections 675 and 676.",
+      relatedSections: ["276.1", "675", "676"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4939,6 +5097,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-277.html`,
+      summary:
+        "Prohibits admitting evidence of a complainant's sexual reputation, general or specific, to challenge or support the complainant's credibility in proceedings for specified sexual offences.",
+      relatedSections: ["151", "152", "153", "153.1", "155", "160"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4949,6 +5110,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.html`,
+      summary:
+        "Confirms that a spouse may be charged with certain sexual offences committed against their spouse, regardless of whether the spouses were living together at the time.",
+      relatedSections: ["271", "272", "273"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4959,6 +5123,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.1.html`,
+      summary:
+        "Defines \"record\" and \"therapeutic record\" for the purposes of sections 278.11 to 278.36.",
+      relatedSections: ["278.11", "278.36"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4969,6 +5136,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.11.html`,
+      summary:
+        "Prohibits producing to an accused a record or therapeutic record relating to a complainant or witness that is held by a third party, in proceedings for specified sexual or sexual-purpose offences, except in accordance with sections 278.12 to 278.19, and defines \"third party.\"",
+      relatedSections: ["278.12", "278.19", "151", "152", "153", "153.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4979,6 +5149,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.12.html`,
+      summary:
+        "Sets out the procedure for an accused to apply to the trial judge for production of a record or therapeutic record held by a third party, including required content, the grounds needed, a list of assertions that alone are insufficient to establish relevance, and requirements for serving the application and a subpoena on the prosecutor, record holder, complainant, and other affected persons.",
+      relatedSections: ["278.11", "278.13"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4989,6 +5162,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.13.html`,
+      summary:
+        "Requires the judge to hold an in-camera hearing to decide whether to order production of a record or therapeutic record to the court, allows the record holder, complainant or witness, and other affected persons to appear and make submissions without being compellable, requires the judge to inform them of their right to counsel, and bars costs orders against them for participating.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4999,6 +5174,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.14.html`,
+      summary:
+        "Sets out when a judge may order a record or therapeutic record produced to the court for review, and lists factors the judge must weigh, balancing the accused's right to make full answer and defence against the privacy, security, and equality interests of the complainant, witness, or others connected to the record.",
+      relatedSections: ["278.13", "278.12"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5009,6 +5187,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.15.html`,
+      summary:
+        "Requires the judge to review, in the parties' absence, a record or therapeutic record produced to the court to decide whether it should be produced to the accused, and allows an in-camera hearing on the same terms as under section 278.13 if the judge considers it would help.",
+      relatedSections: ["278.13"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5019,6 +5200,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.16.html`,
+      summary:
+        "Sets out when a judge may order a record or therapeutic record produced to the accused, the factors the judge must weigh, the conditions the judge may impose on production, and requirements to provide a copy to the prosecutor, restrict its use to the proceedings, and keep it sealed by the court if production is refused.",
+      relatedSections: ["278.14"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5029,6 +5213,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.17.html`,
+      summary:
+        "Requires the judge to give reasons for ordering or refusing to order production of a record or therapeutic record, and requires those reasons to be recorded or, if proceedings are not recorded, provided in writing.",
+      relatedSections: ["278.14", "278.16"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5036,9 +5223,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "278.18",
     {
       title: "Publication prohibited",
-      severity: "",
-      maxPenalty: "",
+      severity: "Summary",
+      maxPenalty: "Summary conviction (no specific penalty amount stated in this section)",
       url: `${JUSTICE_LAWS_BASE}/section-278.18.html`,
+      summary:
+        "Prohibits publishing, broadcasting, or transmitting the contents of an application, evidence given, or the judge's determination and reasons regarding production of a complainant's or witness's record, subject to listed exceptions and a judge's order allowing publication. Contravening the publication ban is an offence punishable on summary conviction.",
+      relatedSections: ["278.12", "278.13", "278.14", "278.15", "278.16", "278.17"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5049,6 +5239,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.19.html`,
+      summary:
+        "Deems a judge's determination to make or refuse to make a production order under the specified sections to be a question of law for appeal purposes.",
+      relatedSections: ["675", "676", "278.14", "278.16"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5059,6 +5252,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.2.html`,
+      summary:
+        "Bars a prosecutor from producing to an accused a complainant's or witness's record or therapeutic record in proceedings for listed sexual or sexual-purpose offences, except as permitted, and requires the prosecutor to notify the accused (without disclosing contents) that such a record exists.",
+      relatedSections: ["278.21", "278.28", "278.29", "278.38", "271", "272"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5069,6 +5265,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.21.html`,
+      summary:
+        "Sets out the procedure for an accused to apply for production of a complainant's or witness's record, including what the written application must contain, what grounds are insufficient on their own, and service requirements on the prosecutor and other affected persons.",
+      relatedSections: ["278.2", "278.22"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5079,6 +5278,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.22.html`,
+      summary:
+        "Requires the judge to hold an in-camera hearing to decide whether to order production of the record for judicial review, and sets out who may appear and make submissions, the right to counsel, and a bar on costs orders against participants.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5089,6 +5290,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.23.html`,
+      summary:
+        "Sets out the conditions under which a judge may order the prosecutor to produce a record to the court for review, and lists the factors the judge must weigh in balancing the accused's right to a defence against the complainant's or witness's privacy and other interests.",
+      relatedSections: ["278.21", "278.22"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5099,6 +5303,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.24.html`,
+      summary:
+        "Requires the judge to review a produced record privately to decide whether it should go to the accused, and allows an in-camera hearing to assist that determination.",
+      relatedSections: ["278.22"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5109,6 +5316,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.25.html`,
+      summary:
+        "Sets out when a judge may order that a record or therapeutic record be produced to the accused, the factors to consider, conditions that may be imposed on production, a restriction on using it in other proceedings, and the requirement to keep an unproduced record sealed pending appeal.",
+      relatedSections: ["278.23"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5119,6 +5329,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.26.html`,
+      summary:
+        "Requires the judge to give reasons for ordering or refusing to order production of a record, and requires those reasons to be recorded or, if proceedings are unrecorded, put in writing.",
+      relatedSections: ["278.23", "278.25"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5126,9 +5339,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "278.27",
     {
       title: "Publication prohibited",
-      severity: "",
-      maxPenalty: "",
+      severity: "Summary",
+      maxPenalty: "Summary conviction (no specific penalty amount stated in this section)",
       url: `${JUSTICE_LAWS_BASE}/section-278.27.html`,
+      summary:
+        "Prohibits publishing, broadcasting, or transmitting the contents of a production application, evidence or submissions at the hearing, or the judge's determination and reasons, subject to listed exceptions and a judge's order allowing publication. Contravening the ban is a summary conviction offence.",
+      relatedSections: ["278.21", "278.22", "278.23", "278.24", "278.25", "278.26"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5139,6 +5355,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.28.html`,
+      summary:
+        "Deems a judge's determination to make or refuse to make a production order under the specified sections to be a question of law for appeal purposes.",
+      relatedSections: ["675", "676", "278.23", "278.25"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5149,6 +5368,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.29.html`,
+      summary:
+        "Makes a complainant's record or therapeutic record in the accused's possession inadmissible in proceedings for listed sexual or sexual-purpose offences unless admissibility requirements are met, and lists the factors a judge must consider in determining admissibility.",
+      relatedSections: ["278.3", "278.31", "278.35", "276", "271", "279.01"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5159,6 +5381,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.3.html`,
+      summary:
+        "Sets out the procedure for an accused to apply for a hearing to determine whether a record is admissible, including the required written application and affidavit, filing requirements, exclusion of the jury and public, and when the judge must grant the application and hold a hearing.",
+      relatedSections: ["278.29", "278.31"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5169,6 +5394,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.31.html`,
+      summary:
+        "Requires the jury and public to be excluded from a hearing on the admissibility of a record, allows the complainant to appear without being compellable, and requires the judge to determine admissibility and give reasons covering specified factors.",
+      relatedSections: ["278.29"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5176,9 +5404,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "278.32",
     {
       title: "Publication prohibited",
-      severity: "",
-      maxPenalty: "",
+      severity: "Summary",
+      maxPenalty: "Summary conviction (no specific penalty amount stated in this section)",
       url: `${JUSTICE_LAWS_BASE}/section-278.32.html`,
+      summary:
+        "Prohibits publishing, broadcasting, or transmitting the contents of an admissibility application, evidence or submissions, or the resulting decision and reasons, subject to listed exceptions and a judge's order allowing publication. Contravening the ban is a summary conviction offence.",
+      relatedSections: ["278.3", "278.31"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5189,6 +5420,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.33.html`,
+      summary:
+        "Requires the judge to instruct the jury on the permitted and prohibited uses of evidence admitted following a determination under the referenced section.",
+      relatedSections: ["278.31"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5199,6 +5433,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.34.html`,
+      summary:
+        "Deems a determination made under the referenced subsection to be a question of law for appeal purposes.",
+      relatedSections: ["675", "676", "278.31"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5209,6 +5446,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.35.html`,
+      summary:
+        "Sets out a joint-application procedure by which the prosecutor, accused, and complainant or witness may ask a judge to determine a record's admissibility without a hearing, including required contents, filing deadlines, the judge's determination and reasons, and when a hearing must instead be held; it does not apply to therapeutic records.",
+      relatedSections: ["278.29", "278.31", "276"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5216,9 +5456,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "278.36",
     {
       title: "Publication prohibited",
-      severity: "",
-      maxPenalty: "",
+      severity: "Summary",
+      maxPenalty: "Summary conviction (no specific penalty amount stated in this section)",
       url: `${JUSTICE_LAWS_BASE}/section-278.36.html`,
+      summary:
+        "Prohibits publishing, broadcasting, or transmitting the contents of a joint application, evidence or submissions, or the resulting determination and reasons, subject to listed exceptions and a judge's order allowing publication. Contravening the ban is a summary conviction offence.",
+      relatedSections: ["278.35"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5229,6 +5472,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.37.html`,
+      summary:
+        "Requires the judge to instruct the jury on the permitted and prohibited uses of evidence admitted following a determination under the referenced section.",
+      relatedSections: ["278.35"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5239,6 +5485,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.38.html`,
+      summary:
+        "Deems a determination made under the referenced subsections to be a question of law for appeal purposes.",
+      relatedSections: ["675", "676", "278.35"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5249,6 +5498,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-278.98.html`,
+      summary:
+        "Requires a judge, in proceedings for listed sexual offences, to give reasons for a decision to acquit, convict, discharge, find not criminally responsible, or find unfit to stand trial, and requires those reasons to be recorded or put in writing; applies only in trials without a jury.",
+      relatedSections: ["151", "152", "153", "153.1", "155", "160"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5274,6 +5526,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment (minimum 14 years)",
       url: `${JUSTICE_LAWS_BASE}/section-279.01.html`,
+      summary:
+        "Makes it an offence to recruit, transport, transfer, receive, hold, conceal, harbour, or exercise control over the movements of a person for the purpose of exploiting them or facilitating their exploitation. Consent to the conduct is not a valid defence, and living with or habitually associating with an exploited person is presumed evidence of exercising control for exploitation absent contrary evidence.",
+      relatedSections: ["279.011"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5284,6 +5539,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-279.011.html`,
+      summary:
+        "Makes it an offence to recruit, transport, transfer, receive, hold, conceal, harbour, or exercise control over the movements of a person under 18 for the purpose of exploiting them or facilitating their exploitation. Consent to the conduct is not a valid defence.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5294,6 +5551,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-279.02.html`,
+      summary:
+        "Makes it an offence to knowingly receive a financial or other material benefit derived from human trafficking under the referenced sections, with a separate, more serious version of the offence where the trafficking victim is under 18.",
+      relatedSections: ["279.01", "279.011"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5304,6 +5564,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-279.03.html`,
+      summary:
+        "Makes it an offence to conceal, remove, withhold, or destroy another person's travel or identity/immigration document in order to commit or facilitate human trafficking, with a separate, more serious version of the offence where the trafficking victim is under 18.",
+      relatedSections: ["279.01", "279.011"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5314,6 +5577,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-279.04.html`,
+      summary:
+        "Defines what it means to exploit another person for the purposes of the trafficking offences, describing the coercive conduct that could reasonably be expected to make a person believe their safety is threatened if they do not provide labour or a service, and lists factors and circumstances a court must consider in assessing exploitation, including organ or tissue removal by deception, force, or coercion.",
+      relatedSections: ["279.01", "279.03"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5324,6 +5590,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment (minimum 10 years)",
       url: `${JUSTICE_LAWS_BASE}/section-279.1.html`,
+      summary:
+        "Defines hostage taking as confining, imprisoning, seizing, or detaining a person while threatening death, bodily harm, or continued detention in order to compel a third party or organization to act, and makes hostage taking an indictable offence with escalating minimum penalties depending on whether a firearm was used, whether the offence involved a criminal organization, and whether it is a repeat offence.",
+      relatedSections: ["85", "244", "244.2", "220", "236", "239"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5332,8 +5601,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Abduction of person under age of 16",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-280.html`,
+      summary:
+        "Makes it an offence to take a person under 16 out of the possession of and against the will of their parent, guardian, or lawful caregiver without lawful authority, and defines guardian for this and related sections as including anyone with actual or legal custody or control of another person.",
+      relatedSections: ["281", "283"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5342,8 +5614,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Abduction of person under age of 14",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-281.html`,
+      summary:
+        "Makes it an offence for someone who is not the parent, guardian, or lawful caregiver of a person under 14 to unlawfully take, entice away, conceal, detain, receive, or harbour that person with intent to deprive the parent, guardian, or caregiver of possession of them.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5352,8 +5626,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Abduction in contravention of custody or parenting order",
       severity: "Hybrid",
-      maxPenalty: "10 years indictable",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-282.html`,
+      summary:
+        "Makes it an offence for a parent, guardian, or lawful caregiver of a child under 14 to take, entice away, conceal, detain, receive, or harbour the child in contravention of a custody or parenting order, with intent to deprive another entitled person of possession of the child; also allows conviction under section 283 where the accused's lack of belief in the order's validity is the only reason the offence is not proven.",
+      relatedSections: ["283"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5362,8 +5639,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Abduction",
       severity: "Hybrid",
-      maxPenalty: "10 years indictable",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-283.html`,
+      summary:
+        "Makes it an offence for a parent, guardian, or lawful caregiver of a child under 14 to take, entice away, conceal, detain, receive, or harbour the child with intent to deprive another entitled person of possession, regardless of whether a custody or parenting order exists, and requires Attorney General consent before proceedings can begin.",
+      relatedSections: ["282"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5374,6 +5654,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-284.html`,
+      summary:
+        "Provides that no one is guilty of an offence under the abduction sections if they establish that the taking, enticing away, concealing, detaining, receiving, or harbouring of the young person was done with the consent of the parent, guardian, or other person with lawful care of that young person.",
+      relatedSections: ["281", "283"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5384,6 +5667,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-285.html`,
+      summary:
+        "Provides a defence to the abduction offences where the court is satisfied the taking, enticing away, concealing, detaining, receiving, or harbouring was necessary to protect the young person from imminent harm, or the accused was themselves escaping imminent harm.",
+      relatedSections: ["280", "283"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5394,6 +5680,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-286.html`,
+      summary:
+        "Provides that in proceedings for the abduction offences, it is not a defence that the young person consented to or suggested the accused's conduct.",
+      relatedSections: ["280", "283"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5404,6 +5693,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years indictable + minimum fine / summary fine or 2 years less a day (general, s. 286.1(1)); 14 years, minimum 6 months (first offence) / 1 year (subsequent), if the person is under 18 (s. 286.1(2))",
       url: `${JUSTICE_LAWS_BASE}/section-286.1.html`,
+      summary:
+        "Makes it an offence to obtain, or communicate to obtain, sexual services for consideration, with minimum fines that increase for offences occurring near places where minors may reasonably be present or for repeat offences, and creates a separate, more serious offence with mandatory minimum imprisonment where the person providing the sexual services is under 18.",
+      relatedSections: ["212", "197"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5414,6 +5706,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-286.2.html`,
+      summary:
+        "Makes it an offence to knowingly receive a financial or other material benefit derived from obtaining sexual services for consideration, with a more serious minimum-sentence version where the services were provided by a person under 18, subject to listed exceptions for legitimate living or business arrangements that do not apply where coercion, abuse of trust, intoxicants, exploitation-related conduct, or a commercial sexual-services enterprise are involved.",
+      relatedSections: ["286.3"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5424,6 +5719,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-286.3.html`,
+      summary:
+        "Makes it an offence to procure a person to offer or provide sexual services for consideration, or to recruit, hold, conceal, harbour, or control the movements of such a person to facilitate that offence, with a more serious mandatory-minimum version where the person procured is under 18.",
+      relatedSections: ["286.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5432,8 +5730,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Advertising sexual services",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-286.4.html`,
+      summary:
+        "Makes it an offence to knowingly advertise an offer to provide sexual services for consideration.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5444,6 +5744,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-286.5.html`,
+      summary:
+        "Provides immunity from prosecution for material-benefit or advertising offences, or for aiding, abetting, conspiring, or being an accessory to such offences, where the conduct relates only to the offering or provision of the person's own sexual services.",
+      relatedSections: ["286.2", "286.4", "286.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5454,6 +5757,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-290.html`,
+      summary:
+        "Defines bigamy as going through a form of marriage while already married, or knowing the other party is already married, or marrying more than one person on the same day, and sets out defences including a good-faith belief the spouse is dead, seven years' continuous absence of the spouse, prior divorce, or a prior marriage declared void; it also addresses presumed validity of marriages and related evidentiary matters.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5462,8 +5767,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-291.html`,
+      summary:
+        "Makes committing bigamy an offence, and provides that a certificate of marriage is evidence of the marriage or form of marriage without needing to prove the signature or authority of the person who signed it.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5472,8 +5779,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Procuring feigned marriage",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-292.html`,
+      summary:
+        "Makes it an offence to procure or knowingly aid in procuring a feigned marriage between oneself and another person, and requires that a conviction not rest on the evidence of a single uncorroborated witness.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5482,8 +5791,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Polygamy",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-293.html`,
+      summary:
+        "Makes it an offence to practise, enter into, or consent to any form of polygamy or simultaneous conjugal union with more than one person, or to celebrate, assist, or be party to a rite or ceremony purporting to sanction such a relationship, and provides that proof of the method of entry or of sexual intercourse is not required.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5492,8 +5803,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Forced marriage",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-293.1.html`,
+      summary:
+        "Makes it an offence to celebrate, aid, or participate in a marriage rite or ceremony knowing that one of the persons being married is marrying against their will.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5502,8 +5815,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Marriage under age of 16 years",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-293.2.html`,
+      summary:
+        "Makes it an offence to celebrate, aid, or participate in a marriage rite or ceremony knowing that one of the persons being married is under the age of 16 years.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5512,8 +5827,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Pretending to solemnize marriage",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-294.html`,
+      summary:
+        "Makes it an offence to solemnize or pretend to solemnize a marriage without lawful authority, or to procure a person to solemnize a marriage knowing that they are not lawfully authorized to do so.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5522,8 +5839,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Marriage contrary to law",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-295.html`,
+      summary:
+        "Makes it an offence for a person lawfully authorized to solemnize marriage to knowingly do so in contravention of federal or provincial law.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5534,6 +5853,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-297.html`,
+      summary:
+        "Defines newspaper for the purposes of the specified sections as certain periodically published papers, magazines, or periodicals containing news or advertisements.",
+      relatedSections: ["303", "304", "308"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5544,6 +5866,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-298.html`,
+      summary:
+        "Defines defamatory libel as unjustified published matter likely to injure a person's reputation by exposing them to hatred, contempt, or ridicule, or that is designed to insult them, and states that it may be expressed directly, by insinuation or irony, in words, or by another object.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5554,6 +5878,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-299.html`,
+      summary:
+        "Defines when a person publishes a libel: by exhibiting it in public, causing it to be read or seen, or showing or delivering it, or causing it to be shown or delivered, with intent that it should be read or seen by any person other than the person whom it defames.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5562,8 +5888,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment of libel known to be false",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-300.html`,
+      summary:
+        "Makes it an offence to publish a defamatory libel while knowing it is false.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5572,8 +5900,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment for defamatory libel",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-301.html`,
+      summary:
+        "Makes it an offence to publish a defamatory libel.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5582,8 +5912,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Extortion by libel",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-302.html`,
+      summary:
+        "Makes it an offence to publish, threaten to publish, or offer to withhold publication of a defamatory libel in order to extort money or induce someone to confer an appointment or office, and also makes it an offence to publish or threaten to publish a defamatory libel after such a demand is refused.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5594,6 +5926,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-303.html`,
+      summary:
+        "Deems a newspaper's proprietor to have published defamatory matter appearing in it unless they prove it was inserted without their knowledge or negligence, sets out when authority given to a manager or editor does not count as negligence, and provides that merely selling a newspaper containing defamatory matter is not publishing it unless the seller knew of the defamatory content.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5604,6 +5938,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-304.html`,
+      summary:
+        "Provides that selling a book, magazine, pamphlet or similar item containing defamatory matter is not publishing it unless the seller knew of the content, and sets out when an employer is not deemed to publish defamatory matter sold by an employee.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5614,6 +5950,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-305.html`,
+      summary:
+        "Provides that publishing defamatory matter that occurs only in a court proceeding or in an inquiry under an Act or governmental authority is not publishing a defamatory libel.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5624,6 +5962,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-306.html`,
+      summary:
+        "Provides that publishing defamatory matter contained in a petition to Parliament or a provincial legislature, or in a paper published by their order or authority, or a good-faith extract or abstract of such material, is not publishing a defamatory libel.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5634,6 +5974,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-307.html`,
+      summary:
+        "Provides that a good-faith, fair report of parliamentary or judicial proceedings, or fair comment on such proceedings, is not publishing a defamatory libel, except that this protection does not extend to certain unauthorized reports of divorce-related evidence before Parliament.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5644,6 +5986,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-308.html`,
+      summary:
+        "Provides that a good-faith, fair and accurate newspaper report of a lawfully convened public meeting is not publishing a defamatory libel, provided the publication is for public benefit and the newspaper allows the defamed person a reasonable right of reply.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5654,6 +5998,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-309.html`,
+      summary:
+        "Provides that publishing defamatory matter reasonably believed to be true and relevant to a matter of public interest whose discussion serves the public benefit is not publishing a defamatory libel.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5664,6 +6010,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-310.html`,
+      summary:
+        "Provides that publishing fair comments on the public conduct of a person involved in public affairs, or on a published work or public performance, is not publishing a defamatory libel where the comments are confined to criticism.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5674,6 +6022,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-311.html`,
+      summary:
+        "Provides that publishing defamatory matter is not a defamatory libel where the person proves the publication was for the public benefit and that the matter was true.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5684,6 +6034,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-312.html`,
+      summary:
+        "Provides that publishing defamatory matter invited or challenged by the person defamed, or necessary to refute defamatory matter published by another about that person, is not a defamatory libel if believed true, relevant, and not excessive.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5694,6 +6046,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-313.html`,
+      summary:
+        "Provides that publishing defamatory matter in good-faith answer to an inquiry from someone with a genuine interest in knowing the truth is not a defamatory libel if it is believed true, relevant, and not excessive.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5704,6 +6058,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-314.html`,
+      summary:
+        "Provides that publishing defamatory matter to inform another person with a genuine interest in the subject is not a defamatory libel if the conduct is reasonable, the matter relevant, and the matter true or made without ill-will and reasonably believed true.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5714,6 +6070,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-315.html`,
+      summary:
+        "Provides that publishing defamatory matter in good faith to seek a remedy or redress for a wrong or grievance is not a defamatory libel if believed true, relevant to the remedy sought, and not excessive.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5724,6 +6082,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-316.html`,
+      summary:
+        "Allows an accused charged with publishing a defamatory libel to prove the matter was contained in a paper published by order or authority of Parliament or a provincial legislature, in which case the court must direct a not-guilty verdict and discharge the accused, and sets out that a certificate from the relevant Speaker or clerk is conclusive proof of this.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5734,6 +6094,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-317.html`,
+      summary:
+        "Sets out how a jury must be instructed and may render its verdict at a trial for publishing a defamatory libel, including that a general verdict is available and the judge may give a direction or opinion but cannot direct a guilty verdict merely from proof of publication.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5744,6 +6106,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-318.html`,
+      summary:
+        "Makes it an offence to advocate or promote genocide, defines genocide and identifiable group for this purpose, and requires Attorney General consent before a prosecution can be started.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5754,6 +6118,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "2 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-319.html`,
+      summary:
+        "Makes it an offence to incite hatred against an identifiable group likely to breach the peace, to wilfully promote hatred against such a group, to wilfully promote antisemitism by condoning, denying or downplaying the Holocaust, or to wilfully promote hatred by displaying specified hate-related symbols, and sets out defences, forfeiture, exemptions, definitions, and a requirement of Attorney General consent for certain prosecutions.",
+      relatedSections: ["318", "199", "83.01"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5764,6 +6131,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.html`,
+      summary:
+        "Sets out the process for a judge to issue a warrant to seize hate propaganda kept for sale or distribution, requires a summons to the occupier to show cause, allows the owner and author to oppose forfeiture, and sets out forfeiture or return of the material, an appeal right, a consent requirement, and definitions.",
+      relatedSections: ["318", "319"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5774,6 +6144,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.1.html`,
+      summary:
+        "Sets out the process for a judge to order a computer system's custodian to copy, remove, and identify the poster of online hate propaganda, notify the poster with a chance to be heard, and either order deletion of the material or its return depending on the court's findings.",
+      relatedSections: ["320", "342.1"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5784,6 +6157,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.1001.html`,
+      summary:
+        "Makes it an offence to commit any offence under this or another federal Act where the offence is motivated by hatred based on specified personal characteristics, sets out the resulting maximum penalties tied to the underlying offence's maximum, clarifies what does not count as hatred-motivated, and limits when this offence can be prosecuted by indictment.",
+      relatedSections: ["319"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5794,6 +6170,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.101.html`,
+      summary:
+        "Defines conversion therapy for the purposes of the following sections, listing the practices, treatments or services it covers, and clarifies that practices relating to exploring or developing an integrated personal identity, including gender transition, are not included.",
+      relatedSections: ["320.102", "320.103", "320.104"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5802,8 +6181,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Conversion therapy",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-320.102.html`,
+      summary:
+        "Makes it an offence to knowingly cause another person to undergo conversion therapy, including by providing it.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5812,8 +6193,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Promoting or advertising",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-320.103.html`,
+      summary:
+        "Makes it an offence to knowingly promote or advertise conversion therapy.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5822,8 +6205,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Material benefit",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-320.104.html`,
+      summary:
+        "Makes it an offence to receive a financial or other material benefit known to come from providing conversion therapy.",
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5836,6 +6221,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.11.html`,
+      summary:
+        "Defines terms used throughout this Part, including analyst, approved container, approved drug screening equipment, approved instrument, approved screening device, conveyance, evaluating officer, operate, qualified medical practitioner, qualified technician, and vessel.",
+      relatedSections: ["320.4", "320.39"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5846,6 +6234,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.12.html`,
+      summary:
+        "Sets out Parliament's recognition and declaration regarding the privilege of operating a conveyance, the public safety rationale for deterring impaired or dangerous operation, and the reliability of approved breath instruments and evaluating officer assessments.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5856,6 +6246,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years / life if death",
       url: `${JUSTICE_LAWS_BASE}/section-320.13.html`,
+      summary:
+        "Makes it an offence to operate a conveyance in a manner dangerous to the public, and makes it a further offence where that dangerous operation causes bodily harm or death to another person.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5926,6 +6318,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-320.18.html`,
+      summary:
+        "Makes it an offence to operate a conveyance while prohibited from doing so by a court order or other legal restriction, with an exception for a person properly registered in and complying with an alcohol ignition interlock device program.",
+      relatedSections: ["730"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5936,6 +6331,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years (minimum 10 years)",
       url: `${JUSTICE_LAWS_BASE}/section-320.19.html`,
+      summary:
+        "Sets out the punishment for offences under subsection 320.14(1) or 320.15(1), including minimum punishments that escalate for repeat offences and higher minimum fines tied to specified higher blood alcohol concentrations, a separate summary conviction penalty for an offence under subsection 320.14(4), and punishment for offences under subsection 320.13(1) or 320.16(1), section 320.17, or subsection 320.18(1).",
+      relatedSections: ["320.13", "320.14", "320.15", "320.16", "320.17", "320.18"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5944,8 +6342,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment in case of bodily harm",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-320.2.html`,
+      summary:
+        "Sets out the punishment, including escalating minimum punishments for repeat offences, for offences under subsection 320.13(2), 320.14(2), 320.15(2) or 320.16(2) that cause bodily harm.",
+      relatedSections: ["320.13", "320.14", "320.15", "320.16"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5953,9 +6354,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "320.21",
     {
       title: "Punishment in case of death",
-      severity: "",
+      severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-320.21.html`,
+      summary:
+        "Sets out the punishment, including escalating minimum punishments for repeat offences, for offences under subsection 320.13(3), 320.14(3), 320.15(3) or 320.16(3) that cause death.",
+      relatedSections: ["320.13", "320.14", "320.15", "320.16"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5966,6 +6370,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.22.html`,
+      summary:
+        "Lists factors a court must treat as aggravating when sentencing for conveyance-operation offences, such as multiple victims, street racing, a young passenger, being paid to operate the conveyance, a high blood alcohol concentration, operating a large motor vehicle, or not being permitted to operate the conveyance.",
+      relatedSections: ["320.13", "320.14", "320.15", "320.16", "320.17", "320.18"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5976,6 +6383,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.23.html`,
+      summary:
+        "Allows a court, with the consent of the prosecutor and offender, to delay sentencing of an offender found guilty of an offence under subsection 320.14(1) or 320.15(1) so they can attend an approved treatment program, imposes a prohibition on operating the conveyance before sentencing, and relieves the offender of the mandatory minimum punishment under section 320.19 and the prohibition order under section 320.24 if the program is completed successfully.",
+      relatedSections: ["320.14", "320.15", "320.19", "320.24", "730"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5986,6 +6396,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.24.html`,
+      summary:
+        "Requires a court to impose a mandatory prohibition order against operating a conveyance for offenders found guilty of an offence under subsection 320.14(1) or 320.15(1), with prohibition periods that increase for repeat offences, and allows discretionary prohibition orders of varying length for offenders found guilty of other listed offences, along with related rules on the order's effect, notice to the offender, consecutive prohibition periods, and eligibility for an alcohol ignition interlock program.",
+      relatedSections: ["320.14", "320.15", "220", "221", "236", "320.13"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -5996,6 +6409,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.25.html`,
+      summary:
+        "Allows a judge of the appeal court to stay a prohibition order under section 320.24 pending the outcome of an appeal of a conviction or sentence for an offence under any of sections 320.13 to 320.18, restricts this power for Supreme Court of Canada appeals, and provides that conditions on a stay do not decrease the prohibition period.",
+      relatedSections: ["320.13", "320.14", "320.15", "320.16", "320.18", "320.24"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6006,6 +6422,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.26.html`,
+      summary:
+        "Sets out which prior convictions count as an earlier offence when determining whether a current offence under subsection 320.14(1) or 320.15(1) is a second, third, or subsequent offence for sentencing purposes.",
+      relatedSections: ["320.14", "320.15", "253", "254", "255"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6016,6 +6435,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.27.html`,
+      summary:
+        "Authorizes a peace officer with reasonable suspicion of alcohol or drugs in a person's body who recently operated a conveyance to demand physical coordination tests and breath or bodily substance samples for screening devices, and separately authorizes mandatory roadside breath screening of a person operating a motor vehicle.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6026,6 +6447,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.28.html`,
+      summary:
+        "Authorizes a peace officer with reasonable grounds to believe a person's ability to operate a conveyance was impaired by alcohol or drugs to demand breath or blood samples or an evaluation, sets out conditions and procedures for taking blood samples, and allows a person from whom blood was taken to apply to a judge for release of a retained sample.",
+      relatedSections: ["320.14"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6036,6 +6460,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.29.html`,
+      summary:
+        "Allows a justice to issue a warrant authorizing blood samples to be taken from a person involved in an accident causing bodily harm or death, who is suspected of having alcohol or drugs in their body and is medically unable to consent, and sets out the warrant's form, duration, and related procedural requirements.",
+      relatedSections: ["320.28"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6046,6 +6473,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.3.html`,
+      summary:
+        "Provides that blood samples taken under this Part may be analyzed to determine blood alcohol or blood drug concentration.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6056,6 +6485,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.31.html`,
+      summary:
+        "Sets out rules for proving a person's blood alcohol or blood drug concentration through breath or blood sample analysis, including conditions for conclusive proof, what evidence does not undermine an analysis, a presumption used to back-calculate blood alcohol concentration, admissibility of an evaluating officer's opinion and drug presumptions, and rules on the admissibility of analysis results, failure to provide a sample, and statements made to police.",
+      relatedSections: ["320.14", "320.27", "320.28"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6066,6 +6498,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.32.html`,
+      summary:
+        "Sets out rules for using certificates from analysts, medical practitioners, or technicians as evidence, including notice requirements, the right to require the signer's attendance for cross-examination, related application procedures, the evidentiary effect of prohibition certificates, and a presumption of notice of a prohibition after mailing.",
+      relatedSections: ["320.18"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
