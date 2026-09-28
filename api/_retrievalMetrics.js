@@ -157,7 +157,7 @@ export async function logRetrievalMetrics(input = {}) {
   const payload = buildRetrievalMetrics(input);
   console.log(createLog(payload));
 
-  let healthSnapshot = null;
+  let healthSnapshot;
   try {
     await recordRetrievalMetricsEvent(payload);
     healthSnapshot = await getRetrievalHealthSnapshot();

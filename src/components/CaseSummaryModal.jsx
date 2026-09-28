@@ -69,7 +69,7 @@ function SummarySection({ label, children, t, isQuote = false }) {
   );
 }
 
-function LoadingSkeleton({ t }) {
+function LoadingSkeleton() {
   return (
     <div>
       {[80, 100, 60, 90, 70].map((w, i) => (
@@ -172,6 +172,8 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
     return () => {
       cancelled = true;
     };
+    // One fetch per citation; the other fields describe that same case.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item.citation]);
 
   const viewUrl = isValidUrl(canliiUrl) ? canliiUrl : null;
@@ -272,7 +274,7 @@ export default function CaseSummaryModal({ item, canliiUrl, onClose }) {
             flex: 1,
           }}
         >
-          {loading && <LoadingSkeleton t={t} />}
+          {loading && <LoadingSkeleton />}
           {error && (
             <div
               role="alert"

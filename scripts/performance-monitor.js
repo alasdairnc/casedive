@@ -128,7 +128,7 @@ async function run() {
   }
 
   const rawText = await res.text();
-  let body = {};
+  let body;
   try {
     body = rawText ? JSON.parse(rawText) : {};
   } catch {

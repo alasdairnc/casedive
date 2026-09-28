@@ -39,10 +39,6 @@ import { withRedisTimeout } from "./_redisTimeout.js";
 // Matches bare Criminal Code section references like "s. 348(1)(b)", "section 7", "348"
 const CRIMINAL_CODE_PATTERN = /^(s\.\s*|section\s+)?\d+/i;
 
-// Matches Charter citations: "s. 7", "s. 11(b)", "Charter s. 24(2)", "section 8"
-const CHARTER_PATTERN =
-  /^(canadian\s+)?charter(\s+of\s+rights\s+and\s+freedoms)?,?\s*s\.\s*\d+|^s\.\s*\d+\s*(\(\w+\))?$/i;
-
 // Matches civil law statute citations with a statute name prefix
 const CIVIL_LAW_PATTERN =
   /\b(CDSA|YCJA|CHRA|CEA|CCRA|HTA|MVA|TSA|AHRA|HRC|controlled drugs|youth criminal justice|canadian human rights|human rights code|human rights act|canada evidence|corrections and conditional release|highway traffic|motor vehicle|residential tenanc|traffic safety)\b/i;
@@ -107,7 +103,9 @@ export default async function handler(req, res) {
           .status(200)
           .json(typeof cached === "string" ? JSON.parse(cached) : cached);
       }
-    } catch (err) {}
+    } catch {
+      // Best-effort cache: on a Redis error, carry on without it.
+    }
   }
 
   const apiKey = process.env.CANLII_API_KEY || "";
@@ -126,6 +124,7 @@ export default async function handler(req, res) {
     // Sanitize: enforce length limit and strip non-printable characters
     const citation = rawCitation
       .slice(0, 500)
+      // eslint-disable-next-line no-control-regex -- stripping control chars is the point
       .replace(/[\x00-\x1F\x7F]/g, "")
       .trim();
     if (!citation) {
@@ -364,7 +363,9 @@ export default async function handler(req, res) {
         redis.setex(cacheKey, 7 * 24 * 60 * 60, JSON.stringify(results)),
         API_REDIS_TIMEOUT_MS,
       );
-    } catch (err) {}
+    } catch {
+      // Best-effort cache: on a Redis error, carry on without it.
+    }
   }
 
   logSuccess(requestId, "verify", 200, Date.now() - startMs, rlResult, {

@@ -240,7 +240,7 @@ async function main() {
   const reportPath = path.join(outDir, `daily-${dateTag}.json`);
   const markdownPath = path.join(outDir, `daily-${dateTag}.md`);
 
-  let rawEvents = [];
+  let rawEvents;
   let fetchMeta = null;
   try {
     if (args.input) {

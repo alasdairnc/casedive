@@ -69,6 +69,30 @@ vi.mock("@supabase/supabase-js", () => ({
   })),
 }));
 
+// Stand-in for supabase-js's query builder: every `from()` starts a query
+// that records its calls, and awaiting it records the query and resolves
+// with `results[<first call>]` (select, insert or delete).
+function fakeTables(results = {}) {
+  const queries = [];
+  const from = (table) => {
+    const ops = [["from", table]];
+    const builder = {};
+    for (const op of ["select", "insert", "delete", "eq", "lte", "order", "limit"]) {
+      builder[op] = (...args) => {
+        ops.push([op, ...args]);
+        return builder;
+      };
+    }
+    builder.then = (resolve, reject) => {
+      queries.push(ops);
+      const result = results[ops[1][0]] ?? { data: [], error: null };
+      return Promise.resolve(result).then(resolve, reject);
+    };
+    return builder;
+  };
+  return { from, queries };
+}
+
 // ── Request / response helpers ────────────────────────────────────────────────
 
 function makeReq(method, body, token = "valid-token", headers = {}) {
@@ -246,25 +270,108 @@ describe("api/user-data.js", () => {
 
   // ── POST bookmarks ──────────────────────────────────────────────────────────
 
-  it("POST bookmarks replaces data for authenticated user (delete then insert)", async () => {
-    const bookmarks = [
-      { citation: "R v Grant, 2009 SCC 32", summary: "Charter s.24(2)" },
-    ];
-    const req = makeReq("POST", { type: "bookmarks", data: bookmarks });
+  // ── POST replace ────────────────────────────────────────────────────────────
+
+  const NEWEST = "2026-09-27T20:15:30.123456+00:00";
+  const BOOKMARKS = [
+    { id: "client-id", citation: "R v Grant, 2009 SCC 32", summary: "s.24(2)" },
+  ];
+
+  it("POST inserts the new list, then removes the user's older rows", async () => {
+    const db = fakeTables({ select: { data: [{ created_at: NEWEST }], error: null } });
+    mockFrom.mockImplementation(db.from);
     const res = makeRes();
-    await handler(req, res);
+
+    await handler(makeReq("POST", { type: "bookmarks", data: BOOKMARKS }), res);
+
     expect(res._status).toBe(200);
     expect(res._body).toMatchObject({ ok: true });
-    // Replace semantics: the user's existing rows are deleted, then the new
-    // set is inserted. This is what makes removals/clears propagate and
-    // prevents duplicate accumulation on every sync.
-    expect(mockDelete).toHaveBeenCalled();
-    expect(mockInsert).toHaveBeenCalled();
-    // The inserted rows must carry the verified user's id, never the client's.
-    const insertedRows = mockInsert.mock.calls[0][0];
-    expect(insertedRows.every((r) => r.user_id === VALID_USER.id)).toBe(true);
-    // Client-supplied id must NOT survive into the DB row.
-    expect(insertedRows.every((r) => !("id" in r))).toBe(true);
+    const [read, insert, cleanup] = db.queries;
+    expect(read).toEqual([
+      ["from", "user_bookmarks"],
+      ["select", "created_at"],
+      ["eq", "user_id", VALID_USER.id],
+      ["order", "created_at", { ascending: false }],
+      ["limit", 1],
+    ]);
+    expect(insert[1][0]).toBe("insert");
+    // Rows carry the verified user's id and never the client's own id.
+    expect(insert[1][1].every((r) => r.user_id === VALID_USER.id)).toBe(true);
+    expect(insert[1][1].every((r) => !("id" in r))).toBe(true);
+    // Only rows up to the newest one read before the insert, passed back
+    // exactly (microseconds included).
+    expect(cleanup).toEqual([
+      ["from", "user_bookmarks"],
+      ["delete"],
+      ["eq", "user_id", VALID_USER.id],
+      ["lte", "created_at", NEWEST],
+    ]);
+    expect(db.queries).toHaveLength(3);
+  });
+
+  it("POST for a user with nothing saved yet inserts without deleting", async () => {
+    const db = fakeTables({ select: { data: [], error: null } });
+    mockFrom.mockImplementation(db.from);
+    const res = makeRes();
+
+    await handler(makeReq("POST", { type: "bookmarks", data: BOOKMARKS }), res);
+
+    expect(res._status).toBe(200);
+    expect(db.queries.map((q) => q[1][0])).toEqual(["select", "insert"]);
+  });
+
+  it("POST keeps the previous list when the insert fails", async () => {
+    const db = fakeTables({
+      select: { data: [{ created_at: NEWEST }], error: null },
+      insert: { error: { message: "insert failed" } },
+    });
+    mockFrom.mockImplementation(db.from);
+    const res = makeRes();
+
+    await handler(makeReq("POST", { type: "bookmarks", data: BOOKMARKS }), res);
+
+    expect(res._status).toBe(500);
+    expect(db.queries.map((q) => q[1][0])).toEqual(["select", "insert"]);
+  });
+
+  it("POST writes nothing when the current list can't be read", async () => {
+    const db = fakeTables({ select: { data: null, error: { message: "down" } } });
+    mockFrom.mockImplementation(db.from);
+    const res = makeRes();
+
+    await handler(makeReq("POST", { type: "bookmarks", data: BOOKMARKS }), res);
+
+    expect(res._status).toBe(500);
+    expect(db.queries.map((q) => q[1][0])).toEqual(["select"]);
+  });
+
+  it("POST reports a failed cleanup so the client saves again", async () => {
+    const db = fakeTables({
+      select: { data: [{ created_at: NEWEST }], error: null },
+      delete: { error: { message: "delete failed" } },
+    });
+    mockFrom.mockImplementation(db.from);
+    const res = makeRes();
+
+    await handler(makeReq("POST", { type: "bookmarks", data: BOOKMARKS }), res);
+
+    expect(res._status).toBe(500);
+    expect(db.queries.map((q) => q[1][0])).toEqual([
+      "select",
+      "insert",
+      "delete",
+    ]);
+  });
+
+  it("GET reads up to twice the cap, in case a cleanup failed", async () => {
+    const db = fakeTables();
+    mockFrom.mockImplementation(db.from);
+    const req = makeReq("GET", null);
+    req.query = { type: "bookmarks" };
+
+    await handler(req, makeRes());
+
+    expect(db.queries[0]).toContainEqual(["limit", 400]);
   });
 
   it("POST with empty array clears the user's rows (delete, no insert)", async () => {

@@ -141,7 +141,9 @@ export default async function handler(req, res) {
           .status(200)
           .json(typeof cached === "string" ? JSON.parse(cached) : cached);
       }
-    } catch (err) {}
+    } catch {
+      // Best-effort cache: on a Redis error, carry on without it.
+    }
   }
 
   try {
@@ -182,7 +184,9 @@ export default async function handler(req, res) {
           redis.setex(cacheKey, 7 * 24 * 60 * 60, JSON.stringify(response)),
           API_REDIS_TIMEOUT_MS,
         );
-      } catch (err) {}
+      } catch {
+        // Best-effort cache: on a Redis error, carry on without it.
+      }
     }
 
     logSuccess(

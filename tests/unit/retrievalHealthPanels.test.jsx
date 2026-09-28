@@ -94,7 +94,7 @@ describe("WindowPanel", () => {
       lastEventAt: new Date().toISOString(),
       breakdowns: { byIssue: [] },
     };
-    const { container } = render(
+    render(
       <WindowPanel
         label="1 HOUR"
         windowStats={windowStats}

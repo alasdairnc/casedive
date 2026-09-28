@@ -142,15 +142,17 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "search_not_jordan",
-    knownFailure: "Shows case law in production, 2026-09-27",
+    // A warrantless phone search is a real s. 8 issue, so search case law
+    // belongs here. What this case guards is that the trial-delay landmark
+    // stays out. It used to expect no case law at all (fixed 2026-09-28).
     scenario: "Police took my phone and searched messages without a warrant.",
     expectedPrimary: "charter_search_seizure",
-    expectedResult: "zero_expected",
-    shouldInclude: [],
+    expectedResult: "nonzero_required",
+    shouldInclude: ["Hunter", "search"],
     shouldExclude: ["R v Jordan", "R v Cody", "11(b)", "trial delay"],
     expectedKeywords: [],
-    minResults: 0,
-    maxResults: 0,
+    minResults: 1,
+    maxResults: 3,
     landmarkMatches: [
       {
         citation: "R v Jordan, 2016 SCC 27",
@@ -186,15 +188,18 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "counsel_not_oakes",
-    knownFailure: "Shows case law in production, 2026-09-27",
+    // Being held two hours without a lawyer is a real s. 10(b) issue, so
+    // right-to-counsel case law belongs here. What this case guards is that
+    // the s. 1 landmark stays out. It used to expect no case law at all
+    // (fixed 2026-09-28).
     scenario: "I was detained and denied access to a lawyer for two hours.",
     expectedPrimary: "charter_counsel",
-    expectedResult: "zero_expected",
-    shouldInclude: [],
+    expectedResult: "nonzero_required",
+    shouldInclude: ["counsel"],
     shouldExclude: ["R v Oakes", "section 1", "proportionality"],
     expectedKeywords: [],
-    minResults: 0,
-    maxResults: 0,
+    minResults: 1,
+    maxResults: 3,
     landmarkMatches: [
       {
         citation: "R v Oakes, [1986] 1 SCR 103",
