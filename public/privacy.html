@@ -6,7 +6,7 @@
     <title>Privacy Policy - CaseDive</title>
     <meta
       name="description"
-      content="Privacy policy for CaseDive - Canadian criminal code analysis tool"
+      content="What CaseDive collects, why, where it is stored, how long it is kept, and how to see or delete it."
     />
     <link rel="canonical" href="https://casedive.ca/privacy" />
     <style>
@@ -27,6 +27,18 @@
         border-bottom: 2px solid #3498db;
         padding-bottom: 10px;
       }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 12px 0;
+      }
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
       .contact {
         background: #f8f9fa;
         padding: 15px;
@@ -37,93 +49,192 @@
   </head>
   <body>
     <h1>Privacy Policy</h1>
-    <p><strong>Effective Date:</strong> April 15, 2026</p>
+    <p><strong>Effective date:</strong> September 27, 2026</p>
 
-    <h2>Information We Collect</h2>
-    <p>
-      CaseDive ("we", "us", or "our") collects information you provide directly
-      to us, such as when you use our criminal code analysis tool. This may
-      include search queries, analysis requests, and relevance feedback or
-      optional notes you submit about case-law results.
-    </p>
-    <p>
-      Search history is kept only in the active browser session and clears when
-      you reload or close the page. We do not persist public search history in
-      browser storage across sessions.
-    </p>
-
-    <h2>How We Use Your Information</h2>
-    <p>We use the information we collect to:</p>
-    <ul>
-      <li>Provide our AI-powered criminal code analysis service</li>
-      <li>Improve our service and develop new features</li>
-      <li>Review user-reported irrelevant results to improve match quality</li>
-      <li>Ensure compliance with legal and educational standards</li>
-    </ul>
-
-    <h2>Information Sharing</h2>
-    <p>
-      We do not sell, trade, or otherwise transfer your personal information to
-      third parties without your consent, except as described in this policy.
-    </p>
-
-    <h2>Data Security</h2>
-    <p>
-      We implement appropriate security measures to protect your personal
-      information against unauthorized access, alteration, disclosure, or
-      destruction.
-    </p>
-
-    <h2>Third-Party Services</h2>
-    <p>Our service integrates with the following third parties:</p>
+    <h2>In short</h2>
     <ul>
       <li>
-        <strong>CanLII</strong> — Canadian Legal Information Institute, for case
-        law data. See CanLII's privacy policy for their data practices.
+        What you type is sent to Anthropic to produce your research results.
+        Leave out names and other details that could identify you or anyone
+        else.
       </li>
       <li>
-        <strong>Anthropic</strong> — We send scenario analysis requests from our
-        server to Anthropic to generate structured legal research output.
+        You don't need an account. If you create one, we keep your bookmarks and
+        search history until you delete them or ask us to delete the account.
       </li>
       <li>
-        <strong>Vercel Analytics</strong> — We use Vercel Analytics to
-        understand aggregate site usage and performance.
+        We don't sell your information and don't run advertising.
       </li>
       <li>
-        <strong>Sentry</strong> — We use Sentry for error monitoring and
-        incident investigation. Sensitive request fields are redacted before
-        events are sent.
+        Several of our service providers are outside Canada, mostly in the
+        United States.
       </li>
     </ul>
 
-    <h2>Cookies and Tracking</h2>
+    <h2>What we collect and why</h2>
+
+    <h3>Scenarios you type</h3>
     <p>
-      We use only the cookies or browser storage needed to operate the site and
-      measure aggregate performance. CaseDive does not run third-party ad
-      scripts or advertising cookies.
+      When you run a search, our server sends your scenario to Anthropic, which
+      generates the analysis. To answer repeat requests quickly, we cache the
+      results of a search, case summaries, citation checks and exported PDFs
+      for up to 7 days. An exported PDF includes your scenario. Cache entries
+      are labelled with a one-way code made from the request, so they aren't
+      tied to your name, email or account.
+    </p>
+    <p>
+      Case citations are checked against CanLII using the citation only. Your
+      scenario is not sent to CanLII.
     </p>
 
-    <h2>Children's Privacy</h2>
+    <h3>Case-law reports (optional)</h3>
     <p>
-      Our service is intended for educational purposes and is not directed to
-      children under 13. We do not knowingly collect personal information from
-      children under 13.
+      If you flag a case as irrelevant, we store the first 280 characters of
+      your scenario, the case you flagged, the reason you picked, any note you
+      add, and your search filters. We use these reports to improve which cases
+      we show, and delete each one after 90 days.
     </p>
 
-    <h2>Changes to This Policy</h2>
+    <h3>Accounts (optional)</h3>
     <p>
-      We may update this privacy policy from time to time. We will notify you of
-      any changes by posting the new policy on this page.
+      Sign-in is handled by Supabase. We store your email address, and your
+      password goes straight to Supabase, so we never see it. Sign-in,
+      confirmation and password-reset emails are sent through Resend.
+    </p>
+    <p>
+      While you're signed in, your bookmarks and your search history (the text
+      of each search, its filters and how many results it returned) are saved
+      to your account so they're available on your other devices. Only your
+      account can read them. When you sign in, bookmarks and searches you made
+      on this device before signing in are added to your account too.
+    </p>
+
+    <h3>Technical information</h3>
+    <ul>
+      <li>
+        Your IP address, or your account ID when you're signed in, is used to
+        limit how many requests can be made per hour. These counters expire
+        within about an hour.
+      </li>
+      <li>
+        Our host, Vercel, keeps request logs that include your IP address and
+        browser type for about an hour.
+      </li>
+      <li>
+        When something breaks, an error report goes to Sentry. Scenario text,
+        summaries and sign-in tokens are removed from these reports before they
+        are sent.
+      </li>
+      <li>
+        Vercel Analytics counts page views so we can see overall site usage. It
+        doesn't use advertising cookies.
+      </li>
+    </ul>
+
+    <h3>Stored in your browser</h3>
+    <p>
+      Without an account, your bookmarks are saved in your browser's local
+      storage and your search history stays in the open tab until you reload or
+      close it. If you sign in, Supabase keeps your sign-in session in local
+      storage. When you sign out, your bookmarks and search history are cleared
+      from this browser; they stay in your account. We don't use advertising or
+      tracking cookies.
+    </p>
+
+    <h2>How long we keep it</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Information</th>
+          <th>Kept for</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cached results and exported PDFs</td>
+          <td>Up to 7 days</td>
+        </tr>
+        <tr>
+          <td>Case-law reports</td>
+          <td>90 days</td>
+        </tr>
+        <tr>
+          <td>Rate-limit counters and request logs</td>
+          <td>About an hour</td>
+        </tr>
+        <tr>
+          <td>Account email, bookmarks and search history</td>
+          <td>Until you delete them or ask us to delete your account</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Service providers</h2>
+    <p>
+      These companies process information for us, and each one's own privacy
+      policy also applies:
+    </p>
+    <ul>
+      <li><strong>Anthropic</strong> — generates the analysis of your scenario.</li>
+      <li><strong>Supabase</strong> — accounts, bookmarks and search history.</li>
+      <li><strong>Upstash</strong> — caches, case-law reports and rate limits.</li>
+      <li><strong>Vercel</strong> — hosting, request logs and page-view analytics.</li>
+      <li><strong>Sentry</strong> — error reports.</li>
+      <li><strong>Resend</strong> — sign-in and password-reset emails.</li>
+      <li><strong>CanLII</strong> — citation checks (no scenario text).</li>
+    </ul>
+    <p>
+      Some of these providers store or process information outside Canada,
+      mostly in the United States. While it's there, it can be accessed by
+      courts and authorities under that country's laws.
+    </p>
+
+    <h2>Your choices and rights</h2>
+    <ul>
+      <li>
+        Remove bookmarks or clear your search history in the app. When you're
+        signed in, clearing history also removes it from your account.
+      </li>
+      <li>
+        Email us to see the information we hold about you, correct it, or delete
+        your account. Deleting an account removes its bookmarks and search
+        history too. We'll reply within 30 days.
+      </li>
+      <li>
+        If you're not satisfied with our answer, you can complain to the Office
+        of the Privacy Commissioner of Canada at
+        <a href="https://www.priv.gc.ca">priv.gc.ca</a>.
+      </li>
+    </ul>
+
+    <h2>Security</h2>
+    <p>
+      Information is encrypted in transit. Each account can read only its own
+      rows in the database, and service keys stay on our server. No system is
+      perfectly secure. If a breach creates a real risk of significant harm to
+      you, we'll tell you and the Privacy Commissioner.
+    </p>
+
+    <h2>Children</h2>
+    <p>
+      CaseDive is an educational tool and isn't meant for children under 13. We
+      don't knowingly collect their information.
+    </p>
+
+    <h2>Changes to this policy</h2>
+    <p>
+      If we change this policy, we'll post the new version here with a new
+      effective date.
     </p>
 
     <div class="contact">
-      <h2>Contact Us</h2>
+      <h2>Contact</h2>
       <p>
-        If you have any questions about this Privacy Policy, please contact us
-        at:
+        Questions, requests and complaints go to the person responsible for
+        privacy at CaseDive:
       </p>
       <p><strong>Email:</strong> contact@casedive.ca</p>
-      <p><strong>Subject:</strong> Privacy Policy Inquiry</p>
+      <p><strong>Subject:</strong> Privacy request</p>
     </div>
   </body>
 </html>

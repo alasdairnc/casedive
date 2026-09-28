@@ -27,7 +27,6 @@ casedive/
 |  |- export-pdf.js           # POST /api/export-pdf — branded PDF export
 |  |- filter-quality.js       # GET /api/filter-quality — internal filter dashboard (auth-gated)
 |  |- retrieval-health.js     # GET /api/retrieval-health — retrieval metrics/alerts snapshot (auth-gated)
-|  |- retrieve-caselaw.js     # POST /api/retrieve-caselaw — Phase A retrieval endpoint
 |  \- verify.js               # POST /api/verify — citation verification (max 10 citations)
 |- src/
 |  |- components/             # Header, FiltersPanel, SearchArea, StagedLoading, Results,

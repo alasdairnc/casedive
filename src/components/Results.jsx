@@ -262,13 +262,12 @@ export default function Results({
   const isWide = useMediaQuery(WIDE_LAYOUT_QUERY);
   const analysisText = useTypewriter(data.analysis || "", 10);
   const [verifications, setVerifications] = useState({});
-  const [verifyingCitations, setVerifyingCitations] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
   const [pdfState, setPdfState] = useState("idle");
   const pdfErrorTimer = useRef(null);
   const caseLawMeta = data?.meta?.case_law;
-  const retrievalMeta = caseLawMeta?.retrieval || {};
-  const issuePrimary = retrievalMeta.issuePrimary || null;
+  const retrievalMeta = caseLawMeta?.retrieval;
+  const issuePrimary = retrievalMeta?.issuePrimary || null;
   const showCaseLawEmptyState =
     CASE_LAW_EMPTY_SOURCES.has(caseLawMeta?.source) &&
     caseLawMeta?.reason !== "filter_disabled" &&
@@ -315,8 +314,10 @@ export default function Results({
     (retrievalStats.searchCalls > 0 || retrievalStats.candidateCount > 0);
   const analysisRequestId = data?.meta?.requestId || null;
 
+  // Check this result's citations. A newer result cancels the check for the
+  // older one, so a late answer can't land on the new cards.
   useEffect(() => {
-    if (!data || verifyingCitations) return;
+    if (!data) return undefined;
     const citationSet = new Set();
     const sections = ["criminal_code", "case_law", "civil_law", "charter"];
     for (const section of sections) {
@@ -330,8 +331,8 @@ export default function Results({
       }
       if (citationSet.size >= 20) break;
     }
-    if (citationSet.size === 0) return;
-    setVerifyingCitations(true);
+    if (citationSet.size === 0) return undefined;
+    let cancelled = false;
     fetch("/api/verify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -339,12 +340,19 @@ export default function Results({
     })
       .then((res) => res.json())
       .then((json) => {
-        if (json && typeof json === "object" && !Array.isArray(json)) {
+        if (
+          !cancelled &&
+          json &&
+          typeof json === "object" &&
+          !Array.isArray(json)
+        ) {
           setVerifications(json);
         }
       })
-      .catch(() => {})
-      .finally(() => setVerifyingCitations(false));
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [data]);
 
   const isOldFormat = data.charges && !data.criminal_code;
@@ -385,7 +393,7 @@ export default function Results({
         PDF_ERROR_RESET_MS,
       );
     }
-  }, [pdfState, data, verifications]);
+  }, [pdfState, scenario, data, verifications]);
 
   const handleReportCaseLaw = useCallback(
     async ({ item, resultIndex, reason, note }) => {

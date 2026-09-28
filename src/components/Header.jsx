@@ -67,7 +67,6 @@ export default function Header({
   onShowHistory,
   onShowBookmarks,
   onShowCriminalCode,
-  activePanel,
 }) {
   const t = useTheme();
   const isMobile = useMediaQuery(MOBILE_NAV_QUERY);

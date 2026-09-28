@@ -1,11 +1,7 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { MASTER_CASE_LAW_DB } from "./src/lib/caselaw/index.js";
-import {
-  buildCaseUrl,
-  buildSearchUrl,
-  parseCitation,
-} from "./src/lib/canlii.js";
+import { buildSearchUrl } from "./src/lib/canlii.js";
 import {
   ANTHROPIC_MODEL_ID,
   ANTHROPIC_MESSAGES_URL,
@@ -140,11 +136,8 @@ function buildOfflineAnalyzeResponse(scenario) {
   };
 }
 
-export default defineConfig(({ mode }) => {
-  // Load only VITE_* prefixed variables for frontend safety
+export default defineConfig(() => {
   // API keys use process.env directly in dev middleware (Node.js can access all env vars)
-  const env = loadEnv(mode, process.cwd(), "VITE_");
-
   return {
     plugins: [
       react(),
@@ -468,10 +461,18 @@ export default defineConfig(({ mode }) => {
       },
     ],
     build: {
-      rollupOptions: {
+      // Vite 6's default. Vite 8's default (Safari 16.4, Chrome 111) would
+      // drop older iPhones and other browsers the site supports today.
+      target: ["es2020", "edge88", "firefox78", "chrome87", "safari14"],
+      rolldownOptions: {
         output: {
-          manualChunks: {
-            vendor: ["react", "react-dom"],
+          codeSplitting: {
+            groups: [
+              {
+                name: "vendor",
+                test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+              },
+            ],
           },
         },
       },

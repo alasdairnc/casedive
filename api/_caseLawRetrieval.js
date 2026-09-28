@@ -3,7 +3,6 @@
 // and return only citations that verify through the existing lookup pipeline.
 
 import {
-  COURT_API_MAP,
   parseCitation,
   buildSearchUrl,
   buildCaseUrl,
@@ -29,11 +28,6 @@ import {
 } from "./_legalConcepts.js";
 import { cachedLookupCase } from "./_canliiCache.js";
 
-// SECURITY TESTING: Set CANLII_API_BASE_URL env var to redirect to a mock server.
-// Also update the matching constant in src/lib/canlii.js (where HTTP calls originate).
-// Revert both after testing. See scripts/README-security-testing.md.
-const CANLII_API_BASE =
-  process.env.CANLII_API_BASE_URL ?? "https://api.canlii.org/v1";
 const MAX_TERMS = 4;
 const MAX_DATABASES = 3;
 
@@ -90,8 +84,6 @@ const COURT_LEVEL_DB_IDS = {
   ],
 };
 
-const FEDERAL_DATABASE_IDS = ["csc-scc", "fca", "fct"];
-
 /** Lower rank = verify / display earlier (deterministic ordering). */
 const DATABASE_VERIFY_RANK = (() => {
   const order = [
@@ -131,32 +123,6 @@ const DATABASE_VERIFY_RANK = (() => {
   order.forEach((id, i) => map.set(id, i));
   return map;
 })();
-
-const DB_TO_COURT_CODE = (() => {
-  const map = new Map();
-  for (const [code, dbId] of Object.entries(COURT_API_MAP)) {
-    if (!dbId) continue;
-    if (!map.has(dbId)) {
-      map.set(dbId, code);
-      continue;
-    }
-    // Prefer the shorter/common code where there are aliases (e.g., SCC over CSC).
-    const existing = map.get(dbId);
-    if (code.length < existing.length) {
-      map.set(dbId, code);
-    }
-  }
-  if (map.has("csc-scc")) map.set("csc-scc", "SCC");
-  return map;
-})();
-
-function getString(value) {
-  if (typeof value === "string") return value.trim();
-  if (!value || typeof value !== "object") return "";
-  if (typeof value.en === "string") return value.en.trim();
-  if (typeof value.fr === "string") return value.fr.trim();
-  return "";
-}
 
 function sanitizeTerm(term) {
   if (typeof term !== "string") return "";
@@ -1768,6 +1734,11 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
     .slice(0, Math.max(1, Math.min(3, maxResults)));
 }
 
+// Marks a candidate the model suggested and CanLII confirmed. A symbol, so it
+// never reaches JSON (API responses, caches); it is also stripped on the way
+// out of retrieveVerifiedCaseLaw.
+const VERIFIED_BY_LOOKUP = Symbol("verifiedByLookup");
+
 function selectFinalCandidates({
   candidates = [],
   issuePrimary = "general_criminal",
@@ -1831,12 +1802,20 @@ function selectFinalCandidates({
     return score >= moderateScoreThreshold;
   });
 
+  // Nothing cleared a threshold. Keep the single best only when it is a
+  // citation the model suggested and CanLII confirmed (the failure corpus
+  // can't measure that path, so it keeps its old behaviour). A weak landmark,
+  // landmark seed or local-fallback case is dropped: showing one anyway put
+  // unrelated case law on "no case law" scenarios, e.g. R v Stewart for a
+  // stolen chair (tests/unit/retrievalFailureSet.js).
   const selected =
     strict.length > 0
       ? strict
       : moderate.length > 0
         ? moderate
-        : sorted.slice(0, 1);
+        : sorted[0]?.[VERIFIED_BY_LOOKUP]
+          ? sorted.slice(0, 1)
+          : [];
 
   // Keep a slightly wider set for broad/general scenarios.
   const cap =
@@ -2331,7 +2310,7 @@ function pickDatabaseTargets(filters = {}) {
 
   if (courtLevel === "scc") return ["csc-scc"];
 
-  let ids = [];
+  let ids;
   if (jurisdiction !== "all" && JURISDICTION_DB_IDS[jurisdiction]) {
     ids = [...JURISDICTION_DB_IDS[jurisdiction], "csc-scc"]; // Always include SCC as fallback
   } else {
@@ -2746,7 +2725,10 @@ export async function retrieveVerifiedCaseLaw({
   const verifiedCases = [];
   for (let i = 0; i < toVerify.length; i++) {
     if (verificationResults[i].status === "verified") {
-      verifiedCases.push(toCaseLawItem(toVerify[i], verificationResults[i]));
+      verifiedCases.push({
+        ...toCaseLawItem(toVerify[i], verificationResults[i]),
+        [VERIFIED_BY_LOOKUP]: true,
+      });
     }
   }
 
@@ -2836,7 +2818,11 @@ export async function retrieveVerifiedCaseLaw({
         : "semantic_primary";
 
   const cases = selectedCandidates.slice(0, maxResults).map((item) => {
-    const { retrievalScore: _dropScore, ...rest } = item;
+    const {
+      retrievalScore: _dropScore,
+      [VERIFIED_BY_LOOKUP]: _dropVerified,
+      ...rest
+    } = item;
     return rest;
   });
   const verificationCallsTotal = toVerify.length;

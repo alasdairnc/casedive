@@ -1,8 +1,14 @@
 import { redis } from "./_rateLimit.js";
 import { API_REDIS_TIMEOUT_MS } from "./_constants.js";
+import { withRedisTimeout } from "./_redisTimeout.js";
 import { isValidUrl } from "../src/lib/validateUrl.js";
 
-const REPORTS_KEY = "feedback:case-law-reports:v1";
+// One key per report so each expires on its own; the privacy policy promises
+// reports are deleted after REPORT_RETENTION_DAYS.
+const REPORT_KEY_PREFIX = "feedback:case-law-report:v2:";
+export const REPORT_RETENTION_DAYS = 90;
+const REPORT_RETENTION_S = REPORT_RETENTION_DAYS * 24 * 60 * 60;
+const REPORT_RETENTION_MS = REPORT_RETENTION_S * 1000;
 const MAX_STORED_REPORTS = 1000;
 const memoryReports = [];
 
@@ -92,44 +98,49 @@ export function normalizeCaseLawReport(raw = {}) {
   return normalized;
 }
 
-function trimMemoryReports() {
-  if (memoryReports.length > MAX_STORED_REPORTS) {
-    memoryReports.splice(0, memoryReports.length - MAX_STORED_REPORTS);
+function isWithinRetention(report, nowMs) {
+  const reportedMs = Date.parse(report.reportedAt);
+  return (
+    Number.isFinite(reportedMs) && reportedMs > nowMs - REPORT_RETENTION_MS
+  );
+}
+
+function pruneMemoryReports(nowMs) {
+  const kept = memoryReports
+    .filter((report) => isWithinRetention(report, nowMs))
+    .slice(-MAX_STORED_REPORTS);
+  memoryReports.length = 0;
+  memoryReports.push(...kept);
+}
+
+function parseStoredReport(row) {
+  if (typeof row !== "string") return normalizeCaseLawReport(row);
+  try {
+    return normalizeCaseLawReport(JSON.parse(row));
+  } catch {
+    return null;
   }
 }
 
 async function readRedisReports() {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Redis timeout")), API_REDIS_TIMEOUT_MS),
+  const keys = [];
+  let cursor = "0";
+  do {
+    const [nextCursor, batch] = await withRedisTimeout(
+      redis.scan(cursor, { match: `${REPORT_KEY_PREFIX}*`, count: 500 }),
+      API_REDIS_TIMEOUT_MS,
+    );
+    keys.push(...batch);
+    cursor = String(nextCursor);
+  } while (cursor !== "0");
+
+  if (keys.length === 0) return [];
+
+  const rows = await withRedisTimeout(
+    redis.mget(...keys),
+    API_REDIS_TIMEOUT_MS,
   );
-  const raw = await Promise.race([redis.get(REPORTS_KEY), timeout]);
-  let rows = raw;
-
-  if (typeof raw === "string") {
-    try {
-      rows = JSON.parse(raw);
-    } catch {
-      rows = [];
-    }
-  }
-
-  if (!Array.isArray(rows)) return [];
-
-  return rows
-    .map((row) => normalizeCaseLawReport(row))
-    .filter(Boolean)
-    .slice(-MAX_STORED_REPORTS);
-}
-
-async function writeRedisReports(reports) {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Redis timeout")), API_REDIS_TIMEOUT_MS),
-  );
-
-  await Promise.race([
-    redis.set(REPORTS_KEY, JSON.stringify(reports.slice(-MAX_STORED_REPORTS))),
-    timeout,
-  ]);
+  return rows.map(parseStoredReport).filter(Boolean);
 }
 
 export async function recordCaseLawReport(raw = {}) {
@@ -139,14 +150,19 @@ export async function recordCaseLawReport(raw = {}) {
   }
 
   memoryReports.push(normalized);
-  trimMemoryReports();
+  pruneMemoryReports(Date.now());
 
   if (!redis) return normalized;
 
   try {
-    const existing = await readRedisReports();
-    existing.push(normalized);
-    await writeRedisReports(existing);
+    await withRedisTimeout(
+      redis.set(
+        `${REPORT_KEY_PREFIX}${normalized.reportId}`,
+        JSON.stringify(normalized),
+        { ex: REPORT_RETENTION_S },
+      ),
+      API_REDIS_TIMEOUT_MS,
+    );
   } catch {
     // In-memory fallback already captured the report.
   }
@@ -154,15 +170,20 @@ export async function recordCaseLawReport(raw = {}) {
   return normalized;
 }
 
-export async function getStoredCaseLawReports() {
+export async function getStoredCaseLawReports({ nowMs = Date.now() } = {}) {
   if (redis) {
     try {
-      return await readRedisReports();
+      const reports = await readRedisReports();
+      return reports
+        .filter((report) => isWithinRetention(report, nowMs))
+        .sort((a, b) => Date.parse(a.reportedAt) - Date.parse(b.reportedAt))
+        .slice(-MAX_STORED_REPORTS);
     } catch {
       // Fall through to memory snapshot.
     }
   }
 
+  pruneMemoryReports(nowMs);
   return memoryReports.slice();
 }
 

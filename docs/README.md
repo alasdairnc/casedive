@@ -11,6 +11,7 @@
 - `architecture.md` — System architecture and component boundaries.
 - `design-system.md` — UI patterns, tokens, and design conventions.
 - `security.md` — Security posture and safeguards.
+- `adr/` — Architecture decision records: why the function cap, parked billing and the desktop layout are the way they are.
 
 ## Filtering
 
@@ -20,6 +21,7 @@
 ## Operations
 
 - `operations/PERFORMANCE_PLAN.md` — Performance optimization and monitoring plan.
+- `breach-response.md` — What to do if personal information may have been exposed (PIPEDA steps and record template).
 - Audit history lives in `.claude/skills/casedive-audit/AUDIT_LOG.md` (append-only, written by the `casedive-audit` skill).
 
 ## Parked
