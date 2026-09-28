@@ -18,7 +18,7 @@ Educational tool only, not legal advice.
 ```bash
 npm install
 cp .env.example .env        # add ANTHROPIC_API_KEY (CANLII_API_KEY optional)
-npm run security:hooks      # wire the gitleaks pre-commit + security pre-push hooks
+npm run security:hooks      # wire the gitleaks pre-commit + unit-test pre-push hooks
 npm run dev:api             # full stack via `vercel dev` (npm run dev = frontend only)
 ```
 
