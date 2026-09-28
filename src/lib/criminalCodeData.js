@@ -18350,6 +18350,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-746.1.html`,
+      summary:
+        "Sets rules restricting parole, day parole and unescorted or escorted absences for a person serving a life sentence with a specified parole ineligibility period, including a shorter ineligibility threshold for offenders under 18 at the time of the murder.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -18360,6 +18362,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-748.html`,
+      summary:
+        "Allows the Crown to extend mercy or grant a free or conditional pardon to a convicted person, and provides that a free pardon means the person is treated as never having committed the offence, though a subsequent conviction for a different offence is unaffected.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -18370,6 +18374,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-748.1.html`,
+      summary:
+        "Allows the Governor in Council to remit, in whole or in part, a fine or forfeiture imposed under a federal Act, including related costs, but not costs owed to a private prosecutor.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -18380,6 +18386,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-749.html`,
+      summary:
+        "States that nothing in the Act limits or affects the royal prerogative of mercy.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -18390,6 +18398,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-750.html`,
+      summary:
+        "Provides that a person convicted of an indictable offence carrying two years or more imprisonment automatically loses any public office or Crown employment and becomes ineligible to hold office or vote until the sentence is served or a pardon is granted, and sets out related rules on contracting with the Crown and applying to have those capacities restored.",
+      relatedSections: ["121", "124", "418", "380"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -18400,6 +18411,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-751.html`,
+      summary:
+        "Entitles the party who wins an indictment proceeding for defamatory libel to recover reasonable costs from the other party, as fixed by court order.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -18410,6 +18423,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-751.1.html`,
+      summary:
+        "Allows a party owed costs fixed under section 751 to enter and enforce that amount as a civil court judgment if it is not paid immediately.",
+      relatedSections: ["751"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -18422,6 +18438,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-752.html`,
+      summary:
+        "Defines terms used in this Part, including court, designated offence, long-term supervision, primary designated offence and serious personal injury offence, by listing the specific Criminal Code provisions and criteria each term covers.",
+      relatedSections: ["753", "753.01", "753.1", "759"],
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18432,6 +18451,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-752.01.html`,
+      summary:
+        "Requires the prosecutor to tell the court, before sentencing, whether they intend to apply under section 752.1 where the offence is a serious personal injury offence and the offender has a specified pattern of prior related convictions.",
+      relatedSections: ["752.1"],
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18442,6 +18464,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-752.1.html`,
+      summary:
+        "Allows the court, on the prosecutor's application, to remand an offender for up to 60 days for an assessment where there are reasonable grounds to believe the offender may be found a dangerous or long-term offender, and sets deadlines and extension rules for filing the resulting report.",
+      relatedSections: ["753", "753.1"],
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18452,6 +18477,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.html`,
+      summary:
+        "Sets out the grounds on which a court must find an offender to be a dangerous offender based on patterns of violent or sexual behaviour, when such an application must be made, and the sentencing options available once that finding is made.",
+      relatedSections: ["752", "753.1"],
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18462,6 +18490,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.01.html`,
+      summary:
+        "Sets out the process where a person already found to be a dangerous offender is convicted of a further serious offence, allowing the prosecutor to seek a fresh assessment and then apply for indeterminate detention or a new period of long-term supervision.",
+      relatedSections: ["753.3"],
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18472,6 +18503,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.02.html`,
+      summary:
+        "Provides that victim evidence given at a dangerous offender application hearing is also deemed to have been given at any related hearing under sections 753 or 753.01.",
+      relatedSections: ["753", "753.01"],
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18482,6 +18516,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.1.html`,
+      summary:
+        "Sets out the conditions under which a court may find an offender to be a long-term offender, including a substantial risk of reoffending and a reasonable possibility of controlling that risk in the community, and the resulting sentence and supervision order.",
+      relatedSections: ["151", "152", "153", "153.1", "163.1", "170"],
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18492,6 +18529,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.2.html`,
+      summary:
+        "Describes how and when long-term supervision in the community begins after an offender finishes their sentences, and the process for applying to reduce or end the supervision period on the ground that the offender no longer poses a substantial risk.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18500,8 +18539,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Breach of long-term supervision",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "Indictable: imprisonment for not more than 10 years. Also punishable on summary conviction if the Crown elects that procedure.",
       url: `${JUSTICE_LAWS_BASE}/section-753.3.html`,
+      summary:
+        "Makes it an offence for an offender to fail or refuse, without reasonable excuse, to comply with a long-term supervision order, and sets out where the offender may be tried and punished.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18512,6 +18553,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-753.4.html`,
+      summary:
+        "Provides that long-term supervision is interrupted while an offender serves a new sentence of imprisonment for a further offence, unless the court orders otherwise or reduces the supervision period.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18522,6 +18565,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-754.html`,
+      summary:
+        "Sets conditions that must be met before a court can hear a dangerous or long-term offender application, including Attorney General consent and notice to the offender, and states the application is heard by the court alone without a jury.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18532,6 +18577,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-755.html`,
+      summary:
+        "Bars a court from ordering long-term supervision for an offender sentenced to life imprisonment and caps the total periods of long-term supervision an offender may be subject to at ten years.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18542,6 +18589,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-757.html`,
+      summary:
+        "Allows evidence of the offender's character and repute to be admitted on the question of whether they are a dangerous or long-term offender and in connection with the sentence or order to be made.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18552,6 +18601,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-758.html`,
+      summary:
+        "Requires the offender to be present at the hearing of a dangerous or long-term offender application and sets out how the court secures their attendance, with exceptions allowing removal for misconduct or permitted absence.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18562,6 +18613,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-759.html`,
+      summary:
+        "Gives the offender and the Attorney General rights to appeal a dangerous or long-term offender decision to the court of appeal, describes the court of appeal's powers on such an appeal, and applies the general appeal procedure rules.",
+      relatedSections: ["719"],
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18572,6 +18626,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-760.html`,
+      summary:
+        "Requires the court, upon finding an offender to be a dangerous or long-term offender, to forward copies of expert reports, testimony, the court's reasons and the trial transcript to the Correctional Service of Canada.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18582,6 +18638,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-761.html`,
+      summary:
+        "Requires the Parole Board of Canada to periodically review the case of a person serving an indeterminate sentence to decide whether parole should be granted, with different review timelines depending on when the sentence was imposed.",
       partOf: "Part XXIV — Dangerous Offenders and Long-term Offenders",
     },
   ],
@@ -18594,6 +18652,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-762.html`,
+      summary:
+        "Sets out that applications to forfeit an amount under an undertaking, release order or recognizance must be made to specified courts, and defines terms used in this Part.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18604,6 +18664,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-763.html`,
+      summary:
+        "Provides that a person and their sureties remain bound by an undertaking, release order or recognizance to appear in court even if proceedings are adjourned or the trial location is changed, and requires a summary of the section to appear on such documents.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18614,6 +18676,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-764.html`,
+      summary:
+        "Provides that an accused's arraignment or conviction does not cancel their release conditions, which continue to bind them and their sureties until discharge or sentencing, and allows the court to commit the accused or require new sureties, discharging existing sureties if committal occurs.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18624,6 +18688,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-765.html`,
+      summary:
+        "Provides that an accused's arrest on another charge does not cancel an existing undertaking or release order, which continues to bind them and their sureties until they are discharged or sentenced on the original offence.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18634,6 +18700,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-766.html`,
+      summary:
+        "Sets out the process by which a surety can apply to be relieved of their obligation, resulting in an order committing the person to prison, and describes how the arrest, delivery, and endorsement of that committal discharge the sureties.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18644,6 +18712,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-767.html`,
+      summary:
+        "Allows a surety to bring the person they are bound for before the court and discharge their obligation by surrendering that person into the court's custody, after which the court commits the person to prison.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18654,6 +18724,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-767.1.html`,
+      summary:
+        "Allows a court, justice or provincial court judge to substitute another suitable person for a surety instead of committing the accused to prison, and provides that signing by the new surety discharges the original one without otherwise affecting the release order or recognizance.",
+      relatedSections: ["767", "766"],
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18664,6 +18737,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-768.html`,
+      summary:
+        "Preserves a surety's existing right to take and give into custody any person for whom they are a surety under a release order or recognizance.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18674,6 +18749,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-769.html`,
+      summary:
+        "Provides that when a surety has rendered a person into custody and that person is committed to prison, the judicial interim release provisions apply and the person must promptly be brought before a justice or judge as if newly charged or appealing.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18684,6 +18761,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-770.html`,
+      summary:
+        "Requires a court, judge or justice who learns that a person has not complied with an undertaking, release order or recognizance to endorse a certificate detailing the default, and sets out how the document and any deposited money are transmitted to the clerk of the court.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18694,6 +18773,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-771.html`,
+      summary:
+        "Sets out the procedure for holding a forfeiture hearing after a default has been certified, including notice to the principal and sureties, the judge's power to order forfeiture making them judgment debtors of the Crown, and how the order may be filed and enforced or a deposit transferred instead.",
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18704,6 +18785,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-772.html`,
+      summary:
+        "Directs the sheriff to execute a writ of fieri facias issued under this Part in the same manner as similar civil writs and entitles the Crown to costs of execution as fixed by the applicable provincial tariff.",
+      relatedSections: ["771"],
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18714,6 +18798,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-773.html`,
+      summary:
+        "Sets out the process for committing sureties to prison where a writ of fieri facias has not been fully satisfied, including notice requirements and the judge's discretion to discharge the amount owed or order imprisonment.",
+      relatedSections: ["771", "734.4"],
       partOf: "Part XXV — Effect and Enforcement of Undertakings, Release Orders and Recognizances",
     },
   ],
@@ -18726,6 +18813,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-774.html`,
+      summary:
+        "States that this Part applies to criminal proceedings by way of certiorari, habeas corpus, mandamus, procedendo and prohibition.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18736,6 +18825,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-774.1.html`,
+      summary:
+        "Requires the person who is the subject of a writ of habeas corpus to appear in court in person, despite any other provision of the Act.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18746,6 +18837,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-775.html`,
+      summary:
+        "Allows a judge or court hearing habeas corpus-type proceedings about the legality of a person's custody to order further detention without deciding the issue, and to direct further proceedings or evidence to best serve the interests of justice.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18756,6 +18849,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-776.html`,
+      summary:
+        "Bars removal of a conviction or order by certiorari where an appeal was taken, or where the defendant appeared, pleaded and had the merits tried but did not appeal despite being able to.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18766,6 +18861,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-777.html`,
+      summary:
+        "Sets out that a conviction, order or warrant reviewed on certiorari will not be held invalid for irregularity if the court is satisfied the offence was committed, there was jurisdiction, and the punishment was lawful, and describes how the court corrects an excessive sentence or remits the matter back.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18776,6 +18873,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-778.html`,
+      summary:
+        "Clarifies that section 777 also applies where the adjudication is stated in the wrong tense, where a lesser punishment than lawfully available was imposed, or where circumstances that would make the act lawful were not negatived in the charging document.",
+      relatedSections: ["777"],
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18786,6 +18886,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-779.html`,
+      summary:
+        "Allows a court with authority to quash a conviction on certiorari to require the defendant to post a recognizance or deposit as a condition of hearing the motion, and applies the Part XXV forfeiture provisions to that recognizance.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18796,6 +18898,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-780.html`,
+      summary:
+        "Provides that when a motion to quash a conviction or order is refused, that refusal authorizes the clerk to return the matter to the original court for enforcement proceedings.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18806,6 +18910,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-781.html`,
+      summary:
+        "Provides that a conviction or proceeding cannot be quashed and a defendant cannot be discharged merely because evidence was not given of certain proclamations, orders or regulations or their publication, since such matters are judicially noticed.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18816,6 +18922,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-782.html`,
+      summary:
+        "Provides that a warrant of committal is not void on certiorari or habeas corpus merely for a defect, as long as it alleges the defendant was convicted and a valid conviction supports it.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18826,6 +18934,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-783.html`,
+      summary:
+        "Allows the court or judge, when quashing a conviction or order made by a provincial court judge or justice who exceeded their jurisdiction, to order that no civil proceedings be taken against that judicial officer or any official who acted under it.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18836,6 +18946,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-784.html`,
+      summary:
+        "Allows an appeal to the court of appeal from decisions on mandamus, certiorari or prohibition, and sets out special appeal rules for habeas corpus applications, including restrictions on repeat applications and who may appeal a decision to grant or deny the writ.",
       partOf: "Part XXVI — Extraordinary Remedies",
     },
   ],
@@ -18848,6 +18960,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-785.html`,
+      summary:
+        "Defines terms used throughout this Part, including clerk of the appeal court, informant, information, order, proceedings, prosecutor, sentence, summary conviction court, and trial.",
+      relatedSections: ["199", "109", "110", "730", "731", "732"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18858,6 +18973,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-786.html`,
+      summary:
+        "States that this Part applies to proceedings as defined here unless the law provides otherwise, and requires proceedings to be commenced within 12 months of when the subject matter arose unless the prosecutor and defendant agree otherwise.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18866,8 +18983,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "General penalty",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Fine of not more than $5,000, or imprisonment for not more than two years less a day, or both — this is itself the general default penalty for summary conviction offences that have no penalty otherwise specified by law.",
       url: `${JUSTICE_LAWS_BASE}/section-787.html`,
+      summary:
+        "Sets the general penalty that applies to summary conviction offences when no other penalty is specified by law, and allows a court to order imprisonment in default of payment of a fine or compliance with an order when the authorizing law does not otherwise provide for default imprisonment.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18878,6 +18997,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-788.html`,
+      summary:
+        "Requires proceedings under this Part to be commenced by laying an information in the prescribed form, and allows a single justice to receive the information, issue a summons or warrant, and handle preliminary matters even where the law otherwise requires two or more justices.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18888,6 +19009,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-789.html`,
+      summary:
+        "Sets out formal requirements for an information, including that it be in writing and under oath and that multiple offences or matters be set out in separate counts, and prohibits referencing previous convictions in an information where they would increase the punishment.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18898,6 +19021,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-790.html`,
+      summary:
+        "Clarifies that the justice who commences proceedings or issues process need not be the same justice who presides at trial, and sets out how multiple justices with jurisdiction over proceedings must act together at trial while one justice may act afterward.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18908,6 +19033,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-794.html`,
+      summary:
+        "States that an information does not need to set out or negative any exception, exemption, proviso, excuse or qualification prescribed by law.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18918,6 +19045,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-795.html`,
+      summary:
+        "Applies specified provisions of other Parts of the Act dealing with compelling an accused's appearance and related procedures to proceedings under this Part, with necessary modifications.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18928,6 +19057,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-798.html`,
+      summary:
+        "Gives every summary conviction court jurisdiction to try, determine and adjudge proceedings under this Part within the territorial division over which the presiding person has jurisdiction.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18938,6 +19069,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-799.html`,
+      summary:
+        "Allows a summary conviction court to dismiss the information or adjourn the trial when the defendant appears but the prosecutor, despite due notice, does not.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18948,6 +19081,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-800.html`,
+      summary:
+        "Requires the court to proceed with trial when both prosecutor and defendant appear, and sets out how a defendant may appear personally, by counsel or agent, or, if an organization, must appear by counsel or agent.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18958,6 +19093,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-801.html`,
+      summary:
+        "Sets out the arraignment process where the substance of the information is stated to the defendant and a plea or cause is requested, and describes the resulting procedure depending on whether the charge is admitted or contested.",
+      relatedSections: ["730"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18968,6 +19106,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-802.html`,
+      summary:
+        "Confirms the prosecutor's right to personally conduct the case and the defendant's right to make full answer and defence, allows both to examine and cross-examine witnesses personally or through counsel or agent, and requires witnesses to be examined under oath.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18978,6 +19118,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-802.1.html`,
+      summary:
+        "Restricts a defendant's ability to appear or examine and cross-examine witnesses through an agent where they face potential imprisonment of more than six months, except in specified circumstances such as being an organization or requesting an adjournment.",
+      relatedSections: ["800", "802"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18988,6 +19131,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-803.html`,
+      summary:
+        "Gives the court discretion to adjourn a trial and directs it to consider the interests of justice, including victim interests, and sets out what the court may do when a defendant or prosecutor fails to appear at a scheduled or resumed trial.",
+      relatedSections: ["145"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -18998,6 +19144,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-804.html`,
+      summary:
+        "Directs the summary conviction court, after hearing the prosecutor, defendant and witnesses, to convict, discharge, make an order against, or dismiss the information regarding the defendant as appropriate.",
+      relatedSections: ["730"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19008,6 +19157,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-806.html`,
+      summary:
+        "Requires a memorandum of conviction or order to be made and, on request, a certified copy provided, and requires the court to issue a warrant of committal where a defendant is convicted or an order made against them.",
+      relatedSections: ["528"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19018,6 +19170,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-807.html`,
+      summary:
+        "Sets out how payments ordered against multiple joint offenders convicted of the same offence are to be limited and distributed so the person harmed does not receive more than the value of the loss plus costs.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19028,6 +19182,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-808.html`,
+      summary:
+        "Allows a summary conviction court to draw up and provide a certified copy of an order of dismissal at the defendant's request, and provides that such a certified copy bars any subsequent proceedings against the defendant for the same matter.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19038,6 +19194,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-809.html`,
+      summary:
+        "Gives a summary conviction court discretion to award costs to the informant or the defendant depending on the outcome, and sets out how costs relate to fines, imprisonment in default, and their definition.",
+      relatedSections: ["840"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19048,6 +19207,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.html`,
+      summary:
+        "Allows a person who fears on reasonable grounds that another will cause them personal injury, damage their property, or commit certain offences to lay an information, and sets out the process for the justice or court to order a recognizance to keep the peace, commit the defendant to prison on refusal, and attach conditions.",
+      relatedSections: ["162.1", "810.3"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19058,6 +19220,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.01.html`,
+      summary:
+        "Allows a person who fears certain offences to lay an information with Attorney General consent, and sets out the process for ordering a recognizance to keep the peace, extending its duration for prior convictions, committing the defendant to prison on refusal, and attaching conditions.",
+      relatedSections: ["423.1", "810.3", "810"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19068,6 +19233,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.011.html`,
+      summary:
+        "Allows a person who fears a terrorism offence to lay an information with Attorney General consent, and sets out the process for ordering a recognizance to keep the peace, extending its duration for a prior terrorism conviction, committing the defendant to prison on refusal, and attaching conditions.",
+      relatedSections: ["810.3", "810"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19078,6 +19246,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.02.html`,
+      summary:
+        "Allows a person who fears a forced marriage or underage marriage offence to lay an information, and sets out the process for ordering a recognizance to keep the peace, extending its duration for prior convictions, committing the defendant to prison on refusal, and attaching conditions such as prohibiting marriage arrangements or requiring surrender of travel documents.",
+      relatedSections: ["273.3", "293.1", "293.2"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19088,6 +19259,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.03.html`,
+      summary:
+        "Allows a person who fears an offence causing personal injury to an intimate partner or child to lay an information, and sets out the process for ordering a recognizance to keep the peace, extending its duration for a prior violence-related conviction, considering Indigenous support services, committing the defendant to prison on refusal, and attaching protective conditions.",
+      relatedSections: ["810.3"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19098,6 +19272,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.1.html`,
+      summary:
+        "Allows a person who fears certain sexual offences against a person under 18 to lay an information, and sets out the process for ordering a recognizance to keep the peace, extending its duration for a prior sexual offence conviction, and attaching conditions such as restricting contact with minors or internet use.",
+      relatedSections: ["151", "152", "153", "155", "160", "163.1"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19108,6 +19285,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.2.html`,
+      summary:
+        "Allows a person who fears a serious personal injury offence to lay an information with Attorney General consent, and sets out the process for ordering a recognizance to keep the peace, extending its duration for prior convictions, committing the defendant to prison on refusal, and attaching conditions.",
+      relatedSections: ["752", "810.3", "810"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19118,6 +19298,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.21.html`,
+      summary:
+        "Allows a provincial court judge, on the prosecutor's application, to order that a defendant appear by audioconference or videoconference in specified peace-recognizance proceedings, and applies related provisions with necessary modifications.",
+      relatedSections: ["83.3", "810", "810.2", "769", "714.1", "714.8"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19128,6 +19311,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.22.html`,
+      summary:
+        "Sets out the process for transferring a peace-recognizance order to a provincial court judge in another territorial division when the bound person moves or is charged, convicted or discharged there, subject to Attorney General consent, and addresses who may act if the original judge is unavailable.",
+      relatedSections: ["83.3", "810", "810.2", "811", "730"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19138,6 +19324,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.3.html`,
+      summary:
+        "Requires the Attorney General of a province or territorial minister of justice to designate persons, places and procedures for taking, analyzing, storing and destroying bodily substance samples and related records under specified peace-recognizance provisions, and authorizes regulations governing these matters.",
+      relatedSections: ["810", "810.01", "810.011", "810.03", "810.1", "810.2"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19146,8 +19335,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Prohibition on use of bodily substance",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Guilty of an offence punishable on summary conviction; this section does not itself specify a fine or imprisonment amount.",
       url: `${JUSTICE_LAWS_BASE}/section-810.4.html`,
+      summary:
+        "Restricts the use of a bodily substance provided under specified peace-recognizance provisions to determining compliance with abstinence conditions, restricts disclosure of analysis results subject to limited exceptions, and makes contravention an offence punishable on summary conviction.",
+      relatedSections: ["810", "810.01", "810.011", "810.1", "810.2", "811"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19158,6 +19350,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-810.5.html`,
+      summary:
+        "Applies specified publication-ban and related order provisions to proceedings under specified peace-recognizance sections, and makes failing to comply with such an order an offence.",
+      relatedSections: ["486", "486.4", "486.5", "486.6", "486.7"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19168,6 +19363,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-811.html`,
+      summary:
+        "Describes breaching a recognizance under specified peace-recognizance provisions as an offence that can be prosecuted either as an indictable offence or as an offence punishable on summary conviction.",
+      relatedSections: ["83.3", "810", "810.2"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19178,6 +19376,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-811.1.html`,
+      summary:
+        "Sets out how a signed analyst's certificate regarding a bodily substance sample may be used as evidence in a prosecution for breach of an abstinence condition, and requires advance notice before it is admitted and allows the opposing party to require the analyst's attendance for cross-examination.",
+      relatedSections: ["320.11", "810", "810.01", "810.011", "810.1", "810.2"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19188,6 +19389,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-812.html`,
+      summary:
+        "Defines \"appeal court\" for sections 813 to 828, listing which court in each province or territory serves that function. Also specifies that a judge of the Court of Appeal of Nunavut is the appeal court when the appeal is from a summary conviction court judge of the Nunavut Court of Justice.",
+      relatedSections: ["813", "828"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19198,6 +19402,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-813.html`,
+      summary:
+        "Sets out who may appeal a summary conviction proceeding and on what grounds: the defendant may appeal a conviction, order, sentence, or certain verdicts, and the informant or Attorney General may appeal a stay, dismissal, sentence, or certain verdicts. Gives the Attorney General of Canada the same appeal rights as a provincial Attorney General in proceedings instituted by the federal government.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19208,6 +19414,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-814.html`,
+      summary:
+        "Specifies where an appeal under section 813 is to be heard in various provinces and the territories, generally at the sittings nearest to where the adjudication or proceedings arose, unless the appeal court judge appoints another location on a party's application.",
+      relatedSections: ["813"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19218,6 +19427,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-815.html`,
+      summary:
+        "Requires an appellant to give notice of appeal in the manner and within the period set by rules of court, and allows the appeal court or a judge to extend that time.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19228,6 +19439,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-816.html`,
+      summary:
+        "Requires a defendant who appeals under section 813 and is in custody to remain in custody unless the appeal court makes a release order, and requires immediate release once the appellant complies with that order. Applies certain other sections, with modifications, to these proceedings.",
+      relatedSections: ["813", "515", "495.1", "512.3", "524"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19238,6 +19452,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-817.html`,
+      summary:
+        "Requires a prosecutor appealing under section 813 to appear before a justice and enter into a recognizance, with conditions the justice sets, ensuring the prosecutor will appear at the appeal hearing. Does not apply to appeals taken by the Attorney General.",
+      relatedSections: ["813", "815"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19248,6 +19465,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-818.html`,
+      summary:
+        "Allows either the appellant or respondent to apply to the appeal court to review an order made by a justice under section 817, and directs the appeal court to dismiss or allow the application after hearing both sides. An order made on review has the same effect as one made by the justice.",
+      relatedSections: ["817"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19258,6 +19478,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-819.html`,
+      summary:
+        "Requires the person holding an in-custody appellant to apply to the appeal court to fix a hearing date if the appeal has not been heard within thirty days of the notice of appeal. Directs the appeal court to then fix a date and give directions to expedite the hearing.",
+      relatedSections: ["815"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19268,6 +19491,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-820.html`,
+      summary:
+        "States that paying a fine after conviction does not by itself waive the right to appeal. Also creates a presumption that a conviction, order, or sentence has not been appealed until shown otherwise.",
+      relatedSections: ["813"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19278,6 +19504,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-821.html`,
+      summary:
+        "Sets out the process for notifying the summary conviction court of an appeal and transmitting the conviction, order, and related materials to the appeal court, and requires the appellant to furnish a transcript of the trial evidence. Provides that an appeal is not dismissed solely because someone other than the appellant failed to comply with these procedural requirements.",
+      relatedSections: ["815", "540"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19288,6 +19517,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-822.html`,
+      summary:
+        "Applies certain provisions on appeals (sections 683 to 689) to appeals under section 813, sets rules for where a new trial is held, and governs release or detention pending a new trial. Also allows the appeal court to order a trial de novo in certain circumstances, sets rules for using prior witness evidence, and governs how sentence appeals and defects in process are to be handled.",
+      relatedSections: ["813", "683", "689", "515", "793", "809"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19298,6 +19530,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-824.html`,
+      summary:
+        "Allows the appeal court to adjourn the hearing of an appeal as necessary, and requires it to consider the interests of justice, including a victim's interests where readily available information exists, when deciding whether to adjourn.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19308,6 +19542,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-825.html`,
+      summary:
+        "Allows the appeal court to dismiss an appeal on proof that the appellant failed to comply with release or recognizance conditions, or that the appeal was not proceeded with or was abandoned.",
+      relatedSections: ["816", "817"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19318,6 +19555,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-826.html`,
+      summary:
+        "Allows the appeal court to make any order it considers just and reasonable regarding costs when an appeal is heard and determined, abandoned, or dismissed for want of prosecution.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19328,6 +19567,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-827.html`,
+      summary:
+        "Sets out the process for payment of costs ordered by the appeal court, including a required payment period, a certificate process when costs go unpaid, and committal to imprisonment for a defaulter who fails to pay.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19338,6 +19579,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-828.html`,
+      summary:
+        "Allows a conviction or order made by the appeal court to be enforced as if made by the summary conviction court, or by the appeal court's own process. Sets out how a justice enforces such an order and what documents the appeal court clerk must send to the justice.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19348,6 +19591,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-829.html`,
+      summary:
+        "Defines \"appeal court\" for sections 830 to 838 as the superior court of criminal jurisdiction of the province, except that for Nunavut appeals from a Nunavut Court of Justice judge the appeal court is a judge of the Court of Appeal of Nunavut.",
+      relatedSections: ["830", "838"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19358,6 +19604,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-830.html`,
+      summary:
+        "Allows a party or the Attorney General to appeal a conviction, judgment, verdict, or other final determination of a summary conviction court on grounds it was erroneous in law, in excess of jurisdiction, or a refusal to exercise jurisdiction. Sets out the form the appeal must take, the filing deadlines, and gives the federal Attorney General the same appeal rights as a provincial one.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19368,6 +19616,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-831.html`,
+      summary:
+        "Applies sections 816, 817, 819, and 825, with modifications, to appeals under section 830, and requires the appeal court to give directions expediting the hearing when applied to by the custodian of an in-custody appellant.",
+      relatedSections: ["816", "817", "819", "825", "830"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19378,6 +19629,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-832.html`,
+      summary:
+        "Allows the appeal court to make a release order for a defendant appellant, or to require another appellant to enter into a recognizance, once a notice of appeal is filed under section 830. Does not apply when the appellant is the Attorney General or counsel for the Attorney General.",
+      relatedSections: ["830", "816", "817"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19388,6 +19642,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-833.html`,
+      summary:
+        "States that no writ of certiorari or other writ is needed to bring a summary conviction court's conviction, judgment, verdict, or other final order before the appeal court for its determination.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19398,6 +19654,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-834.html`,
+      summary:
+        "Gives the appeal court authority to hear and determine the grounds of an appeal filed under section 830, and to affirm, reverse, modify, or remit the matter, along with any related order including costs. Allows a judge exercising the appeal court's authority to do so in chambers in or out of term time.",
+      relatedSections: ["830"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19408,6 +19667,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-835.html`,
+      summary:
+        "Gives the summary conviction court or a justice with the same jurisdiction the authority to enforce a conviction, order, or determination affirmed, modified, or made by the appeal court, as if no appeal had been taken. Also allows the appeal court's order to be enforced by its own process.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19418,6 +19679,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-836.html`,
+      summary:
+        "States that a person who appeals under section 830 from a decision they were also entitled to appeal under section 813 is deemed to have abandoned their rights of appeal under section 813.",
+      relatedSections: ["830", "813"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19428,6 +19692,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-837.html`,
+      summary:
+        "States that no appeal lies under section 830 from a conviction or order where the law otherwise provides that no appeal lies from it.",
+      relatedSections: ["830"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19438,6 +19705,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-838.html`,
+      summary:
+        "Allows the appeal court or a judge of it to extend, at any time, any time period referred to in sections 830, 831, or 832.",
+      relatedSections: ["830", "831", "832"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19448,6 +19718,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-839.html`,
+      summary:
+        "Allows an appeal to the court of appeal, with leave, on a ground involving a question of law alone, against certain decisions made under sections 822 or 834, and sets out a corresponding leave-to-appeal process for Nunavut. Applies sections 673 to 689 with modifications, allows the court of appeal to make cost orders, sets out how its decision is enforced, and gives the federal Attorney General the same appeal rights as a provincial one.",
+      relatedSections: ["673", "822", "834", "812", "829", "689"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19458,6 +19731,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-840.html`,
+      summary:
+        "States that the fees and allowances listed in the schedule to this Part apply in proceedings before summary conviction courts and justices, subject to the lieutenant governor in council's power to disallow them and substitute other fees and allowances in a province.",
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
@@ -19470,6 +19745,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-841.html`,
+      summary:
+        "Defines \"data\" and \"electronic document\" for the purposes of sections 841 to 847.",
+      relatedSections: ["842", "847"],
       partOf: "Part XXVIII — Miscellaneous",
     },
   ],
@@ -19480,6 +19758,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-842.html`,
+      summary:
+        "Allows a court to create, collect, receive, store, transfer, distribute, publish, or otherwise deal with electronic documents, provided it does so in accordance with an Act or the rules of court.",
       partOf: "Part XXVIII — Miscellaneous",
     },
   ],
@@ -19490,6 +19770,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-843.html`,
+      summary:
+        "Allows a court to accept the electronic transfer of data if the transfer complies with the laws of the place it originates or the place it is received, and states that filing by electronic transfer is complete once the court accepts the transfer.",
       partOf: "Part XXVIII — Miscellaneous",
     },
   ],
@@ -19500,6 +19782,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-844.html`,
+      summary:
+        "States that a requirement under the Act that a document be in writing is satisfied by making the document in electronic form in accordance with an Act or the rules of court.",
       partOf: "Part XXVIII — Miscellaneous",
     },
   ],
@@ -19510,6 +19794,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-845.html`,
+      summary:
+        "Allows a court to accept a signature made in an electronic document, where a document under the Act must be signed, if the signature is made in accordance with an Act or the rules of court.",
       partOf: "Part XXVIII — Miscellaneous",
     },
   ],
@@ -19520,6 +19806,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-846.html`,
+      summary:
+        "Allows a court to accept an information, affidavit, solemn declaration, or sworn statement in electronic form if the document states the matters are true, the person taking it states it was made under oath or affirmation, and it was made in accordance with the laws of the place it was made.",
       partOf: "Part XXVIII — Miscellaneous",
     },
   ],
@@ -19530,6 +19818,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-847.html`,
+      summary:
+        "Entitles a person who is entitled to a copy of a court document to obtain a printed copy of it, where it exists in electronic form, on payment of a fee set by tariff approved by the relevant Attorney General.",
       partOf: "Part XXVIII — Miscellaneous",
     },
   ],
@@ -19540,6 +19830,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-849.html`,
+      summary:
+        "States that the forms set out in this Part, or forms to like effect, are deemed good, valid, and sufficient when varied to suit the case, that no justice is required to affix a seal to writings for which a form is provided, and that pre-printed portions of these forms must be printed in both official languages.",
       partOf: "Part XXVIII — Miscellaneous",
     },
   ],
