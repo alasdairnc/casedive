@@ -3275,7 +3275,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Definition of child sexual abuse and exploitation material",
       severity: "Hybrid",
-      maxPenalty: "14 years, minimum 1 year (making/distributing, s. 163.1(2)-(3)); 10 years indictable minimum 1 year / 2 years less a day summary minimum 6 months (possession/accessing, s. 163.1(4)-(4.1))",
+      maxPenalty: "14 years, indictable only, minimum 1 year (making/distributing, s. 163.1(2)-(3)); 10 years indictable minimum 1 year / 2 years less a day summary minimum 6 months (possession/accessing/threat to publish, s. 163.1(4)-(4.21))",
       url: `${JUSTICE_LAWS_BASE}/section-163.1.html`,
       summary:
         "Defines child sexual abuse and exploitation material and makes it separate offences to make or possess for publication such material, to distribute or possess it for distribution, to simply possess it, to access it, and to threaten to publish or distribute it, while setting out limited defences relating to reasonable steps to verify age or legitimate purposes that pose no undue risk of harm.",
@@ -3995,7 +3995,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Cheating at play",
       severity: "Hybrid",
-      maxPenalty: "2 years indictable",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-209.html`,
       summary:
         "Makes it an offence to cheat while playing a game, holding stakes for a game, or betting, with intent to defraud.",
@@ -4105,7 +4105,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Causing death by criminal negligence",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "Life imprisonment; minimum 4 years where a firearm is used in the commission of the offence (s. 220(a)); no minimum in any other case (s. 220(b))",
       url: `${JUSTICE_LAWS_BASE}/section-220.html`,
       summary:
         "Makes it an offence to cause the death of another person by criminal negligence.",
@@ -4343,7 +4343,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Attempt to commit murder",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment (minimum 10 years)",
+      maxPenalty: "Life imprisonment; minimum 5 years (first offence, restricted/prohibited firearm or criminal-organization-related firearm use, s.239(1)(a)(i)); minimum 7 years (second or subsequent such offence, s.239(1)(a)(ii)); minimum 4 years (any other firearm use, s.239(1)(a.1)); no minimum in any other case (s.239(1)(b))",
       url: `${JUSTICE_LAWS_BASE}/section-239.html`,
       summary:
         "Makes it an offence to attempt, by any means, to commit murder. Provides that for determining whether a person has committed a repeat offence under this section, certain firearms-related, robbery, or violence offences involving a firearm count as an earlier offence based only on the sequence of convictions — not the sequence in which the offences were actually committed — and that sufficiently old prior convictions are not counted.",
@@ -4481,7 +4481,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Discharging firearm with intent",
       severity: "Indictable",
-      maxPenalty: "14 years (minimum 14 years)",
+      maxPenalty: "14 years; minimum of 5 years (first offence) or 7 years (subsequent offence) only where a restricted or prohibited firearm is used or the offence is for a criminal organization — no minimum otherwise",
       url: `${JUSTICE_LAWS_BASE}/section-244.html`,
       summary:
         "Makes it an offence to discharge a firearm at a person with intent to wound, maim, disfigure, endanger life, or prevent arrest or detention, whether or not that person is the one actually shot at. Also sets out how earlier convictions under this or related firearm offences are counted toward treating a conviction as a repeat offence, based on the order in which convictions occurred.",
@@ -4506,7 +4506,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Discharging firearm — recklessness",
       severity: "Indictable",
-      maxPenalty: "14 years (minimum 14 years)",
+      maxPenalty: "14 years; minimum of 5 years (first offence) or 7 years (subsequent offence) only where a restricted or prohibited firearm is used or the offence is for a criminal organization — no minimum otherwise",
       url: `${JUSTICE_LAWS_BASE}/section-244.2.html`,
       summary:
         "Makes it an offence to intentionally discharge a firearm into or at a place while knowing or being reckless as to whether another person is present there, or to intentionally discharge a firearm while reckless as to another person's life or safety. The section also defines \"place\" for this purpose and sets out how an earlier related conviction is counted when determining whether a later offence is a second or subsequent one.",
@@ -4519,7 +4519,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Administering noxious thing",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years, indictable only, if committed with intent to endanger life or cause bodily harm (s.245(1)(a)); 2 years indictable or summary conviction if committed with intent to aggrieve or annoy (s.245(1)(b))",
       url: `${JUSTICE_LAWS_BASE}/section-245.html`,
       summary:
         "Makes it an offence to administer, or cause to be administered or taken, poison or another destructive or noxious thing to another person, either with intent to endanger life or cause bodily harm, or with intent to aggrieve or annoy that person. It exempts a medical practitioner or nurse practitioner providing medical assistance in dying under section 241.2, and anyone who helps them do so.",
@@ -4544,7 +4544,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Traps likely to cause bodily harm",
       severity: "Hybrid",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "Life imprisonment, indictable only, if death results (s.247(5)); 14 years, indictable only, if bodily harm results in an offence-related place (s.247(4)); 10 years indictable or summary conviction for bodily harm (s.247(2)) or for the offence committed in an offence-related place (s.247(3)); 5 years indictable or summary conviction for the base offence (s.247(1))",
       url: `${JUSTICE_LAWS_BASE}/section-247.html`,
       summary:
         "Makes it an offence, with intent to cause death or bodily harm to a person, to set or place a trap, device, or other thing likely to cause death or bodily harm, or to knowingly allow such a trap to remain in a place one occupies or possesses. It also addresses the same conduct where it actually causes bodily harm or death, or takes place in a location kept or used for committing another indictable offence.",
@@ -6342,7 +6342,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment in case of bodily harm",
       severity: "Hybrid",
-      maxPenalty: "14 years indictable",
+      maxPenalty: "Indictable: up to 14 years. Summary conviction: fine of not more than $5,000 or imprisonment of not more than 2 years less a day, or both. Both branches carry mandatory minimums: $1,000 fine for a first offence, 30 days imprisonment for a second offence, and 120 days imprisonment for each subsequent offence.",
       url: `${JUSTICE_LAWS_BASE}/section-320.2.html`,
       summary:
         "Sets out the punishment, including escalating minimum punishments for repeat offences, for offences under subsection 320.13(2), 320.14(2), 320.15(2) or 320.16(2) that cause bodily harm.",
@@ -6355,7 +6355,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment in case of death",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "Life imprisonment (indictable only), with mandatory minimums of a $1,000 fine for a first offence, 30 days imprisonment for a second offence, and 120 days imprisonment for each subsequent offence.",
       url: `${JUSTICE_LAWS_BASE}/section-320.21.html`,
       summary:
         "Sets out the punishment, including escalating minimum punishments for repeat offences, for offences under subsection 320.13(3), 320.14(3), 320.15(3) or 320.16(3) that cause death.",
@@ -6848,7 +6848,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulently taking cattle or defacing brand",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "Subsection (1) (fraudulently taking cattle found astray, or defacing/counterfeiting a brand): indictable up to 5 years, or summary conviction. Subsection (2) (theft of cattle): indictable up to 10 years, or summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-338.html`,
       summary:
         "Makes it an offence to fraudulently take, possess, or deal with stray cattle without the owner's consent, or to alter or falsify brands or marks on cattle, sets separate penalties for theft of cattle, and establishes evidentiary presumptions regarding ownership based on registered brands and possession.",
@@ -7015,7 +7015,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Criminal interest rate",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable; summary conviction available",
+      maxPenalty: "Indictable: up to 5 years. Summary conviction: fine of not more than $25,000 or imprisonment of not more than 2 years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-347.html`,
       summary:
         "Makes it an offence to enter into, offer, advertise, or receive payment under an agreement charging interest above a defined criminal rate, defines related terms such as credit advanced and criminal rate, establishes a presumption of knowledge when criminal-rate interest is received, and sets rules for proving the interest rate by actuarial certificate.",
@@ -7172,7 +7172,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "If the subject matter is a testamentary instrument or valued over $5,000: indictable up to 10 years, or summary conviction. If valued at $5,000 or less: indictable up to 2 years, or summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-355.html`,
       summary:
         "Sets out the offence and classification structure for offences under section 354, distinguishing penalties based on whether the subject matter is a testamentary instrument or exceeds $5,000 in value versus lesser-value property.",
@@ -8360,7 +8360,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Interfering with marine signal, etc.",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available (s. 439(2)); summary conviction only for making fast a vessel to a sea-mark (s. 439(1))",
       url: `${JUSTICE_LAWS_BASE}/section-439.html`,
       summary:
         "Makes it an offence to make a vessel or boat fast to a navigational signal, buoy, or sea-mark, and a separate, more serious offence to intentionally alter, remove, or conceal such a signal, buoy, or sea-mark.",
@@ -9097,7 +9097,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Recruitment of members by a criminal organization",
       severity: "Indictable",
-      maxPenalty: "5 years",
+      maxPenalty: "5 years; minimum 6 months where the person recruited is under 18",
       url: `${JUSTICE_LAWS_BASE}/section-467.111.html`,
       summary:
         "Makes it an offence to recruit, solicit, encourage, coerce, or invite a person to join a criminal organization for the purpose of enhancing its ability to facilitate or commit an indictable offence.",
