@@ -1734,6 +1734,11 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
     .slice(0, Math.max(1, Math.min(3, maxResults)));
 }
 
+// Marks a candidate the model suggested and CanLII confirmed. A symbol, so it
+// never reaches JSON (API responses, caches); it is also stripped on the way
+// out of retrieveVerifiedCaseLaw.
+const VERIFIED_BY_LOOKUP = Symbol("verifiedByLookup");
+
 function selectFinalCandidates({
   candidates = [],
   issuePrimary = "general_criminal",
@@ -1797,12 +1802,20 @@ function selectFinalCandidates({
     return score >= moderateScoreThreshold;
   });
 
+  // Nothing cleared a threshold. Keep the single best only when it is a
+  // citation the model suggested and CanLII confirmed (the failure corpus
+  // can't measure that path, so it keeps its old behaviour). A weak landmark,
+  // landmark seed or local-fallback case is dropped: showing one anyway put
+  // unrelated case law on "no case law" scenarios, e.g. R v Stewart for a
+  // stolen chair (tests/unit/retrievalFailureSet.js).
   const selected =
     strict.length > 0
       ? strict
       : moderate.length > 0
         ? moderate
-        : sorted.slice(0, 1);
+        : sorted[0]?.[VERIFIED_BY_LOOKUP]
+          ? sorted.slice(0, 1)
+          : [];
 
   // Keep a slightly wider set for broad/general scenarios.
   const cap =
@@ -2712,7 +2725,10 @@ export async function retrieveVerifiedCaseLaw({
   const verifiedCases = [];
   for (let i = 0; i < toVerify.length; i++) {
     if (verificationResults[i].status === "verified") {
-      verifiedCases.push(toCaseLawItem(toVerify[i], verificationResults[i]));
+      verifiedCases.push({
+        ...toCaseLawItem(toVerify[i], verificationResults[i]),
+        [VERIFIED_BY_LOOKUP]: true,
+      });
     }
   }
 
@@ -2802,7 +2818,11 @@ export async function retrieveVerifiedCaseLaw({
         : "semantic_primary";
 
   const cases = selectedCandidates.slice(0, maxResults).map((item) => {
-    const { retrievalScore: _dropScore, ...rest } = item;
+    const {
+      retrievalScore: _dropScore,
+      [VERIFIED_BY_LOOKUP]: _dropVerified,
+      ...rest
+    } = item;
     return rest;
   });
   const verificationCallsTotal = toVerify.length;
