@@ -6511,6 +6511,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.33.html`,
+      summary:
+        "A printout from an approved breath-testing instrument, signed by a qualified technician certifying it as the instrument's output, is evidence of the facts it states without needing proof of the signer's signature or official status.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6521,6 +6523,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.34.html`,
+      summary:
+        "Requires the prosecutor, in proceedings for an offence under section 320.14, to disclose to the accused specified breath-test data, and sets out a process — including timing and content requirements — for the accused to apply for further disclosure.",
+      relatedSections: ["320.14", "320.28", "320.31"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6531,6 +6536,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.35.html`,
+      summary:
+        "In proceedings for an offence under section 320.14 or 320.15, a person who occupied the seat or position ordinarily used to operate a conveyance is presumed to have been operating it, unless they show they did not occupy that position in order to set the conveyance in motion.",
+      relatedSections: ["320.14", "320.15"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6539,8 +6547,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Unauthorized use of bodily substance",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-320.36.html`,
+      summary:
+        "Prohibits using a bodily substance obtained under this Part for anything other than the authorized analysis, and prohibits disclosing evaluation, test, or analysis results except for drug/alcohol/vehicle-operation law enforcement purposes or with permitted exceptions; contravening either prohibition is a summary conviction offence.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6551,6 +6561,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.37.html`,
+      summary:
+        "Protects a medical practitioner or technician from guilt for refusing to take a blood sample if they have a reasonable excuse, and from liability for taking a sample with reasonable care and skill.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6561,6 +6573,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.38.html`,
+      summary:
+        "Authorizes the Governor in Council to make regulations on evaluating officer qualifications and training, prescribed drug/alcohol concentrations, physical coordination tests, and evaluation procedures and forms.",
+      relatedSections: ["320.14", "320.27", "320.28"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6571,6 +6586,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.39.html`,
+      summary:
+        "Authorizes the Attorney General of Canada to approve devices and equipment for detecting alcohol or drugs, instruments for analyzing breath samples, and containers for blood samples.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6581,6 +6598,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-320.4.html`,
+      summary:
+        "Authorizes the Attorney General to designate persons or classes of persons as qualified to operate approved instruments, take or analyze bodily substance samples, or certify alcohol standards.",
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6593,6 +6612,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-321.html`,
+      summary:
+        "Defines terms used in this Part, including break, credit card, document, exchequer bill, exchequer bill paper, false document, and revenue paper.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6618,6 +6639,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-323.html`,
+      summary:
+        "Provides that a person with marked or known ownership of oysters or oyster beds is deemed to have a special property interest in them, and that an indictment describing an oyster bed by name or otherwise need not state its territorial division.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6628,6 +6651,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-324.html`,
+      summary:
+        "A bailee who is lawfully obliged to produce and deliver seized property to a peace officer or entitled person, but fails to do so, commits theft, unless the failure was not the result of a willful act or omission.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6638,6 +6663,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-325.html`,
+      summary:
+        "A factor or agent who pledges or gives a lien on goods entrusted to them does not commit theft if the pledge or lien does not exceed amounts owed to them by their principal, including accepted bills of exchange.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6648,6 +6675,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-326.html`,
+      summary:
+        "Makes it theft to fraudulently, maliciously, or without colour of right abstract, consume, waste, or divert electricity or gas, or to use a telecommunication facility or obtain a telecommunication service.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6656,8 +6685,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of device to obtain use of telecommunication facility or service",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-327.html`,
+      summary:
+        "Prohibits making, possessing, selling, importing, or distributing a device designed primarily to obtain telecommunication facilities or services without payment, knowing it has been or will be used for that purpose, and provides for forfeiture of such devices on conviction, with a limitation protecting innocent telecommunication service providers.",
+      relatedSections: ["326", "342.1"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6668,6 +6700,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-328.html`,
+      summary:
+        "Allows a person to be convicted of theft even where the stolen item was taken between an owner and someone with a special property interest, between joint owners or partners, by a lessee from a reversioner, or by an organization's representatives from the organization.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6678,6 +6712,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-330.html`,
+      summary:
+        "A person who receives something on terms requiring them to account for or pay it (or its proceeds) to another and fraudulently fails to do so commits theft, though a proper accounting entry in a debtor-creditor arrangement can satisfy this requirement.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6688,6 +6724,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-331.html`,
+      summary:
+        "A person entrusted with a power of attorney for disposing of property who fraudulently sells, mortgages, or otherwise disposes of the property or its proceeds for an unauthorized purpose commits theft.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6698,6 +6736,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-332.html`,
+      summary:
+        "A person who receives money, security, or a power of attorney with directions on how it must be applied or to whom it must be paid, and fraudulently applies or pays it contrary to those directions, commits theft, subject to an exception for ordinary debtor-creditor account dealings absent a written direction.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6708,6 +6748,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-333.html`,
+      summary:
+        "A person does not commit theft merely by taking a specimen of ore or mineral for exploration or scientific investigation from unenclosed, unoccupied land that is not a mine, quarry, or digging.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6718,6 +6760,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years (minimum 14 years)",
       url: `${JUSTICE_LAWS_BASE}/section-333.1.html`,
+      summary:
+        "Makes theft of a motor vehicle an offence, with escalated penalties for repeat offences and separate, more serious offences where violence is used, threatened, or attempted, or where the theft benefits a criminal organization.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6728,6 +6772,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-333.11.html`,
+      summary:
+        "Requires that a sentence imposed under subsection 333.1(3) or (4) be served consecutively to a related sentence under section 348 for breaking and entering arising from the same event or series of events, and that a sentence for a second or subsequent offence under subsection 333.1(3) or (4) be served consecutively to any other related sentence arising from the same event or series of events.",
+      relatedSections: ["333.1", "348"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6736,8 +6783,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of device for purpose of committing theft",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-333.2.html`,
+      summary:
+        "Makes it an offence to possess an electronic device suitable for motor vehicle theft for that purpose, or to make, sell, import, or distribute such a device knowing it has been or will be used for motor vehicle theft, and provides for forfeiture of the device on conviction.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6763,6 +6812,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-334.1.html`,
+      summary:
+        "Directs courts sentencing certain property offences to treat as an aggravating circumstance an intent to sell, barter, or fraudulently return stolen property, and to treat interference with essential infrastructure as an aggravating circumstance for certain other offences.",
+      relatedSections: ["718.2", "322", "343", "348", "351", "354"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6771,8 +6823,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Taking motor vehicle or vessel or found therein without consent",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-335.html`,
+      summary:
+        "Makes it an offence to take a motor vehicle or vessel without the owner's consent intending to use it, or to be an occupant knowing it was taken without consent, with an exception for occupants who try to leave or leave once they become aware it was taken.",
+      relatedSections: ["320.11"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6783,6 +6838,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-336.html`,
+      summary:
+        "Makes it an offence for a trustee to convert, with intent to defraud, anything held in trust to an unauthorized use.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6793,6 +6850,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-338.html`,
+      summary:
+        "Makes it an offence to fraudulently take, possess, or deal with stray cattle without the owner's consent, or to alter or falsify brands or marks on cattle, sets separate penalties for theft of cattle, and establishes evidentiary presumptions regarding ownership based on registered brands and possession.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6803,6 +6862,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-339.html`,
+      summary:
+        "Makes it an offence to fraudulently take, possess, or deal with drift lumber or lumbering equipment without the owner's consent, to alter marks on it, or to refuse to deliver it to the owner, and provides related offences for second-hand dealers, peace officer search powers, and evidentiary presumptions based on marks and possession.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6811,8 +6872,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Destroying documents of title",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-340.html`,
+      summary:
+        "Makes it an offence to destroy, cancel, conceal, or obliterate a document of title, valuable security, testamentary instrument, or judicial or official document for a fraudulent purpose.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6821,8 +6884,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulent concealment",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-341.html`,
+      summary:
+        "Makes it an offence to take, obtain, remove, or conceal anything for a fraudulent purpose.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6831,8 +6896,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Theft, forgery, etc., of credit card",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-342.html`,
+      summary:
+        "Makes it an offence to steal, forge, falsify, or knowingly possess, use, or traffic in a stolen or falsified credit card, or to use a revoked or cancelled credit card, sets jurisdictional rules for prosecution, and separately makes it an offence to fraudulently possess, use, or traffic in credit card data without authorization.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6841,8 +6908,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Instruments for copying credit card data or forging or falsifying credit cards",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-342.01.html`,
+      summary:
+        "Makes it an offence to make, repair, buy, sell, import, export, or possess an instrument or device known to have been used or intended for copying credit card data or forging/falsifying credit cards, and provides for forfeiture of such items on conviction.",
+      relatedSections: ["342"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6851,8 +6921,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Unauthorized use of computer",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-342.1.html`,
+      summary:
+        "Makes it an offence to fraudulently and without colour of right obtain computer services, intercept a computer system's functions, use a computer system to commit such offences or mischief, or possess or traffic in a computer password enabling such offences, and defines related terms.",
+      relatedSections: ["430"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6861,8 +6934,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of device to obtain unauthorized use of computer system or to commit mischief",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-342.2.html`,
+      summary:
+        "Makes it an offence to make, possess, sell, import, or distribute a device designed primarily to commit unauthorized computer use or mischief offences, knowing it has been or will be used for that purpose, and provides for forfeiture of such devices on conviction.",
+      relatedSections: ["342.1", "430"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6903,6 +6979,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-345.html`,
+      summary:
+        "Makes it an offence to stop a mail conveyance with intent to rob or search it.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6913,6 +6991,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment; if a firearm is used, minimum 5 years (first offence) / 7 years (subsequent offence)",
       url: `${JUSTICE_LAWS_BASE}/section-346.html`,
+      summary:
+        "Makes it an offence (extortion) to induce or attempt to induce a person to do or cause anything to be done through threats, accusations, menaces, or violence without reasonable justification; sets an enhanced minimum sentence where a restricted or prohibited firearm is used, or where any firearm is used and the offence is committed for the benefit of, at the direction of, or in association with a criminal organization; defines how prior offences count toward repeat-offence determinations; directs courts to treat a sexual purpose as an aggravating factor; and excludes a threat of civil proceedings from the offence.",
+      relatedSections: ["85", "244", "244.2", "220", "236", "239"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6923,6 +7004,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-346.1.html`,
+      summary:
+        "Requires a sentence for an offence under section 346 to be served consecutively to any other sentence imposed on the person for an offence under sections 433 to 436 arising out of the same event or series of events.",
+      relatedSections: ["346", "433", "436"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6931,8 +7015,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Criminal interest rate",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-347.html`,
+      summary:
+        "Makes it an offence to enter into, offer, advertise, or receive payment under an agreement charging interest above a defined criminal rate, defines related terms such as credit advanced and criminal rate, establishes a presumption of knowledge when criminal-rate interest is received, and sets rules for proving the interest rate by actuarial certificate.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6943,6 +7029,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-347.01.html`,
+      summary:
+        "Provides that section 347 does not apply to agreements, offers, or advertisements described by regulation, and authorizes the Governor in Council to make regulations specifying which types of agreements or offers are exempt.",
+      relatedSections: ["347"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6953,6 +7042,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-347.1.html`,
+      summary:
+        "Defines payday loan and exempts qualifying payday loan agreements from section 347 where the loan amount and term are within set limits, the lender is licensed under provincial law, and the province is designated as having adequate borrower protections, and sets out rules for that provincial designation and its revocation.",
+      relatedSections: ["347"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -6978,6 +7070,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-348.1.html`,
+      summary:
+        "Directs a court sentencing certain offences committed in relation to an occupied dwelling-house to treat as an aggravating circumstance that the offender knew or was reckless about the dwelling being occupied and used or threatened violence.",
+      relatedSections: ["98", "98.1", "279", "343", "346", "348"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7003,6 +7098,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-350.html`,
+      summary:
+        "Defines when a person is considered to have entered a place for purposes of breaking and entering offences, including entry by any part of the body or an instrument, and circumstances deemed to constitute breaking and entering.",
+      relatedSections: ["348", "349"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7011,8 +7109,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of break-in instrument",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-351.html`,
+      summary:
+        "Makes it an offence to possess, without lawful excuse, an instrument suitable for breaking into a place, vehicle, vault, or safe knowing it has been or will be used for that purpose, and separately makes it an offence to be disguised with intent to commit an indictable offence.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7021,8 +7121,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of instruments for breaking into coin-operated or currency exchange devices",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-352.html`,
+      summary:
+        "Makes it an offence to possess, without lawful excuse, an instrument suitable for the purpose of breaking into a coin-operated or currency exchange device knowing it has been or will be used for that purpose.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7033,6 +7135,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-353.html`,
+      summary:
+        "Makes it an offence to sell, offer for sale, advertise, purchase, or possess an automobile master key without a provincial licence, exempts police officers authorized for duty purposes, allows provinces to set licence terms and fees, and requires sellers to keep and produce records of sales.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7041,8 +7145,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Tampering with vehicle identification number",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-353.1.html`,
+      summary:
+        "Makes it an offence to alter, remove, or obliterate a vehicle identification number without lawful excuse, defines the term, and exempts alterations made during legitimate maintenance, repair, or modification work.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7068,6 +7174,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-355.html`,
+      summary:
+        "Sets out the offence and classification structure for offences under section 354, distinguishing penalties based on whether the subject matter is a testamentary instrument or exceeds $5,000 in value versus lesser-value property.",
+      relatedSections: ["354"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7078,6 +7187,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-355.1.html`,
+      summary:
+        "Defines traffic for the purposes of sections 355.2 and 355.4.",
+      relatedSections: ["355.2", "355.4"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7088,6 +7200,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-355.2.html`,
+      summary:
+        "Makes it an offence to traffic in property, things, or proceeds knowing they were obtained from the commission of an indictable offence in Canada or an equivalent act committed elsewhere.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7098,6 +7212,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-355.3.html`,
+      summary:
+        "Prohibits importing into or exporting from Canada any property or proceeds known to have been obtained from an indictable offence committed in Canada or an equivalent act elsewhere.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7108,6 +7224,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-355.4.html`,
+      summary:
+        "Makes it an offence to possess, for the purpose of trafficking, property or proceeds knowing they were obtained from an indictable offence committed in Canada or an equivalent act elsewhere.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7118,6 +7236,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-355.5.html`,
+      summary:
+        "Sets out penalty classifications for offences under sections 355.2 or 355.4, based on whether the value of the subject matter exceeds $5,000.",
+      relatedSections: ["355.2", "355.4"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7126,8 +7247,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Theft from mail",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-356.html`,
+      summary:
+        "Makes it an offence to steal mail, mail containers, or Canada Post keys, to make or possess a copy of such a key with intent to commit such theft, to knowingly possess items used to commit these offences, or to fraudulently redirect mail, and provides that proof of value is not required.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7136,8 +7259,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Bringing into Canada property obtained by crime",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-357.html`,
+      summary:
+        "Makes it an offence to bring into or have in Canada anything obtained outside Canada by an act that would have constituted theft or an offence under section 342 or 354 had it occurred in Canada.",
+      relatedSections: ["342", "354"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7148,6 +7274,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-358.html`,
+      summary:
+        "Defines when the offence of possession is complete for the purposes of certain property-crime sections, including when a person has possession or control, alone or jointly, or aids in concealing or disposing of the item.",
+      relatedSections: ["342", "354", "356"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7158,6 +7287,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-361.html`,
+      summary:
+        "Defines false pretence as a knowingly false representation of a present or past fact made with fraudulent intent to induce reliance, clarifies that mere exaggerated commendation or depreciation is not a false pretence unless it amounts to fraudulent misrepresentation, and states this is a question of fact.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7181,8 +7312,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Obtaining execution of valuable security by fraud",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-363.html`,
+      summary:
+        "Makes it an offence to fraudulently cause or induce a person, by false pretence, to execute, make, accept, endorse, or destroy a valuable security, or to write or affix a name or seal on paper intended to become a valuable security.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7191,8 +7324,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulently obtaining food, beverage or accommodation",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-364.html`,
+      summary:
+        "Makes it an offence to fraudulently obtain food, a beverage, or accommodation from a business providing those things, and sets out circumstances (such as absconding, false baggage claims, or offering a worthless cheque) that serve as proof of fraud absent contrary evidence.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7216,8 +7351,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment for forgery",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-367.html`,
+      summary:
+        "Sets out the offence and penalty classification for committing forgery.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7241,8 +7378,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Forgery instruments",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-368.1.html`,
+      summary:
+        "Makes it an offence to make, repair, buy, sell, import, export, or possess, without lawful authority, an instrument or device known to have been used or intended for committing forgery.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7253,6 +7392,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-368.2.html`,
+      summary:
+        "Exempts a public officer from liability for offences under sections 366 to 368.1 where the acts were committed solely to establish or maintain a covert identity for their duties.",
+      relatedSections: ["25.1", "366", "368.1"],
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7263,6 +7405,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-369.html`,
+      summary:
+        "Makes it an offence to make, use, or possess, without lawful authority, exchequer bill paper, revenue paper, or bank-note paper (or paper resembling it), or to make, reproduce, or use a public seal of Canada, a province, or a public body or court.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7271,8 +7415,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "False information",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-372.html`,
+      summary:
+        "Makes it an offence to knowingly convey false information intended to injure or alarm someone, to make indecent communications intended to alarm or annoy, or to repeatedly communicate with someone by telecommunication without lawful excuse and with intent to harass them.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7281,8 +7427,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Drawing document without authority, etc.",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-374.html`,
+      summary:
+        "Makes it an offence to make, sign, or endorse a document in another person's name without authority and with intent to defraud, or to use or utter such a document knowing it was made that way.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7291,8 +7439,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Obtaining, etc., by instrument based on forged document",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-375.html`,
+      summary:
+        "Makes it an offence to demand, receive, or obtain something under a legal instrument, or to cause something to be paid or delivered under one, knowing that the instrument is based on a forged document.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7301,8 +7451,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Counterfeiting stamp, etc.",
       severity: "Indictable",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-376.html`,
+      summary:
+        "Makes it an offence to fraudulently use, mutilate, affix, remove, or counterfeit a government stamp, to possess a counterfeit or fraudulently mutilated stamp, or to make or possess a device for producing one, and separately makes it an offence to make an unauthorized mark, sell or possess a counterfeit mark, or affix a mark or counterfeit mark to something without authority; defines \"mark\" and \"stamp\" for these purposes.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7311,8 +7463,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Damaging documents",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-377.html`,
+      summary:
+        "Makes it an offence to unlawfully destroy, deface, or injure an official register of births, marriages, deaths, or burials (or a required copy of one), or to insert a known-false entry or erase material from it, or to destroy, damage, alter, or interline an election document.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7321,8 +7475,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offences in relation to registers",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-378.html`,
+      summary:
+        "Makes it an offence to knowingly make or issue a false certified copy, extract, or certificate of a register, record, or document when authorized to do so, to fraudulently issue one purporting to be certified when not authorized, or to knowingly make a false certificate or declaration for entries in such a register.",
       partOf: "Part IX — Offences Against Rights of Property",
     },
   ],
@@ -7335,6 +7491,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-379.html`,
+      summary:
+        "Defines \"goods\" for this Part as anything that is the subject of trade or commerce.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7360,6 +7518,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-380.1.html`,
+      summary:
+        "Directs a court, when sentencing for certain fraud offences, to treat specified factors (such as scale, complexity, or planning of the fraud, harm to the financial system, number or vulnerability of victims, abuse of community trust, licensing non-compliance, concealment or destruction of records, and, for some offences, a fraud value exceeding one million dollars) as aggravating, to disregard the offender's employment or community standing as mitigating where relevant to the offence, and to record the aggravating and mitigating factors considered.",
+      relatedSections: ["718.2", "380", "382", "382.1", "400"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7368,8 +7529,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Prohibition order",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-380.2.html`,
+      summary:
+        "Allows a sentencing or discharging court to order a person convicted of certain fraud to be prohibited from seeking or holding employment or volunteer positions involving authority over another person's property, money, or securities, sets out how such an order may be varied, and makes it an offence to breach the order.",
+      relatedSections: ["730", "380"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7378,8 +7542,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Using mails to defraud",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-381.html`,
+      summary:
+        "Makes it an offence to use the mails to transmit or deliver letters or circulars concerning schemes intended to deceive or defraud the public, or to obtain money by false pretences.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7388,8 +7554,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulent manipulation of stock exchange transactions",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-382.html`,
+      summary:
+        "Makes it an offence to carry out certain stock exchange or market transactions or orders, with intent to create a false or misleading appearance of active trading or of the market price of a security.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7400,6 +7568,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-382.1.html`,
+      summary:
+        "Makes it an offence to buy or sell a security while knowingly using inside information obtained through specified relationships to the issuer, and separately makes it an offence to knowingly convey such inside information to another person who might use it to trade or pass it on; excludes conduct authorized or required by law and defines \"inside information.\"",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7408,8 +7578,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Gaming in stocks or merchandise",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-383.html`,
+      summary:
+        "Makes it an offence to make or sign a contract purporting to be for the purchase or sale of stock or goods without genuinely intending to buy, sell, or deliver them, done to profit from price movements; the burden of proving genuine intent falls on the accused once such a contract is shown.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7418,8 +7590,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Broker reducing stock by selling for their own account",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-384.html`,
+      summary:
+        "Makes it an offence for a broker (or a partner, director, officer, or employee of one) who holds shares on margin for a customer to later sell shares for an account in which they have an interest, where the effect is to reduce below the required level the shares the broker should be carrying for all customers.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7428,8 +7602,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulent concealment of title documents",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-385.html`,
+      summary:
+        "Makes it an offence for a vendor, mortgagor, or their lawyer or agent, upon receiving a written demand for an abstract of title, to conceal a material document or defect from the purchaser or mortgagee with intent to defraud, or to falsify a pedigree on which title depends; prosecution requires the Attorney General's consent.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7438,8 +7614,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulent registration of title",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-386.html`,
+      summary:
+        "Makes it an offence for a person involved in registering or transacting real or immovable property to knowingly and with intent to deceive make a false material statement, conceal a material fact from a judge or registrar, or be privy to such conduct.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7448,8 +7626,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulent sale of real property",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-387.html`,
+      summary:
+        "Makes it an offence to fraudulently sell real property while knowing of an existing unregistered prior sale, grant, mortgage, hypothec, lien, or encumbrance on it.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7458,8 +7638,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Misleading receipt",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-388.html`,
+      summary:
+        "Makes it an offence to knowingly give someone a document purporting to be a receipt or acknowledgment for property before that property has actually been delivered or received, with intent to mislead, injure, or defraud, or to accept, transmit, or use such a document.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7468,8 +7650,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulent disposal of goods on which money advanced",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-389.html`,
+      summary:
+        "Makes it an offence, with intent to deceive, defraud, or injure a consignee, to dispose of goods shipped to a warehouse keeper, agent, or carrier in a way inconsistent with the agreement with the consignee (or to help someone do so); no offence occurs if the money or security advanced is repaid before the disposal.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7478,8 +7662,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulent receipts under Bank Act",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-390.html`,
+      summary:
+        "Makes it an offence to knowingly make a false statement in a receipt or certificate used for a purpose under the Bank Act, or to knowingly alienate or fail to deliver property covered by such a receipt without the required consent or delivery.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7488,8 +7674,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Trade secret",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-391.html`,
+      summary:
+        "Makes it an offence to knowingly obtain, communicate, or make available a trade secret by deceit, falsehood, or other fraudulent means, or to knowingly obtain, communicate, or make available a trade secret knowing it was obtained that way; independent development or reverse engineering is not an offence, and defines \"trade secret.\"",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7498,8 +7686,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Disposal of property to defraud creditors",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-392.html`,
+      summary:
+        "Makes it an offence to give away, transfer, remove, or conceal one's own property with intent to defraud creditors, or, with intent that creditors be defrauded, to receive property disposed of in that way.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7510,6 +7700,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-393.html`,
+      summary:
+        "Makes it an offence for a person whose duty is to collect fares, tolls, tickets, or admission to intentionally fail to collect it, collect less than owed, or accept payment for doing so, and makes it an offence to offer such payment to that person; also makes it an offence to obtain transportation by false pretence or fraud.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7518,8 +7710,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraud in relation to valuable minerals",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-394.html`,
+      summary:
+        "Prohibits a mineral lease or licence holder from defrauding a person of valuable minerals or related payments through fraudulent means or from concealing or falsely stating the amount of minerals obtained; also prohibits selling or buying unprocessed valuable minerals without being the owner, agent, or otherwise lawfully authorized, sets out presumptions in such proceedings, and provides for forfeiture on conviction.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7528,8 +7722,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of stolen or fraudulently obtained valuable minerals",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-394.1.html`,
+      summary:
+        "Prohibits possessing unprocessed valuable minerals that have been stolen or dealt with contrary to section 394, sets out an evidentiary presumption, and provides for forfeiture on conviction.",
+      relatedSections: ["394"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7540,6 +7737,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-395.html`,
+      summary:
+        "Sets out the process for a justice to issue a warrant to search for and seize valuable minerals believed to be unlawfully deposited or held, how seized items are to be dealt with by a justice, and how an appeal from such an order proceeds.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7548,8 +7747,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offences in relation to mines",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-396.html`,
+      summary:
+        "Makes it an offence to add to, remove from, or tamper with a mine, mining claim, oil well, or a sample taken from one, with fraudulent intent to affect the result of an assay, test, or valuation; evidence of such tampering is proof of fraudulent intent absent evidence to the contrary.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7558,8 +7759,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Books and documents",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-397.html`,
+      summary:
+        "Makes it an offence, with intent to defraud, to destroy, alter, falsify, or make a false entry in a book, document, or valuable security, or to omit or alter a material particular in one, and separately makes it an offence to be privy to such conduct with intent to defraud creditors.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7568,8 +7771,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Falsifying employment record",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-398.html`,
+      summary:
+        "Makes it an offence to falsify an employment record, including by any means such as punching a time clock, with intent to deceive.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7578,8 +7783,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "False return by public officer",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-399.html`,
+      summary:
+        "Makes it an offence for a person entrusted with public revenues to knowingly furnish a false statement or return of money collected, entrusted to them, or held under their control.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7588,8 +7795,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "False prospectus, etc.",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-400.html`,
+      summary:
+        "Makes it an offence to make, circulate, or publish a prospectus, statement, or account known to be materially false, with intent to induce people to become shareholders or partners, to deceive or defraud a company's members or creditors, or to induce someone to advance property or enter a security for a company; defines \"company\" for this purpose.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7598,8 +7807,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Obtaining carriage by false billing",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-401.html`,
+      summary:
+        "Makes it an offence to knowingly obtain or attempt to obtain, by false or misleading representation, the carriage of something into a place where its importation or transportation is unlawful, and provides for forfeiture of anything used in committing the offence.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7610,6 +7821,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-402.1.html`,
+      summary:
+        "Defines \"identity information\" for the purposes of sections 402.2 and 403 as information commonly used to identify an individual, listing examples such as biometric data, names, addresses, signatures, account numbers, and passwords.",
+      relatedSections: ["402.2", "403"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7618,8 +7832,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Identity theft",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-402.2.html`,
+      summary:
+        "Makes it an offence to obtain or possess another person's identity information intending to use it to commit an indictable offence involving fraud, deceit, or falsehood, and makes it an offence to transmit, distribute, sell, or possess such information knowing or being reckless as to whether it will be used for that purpose; sets out jurisdiction for prosecution and lists related offences for clarification.",
+      relatedSections: ["57", "58", "130", "131", "342", "362"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7628,8 +7845,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Identity fraud",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-403.html`,
+      summary:
+        "Makes it an offence to fraudulently personate another person, living or dead, with intent to gain an advantage, obtain property, disadvantage the person impersonated or another, or avoid arrest or prosecution; clarifies that personating includes using another person's identity information as one's own.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7638,8 +7857,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Acknowledging instrument in false name",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-405.html`,
+      summary:
+        "Makes it an offence to acknowledge, without lawful authority or excuse, an instrument such as a recognizance, undertaking, or judgment in another person's name before a court or authorized official.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7650,6 +7871,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-406.html`,
+      summary:
+        "Defines what it means to forge a trademark for the purposes of this Part, being to make or reproduce a trademark without the proprietor's consent in a manner calculated to deceive, or to falsify a genuine trademark.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7660,6 +7883,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-407.html`,
+      summary:
+        "Makes it an offence to forge a trademark with intent to deceive or defraud the public or any person.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7670,6 +7895,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-408.html`,
+      summary:
+        "Makes it an offence, with intent to deceive or defraud, to pass off wares or services as those ordered or required, or to use a materially false description of the kind, quality, quantity, composition, geographical origin, or mode of manufacture, production, or performance of wares or services.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7680,6 +7907,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-409.html`,
+      summary:
+        "Makes it an offence to make, possess, or dispose of a die, block, machine, or other instrument designed or intended for forging a trademark, unless the person proves they acted in good faith in the ordinary course of business or employment.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7690,6 +7919,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-410.html`,
+      summary:
+        "Makes it an offence, with intent to deceive or defraud, to deface, conceal, or remove a trademark or another person's name from anything without consent, or for a manufacturer, dealer, trader, or bottler to fill a container bearing another's trademark with a liquid commodity for sale without that person's consent.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7700,6 +7931,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-411.html`,
+      summary:
+        "Makes it an offence to sell, possess for sale, or advertise used, reconditioned, rebuilt, or remade goods bearing another person's trademark or trade name without fully disclosing that they have been reconditioned and are not in their original condition.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7708,8 +7941,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-412.html`,
+      summary:
+        "Sets the punishment for offences under sections 407 to 411 and provides that anything used in committing such an offence is forfeited on conviction unless the court orders otherwise.",
+      relatedSections: ["407", "408", "409", "410", "411"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7720,6 +7956,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-414.html`,
+      summary:
+        "Provides that in proceedings involving imported goods, evidence that the goods were shipped to Canada from a foreign place is proof, absent contrary evidence, that they were made or produced in the country from which they were shipped.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7728,8 +7966,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offences in relation to wreck",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-415.html`,
+      summary:
+        "Makes it an offence to secrete or disguise wreck, to receive wreck without notifying the receiver of wreck within 48 hours, to sell or deal in wreck without lawful authority, to keep wreck longer than reasonably necessary without authority, or to board a wrecked or distressed vessel against the master's will without proper authorization.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7740,6 +7980,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-416.html`,
+      summary:
+        "Allows the Governor in Council to prescribe, by notice in the Canada Gazette, distinguishing marks used on public stores to denote that they are the property of Her Majesty.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7748,8 +7990,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Applying or removing marks without authority",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-417.html`,
+      summary:
+        "Makes it an offence to apply a distinguishing mark to something without lawful authority, or to remove or destroy such a mark with intent to conceal that public stores belong to Her Majesty, and separately makes it an offence to knowingly receive, possess, keep, sell, or deliver public stores bearing a distinguishing mark without lawful authority; defines \"distinguishing mark\" by reference to section 416.",
+      relatedSections: ["416"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7758,8 +8003,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Selling defective stores to Her Majesty",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-418.html`,
+      summary:
+        "Makes it an offence to knowingly sell or deliver defective stores to Her Majesty or to commit fraud connected with selling, leasing, delivering, or manufacturing stores for Her Majesty, and makes it an offence for a representative of an organization to knowingly take part in such fraud or fail to report it to the responsible government when aware or suspicious of it.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7768,8 +8015,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Unlawful use of military uniforms or certificates",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-419.html`,
+      summary:
+        "Makes it an offence, without lawful authority, to wear a military uniform or a similar one likely to be mistaken for it, to wear a military decoration or a device likely to be mistaken for one, or to possess a military discharge certificate, service statement, identity card, commission, or warrant that was not issued to and does not belong to the person, including one containing an unverified alteration.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7778,8 +8027,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Military stores",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-420.html`,
+      summary:
+        "Makes it an offence to buy, receive, or detain military stores owned by or accountable to Her Majesty from a member of the Canadian Forces, a deserter, or an absentee without leave, unless the person establishes they did not know and had no reason to suspect the stores' status.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7790,6 +8041,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-421.html`,
+      summary:
+        "Provides evidentiary presumptions for proceedings under sections 417 to 420: performing duties in the Canadian Forces is proof of regular prior enrolment, and an accused charged under subsection 417(2) who was, at the time, in the service or employment of Her Majesty or a dealer in marine stores or old metals is presumed to have known the stores bore a distinguishing mark.",
+      relatedSections: ["417", "418", "419", "420"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7798,8 +8052,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Criminal breach of contract",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-422.html`,
+      summary:
+        "Makes it an offence to wilfully break a contract knowing it will likely endanger life, cause serious bodily injury, expose valuable property to destruction, deprive a place of light, power, gas, or water, or delay or prevent railway operations; excludes lawful work stoppages arising from labour disputes where required dispute-settlement steps have been followed, and requires the Attorney General's consent to prosecute.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7808,8 +8064,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Intimidation",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-423.html`,
+      summary:
+        "Makes it an offence, wrongfully and without lawful authority, to use violence or threats, intimidate, persistently follow, hide property, obstruct, or watch or beset a person or their residence or workplace, for the purpose of compelling them to do or abstain from doing something they have a lawful right to do or abstain from; attending only to obtain or communicate information is excepted.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7818,8 +8076,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Intimidation of a justice system participant or a journalist",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-423.1.html`,
+      summary:
+        "Makes it an offence, without lawful authority, to engage in conduct intended to provoke fear in a group or the public to impede criminal justice administration, in a justice or military justice system participant to impede their duties, or in a journalist to impede reporting on a criminal organization; defines \"military justice system participant\" by reference to the National Defence Act.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7828,8 +8088,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Intimidation — health services",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-423.2.html`,
+      summary:
+        "Makes it an offence to engage in conduct intended to provoke fear in a person to impede them from obtaining health services, in a health professional to impede their duties, or in someone assisting a health professional to impede their functions, and separately makes it an offence to intentionally and without lawful authority obstruct or interfere with lawful access to a place providing health services; attending only to obtain or communicate information is a defence, and defines \"health professional.\"",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7837,9 +8099,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "423.3",
     {
       title: "Intimidation — building used for religious worship, etc.",
-      severity: "",
-      maxPenalty: "",
+      severity: "Hybrid",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-423.3.html`,
+      summary:
+        "Makes it an offence to engage in conduct intended to provoke fear in a person to impede their access to a building used for religious worship, certain identifiable-group activities, education, or seniors' residence, or to a cemetery, and separately makes it an offence to intentionally and without lawful authority obstruct or interfere with lawful access to such a building or cemetery; attending only to obtain or communicate information is excepted.",
+      relatedSections: ["318"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7848,8 +8113,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Threat against internationally protected person",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-424.html`,
+      summary:
+        "Makes it an offence to threaten to commit specified violent offences against an internationally protected person, or to threaten to commit the offence set out in section 431.",
+      relatedSections: ["235", "236", "266", "267", "268", "431"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7858,8 +8126,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Threat against United Nations or associated personnel",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-424.1.html`,
+      summary:
+        "Makes it an offence, with intent to compel a person, group, state, or international organization to act or refrain from acting, to threaten to commit specified violent offences against United Nations or associated personnel, or to threaten to commit the offence set out in section 431.1.",
+      relatedSections: ["235", "236", "266", "267", "268", "431.1"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7868,8 +8139,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offences by employers",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-425.html`,
+      summary:
+        "Makes it an offence for an employer or their agent to wrongfully and without lawful authority refuse to employ or dismiss someone because they belong to a lawful trade union or similar association, to compel employees by intimidation or penalty to abstain from union membership, or to conspire with another employer to do either of these things.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7878,8 +8151,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Threats and retaliation against employees",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-425.1.html`,
+      summary:
+        "Prohibits an employer or someone acting on their behalf from disciplining, demoting, terminating, or otherwise adversely affecting an employee's employment (or threatening to) in order to stop them from reporting a suspected offence to a law enforcement authority or to retaliate for having done so, and makes contravention of this prohibition an offence.",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7888,8 +8163,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Secret commissions",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-426.html`,
+      summary:
+        "Makes it an offence to corruptly give, offer, demand, or accept a reward or benefit as consideration for an agent's act or favour relating to their principal's affairs, or to give or use, with intent to deceive a principal, a receipt or document containing a false or misleading material statement; also makes it an offence to be knowingly privy to such conduct, and defines \"agent\" and \"principal.\"",
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
   ],
@@ -7902,6 +8179,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-428.html`,
+      summary:
+        "Defines \"property\" for this Part as real or personal corporeal property.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -7912,6 +8191,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-429.html`,
+      summary:
+        "Deems a person to have wilfully caused an event if they knew their act or omission would probably cause it and were reckless about whether it occurred. Also provides that legal justification, excuse, or colour of right is a defence to offences under sections 430 to 446, and that a partial ownership interest does not prevent a person from being guilty of destroying or damaging property, while a total ownership interest does not bar guilt if the destruction or damage was done with intent to defraud.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -7935,8 +8216,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Attack on premises, residence or transport of internationally protected person",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-431.html`,
+      summary:
+        "Makes it an offence to carry out a violent attack on the official premises, private accommodation, or means of transport of an internationally protected person that is likely to endanger that person's life or liberty.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -7945,8 +8228,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Attack on premises, accommodation or transport of United Nations or associated personnel",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-431.1.html`,
+      summary:
+        "Makes it an offence to carry out a violent attack on the official premises, private accommodation, or transport of a United Nations or associated personnel member that is likely to endanger that person's life or liberty.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -7957,6 +8242,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-431.2.html`,
+      summary:
+        "Defines terms including explosive or other lethal device, infrastructure facility, military forces of a state, place of public use, and public transportation system, and makes it an offence to deliver, place, discharge, or detonate an explosive or other lethal device against such a place or facility with intent to cause death or serious bodily injury, or to cause extensive destruction likely to result in major economic loss. Excludes acts committed during an armed conflict that comply with international law, and official activities of a state's military forces governed by international law.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -7967,6 +8254,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-432.html`,
+      summary:
+        "Makes it an offence to record a movie theatre performance or its soundtrack without the theatre manager's consent, with a distinct offence for doing so for the purpose of commercial sale or distribution. Allows a court to order forfeiture of anything used to commit the offence, except property belonging to someone not party to the offence.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -7977,6 +8266,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-433.html`,
+      summary:
+        "Makes it an offence to intentionally or recklessly cause damage by fire or explosion to property, regardless of ownership, where the person knows or is reckless as to whether the property is inhabited or occupied, or where the fire or explosion causes bodily harm to another person.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -7987,6 +8278,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-434.html`,
+      summary:
+        "Makes it an offence to intentionally or recklessly cause damage by fire or explosion to property that is not wholly owned by the person responsible.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -7997,6 +8290,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-434.1.html`,
+      summary:
+        "Makes it an offence to intentionally or recklessly cause damage by fire or explosion to property one owns, in whole or in part, where the fire or explosion seriously threatens the health, safety or property of another person.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8007,6 +8302,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-435.html`,
+      summary:
+        "Makes it an offence to cause damage by fire or explosion to property with intent to defraud another person, regardless of ownership. Provides that being the holder or beneficiary of a fire insurance policy on the property is a fact from which intent to defraud may be inferred.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8015,8 +8312,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Arson by negligence",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-436.html`,
+      summary:
+        "Makes it an offence for a person who owns or controls property to cause a fire or explosion on that property, through a marked departure from the standard of care a reasonably prudent person would use, that results in bodily harm or property damage. Failure to comply with fire or explosion prevention laws is a fact from which the required departure from the standard of care may be inferred.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8025,8 +8324,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of incendiary material",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-436.1.html`,
+      summary:
+        "Makes it an offence to possess incendiary material, an incendiary device, or an explosive substance for the purpose of committing an arson offence under sections 433 to 436.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8035,8 +8336,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "False alarm of fire",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years",
       url: `${JUSTICE_LAWS_BASE}/section-437.html`,
+      summary:
+        "Makes it an offence to wilfully, without reasonable cause, make or circulate a false alarm of fire, by outcry, bells, a fire alarm, telephone, telegraph, or any other means.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8047,6 +8350,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-438.html`,
+      summary:
+        "Makes it an offence to intentionally prevent, impede, or attempt to prevent or impede the saving of a wrecked, stranded, abandoned, or distressed vessel, or a person attempting to save one. Also makes it an offence to wilfully prevent or impede the saving of wreck.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8057,6 +8362,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-439.html`,
+      summary:
+        "Makes it an offence to make a vessel or boat fast to a navigational signal, buoy, or sea-mark, and a separate, more serious offence to intentionally alter, remove, or conceal such a signal, buoy, or sea-mark.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8065,8 +8372,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Removing natural bar without permission",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years",
       url: `${JUSTICE_LAWS_BASE}/section-440.html`,
+      summary:
+        "Makes it an offence to knowingly remove, without the Minister of Transport's written permission, stone, wood, earth, or other material forming a natural bar necessary to a public harbour's existence or its natural protection.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8075,8 +8384,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Occupant injuring building",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-441.html`,
+      summary:
+        "Makes it an offence for a person in possession or occupation of a dwelling-house or other building to intentionally pull down, demolish, or remove all or part of it, or sever attached fixtures, to the prejudice of a mortgagee, hypothecary creditor, or owner.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8087,6 +8398,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-442.html`,
+      summary:
+        "Makes it an offence to wilfully pull down, deface, alter, or remove anything planted or set up as the boundary line, or part of the boundary line, of land.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8095,8 +8408,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Interfering with international boundary marks, etc.",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-443.html`,
+      summary:
+        "Makes it an offence to intentionally pull down, deface, alter, or remove a lawfully placed international, provincial, county, or municipal boundary mark, or a boundary mark placed by a land surveyor marking a limit, boundary, or angle of a concession, range, lot, or parcel of land. Exempts a land surveyor who lifts and carefully replaces such a mark in the course of survey work, or who lifts a mark for a highway or similar project and records its original position.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8105,8 +8420,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Injuring or endangering other animals",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-445.html`,
+      summary:
+        "Makes it an offence to wilfully and without lawful excuse kill, maim, wound, poison, or injure dogs, birds, or animals kept for a lawful purpose, or to place poison where such animals may easily consume it.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8115,8 +8432,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Killing or injuring certain animals",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-445.01.html`,
+      summary:
+        "Makes it an offence to wilfully and without lawful excuse kill, maim, wound, poison, or injure a law enforcement animal while it is aiding a law enforcement officer, a military animal while it is aiding a member of the Canadian Forces, or a service animal. Requires a sentence for an offence committed against a law enforcement animal to be served consecutively to any other sentence arising from the same event, and defines the animal categories and law enforcement officer.",
+      relatedSections: ["2"],
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8125,8 +8445,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Causing unnecessary suffering",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable / 18 months summary",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-445.1.html`,
+      summary:
+        "Makes it an offence to wilfully cause or permit unnecessary pain, suffering, or injury to an animal or bird, to take part in or encourage animal or bird fighting or baiting, to administer a poisonous or injurious substance to a domestic or captive wild animal or bird, or to organize or allow premises to be used for events where captive birds are released to be shot. States that a failure to exercise reasonable care causing pain, suffering, or injury is proof of wilful conduct for the pain-or-suffering offence, and that presence at an animal fight or baiting is proof of encouraging, aiding, or assisting at it, in each case absent contrary evidence.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8135,8 +8457,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Definition of cetacean",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Fine not exceeding $200,000",
       url: `${JUSTICE_LAWS_BASE}/section-445.2.html`,
+      summary:
+        "Defines cetacean and makes it an offence to own, have custody of, or control a captive cetacean, to breed or impregnate a cetacean, or to possess or seek a cetacean's reproductive materials, subject to exceptions. Owning or controlling a cetacean already in captivity, under care or rehabilitation, or held under a provincial welfare licence is exempt only from the ownership offence, while a provincial scientific-research licence exempts all three offences; captive cetaceans also cannot be used for unlicensed entertainment performances.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8145,8 +8469,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Causing damage or injury",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable",
+      maxPenalty: "2 years",
       url: `${JUSTICE_LAWS_BASE}/section-446.html`,
+      summary:
+        "Makes it an offence to cause damage or injury to animals or birds being driven or conveyed through wilful neglect, or, as an owner or custodian of a domestic or captive wild animal or bird, to abandon it in distress or wilfully neglect or fail to provide adequate food, water, shelter, or care. States that, for the conveyance offence, a failure to exercise reasonable care or supervision causing damage or injury is proof of wilful neglect absent contrary evidence.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8155,8 +8481,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Arena for animal fighting",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-447.html`,
+      summary:
+        "Makes it an offence to build, make, maintain, keep, or allow to be built, made, maintained, or kept an arena for animal fighting on premises one owns or occupies.",
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8167,6 +8495,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-447.1.html`,
+      summary:
+        "Allows a court sentencing someone for an animal cruelty offence to also prohibit them from owning, having custody or control of, or residing with an animal or bird, and to order repayment of reasonable costs incurred by a person or organization caring for the animal or bird. Makes breaching the prohibition order a separate offence and applies certain restitution procedure provisions to a cost repayment order.",
+      relatedSections: ["445", "445.1", "446", "447"],
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
     },
   ],
@@ -8361,6 +8692,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.3.html`,
+      summary:
+        "Defines terms used in this Part, including designated offence, judge, and proceeds of crime, and notes several earlier definitions as repealed. Allows the Governor in Council to make regulations excluding certain indictable offences from the definition of designated offence.",
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8371,6 +8704,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-462.31.html`,
+      summary:
+        "Makes it an offence to deal with property or its proceeds in various ways, with intent to conceal or convert it, knowing, believing, or being reckless as to whether it derives from a designated offence, with an enhanced offence where done for the benefit of, at the direction of, or in association with a criminal organization. Unless the accused is also charged with the designated offence, the prosecution need not prove knowledge of its specific nature, and the court may infer the required knowledge, belief, or recklessness from markedly unusual dealings or dealings inconsistent with lawful activity in that sector; peace officers acting in their investigative duties are exempted.",
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8381,6 +8716,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.32.html`,
+      summary:
+        "Sets out the process for a judge to issue a special search warrant authorizing search for and seizure of property believed to be proceeds of crime, including the application procedure, execution conditions, and the requirements for detaining seized property, filing a report, and providing notice or copies to interested persons, with provision for returning seized property with the Attorney General's consent in specified circumstances.",
+      relatedSections: ["487", "488"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8391,6 +8729,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.321.html`,
+      summary:
+        "Sets out the process for a judge to issue a special warrant authorizing search for and seizure of digital assets, including virtual currency, believed to be proceeds of crime, including the application procedure, execution conditions, and requirements for detaining the assets, notifying the person from whom they were seized, filing a report, and returning them with the Attorney General's consent in specified circumstances.",
+      relatedSections: ["342.1"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8401,6 +8742,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.33.html`,
+      summary:
+        "Sets out the process for the Attorney General to apply for a restraint order prohibiting anyone from disposing of or dealing with property believed to be proceeds of crime, including the application requirements, the judge's authority to impose conditions and require notice, the order's effect and duration, and the offence of contravening it.",
+      relatedSections: ["462.34", "462.35", "462.37", "462.38", "462.41", "462.43"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8411,6 +8755,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.331.html`,
+      summary:
+        "Allows a judge, on application, to appoint a person to take control of and manage seized or restrained property, sets out that power's scope including interlocutory sale, destruction of low-value property, and forfeiture of certain property, and sets out the procedures for obtaining destruction and forfeiture orders, when a management order ends, and how it applies to sale proceeds.",
+      relatedSections: ["462.32", "462.321", "462.33"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8421,6 +8768,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.34.html`,
+      summary:
+        "Sets out the process by which a person with an interest in seized or restrained property may apply to a judge for its return, for permission to examine it, or for an accounting, including notice requirements, the conditions under which a judge may order property returned or a restraint order revoked or varied, and how legal and other expenses are assessed.",
+      relatedSections: ["462.32", "462.321", "462.33", "354", "355.2", "355.4"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8431,6 +8781,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.341.html`,
+      summary:
+        "Extends certain notice, expense, and legal fee taxation provisions governing property restitution applications to persons with an interest in seized money, bank-notes, or virtual currency or other digital assets that may be subject to forfeiture proceedings.",
+      relatedSections: ["462.34", "462.37", "462.38"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8441,6 +8794,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.35.html`,
+      summary:
+        "Sets out how long seized property may be detained or a restraint order may remain in force, generally six months, and the circumstances under which that period may be extended, either because proceedings have been instituted or because a judge orders a further extension on application by the Attorney General.",
+      relatedSections: ["462.32", "462.321", "462.33", "462.37", "462.38"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8451,6 +8807,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.36.html`,
+      summary:
+        "Requires the clerk of the court to forward a copy of the seizure report or restraint order to the clerk of the court where an accused is ordered to stand trial for a designated offence.",
+      relatedSections: ["462.32", "462.321", "462.33"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8461,6 +8820,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.37.html`,
+      summary:
+        "Sets out when a court must order forfeiture of property found to be proceeds of crime following a conviction or discharge for a designated offence, including an expanded forfeiture regime for offenders shown to have engaged in a pattern of criminal activity or whose property value cannot be explained by legitimate income, and allows a court to order a fine instead of forfeiture where the property cannot be forfeited, with corresponding default imprisonment terms.",
+      relatedSections: ["730", "462.4", "462.41", "736"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8471,6 +8833,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.371.html`,
+      summary:
+        "Sets out how an order made under section 462.37 or 462.38 (defined here as \"order\") can be executed anywhere in Canada, filed and entered as a judgment in another province's superior court, and how notice, claims under section 462.42, and court findings on such filed orders are handled.",
+      relatedSections: ["462.37", "462.38", "462.41", "462.42"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8481,6 +8846,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.38.html`,
+      summary:
+        "Allows the Attorney General to apply for a court order forfeiting property as proceeds of crime where an accused charged with a designated offence has died or absconded, and defines when a person is deemed to have absconded for this purpose.",
+      relatedSections: ["462.39", "462.4", "462.41"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8491,6 +8859,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.39.html`,
+      summary:
+        "Allows a court to infer that property was obtained through a designated offence where a person's property value increased after the offence in a way their unrelated income cannot reasonably explain.",
+      relatedSections: ["462.37", "462.38"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8501,6 +8872,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.4.html`,
+      summary:
+        "Allows a court to set aside a conveyance or transfer of property that occurred after seizure or service of a restraint order, before forfeiture is ordered, unless the transfer was for valuable consideration to a person acting in good faith.",
+      relatedSections: ["462.37", "462.38", "462.33"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8511,6 +8885,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.41.html`,
+      summary:
+        "Requires a court to give notice to, and allows it to hear, anyone with an apparent interest in property before ordering its forfeiture, and lets the court order restoration of property to an innocent lawful owner instead of forfeiture.",
+      relatedSections: ["462.37", "462.38"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8521,6 +8898,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.42.html`,
+      summary:
+        "Lets a person claiming an interest in forfeited property apply to a judge within thirty days for a declaration that their interest is unaffected by the forfeiture, sets out the notice, hearing, and appeal process, and requires the Attorney General to return the property or its value once such an order becomes final.",
+      relatedSections: ["462.37", "462.38"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8531,6 +8911,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.43.html`,
+      summary:
+        "Allows a judge, on application or on their own motion, to revoke a restraint order, cancel a recognizance, or order return or forfeiture of seized property once satisfied it is no longer needed for forfeiture proceedings, investigation, or evidence.",
+      relatedSections: ["462.32", "462.321", "462.33", "462.34", "462.37", "462.38"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8541,6 +8924,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.44.html`,
+      summary:
+        "Allows a person aggrieved by certain forfeiture, restoration, or disposal orders to appeal them in the same manner as an appeal against a conviction or acquittal.",
+      relatedSections: ["462.38", "462.41", "462.43"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8551,6 +8937,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.45.html`,
+      summary:
+        "Suspends the operation of a forfeiture or restoration order while related applications, appeals, or proceedings about the property's seizure are ongoing, and bars disposal of the property within thirty days after a forfeiture order.",
+      relatedSections: ["462.34", "462.37", "462.38", "462.41", "462.43"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8561,6 +8950,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.46.html`,
+      summary:
+        "Allows the Attorney General to make and retain a copy of a document before returning, forfeiting, or otherwise dealing with it under the Part, and gives a certified copy the same evidentiary weight as the original.",
+      relatedSections: ["462.34", "462.37", "462.38", "462.41", "462.43"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8571,6 +8963,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.47.html`,
+      summary:
+        "States that a person is legally justified in disclosing to a peace officer or the Attorney General facts giving rise to a reasonable suspicion that property is proceeds of crime or that a designated offence has been committed or is about to be committed, subject to Income Tax Act confidentiality obligations.",
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8581,6 +8975,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.48.html`,
+      summary:
+        "Defines \"designated substance offence,\" sets out the offences for which the Attorney General may apply for court-ordered disclosure of income tax information, and establishes the application, order, objection, and appeal process governing that disclosure.",
+      relatedSections: ["119", "120", "121", "122", "123", "279.01"],
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8591,6 +8988,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.49.html`,
+      summary:
+        "Provides that this Part does not affect forfeiture provisions in other Acts, and that an offender's property used to satisfy forfeiture takes priority only after satisfying any restitution or compensation owed to victims.",
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8601,6 +9000,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-462.5.html`,
+      summary:
+        "Authorizes the Attorney General to make regulations governing how property forfeited under this Part is disposed of or otherwise dealt with.",
       partOf: "Part XII.2 — Proceeds of Crime",
     },
   ],
@@ -8613,6 +9014,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-463.html`,
+      summary:
+        "Sets out that a person who attempts to commit, or is an accessory after the fact to, an indictable or summary conviction offence is themselves guilty of an offence, whether the underlying offence is indictable, hybrid, or summary.",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8623,6 +9026,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-464.html`,
+      summary:
+        "Makes it an offence to counsel another person to commit an indictable or summary conviction offence, even if the offence counselled is not actually committed.",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8633,6 +9038,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-465.html`,
+      summary:
+        "Makes it an offence to conspire with another person to commit murder, to prosecute a person known to be innocent, or to commit any other indictable or summary conviction offence, and extends jurisdiction to conspiracies formed partly in or affecting Canada.",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8643,6 +9050,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-466.html`,
+      summary:
+        "Defines a conspiracy in restraint of trade as an agreement between two or more persons to do or procure an unlawful act in restraint of trade, and states that a trade union's purposes are not unlawful merely because they restrain trade.",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8653,6 +9062,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-467.html`,
+      summary:
+        "Provides that a person is not guilty of conspiracy merely for refusing to work with someone or acting for the purpose of a trade combination, unless that act is otherwise expressly punishable by law, and defines \"trade combination.\"",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8663,6 +9074,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-467.1.html`,
+      summary:
+        "Defines \"criminal organization\" as a group of three or more persons whose main purpose or activity is facilitating or committing serious offences for material benefit, defines \"serious offence,\" and clarifies what counts as facilitation or commission of an offence for related sections.",
+      relatedSections: ["467.11", "467.111", "467.12", "467.13"],
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8673,6 +9087,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-467.11.html`,
+      summary:
+        "Makes it an offence to knowingly participate in or contribute to a criminal organization's activities for the purpose of enhancing its ability to facilitate or commit an indictable offence, and lists factors a court may consider and facts the prosecutor need not prove.",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8681,8 +9097,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Recruitment of members by a criminal organization",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-467.111.html`,
+      summary:
+        "Makes it an offence to recruit, solicit, encourage, coerce, or invite a person to join a criminal organization for the purpose of enhancing its ability to facilitate or commit an indictable offence.",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8693,6 +9111,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-467.12.html`,
+      summary:
+        "Makes it an offence to commit an indictable offence for the benefit of, at the direction of, or in association with a criminal organization, and states the prosecutor need not prove the accused knew the identity of the organization's members.",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8703,6 +9123,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-467.13.html`,
+      summary:
+        "Makes it an offence for a member of a criminal organization to knowingly instruct another person to commit an offence for the benefit of, at the direction of, or in association with the organization, and states what the prosecutor need not prove.",
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8713,6 +9135,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-467.14.html`,
+      summary:
+        "Requires that a sentence for an offence under sections 467.11, 467.111, 467.12, or 467.13 be served consecutively to other related punishments or sentences the person is subject to.",
+      relatedSections: ["467.11", "467.111", "467.12", "467.13"],
       partOf: "Part XIII — Attempts — Conspiracies — Accessories",
     },
   ],
@@ -8725,6 +9150,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-468.html`,
+      summary:
+        "States that every superior court of criminal jurisdiction has jurisdiction to try any indictable offence.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8735,6 +9162,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-469.html`,
+      summary:
+        "Lists the indictable offences — including treason, intimidating Parliament, mutiny, sedition, piracy, murder, certain judicial bribery, crimes against humanity, and related attempts or conspiracies — over which a court of criminal jurisdiction does not have jurisdiction under this section.",
+      relatedSections: ["47", "51", "53", "61", "74", "75"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8745,6 +9175,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-470.html`,
+      summary:
+        "Sets out when a superior or other court of criminal jurisdiction is competent to try an accused, namely where the accused is found, arrested, or in custody within its territory, or has been ordered to be tried by that court or a court whose jurisdiction was transferred to it.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8755,6 +9187,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-471.html`,
+      summary:
+        "Requires that, unless the law expressly provides otherwise, an accused charged with an indictable offence be tried by a judge and jury.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8765,6 +9199,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-473.html`,
+      summary:
+        "Allows an accused charged with an offence listed in section 469 to be tried without a jury by a superior court judge with the consent of both the accused and the Attorney General, permits joinder of other offences, and provides that such consent cannot be withdrawn unless both parties agree.",
+      relatedSections: ["469"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8775,6 +9212,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-474.html`,
+      summary:
+        "Allows a court clerk to adjourn court proceedings to a later day when no judge is present because no jury panel was summoned, or on a presiding judge's instructions at any time.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8785,6 +9224,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-475.html`,
+      summary:
+        "Provides that an accused who absconds during trial is deemed to have waived the right to be present, allowing the court to continue the trial and impose sentence in absence or adjourn pending arrest, permits adverse inferences from absconding, limits reopening proceedings on the accused's return, and preserves defence counsel's authority to continue acting.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8795,6 +9236,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-476.html`,
+      summary:
+        "Sets out deeming rules for where an offence is considered to have been committed when it occurs on water, on a boundary between territorial divisions, on a traveling vehicle or vessel, on an aircraft in flight, or in the course of mail delivery spanning multiple territorial divisions.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8805,6 +9248,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-477.html`,
+      summary:
+        "Defines \"ship\" for the purposes of sections 477.1 to 477.4 and states those sections do not limit the operation of any other Act or a court's other jurisdiction.",
+      relatedSections: ["477.1", "477.2", "477.3", "477.4"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8815,6 +9261,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-477.1.html`,
+      summary:
+        "Deems certain acts or omissions committed outside Canada's land territory — in the exclusive economic zone, over the continental shelf, aboard a Canadian-registered ship, during hot pursuit, or outside any state's territory by a Canadian citizen — to have been committed in Canada if they would be offences here.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8825,6 +9273,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-477.2.html`,
+      summary:
+        "Requires the consent of the federal Attorney General, obtained within eight days of commencing proceedings, to continue certain prosecutions involving non-citizens and foreign-registered ships in Canada's territorial sea or under section 477.1, with an exception for summary conviction proceedings.",
+      relatedSections: ["477.1"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8835,6 +9286,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-477.3.html`,
+      summary:
+        "Sets out where and how powers of arrest, entry, search, or seizure connected to offences under section 477.1 may be exercised, gives justices and judges jurisdiction to authorize such measures, and requires the federal Attorney General's consent to exercise these powers outside Canada regarding a foreign-registered ship.",
+      relatedSections: ["477.1"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8845,6 +9299,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-477.4.html`,
+      summary:
+        "Makes a certificate under the Oceans Act, or one from the Minister of Foreign Affairs stating a location's status relative to Canada's waters or territory, conclusive proof of that fact without needing to prove the signature or authority of the issuer, though its production cannot be compelled.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8855,6 +9311,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-478.html`,
+      summary:
+        "Generally bars a court in one province from trying an offence committed entirely in another province, sets special rules for defamatory libel in newspapers, and allows an accused charged with an offence committed elsewhere in Canada to plead guilty before a court in the province where they are located with the relevant Attorney General's consent.",
+      relatedSections: ["469", "297"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8865,6 +9324,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-479.html`,
+      summary:
+        "Allows an accused charged with an offence committed in the province where they are located, but who is not charged under section 469, to plead guilty before a court there with the relevant Attorney General's consent, with the accused returned to custody if they do not plead guilty.",
+      relatedSections: ["469"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8875,6 +9337,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-480.html`,
+      summary:
+        "Allows an offence committed in an unorganized tract of a province, or on a lake or river within it, to be prosecuted in any territorial division or provisional judicial district of that province, with jurisdiction continuing after a new division or district is created there.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8885,6 +9349,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-481.html`,
+      summary:
+        "Allows an offence committed in a part of Canada not within any province to be prosecuted, tried, and punished in any provincial territorial division as if it occurred there.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8895,6 +9361,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-481.1.html`,
+      summary:
+        "Allows an offence committed in Canada's territorial sea or internal waters to be prosecuted, tried, and punished in any Canadian territorial division regardless of whether the accused is in Canada.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8905,6 +9373,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-481.2.html`,
+      summary:
+        "Allows an offence committed outside Canada, where the act or omission is itself an offence when committed abroad, to be prosecuted, tried, and punished in any Canadian territorial division regardless of whether the accused is in Canada.",
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8915,6 +9385,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-481.3.html`,
+      summary:
+        "Confirms that the Act's rules on an accused's required appearance at proceedings, and their exceptions, apply to proceedings commenced under sections 481, 481.1, or 481.2.",
+      relatedSections: ["481", "481.1", "481.2"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8925,6 +9398,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-482.html`,
+      summary:
+        "Authorizes superior courts of criminal jurisdiction, courts of appeal, and a listed set of provincial and territorial courts to make rules of court governing criminal proceedings, sets out the purposes such rules may serve, requires their publication, and allows the Governor in Council to make regulations securing uniformity among them.",
+      relatedSections: ["625.1", "689", "830", "812"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8935,6 +9411,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-482.1.html`,
+      summary:
+        "Authorizes courts to make case management rules, including for determining matters, delegating administrative tasks to court personnel, and setting case management schedules, requires parties to comply with directions made under such rules, and allows summonses or warrants to compel attendance at case management proceedings.",
+      relatedSections: ["482", "512", "512.3"],
       partOf: "Part XIV — Jurisdiction",
     },
   ],
@@ -8947,6 +9426,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-483.html`,
+      summary:
+        "Allows a judge or provincial court judge authorized to act as two or more justices to do alone anything that the Act authorizes two or more justices to do.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
