@@ -5,6 +5,7 @@
 //
 //   { mode: "enrich", batchPaths: ["reports/criminal-code-enrichment/full-batches/batch-01.json", ...] }
 //   { mode: "curated-audit", batchPaths: [...] }
+//   { mode: "curated-rewrite", batchPaths: [...] }
 //
 // "enrich" mode is the proven pilot pattern: writer drafts a plain-language
 // summary per section from sourceText only, an independent verifier re-checks
@@ -18,8 +19,17 @@
 // mergeEnrichmentBatch.mjs never auto-applies anything to a curated entry
 // regardless of mode.
 //
-// Batch files are produced by prepareEnrichmentBatch.mjs. After a run,
-// apply results with: node scripts/mergeEnrichmentBatch.mjs <results.json>
+// "curated-rewrite" mode fixes curated entries a prior "curated-audit" flagged.
+// Batch items are shaped {section, title, sourceText, existing, curatedMismatch}
+// (built by a one-off prep step, not prepareEnrichmentBatch.mjs, since it needs
+// the mismatch description attached). Writer drafts a corrected `definition`
+// (and maxPenalty/relatedSections if warranted) from sourceText only, fixing
+// the flagged gap and any other gap it notices; verifier independently
+// re-checks the rewrite against sourceText before it's approved. Apply
+// approved results with: node scripts/mergeCuratedFix.mjs <results.json>
+//
+// Batch files for enrich/curated-audit are produced by prepareEnrichmentBatch.mjs.
+// After an enrich/curated-audit run, apply with: node scripts/mergeEnrichmentBatch.mjs <results.json>
 
 export const meta = {
   name: 'criminal-code-enrichment-chunk',
@@ -46,6 +56,83 @@ const WRITER_SCHEMA = {
     },
   },
   required: ['summaries'],
+}
+
+const REWRITE_WRITER_SCHEMA = {
+  type: 'object',
+  properties: {
+    rewrites: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          section: { type: 'string' },
+          definition: { type: 'string' },
+          maxPenalty: { type: 'string' },
+          relatedSections: { type: 'array', items: { type: 'string' } },
+        },
+        required: ['section', 'definition', 'maxPenalty', 'relatedSections'],
+      },
+    },
+  },
+  required: ['rewrites'],
+}
+
+const REWRITE_VERIFIER_SCHEMA = {
+  type: 'object',
+  properties: {
+    results: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          section: { type: 'string' },
+          approved: { type: 'boolean' },
+          finalDefinition: { type: 'string' },
+          finalMaxPenalty: { type: 'string' },
+          finalRelatedSections: { type: 'array', items: { type: 'string' } },
+          notes: { type: 'string' },
+        },
+        required: ['section', 'approved', 'finalDefinition', 'finalMaxPenalty', 'finalRelatedSections', 'notes'],
+      },
+    },
+  },
+  required: ['results'],
+}
+
+function rewriteWriterPrompt(batchPath) {
+  return `Read the JSON file at ${batchPath}. It is an array of Criminal Code of Canada sections, each shaped {section, title, sourceText, existing: {severity, maxPenalty, definition, relatedSections}, curatedMismatch}. existing.definition is a hand-curated definition that a prior independent review found to be inaccurate or incomplete; curatedMismatch describes the specific problem found.
+
+For EVERY section, write a corrected definition using ONLY sourceText as your source of legal content — no outside legal knowledge, no assumptions, nothing not in sourceText. Rules:
+- Fix the specific problem named in curatedMismatch.
+- Also check the rest of existing.definition against sourceText yourself — if you notice OTHER inaccuracies or omissions beyond the one named, fix those too.
+- Preserve everything in existing.definition that is still accurate and well-phrased; don't rewrite from scratch if only one clause is wrong.
+- Match the style of a real statute reference: plain but precise legal language, gender-neutral where sourceText itself is gender-neutral, 2-5 sentences depending on how much the section actually contains. Cover every operative paragraph/subsection of an offence-creating section (don't silently drop a branch to save space).
+- Do not state case law, outside commentary, or anything not traceable to sourceText.
+- Propose a corrected maxPenalty ONLY if sourceText's own punishment clause(s) support a specific, accurate string (if the section has multiple tiers, describe them concisely, e.g. "X years indictable (Y years if <condition>); summary conviction available"). If you're not confident, set maxPenalty to existing.maxPenalty unchanged rather than guessing.
+- Propose relatedSections ONLY for sections sourceText itself explicitly cross-references (cap 8). If none should change, return existing.relatedSections unchanged.
+
+Return one entry per section via the schema, section number exactly as given.`
+}
+
+function rewriteVerifierPrompt(batchPath, writerOutput) {
+  const draftJson = JSON.stringify(writerOutput.rewrites, null, 2)
+  return `Read the JSON file at ${batchPath} again — same file: an array of {section, title, sourceText, existing, curatedMismatch}.
+
+A separate writer agent produced draft corrected definitions for these curated sections, using only sourceText, meant to fix the problem in each section's curatedMismatch. Here are its drafts:
+${draftJson}
+
+You are the independent verifier. You did NOT write these — your job is to catch anything wrong, not rubber-stamp it. For EVERY section, checking only against that section's own sourceText:
+
+1. Does the draft definition state ONLY things actually in sourceText, with nothing invented, no outside legal knowledge?
+2. Does it actually fix the problem described in curatedMismatch?
+3. Does it cover every operative paragraph/subsection sourceText contains for this offence, or does it still silently drop something?
+4. Is draft maxPenalty accurate against sourceText's own punishment clause(s) (not a cross-reference to another section)? If sourceText doesn't support a confident single answer, finalMaxPenalty should just be existing.maxPenalty unchanged, not a guess.
+5. Are relatedSections limited to sections sourceText itself explicitly cross-references?
+
+If the draft passes all checks (or you can fix small issues yourself using only sourceText), set approved=true and put your (possibly corrected) final text in finalDefinition/finalMaxPenalty/finalRelatedSections. If the draft has a problem you cannot fix confidently from sourceText alone, set approved=false, put your reasoning in notes, and leave the final* fields as existing.definition/existing.maxPenalty/existing.relatedSections unchanged (never leave a curated entry with worse text than it started with).
+
+Return one entry per section via the schema, section number exactly as given.`
 }
 
 const VERIFIER_SCHEMA = {
@@ -108,34 +195,54 @@ You are the independent verifier. You did NOT write these summaries — your job
 Return one entry per section via the schema, section number exactly as given.`
 }
 
-const verified = MODE === 'curated-audit'
-  ? await pipeline(
-      BATCH_PATHS,
-      (batchPath, _item, i) => agent(verifierPrompt(batchPath, null), {
-        label: `audit:batch-${i + 1}`,
+let verified
+if (MODE === 'curated-audit') {
+  verified = await pipeline(
+    BATCH_PATHS,
+    (batchPath, _item, i) => agent(verifierPrompt(batchPath, null), {
+      label: `audit:batch-${i + 1}`,
+      phase: 'Verify',
+      schema: VERIFIER_SCHEMA,
+    }),
+  )
+} else if (MODE === 'curated-rewrite') {
+  verified = await pipeline(
+    BATCH_PATHS,
+    (batchPath, _item, i) => agent(rewriteWriterPrompt(batchPath), {
+      label: `rewrite:batch-${i + 1}`,
+      phase: 'Write',
+      schema: REWRITE_WRITER_SCHEMA,
+    }),
+    (writerOutput, batchPath, i) => {
+      if (!writerOutput) return null
+      return agent(rewriteVerifierPrompt(batchPath, writerOutput), {
+        label: `verify-rewrite:batch-${i + 1}`,
+        phase: 'Verify',
+        schema: REWRITE_VERIFIER_SCHEMA,
+      })
+    },
+  )
+} else {
+  verified = await pipeline(
+    BATCH_PATHS,
+    (batchPath, _item, i) => agent(writerPrompt(batchPath), {
+      label: `write:batch-${i + 1}`,
+      phase: 'Write',
+      schema: WRITER_SCHEMA,
+      effort: 'low',
+    }),
+    (writerOutput, batchPath, i) => {
+      if (!writerOutput) return null
+      return agent(verifierPrompt(batchPath, writerOutput), {
+        label: `verify:batch-${i + 1}`,
         phase: 'Verify',
         schema: VERIFIER_SCHEMA,
-      }),
-    )
-  : await pipeline(
-      BATCH_PATHS,
-      (batchPath, _item, i) => agent(writerPrompt(batchPath), {
-        label: `write:batch-${i + 1}`,
-        phase: 'Write',
-        schema: WRITER_SCHEMA,
-        effort: 'low',
-      }),
-      (writerOutput, batchPath, i) => {
-        if (!writerOutput) return null
-        return agent(verifierPrompt(batchPath, writerOutput), {
-          label: `verify:batch-${i + 1}`,
-          phase: 'Verify',
-          schema: VERIFIER_SCHEMA,
-        })
-      },
-    )
+      })
+    },
+  )
+}
 
 const flat = verified.filter(Boolean).flatMap((v) => v.results ?? v)
-log(`${MODE === 'curated-audit' ? 'Audited' : 'Verified'} ${flat.length} sections across ${BATCH_PATHS.length} batches. Tokens spent: ${budget.spent()}`)
+log(`${MODE} produced ${flat.length} results across ${BATCH_PATHS.length} batches. Tokens spent: ${budget.spent()}`)
 
 return { mode: MODE, batches: BATCH_PATHS.length, results: flat, tokensSpent: budget.spent() }
