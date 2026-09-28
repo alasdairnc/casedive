@@ -22,6 +22,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-1.html`,
+      summary:
+        "States that the Act may be cited as the Criminal Code.",
     },
   ],
 
@@ -33,6 +35,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-2.html`,
+      summary:
+        "Defines the meaning of numerous terms and expressions used throughout the Act, such as Attorney General, peace officer, dwelling-house, firearm, organization, victim, and property.",
       partOf: "Part I — General",
     },
   ],
@@ -43,6 +47,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-2.1.html`,
+      summary:
+        "States that a list of firearms-related terms, including ammunition, prohibited firearm, and replica firearm, have the same meaning given to them in subsection 84(1).",
+      relatedSections: ["84"],
       partOf: "Part I — General",
     },
   ],
@@ -53,6 +60,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-2.2.html`,
+      summary:
+        "Lists which individuals (such as a spouse, common-law partner, relative, or caregiver) may act on a victim's behalf for specified sections if the victim is dead or unable to act for themselves, and excludes the accused or a person found guilty of the offence from doing so.",
+      relatedSections: ["606", "672.5", "715.37", "722", "737.1", "745.63"],
       partOf: "Part I — General",
     },
   ],
@@ -63,6 +73,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-2.3.html`,
+      summary:
+        "Lists the categories of proceedings for which the Attorney General of Canada or the Director of Public Prosecutions shares jurisdiction with the provincial Attorney General, and confirms the scope of powers the federal Attorney General or Director may exercise over related proceedings such as conspiracy, breach of court orders, and ancillary matters.",
       partOf: "Part I — General",
     },
   ],
@@ -73,6 +85,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-3.html`,
+      summary:
+        "States that descriptive words in parentheses following a cross-reference to another provision are inserted only for convenience and are not part of the provision itself.",
       partOf: "Part I — General",
     },
   ],
@@ -83,6 +97,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-3.01.html`,
+      summary:
+        "Provides that, for a specified list of provisions, a reference to an offence involving violence against a person also includes sexual offences, criminal harassment, and trafficking in persons offences, and lists the sections to which this applies.",
+      relatedSections: ["264", "279.01", "279.011", "109", "110", "515"],
       partOf: "Part I — General",
     },
   ],
@@ -93,6 +110,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-3.1.html`,
+      summary:
+        "States that anything done by a court, justice or judge takes effect from the moment it is done even if not yet written down, and that the clerk of the court may sign the writing if it is later reduced to writing.",
       partOf: "Part I — General",
     },
   ],
@@ -103,6 +122,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-4.html`,
+      summary:
+        "Sets out rules for determining value in various circumstances (postal cards/stamps, valuable securities), defines what it means for a person to have something in possession, provides that terms drawn from other Acts keep their meaning from those Acts, defines when sexual intercourse is complete, and sets out how service of documents and notices may be proved, including by telecommunication.",
+      relatedSections: ["2"],
       partOf: "Part I — General",
     },
   ],
@@ -113,6 +135,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-5.html`,
+      summary:
+        "States that nothing in the Act affects any law relating to the government of the Canadian Forces.",
       partOf: "Part I — General",
     },
   ],
@@ -123,6 +147,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-6.html`,
+      summary:
+        "States that a person is deemed not guilty of an offence until convicted or discharged, limits punishment to what is prescribed by law, provides that no person may be convicted of an offence committed outside Canada except as otherwise provided, and defines \"enactment\" for the purposes of this section.",
+      relatedSections: ["730"],
       partOf: "Part I — General",
     },
   ],
@@ -133,6 +160,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-7.html`,
+      summary:
+        "Extends Canadian criminal jurisdiction extraterritorially by deeming certain acts or omissions to have been committed in Canada, including acts on or affecting aircraft in flight (or flights terminating in Canada) that would be indictable offences here, and specified offences against aircraft, air navigation facilities, airports, cultural property, fixed platforms, ships, space stations, the Lunar Gateway, internationally protected persons, UN personnel, hostage-taking, explosives, terrorism, and sexual offences or trafficking against persons under 18, when connected to Canada by citizenship, residence, or presence. Also sets out related procedural rules, including where proceedings may be commenced, consent requirements for prosecuting certain cases, and definitions of \"in flight\" and \"in service\" for aircraft.",
+      relatedSections: ["76", "77", "78.1", "269.1", "83.02", "279.1"],
       partOf: "Part I — General",
     },
   ],
@@ -143,6 +173,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-8.html`,
+      summary:
+        "States that the Code applies throughout Canada except where inconsistent with the Yukon Act, Northwest Territories Act, or Nunavut Act, continues pre-1955 English criminal law in a province except as altered by federal law, and preserves common law justifications, excuses, and defences except where altered by or inconsistent with federal law.",
       partOf: "Part I — General",
     },
   ],
@@ -153,6 +185,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-9.html`,
+      summary:
+        "Provides that no person may be convicted or discharged under section 730 of an offence at common law, under an Act of the Parliament of England, Great Britain, or the United Kingdom, or under an Act or ordinance in force in a province, territory, or place before it became a province of Canada, without affecting the power courts had before April 1, 1955 to punish contempt of court.",
+      relatedSections: ["730"],
       partOf: "Part I — General",
     },
   ],
@@ -163,6 +198,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-10.html`,
+      summary:
+        "Allows a person summarily convicted of contempt of court, whether committed in the face of the court or not, to appeal the conviction or the punishment imposed, with the appeal going to the provincial court of appeal under Part XXI procedures.",
       partOf: "Part I — General",
     },
   ],
@@ -173,6 +210,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-11.html`,
+      summary:
+        "States that a civil remedy for an act or omission is not suspended or affected merely because that act or omission is also a criminal offence.",
       partOf: "Part I — General",
     },
   ],
@@ -183,6 +222,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-11.1.html`,
+      summary:
+        "Clarifies that no agreement can prevent or restrict a person from disclosing to a police officer information relating to the commission of an offence.",
       partOf: "Part I — General",
     },
   ],
@@ -193,6 +234,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-12.html`,
+      summary:
+        "Provides that where an act or omission is an offence under more than one federal Act, a person may be proceeded against under any of those Acts unless a contrary intention appears, but cannot be punished more than once for the same offence.",
       partOf: "Part I — General",
     },
   ],
@@ -203,6 +246,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-13.html`,
+      summary:
+        "Provides that no person can be convicted of an offence for an act or omission committed while under the age of twelve.",
       partOf: "Part I — General",
     },
   ],
@@ -213,6 +258,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-14.html`,
+      summary:
+        "States that no person can consent to having death inflicted on them, and such consent does not affect the criminal responsibility of the person who inflicts the death.",
       partOf: "Part I — General",
     },
   ],
@@ -223,6 +270,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-15.html`,
+      summary:
+        "Provides that no person can be convicted of an offence for an act or omission done in obedience to laws made and enforced by those in de facto possession of sovereign power over the place where the act occurred.",
       partOf: "Part I — General",
     },
   ],
@@ -233,6 +282,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-16.html`,
+      summary:
+        "Provides that a person is not criminally responsible for an act or omission committed while suffering from a mental disorder that made them incapable of appreciating its nature and quality or of knowing it was wrong, sets a presumption against mental disorder, and places the burden of proving the defence on the party raising it.",
       partOf: "Part I — General",
     },
   ],
@@ -243,6 +294,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-17.html`,
+      summary:
+        "Excuses a person from an offence committed under compulsion by threats of immediate death or bodily harm from someone present at the time, provided the person believed the threats would be carried out and was not party to a conspiracy subjecting them to compulsion, but this excuse does not apply to a specified list of serious offences including murder, treason, and sexual assault.",
+      relatedSections: ["280", "281", "282", "283"],
       partOf: "Part I — General",
     },
   ],
@@ -253,6 +307,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-18.html`,
+      summary:
+        "States that no presumption of compulsion arises against a married person who commits an offence merely because it was committed in the presence of their spouse.",
       partOf: "Part I — General",
     },
   ],
@@ -263,6 +319,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-19.html`,
+      summary:
+        "States that ignorance of the law is not an excuse for committing an offence.",
       partOf: "Part I — General",
     },
   ],
@@ -273,6 +331,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-20.html`,
+      summary:
+        "Provides that a warrant, summons, appearance notice, undertaking, release order, or recognizance authorized by the Code may be executed, issued, given, or entered into on a holiday.",
       partOf: "Part I — General",
     },
   ],
@@ -283,6 +343,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "Same as principal offence",
       url: `${JUSTICE_LAWS_BASE}/section-21.html`,
+      summary:
+        "Defines who is a party to an offence: the person who actually commits it, aids another to commit it, or abets in its commission, and extends party liability to anyone who forms a common intention with others to carry out an unlawful purpose where an offence results that they knew or ought to have known was a probable consequence.",
       partOf: "Part I — General",
     },
   ],
@@ -293,6 +355,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "Same as principal offence",
       url: `${JUSTICE_LAWS_BASE}/section-22.html`,
+      summary:
+        "Makes a person who counsels another to be a party to an offence a party to that offence even if it is committed differently than counselled, and a party to any other offence the counselled person commits that the counsellor knew or ought to have known was likely; defines counsel to include procure, solicit, or incite.",
       partOf: "Part I — General",
     },
   ],
@@ -303,6 +367,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-22.1.html`,
+      summary:
+        "Makes an organization a party to a negligence-based offence where a representative acting within their authority is a party to it (or multiple representatives together would meet that standard), and a responsible senior officer markedly departed from the standard of care expected to prevent it.",
       partOf: "Part I — General",
     },
   ],
@@ -313,6 +379,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-22.2.html`,
+      summary:
+        "Makes an organization a party to a fault-based offence (other than negligence) where a senior officer, intending at least in part to benefit the organization, is a party to it, directs other representatives to commit it, or knowingly fails to take reasonable measures to stop a representative from committing it.",
       partOf: "Part I — General",
     },
   ],
@@ -323,6 +391,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-23.html`,
+      summary:
+        "Defines an accessory after the fact as someone who, knowing a person was party to an offence, receives, comforts, or assists that person for the purpose of helping them escape.",
       partOf: "Part I — General",
     },
   ],
@@ -333,6 +403,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-23.1.html`,
+      summary:
+        "Clarifies that the party-liability and accessory provisions apply to an accused even though the person they aided, abetted, counselled, or assisted cannot themselves be convicted of the offence.",
+      relatedSections: ["21", "22", "23"],
       partOf: "Part I — General",
     },
   ],
@@ -343,6 +416,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "See s. 463",
       url: `${JUSTICE_LAWS_BASE}/section-24.html`,
+      summary:
+        "Makes a person guilty of attempt where, intending to commit an offence, they do or omit something to carry out that intent, regardless of whether committing the offence was actually possible; states that whether conduct is mere preparation or an attempt is a question of law.",
       partOf: "Part I — General",
     },
   ],
@@ -353,6 +428,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-25.html`,
+      summary:
+        "Justifies a person required or authorized by law to act in law enforcement in doing what is required and using necessary force if acting on reasonable grounds, and extends protection to those executing a defective or improperly issued process or sentence in good faith. Generally limits force likely to cause death or grievous bodily harm to situations of reasonably believed necessity for self-preservation or protecting another, but permits a peace officer to use such force to arrest a fleeing suspect or to stop an escaping inmate reasonably believed to pose a threat of death or grievous bodily harm, subject to specified conditions.",
       partOf: "Part I — General",
     },
   ],
@@ -363,6 +440,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-25.1.html`,
+      summary:
+        "Defines terms such as competent authority, public officer, and senior official, and creates a scheme under which a competent authority may designate public officers who are then justified in committing acts or omissions that would otherwise be offences while investigating crime, provided they believe on reasonable grounds the conduct is reasonable and proportional, with written authorization generally required for acts likely to cause loss or serious property damage. This justification never extends to intentionally or negligently causing death or bodily harm, obstructing justice, or violating sexual integrity, and does not apply to certain drug and cannabis offences.",
+      relatedSections: ["25.2", "25.3", "25.4"],
       partOf: "Part I — General",
     },
   ],
@@ -373,6 +453,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-25.2.html`,
+      summary:
+        "Requires a public officer who commits or directs an authorized act or omission under paragraph 25.1(9)(a) or (b) to file a written report describing it with the appropriate senior official as soon as feasible.",
+      relatedSections: ["25.1"],
       partOf: "Part I — General",
     },
   ],
@@ -383,6 +466,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-25.3.html`,
+      summary:
+        "Requires each competent authority to publish an annual report on designations, authorizations, and acts or omissions committed by public officers under this scheme, the nature of the conduct involved, and limits what information the report may disclose where doing so would compromise investigations, identities, safety, proceedings, or the public interest.",
+      relatedSections: ["25.1"],
       partOf: "Part I — General",
     },
   ],
@@ -393,6 +479,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-25.4.html`,
+      summary:
+        "Requires the senior official to notify in writing any person whose property was lost or seriously damaged by an authorized act or omission, within a set time after the report filed under section 25.2, and allows the competent authority to delay that notification where it would cause specified harms.",
+      relatedSections: ["25.1", "25.2"],
       partOf: "Part I — General",
     },
   ],
@@ -403,6 +492,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-26.html`,
+      summary:
+        "Makes a person authorized by law to use force criminally responsible for any excess force used, judged according to the nature and quality of the act constituting the excess.",
       partOf: "Part I — General",
     },
   ],
@@ -413,6 +504,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-27.html`,
+      summary:
+        "Justifies using as much force as reasonably necessary to prevent the commission of an offence for which the offender could be arrested without warrant and that would likely cause immediate and serious injury to person or property, or to prevent something reasonably believed would constitute such an offence.",
       partOf: "Part I — General",
     },
   ],
@@ -423,6 +516,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-27.1.html`,
+      summary:
+        "Justifies a person on an aircraft in flight in using as much force as reasonably necessary to prevent an offence they believe on reasonable grounds would cause immediate and serious injury to the aircraft or persons or property in it, and specifies this applies to aircraft in Canadian airspace and Canadian-registered aircraft in flight outside it.",
       partOf: "Part I — General",
     },
   ],
@@ -433,6 +528,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-28.html`,
+      summary:
+        "Protects a person executing an arrest warrant, and those assisting or a prison keeper receiving the arrested person, from criminal responsibility if they believed in good faith and on reasonable grounds that the person arrested was the one named in the warrant.",
       partOf: "Part I — General",
     },
   ],
@@ -443,6 +540,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-29.html`,
+      summary:
+        "Requires a person executing a process or warrant to have it with them when feasible and produce it on request, and requires anyone making an arrest to give notice of the warrant or reason for arrest when feasible, while stating that failure to comply does not itself remove protection from criminal responsibility.",
       partOf: "Part I — General",
     },
   ],
@@ -453,6 +552,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-30.html`,
+      summary:
+        "Justifies a person who witnesses a breach of the peace in interfering to prevent its continuance or renewal and in detaining a person committing or about to join or renew it, for handover to a peace officer, using no more force than reasonably necessary or proportioned to the danger.",
       partOf: "Part I — General",
     },
   ],
@@ -463,6 +564,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-31.html`,
+      summary:
+        "Justifies a peace officer and those lawfully assisting in arresting a person found committing a breach of the peace or reasonably believed about to join or renew one, and justifies a peace officer in taking custody of a person given into their charge as having been party to such a breach.",
       partOf: "Part I — General",
     },
   ],
@@ -473,6 +576,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-32.html`,
+      summary:
+        "Justifies a peace officer in using or ordering force believed in good faith and on reasonable grounds to be necessary and not excessive to suppress a riot, justifies those bound by military law or ordered by a peace officer in obeying non-manifestly-unlawful commands to suppress a riot, and justifies a person acting in good faith who believes serious mischief will occur before a peace officer can attend; states whether an order is manifestly unlawful is a question of law.",
       partOf: "Part I — General",
     },
   ],
@@ -483,6 +588,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-33.html`,
+      summary:
+        "Imposes a duty on a peace officer and those lawfully required to assist to disperse or arrest persons who fail to comply with the proclamation referred to in section 67 or commit an offence under paragraph 68(a) or (b), protects such officers and assistants from civil or criminal proceedings for death or injury resulting from resistance during that duty, and states the section does not limit other powers or duties regarding riot suppression.",
+      relatedSections: ["67", "68"],
       partOf: "Part I — General",
     },
   ],
@@ -493,6 +601,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-33.1.html`,
+      summary:
+        "A person who lacks intent or voluntariness due to self-induced extreme intoxication still commits an offence involving assault or interference with another's bodily integrity if they departed markedly from the standard of care expected around consuming intoxicating substances. It sets out factors courts must consider for that marked departure and defines extreme intoxication.",
       partOf: "Part I — General",
     },
   ],
@@ -533,6 +643,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-43.html`,
+      summary:
+        "Allows a schoolteacher, parent, or person standing in place of a parent to use force to correct a pupil or child under their care, provided the force does not exceed what is reasonable in the circumstances.",
       partOf: "Part I — General",
     },
   ],
@@ -543,6 +655,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-45.html`,
+      summary:
+        "Protects a person from criminal responsibility for performing a surgical operation on another for that person's benefit, if the operation is done with reasonable care and skill and is reasonable given the patient's health and the circumstances.",
       partOf: "Part I — General",
     },
   ],
@@ -555,6 +669,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment (high treason)",
       url: `${JUSTICE_LAWS_BASE}/section-46.html`,
+      summary:
+        "Defines the conduct that constitutes high treason (such as killing or harming the Sovereign, levying war against Canada, or assisting an enemy) and treason (such as using force to overthrow government or communicating military/scientific information to a state other than Canada), including conspiracy and forming an intention manifested by an overt act. Also states these provisions apply to Canadian citizens whether the conduct occurs in or out of Canada.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -565,6 +681,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-47.html`,
+      summary:
+        "Sets the conviction consequences for high treason and treason described in section 46, requires corroborating evidence beyond a single witness for conviction, and states the mandatory imprisonment is a minimum punishment.",
+      relatedSections: ["46"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -575,6 +694,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-48.html`,
+      summary:
+        "Sets time limits for starting proceedings for treason involving overthrowing the government, and requires that proceedings for treasonable speech be based on an information laid under oath within six days and an arrest warrant issued within ten days.",
+      relatedSections: ["46", "47"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -583,8 +705,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Assisting alien enemy to leave Canada, or omitting to prevent treason",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-50.html`,
+      summary:
+        "Describes the offence of inciting or assisting a subject of an enemy state to leave Canada without Crown consent, or knowing of impending treason and failing to report or try to prevent it.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -593,8 +717,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Intimidating Parliament or legislature",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-51.html`,
+      summary:
+        "Describes the offence of committing an act of violence to intimidate Parliament or a provincial legislature.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -603,8 +729,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sabotage",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-52.html`,
+      summary:
+        "Describes the offence of sabotage, meaning doing a prohibited act (impairing equipment or destroying/damaging property) with intent to endanger Canada's safety or the safety of allied forces in Canada, defines the prohibited act, and excludes labour-related work stoppages and mere information-gathering or advocacy, protest or dissent activity from the offence.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -613,8 +741,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sabotage — essential infrastructure",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-52.1.html`,
+      summary:
+        "Describes the offence of interfering with or damaging essential infrastructure with intent to endanger Canada's or allied forces' safety or public health/safety, defines essential infrastructure broadly, and excludes labour-related work stoppages, information-gathering, and advocacy, protest or dissent from the offence.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -623,8 +753,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sabotage — device",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-52.2.html`,
+      summary:
+        "Describes the offence of making, possessing, selling, or distributing a device intended or known to be used to carry out sabotage under sections 52 or 52.1, and defines device to include a computer program.",
+      relatedSections: ["52", "52.1", "342.1"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -635,6 +768,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-52.3.html`,
+      summary:
+        "Requires the Attorney General's consent before any proceeding can be instituted for offences under sections 52, 52.1, or 52.2.",
+      relatedSections: ["52", "52.1", "52.2"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -643,8 +779,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Inciting to mutiny",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-53.html`,
+      summary:
+        "Describes the offence of attempting to seduce a member of the Canadian Forces from duty and allegiance, or inciting a member to commit a traitorous or mutinous act, for a traitorous or mutinous purpose.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -653,8 +791,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Assisting deserter",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-54.html`,
+      summary:
+        "Describes the offence of aiding, assisting, harbouring or concealing a person known to be a deserter or absentee without leave from the Canadian Forces, and requires the Attorney General's consent to institute proceedings.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -665,6 +805,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-55.html`,
+      summary:
+        "Provides that evidence of an overt act in treason-related proceedings is inadmissible unless the act is set out in the indictment or the evidence otherwise tends to prove an act that is set out in the indictment.",
+      relatedSections: ["47", "50", "51", "52", "53"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -673,8 +816,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offences in relation to members of R.C.M.P.",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-56.html`,
+      summary:
+        "Describes the offence of wilfully persuading, aiding, or assisting a member of the Royal Canadian Mounted Police to desert or absent themselves without leave, or harbouring such a deserter or absentee.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -683,8 +828,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Identity documents",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-56.1.html`,
+      summary:
+        "Describes the offence of procuring, possessing, transferring, selling, or offering for sale another person's identity document without lawful excuse, while excepting acts done in good faith in the ordinary course of business, for genealogical purposes, with consent, or for a legitimate administration-of-justice purpose, and defines identity document.",
+      relatedSections: ["57"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -695,6 +843,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-57.html`,
+      summary:
+        "Describes offences relating to forging a passport, using or dealing with a passport known to be forged, making false statements to procure a passport or its alteration, and possessing a forged passport, and sets out jurisdictional rules for offences committed outside Canada.",
+      relatedSections: ["321", "366"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -703,8 +854,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraudulent use of certificate of citizenship",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-58.html`,
+      summary:
+        "Describes the offence of using a certificate of citizenship or naturalization for a fraudulent purpose, or knowingly parting with possession of one's own certificate intending it be used fraudulently, and defines the relevant certificates by reference to the Citizenship Act.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -715,6 +868,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-59.html`,
+      summary:
+        "Defines seditious words, seditious libel, and seditious conspiracy, and sets out a presumption that teaching, advocating, publishing, or circulating writing advocating unlawful force to accomplish governmental change in Canada demonstrates a seditious intention.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -725,6 +880,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-60.html`,
+      summary:
+        "Provides that a person is not deemed to have a seditious intention if they act in good faith to point out government errors, seek lawful change, or highlight sources of hostility between classes of persons for the purpose of removing them.",
+      relatedSections: ["59"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -733,8 +891,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment of seditious offences",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-61.html`,
+      summary:
+        "Describes the offence of speaking seditious words, publishing a seditious libel, or being party to a seditious conspiracy.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -743,8 +903,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offences in relation to military forces",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-62.html`,
+      summary:
+        "Describes the offence of intentionally interfering with the loyalty or discipline of a member of the Canadian Forces or allied forces in Canada, or publishing, distributing, or otherwise causing insubordination, disloyalty, mutiny, or refusal of duty, and defines member of a force.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -755,6 +917,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-63.html`,
+      summary:
+        "Defines unlawful assembly as three or more persons assembling with a common purpose in a manner that causes others to reasonably fear a tumultuous disturbance of the peace, addresses a lawful assembly becoming unlawful, and excepts persons assembled only to protect a dwelling-house from threatened break-in.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -765,6 +929,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-64.html`,
+      summary:
+        "Defines a riot as an unlawful assembly that has begun to disturb the peace tumultuously.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -775,6 +941,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-65.html`,
+      summary:
+        "Describes the offence of taking part in a riot, and a more serious version of that offence for doing so while wearing a mask or disguise without lawful excuse to conceal one's identity.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -785,6 +953,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-66.html`,
+      summary:
+        "Describes the offence of being a member of an unlawful assembly, and a more serious version for doing so while wearing a mask or disguise without lawful excuse to conceal one's identity.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -795,6 +965,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-67.html`,
+      summary:
+        "Requires specified officials (such as a justice, mayor, sheriff, or prison warden) who learn that twelve or more persons are unlawfully and riotously assembled to go to the scene and, if satisfied a riot is occurring, command silence and read a proclamation in specified words ordering dispersal.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -805,6 +977,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-68.html`,
+      summary:
+        "Describes the offence of wilfully and forcefully opposing, hindering, or assaulting a person making the proclamation under section 67, or of failing to disperse within thirty minutes after the proclamation is made or would have been made but for such interference.",
+      relatedSections: ["67"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -813,8 +988,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Neglect by peace officer",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-69.html`,
+      summary:
+        "Describes the offence of a peace officer, without reasonable excuse, failing to take reasonable steps to suppress a riot within their jurisdiction after receiving notice of it.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -823,8 +1000,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Orders by Governor in Council",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-70.html`,
+      summary:
+        "Authorizes the Governor in Council to make orders prohibiting unauthorized assemblies for military training, drilling, or exercises, allows such orders to be general or specific to places or groups, and describes the offence of contravening such an order.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -835,6 +1014,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-72.html`,
+      summary:
+        "Defines forcible entry as entering real property in another's actual peaceable possession in a manner likely to cause or threaten a breach of the peace, regardless of entitlement or intent to take possession, and defines forcible detainer as detaining property without colour of right in a manner likely to cause or threaten a breach of the peace against a person entitled to possession; states that possession and colour of right are questions of law.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -843,8 +1024,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-73.html`,
+      summary:
+        "Describes the offence of committing forcible entry or forcible detainer, punishable either as an indictable offence or on summary conviction.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -855,6 +1038,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-74.html`,
+      summary:
+        "Defines piracy as any act that constitutes piracy under the law of nations, and describes the offence of committing piracy whether in or out of Canada.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -863,8 +1048,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Piratical acts",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-75.html`,
+      summary:
+        "Describes the offence of stealing a Canadian ship, stealing or destroying its cargo, supplies or fittings, committing or attempting a mutinous act on a Canadian ship, or counselling any of these acts, whether in or out of Canada.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -875,6 +1062,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-76.html`,
+      summary:
+        "Describes the offence of hijacking, meaning unlawfully seizing or exercising control of an aircraft by force, threat, or intimidation, with intent to confine a person aboard, transport them against their will, hold them for ransom or service, or divert the aircraft from its flight plan.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -885,6 +1074,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-77.html`,
+      summary:
+        "Describes offences endangering the safety of an aircraft or airport, including committing violence on board or at an international airport, damaging an aircraft or interfering with air navigation facilities, placing dangerous items on an aircraft, or communicating information known to be false that endangers aircraft safety.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -893,8 +1084,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offensive weapons and explosive substances",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-78.html`,
+      summary:
+        "Describes the offence of taking an offensive weapon or explosive substance aboard a civil aircraft without the owner's or operator's consent, or in breach of the terms of that consent, and defines civil aircraft to exclude aircraft operated by the Canadian Forces, police, or customs/excise enforcement.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -905,6 +1098,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-78.1.html`,
+      summary:
+        "Describes offences of seizing or controlling a ship or fixed platform by force, threat, or intimidation; committing violence, damage, or interference likely to endanger a ship's safe navigation or a fixed platform's safety; communicating false information endangering safe navigation; and threatening to commit such acts to compel a person to act; and defines fixed platform and ship.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -915,6 +1110,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-79.html`,
+      summary:
+        "Places anyone possessing or having care or control of an explosive substance under a legal duty to use reasonable care to prevent bodily harm, death, or property damage from it.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -925,6 +1122,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-80.html`,
+      summary:
+        "Describes the offence of failing without lawful excuse to perform the duty of care under section 79, where that failure results in an explosion causing or likely to cause death, or causing or likely to cause bodily harm or property damage.",
+      relatedSections: ["79"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -935,6 +1135,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-81.html`,
+      summary:
+        "Describes offences of intentionally causing or attempting to cause an explosion likely to cause serious harm or property damage, causing an explosive or dangerous substance to be delivered or thrown with intent to harm, placing or throwing an explosive substance intending to damage property, or making or possessing an explosive substance intending to endanger life or property or to enable another to do so.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -945,6 +1147,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-82.html`,
+      summary:
+        "Describes the offence of making or possessing or having care or control of an explosive substance without lawful excuse, and a more serious version of that offence where done for the benefit of, at the direction of, or in association with a criminal organization.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -955,6 +1159,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-82.1.html`,
+      summary:
+        "Requires that a sentence for an offence under subsection 82(2) be served consecutively to any other punishment for an offence arising from the same events and to any other sentence the person is already subject to.",
+      relatedSections: ["82"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -965,6 +1172,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-82.2.html`,
+      summary:
+        "Defines device, for the purposes of sections 82.3 to 82.5, as a nuclear explosive device, a device that disperses radioactive material, or a device emitting ionizing radiation capable of causing death, serious bodily harm, or substantial damage.",
+      relatedSections: ["82.3", "82.4", "82.5"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -975,6 +1185,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-82.3.html`,
+      summary:
+        "Describes the offence of, with intent to cause death, serious bodily harm, or substantial damage to property or the environment, making, possessing, using, transferring, exporting, importing, altering, or disposing of nuclear or radioactive material or a device, or committing an act against a nuclear facility that seriously interferes with or disrupts its operations.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -985,6 +1197,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-82.4.html`,
+      summary:
+        "Describes the offence of, with intent to compel a person, government, or international organization to act or refrain from acting, using or altering nuclear or radioactive material or a device, or committing an act against a nuclear facility that seriously interferes with or disrupts its operations.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -995,6 +1209,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-82.5.html`,
+      summary:
+        "Describes the offence of committing any indictable offence with intent to obtain nuclear material, radioactive material, a device, or access to a nuclear facility.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -1005,6 +1221,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-82.6.html`,
+      summary:
+        "Describes the offence of threatening to commit an offence under sections 82.3 to 82.5.",
+      relatedSections: ["82.3", "82.4", "82.5"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -1015,6 +1234,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-82.7.html`,
+      summary:
+        "States that sections 82.3 to 82.6 do not apply to acts committed during an armed conflict that comply with applicable international law, or to activities of a state's military forces in official duties governed by other international law rules.",
+      relatedSections: ["82.3", "82.4", "82.5", "82.6"],
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -1023,8 +1245,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Engaging in prize fight",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-83.html`,
+      summary:
+        "Describes the offence of engaging as a principal in, advising or promoting, or being present at a prize fight in specified roles, and defines prize fight while excluding various sanctioned amateur and professional combative sport contests held under provincial authority.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -1037,6 +1261,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.01.html`,
+      summary:
+        "Defines terms used in this Part, including Canadian, entity, listed entity, terrorist activity (covering specified international convention offences and acts intended to intimidate the public or compel a government/organization through violence, endangerment, property damage, or disruption of essential services), and terrorist group, and clarifies that mere expression of belief or opinion, and suicide bombings, are addressed under the terrorist activity definition's criteria.",
+      relatedSections: ["7", "83.05", "83.19"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1047,6 +1274,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.02.html`,
+      summary:
+        "Describes the offence of directly or indirectly, wilfully and without lawful justification, providing or collecting property intending or knowing it will be used to carry out specified terrorism-related offences or acts intended to cause death or serious bodily harm to civilians for purposes of intimidation or compulsion.",
+      relatedSections: ["83.01"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1057,6 +1287,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.03.html`,
+      summary:
+        "Describes offences of providing, inviting provision of, or making available property or financial/related services intending or knowing they will be used to facilitate or carry out terrorist activity or benefit someone doing so, or knowing they will be used by or benefit a terrorist group, with exceptions for authorized activities and for humanitarian assistance carried out with reasonable efforts to minimize benefit to terrorist groups.",
+      relatedSections: ["83.032"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1067,6 +1300,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.031.html`,
+      summary:
+        "Defines Public Safety Minister for the purposes of sections 83.032 to 83.0392 and allows any Minister referred to in those sections to designate a person to exercise their powers or duties.",
+      relatedSections: ["83.032", "83.0392"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1077,6 +1313,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.032.html`,
+      summary:
+        "Sets out the process by which the Public Safety Minister may authorize an eligible person to carry out specified activities (such as health, education, livelihood, human rights, or immigration-related services) in a geographic area controlled by a terrorist group, including eligibility, referral by other Ministers, conditions for granting, security review factors, and validity period.",
+      relatedSections: ["83.03"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1087,6 +1326,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.033.html`,
+      summary:
+        "Requires notice of a refused application under section 83.032 to be given to the applicant, restricts new applications for the same activity for 30 days absent a material change in circumstances, and allows the Public Safety Minister to consider such a new application without referral in certain cases.",
+      relatedSections: ["83.032"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1097,6 +1339,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.034.html`,
+      summary:
+        "Allows the Public Safety Minister to conduct additional security reviews of a person subject to an authorization granted under section 83.032 or renewed under section 83.035, at any time during its validity period, and to request additional information relating only to that authorization or its renewal.",
+      relatedSections: ["83.032", "83.035"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1107,6 +1352,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.035.html`,
+      summary:
+        "Allows the Public Safety Minister to renew a section 83.032 authorization for up to five years at a time on timely application, and permits renewal of a late application if exceptional circumstances justify the delay.",
+      relatedSections: ["83.032"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1117,6 +1365,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.036.html`,
+      summary:
+        "Allows the Public Safety Minister to amend an authorization (or its terms and conditions) granted or renewed under sections 83.032/83.035, but not so as to change its essential nature or replace/add a purpose, and requires the authorization holder to supply information requested in support of the amendment.",
+      relatedSections: ["83.032", "83.035"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1127,6 +1378,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.037.html`,
+      summary:
+        "Allows the Public Safety Minister to suspend, revoke, or restrict the scope of an authorization if the holder fails to comply with it or its conditions, fails without reasonable excuse to meet reporting or information requests, or if the Minister is no longer satisfied a specified condition is met.",
+      relatedSections: ["83.032", "83.034"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1137,6 +1391,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.038.html`,
+      summary:
+        "Lists government entities (including CSIS, RCMP, CSE, and others) that may assist the Public Safety Minister in administering and enforcing the surrounding sections by collecting and sharing information, restricts use of that information to that purpose, and requires the Minister to take reasonable steps to ensure compliance.",
+      relatedSections: ["83.031", "83.0392"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1147,6 +1404,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.039.html`,
+      summary:
+        "Sets out procedural rules for judicial review of decisions made by the Public Safety Minister or other named Ministers under sections 83.032 to 83.038, including a right to be heard, treatment of withdrawn or irrelevant evidence, and confidentiality obligations, and applies the same rules to appeals.",
+      relatedSections: ["83.032", "83.038"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1157,6 +1417,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.0391.html`,
+      summary:
+        "Authorizes the Governor in Council to make regulations governing applications for authorizations, requests for information, the granting/renewal/amendment/suspension/revocation of authorizations, reporting by authorization holders, and prescribing additional assisting entities.",
+      relatedSections: ["83.032", "83.035", "83.036", "83.037", "83.038"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1167,6 +1430,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.0392.html`,
+      summary:
+        "Requires the Public Safety Minister to prepare an annual report to Parliament on the operation of the surrounding sections, including application statistics and handling of redactions, and to conduct a periodic comprehensive review with a plan to remedy any identified deficiencies.",
+      relatedSections: ["83.031", "83.0391"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1177,6 +1443,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.04.html`,
+      summary:
+        "Makes it an offence to use property, in whole or in part, to facilitate or carry out a terrorist activity, or to possess property intending or knowing it will be used for that purpose.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1187,6 +1455,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.05.html`,
+      summary:
+        "Sets out the process by which the Governor in Council may establish and maintain a list of entities believed to have knowingly carried out or facilitated terrorist activity or acted in association with such an entity, including procedures for a listed entity to apply for removal, judicial review of the Minister's decision, periodic government review of listings, and publication requirements.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1197,6 +1467,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.06.html`,
+      summary:
+        "Sets out how a judge handles foreign-source information given in confidence during a listing-related proceeding under section 83.05 -- returning it if found not relevant, or summarizing it if found relevant but suitable for a summary -- and confirms that the Canada Evidence Act's sensitive-information provisions apply to related applications.",
+      relatedSections: ["83.05"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1207,6 +1480,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.07.html`,
+      summary:
+        "Allows an entity with a name the same as or similar to a listed entity's name to apply to the Minister for a certificate confirming it is not that listed entity, and requires the Minister to issue the certificate within 30 days if satisfied this is the case.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1217,6 +1492,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.08.html`,
+      summary:
+        "Prohibits any person in Canada or Canadian abroad from knowingly dealing in, facilitating transactions involving, or providing services related to property owned or controlled by a terrorist group, while shielding a person who acts reasonably and takes all reasonable steps to comply from civil liability.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1227,6 +1504,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.09.html`,
+      summary:
+        "Allows the Minister of Public Safety (or a designate) to authorize specific activities or transactions that would otherwise be prohibited under section 83.08, subject to conditions the Minister may set, amend, suspend, revoke, or reinstate, while preserving other parties' existing property rights and extending the authorization's protection to others involved in the authorized activity.",
+      relatedSections: ["83.08", "83.1", "83.11"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1237,6 +1517,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.1.html`,
+      summary:
+        "Requires every person in or connected to Canada to promptly disclose to the RCMP Commissioner or CSIS Director any property they know is controlled by a terrorist group and any related transaction information, and grants immunity from criminal or civil proceedings for good-faith disclosures.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1247,6 +1529,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.11.html`,
+      summary:
+        "Requires specified financial institutions (banks, credit unions, insurers, trust and loan companies, and securities dealers) to continuously check whether they hold property controlled by a listed entity and to report their findings periodically to their regulator, with immunity for good-faith reports and regulation-making power to set reporting periods and exemptions.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1257,6 +1541,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.12.html`,
+      summary:
+        "Makes it an offence to contravene the freezing-of-property, disclosure, or audit obligations in sections 83.08, 83.1, and 83.11.",
+      relatedSections: ["83.08", "83.1", "83.11"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1267,6 +1554,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.13.html`,
+      summary:
+        "Allows a Federal Court judge, on an ex parte application by the Attorney General, to issue a warrant to search for and seize, or a restraint order to freeze, property that may later be subject to forfeiture, and sets out related procedures including appointing a manager for the property, destroying property of little value, and varying or cancelling such orders.",
+      relatedSections: ["83.14", "462.32", "462.33", "462.34", "462.35", "462.4"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1277,6 +1567,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.14.html`,
+      summary:
+        "Sets out the process by which the Attorney General may apply to a Federal Court judge for forfeiture of property owned or controlled by a terrorist group or used to facilitate terrorist activity, including notice to respondents, protection of innocent third-party interests and family members' residences, and a procedure to challenge a forfeiture order after the fact.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1287,6 +1579,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.15.html`,
+      summary:
+        "Applies certain existing property-disposal provisions from elsewhere in the Code, with necessary modifications, to property restrained, seized, or forfeited under sections 83.13 or 83.14.",
+      relatedSections: ["462.42", "462.43", "462.46", "83.13", "83.14"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1297,6 +1592,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.16.html`,
+      summary:
+        "Provides that property restrained, seized, or under management pending an appeal of a forfeiture order remains subject to those measures until the appeal concludes, and applies an existing appeal provision to an appeal of a refusal to grant a forfeiture order.",
+      relatedSections: ["83.14", "83.13", "462.34"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1307,6 +1605,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.17.html`,
+      summary:
+        "States that this Part does not affect the operation of other forfeiture provisions in this or any other federal statute, and that property is only forfeitable under section 83.14 to the extent it is not needed to satisfy restitution or compensation obligations to crime victims.",
+      relatedSections: ["83.14"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1317,6 +1618,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.18.html`,
+      summary:
+        "Makes it an offence to knowingly participate in or contribute to an activity of a terrorist group for the purpose of enhancing its ability to facilitate or carry out terrorist activity, and specifies that the offence can be made out even if no terrorist activity actually results, listing examples of what counts as participating or contributing.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1327,6 +1630,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.181.html`,
+      summary:
+        "Makes it an offence to leave or attempt to leave Canada, or board or attempt to board a conveyance intending to leave Canada, for the purpose of doing outside Canada something that would constitute the section 83.18(1) offence if done in Canada.",
+      relatedSections: ["83.18"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1335,8 +1641,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Facilitating terrorist activity",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.19.html`,
+      summary:
+        "Makes it an offence to knowingly facilitate a terrorist activity, and specifies the offence applies regardless of whether the facilitator knew the specific activity, whether it was foreseen or planned, or whether it was actually carried out.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1347,6 +1655,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.191.html`,
+      summary:
+        "Makes it an offence to leave or attempt to leave Canada, or board or attempt to board a conveyance intending to leave Canada, for the purpose of doing outside Canada something that would constitute the section 83.19(1) offence if done in Canada.",
+      relatedSections: ["83.19"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1357,6 +1668,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-83.2.html`,
+      summary:
+        "Makes it an offence to commit any indictable offence under this or another federal Act for the benefit of, at the direction of, or in association with a terrorist group.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1367,6 +1680,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.201.html`,
+      summary:
+        "Makes it an offence to leave or attempt to leave Canada, or board or attempt to board a conveyance intending to leave Canada, for the purpose of committing outside Canada an act that would be an indictable offence for the benefit of, at the direction of, or in association with a terrorist group if committed in Canada.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1377,6 +1692,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.202.html`,
+      summary:
+        "Makes it an offence to leave or attempt to leave Canada, or board or attempt to board a conveyance intending to leave Canada, for the purpose of committing outside Canada an act that would be an indictable offence in Canada and would also constitute a terrorist activity.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1387,6 +1704,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-83.21.html`,
+      summary:
+        "Makes it an offence to knowingly instruct any person, directly or indirectly, to carry out an activity for a terrorist group's benefit for the purpose of enhancing the group's ability to facilitate or carry out terrorist activity, and specifies the offence applies regardless of whether the activity is actually carried out, whether a specific person is instructed, or various other circumstances.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1397,6 +1716,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-83.22.html`,
+      summary:
+        "Makes it an offence to knowingly instruct any person, directly or indirectly, to carry out a terrorist activity, and specifies the offence applies regardless of whether the activity is actually carried out or the instructed person's knowledge.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1405,8 +1726,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Counselling commission of terrorism offence",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "5 years",
       url: `${JUSTICE_LAWS_BASE}/section-83.221.html`,
+      summary:
+        "Makes it an offence to counsel another person to commit a terrorism offence without identifying a specific offence, applicable whether or not the counselled person actually commits a terrorism offence.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1417,6 +1740,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.222.html`,
+      summary:
+        "Allows a judge to issue a warrant to seize publications believed to be terrorist propaganda kept for sale or distribution, sets out a process for the occupier, owner, and author to contest forfeiture before the court, provides for return of the material if the court is not satisfied, and allows appeal, subject to the Attorney General's consent to any proceeding.",
+      relatedSections: ["320", "673", "696"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1427,6 +1753,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.223.html`,
+      summary:
+        "Allows a judge to order a computer system's custodian to copy, remove, and identify the source of material that is or makes available terrorist propaganda, sets out notice and hearing procedures for the person who posted it, and allows the court to order deletion or return of the material, subject to appeal and the Attorney General's consent.",
+      relatedSections: ["342.1", "320", "83.222", "673", "696"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1437,6 +1766,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-83.23.html`,
+      summary:
+        "Makes it an offence to knowingly harbour or conceal a person known to have carried out, or to be likely to carry out, terrorist activity for the purpose of enabling further terrorist activity, with the penalty for concealing someone who already carried out terrorist activity varying based on the punishment that person themselves would face.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1447,6 +1778,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-83.231.html`,
+      summary:
+        "Makes it an offence to convey false information or commit an act, without lawful excuse and intending to cause fear of death, bodily harm, property damage, or interference with property, that is likely to cause a reasonable apprehension that terrorist activity is occurring or will occur, with escalated classification where the act causes bodily harm or death.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1457,6 +1790,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.24.html`,
+      summary:
+        "Requires the Attorney General's consent before proceedings for a terrorism offence or an offence under section 83.12 can be commenced.",
+      relatedSections: ["83.12"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1467,6 +1803,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.25.html`,
+      summary:
+        "Allows proceedings for a terrorism offence or a section 83.12 offence to be commenced and conducted by the federal Attorney General in any Canadian territorial division regardless of where the person is or where the offence occurred, and allows trial and punishment there as if the offence occurred in that division.",
+      relatedSections: ["83.12"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1477,6 +1816,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.26.html`,
+      summary:
+        "Requires that a sentence (other than life imprisonment) for an offence under specified terrorism-related sections be served consecutively to other sentences arising from the same events or already being served.",
+      relatedSections: ["83.02", "83.04", "83.18", "83.23"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1487,6 +1829,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-83.27.html`,
+      summary:
+        "Provides that a person convicted of an indictable offence whose underlying act also constitutes a terrorist activity is liable to life imprisonment (unless a minimum life sentence already applies), but only if the prosecutor gave notice before the plea that this provision would be sought.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1497,6 +1841,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.3.html`,
+      summary:
+        "Sets out a detailed process, requiring the Attorney General's consent, allowing a peace officer to lay an information seeking a recognizance with conditions (or make an arrest without warrant in urgent circumstances) to prevent an anticipated terrorist activity, including timelines for appearance before a judge, grounds for detention, and the conditions a judge may impose in the resulting recognizance, such as firearms, passport, or geographic restrictions.",
+      relatedSections: ["810"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1507,6 +1854,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.31.html`,
+      summary:
+        "Requires the federal Attorney General and Minister of Public Safety to prepare and publish annual reports on the use of section 83.3, including statistics on consents, arrests, detentions, recognizances, and their opinion on whether the section should be extended, while excluding information whose disclosure would be harmful to investigations, safety, proceedings, or the public interest.",
+      relatedSections: ["83.3"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -5206,8 +5556,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Failure or refusal to comply with demand",
       severity: "Hybrid",
-      maxPenalty:
-        "10 years indictable or summary conviction (up to $5,000 fine or 2 years less a day, or both), with a minimum fine of $2,000 for a first offence, imprisonment for 30 days for a second, and 120 days for each subsequent; 14 years indictable/summary with the same minimums if bodily harm results; life imprisonment with the same minimums if death results (s. 320.19(1), (4), 320.2, 320.21).",
+      maxPenalty: "10 years indictable or summary conviction (up to $5,000 fine or 2 years less a day, or both), with a minimum fine of $2,000 for a first offence, imprisonment for 30 days for a second, and 120 days for each subsequent; 14 years indictable/summary with the same minimums if bodily harm results; life imprisonment with the same minimums if death results (s. 320.19(1), (4), 320.2, 320.21).",
       url: `${JUSTICE_LAWS_BASE}/section-320.15.html`,
       definition:
         "Everyone commits an offence who, knowing that a demand has been made, fails or refuses to comply, without reasonable excuse, with a demand made under section 320.27 or 320.28. A person who commits this offence and, at the time, knows or is reckless as to whether they were involved in an accident causing bodily harm to another person commits a separate, more serious offence, as does a person who knows or is reckless as to whether the accident caused death or caused bodily harm from which death results. A person cannot be convicted of more than one offence under this section arising from the same transaction.",
@@ -5944,8 +6293,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of property obtained by crime",
       severity: "Hybrid",
-      maxPenalty:
-        "10 years indictable, or summary conviction available, if the property is a testamentary instrument or worth more than $5,000; 2 years indictable, or summary conviction available, if $5,000 or less (s. 355).",
+      maxPenalty: "10 years indictable, or summary conviction available, if the property is a testamentary instrument or worth more than $5,000; 2 years indictable, or summary conviction available, if $5,000 or less (s. 355).",
       url: `${JUSTICE_LAWS_BASE}/section-354.html`,
       definition:
         "Every one commits an offence who has in his possession any property or thing or any proceeds of any property or thing knowing that all or part of the property or thing or of the proceeds was obtained by or derived directly or indirectly from the commission in Canada of an offence punishable by indictment or an act or omission anywhere that, if it had occurred in Canada, would have constituted an offence punishable by indictment.",
