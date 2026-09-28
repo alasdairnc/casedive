@@ -150,10 +150,11 @@ const VERIFIER_SCHEMA = {
           finalMaxPenalty: { type: 'string' },
           finalRelatedSections: { type: 'array', items: { type: 'string' } },
           curatedMismatch: { type: 'string' },
+          existingPenaltyIssue: { type: 'string' },
         },
         required: [
           'section', 'summaryAccepted', 'finalSummary', 'finalSeverity',
-          'finalMaxPenalty', 'finalRelatedSections', 'curatedMismatch',
+          'finalMaxPenalty', 'finalRelatedSections', 'curatedMismatch', 'existingPenaltyIssue',
         ],
       },
     },
@@ -190,7 +191,9 @@ You are the independent verifier. You did NOT write these summaries — your job
 
 3. RELATED SECTIONS: Only include a number in finalRelatedSections if sourceText itself explicitly cross-references that section (e.g. "under section 265", "within the meaning of section 279.04"). Do not invent related sections. Cap at 6. In curated-audit mode, always leave this empty.
 
-4. CURATED CHECK: If existing.isCurated is true, this section already has a hand-curated existing.definition and existing.maxPenalty that a human wrote — do NOT propose replacing them (leave finalSummary, finalSeverity, finalMaxPenalty, finalRelatedSections empty for this section, since the curated definition already covers it). Instead, compare existing.definition and existing.maxPenalty against sourceText: does the curated content still accurately and completely describe the CURRENT sourceText (sourceText may include amendments the curated text predates)? If everything the curated text says is still accurate and nothing significant introduced by amendments is missing, set curatedMismatch="". If the curated content is now inaccurate, incomplete, or missing something sourceText clearly adds, describe the specific gap in curatedMismatch (one sentence, concrete — name what's missing or wrong, don't just say "outdated").
+4. CURATED CHECK: If existing.isCurated is true, this section already has a hand-curated existing.definition and existing.maxPenalty that a human wrote — do NOT propose replacing them (leave finalSummary, finalSeverity, finalMaxPenalty, finalRelatedSections empty for this section, since the curated definition already covers it). Instead, compare existing.definition and existing.maxPenalty against sourceText: does the curated content still accurately and completely describe the CURRENT sourceText (sourceText may include amendments the curated text predates)? If everything the curated text says is still accurate and nothing significant introduced by amendments is missing, set curatedMismatch="". If the curated content is now inaccurate, incomplete, or missing something sourceText clearly adds, describe the specific gap in curatedMismatch (one sentence, concrete — name what's missing or wrong, don't just say "outdated"). Leave existingPenaltyIssue="" for curated sections (step 5 doesn't apply to them).
+
+5. EXISTING PENALTY CHECK (non-curated sections only, i.e. existing.isCurated is false): if existing.maxPenalty is a non-empty string (a value from a prior, unverified pass), check it against sourceText the same way you checked parserSuggestion in step 2. Important: if sourceText itself contains NO punishment clause for this section (the real penalty is very likely stated in a DIFFERENT, cross-referenced section — this is common, e.g. one section defines an offence and a separate numbered section states the penalty for it), you CANNOT verify existing.maxPenalty from sourceText alone — set existingPenaltyIssue="unverifiable — sourceText has no penalty clause of its own, penalty likely lives in a separate section" rather than assuming it's wrong. If sourceText DOES contain its own penalty clause and existing.maxPenalty contradicts it (wrong tier, wrong minimum, wrong years), set existingPenaltyIssue to a one-sentence description of the discrepancy. If existing.maxPenalty is empty already, or sourceText's own penalty clause confirms it, set existingPenaltyIssue="".
 
 Return one entry per section via the schema, section number exactly as given.`
 }

@@ -42,6 +42,8 @@ const enrichedKeys = new Set(
   [...existingMap.entries()].filter(([, v]) => v.definition).map(([k]) => k),
 );
 console.log(`Enriched entries: ${enrichedKeys.size}`);
+const summaryCountBefore = [...existingMap.values()].filter((v) => v.summary).length;
+console.log(`Summary entries: ${summaryCountBefore}`);
 
 function escapeStr(s) {
   return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
@@ -61,6 +63,8 @@ function buildEntry(sectionNum, title, partOf, existing) {
   ];
   if (existing?.definition) {
     lines.push(`definition:\n        "${escapeStr(existing.definition)}"`);
+  } else if (existing?.summary) {
+    lines.push(`summary:\n        "${escapeStr(existing.summary)}"`);
   }
   if (existing?.relatedSections?.length) {
     lines.push(`relatedSections: ${strArray(existing.relatedSections)}`);
@@ -84,6 +88,9 @@ const sortedSections = [...xmlSections].sort((a, b) => {
 });
 
 const xmlSectionNums = new Set(sortedSections.map((s) => s.section));
+const summaryKeys = new Set(
+  [...existingMap.entries()].filter(([, v]) => v.summary).map(([k]) => k),
+);
 
 // Enriched entries whose section number no longer appears in the live XML
 // (e.g. fully repealed and dropped) — never silently discard hand-curated
@@ -92,6 +99,14 @@ const enrichedOrphans = [...enrichedKeys].filter((k) => !xmlSectionNums.has(k));
 if (enrichedOrphans.length) {
   console.warn(
     `\nWARNING: ${enrichedOrphans.length} enriched section(s) no longer in the XML — kept, needs review: ${enrichedOrphans.join(", ")}`,
+  );
+}
+// Same protection for verified `summary` content (bulk-enrichment output) —
+// it's just as expensive to regenerate as a curated definition.
+const summaryOrphans = [...summaryKeys].filter((k) => !xmlSectionNums.has(k));
+if (summaryOrphans.length) {
+  console.warn(
+    `WARNING: ${summaryOrphans.length} summarized section(s) no longer in the XML — kept, needs review: ${summaryOrphans.join(", ")}`,
   );
 }
 
@@ -121,17 +136,18 @@ for (const section of sortedSections) {
   }
 }
 
-for (const key of enrichedOrphans) {
+const allOrphans = [...new Set([...enrichedOrphans, ...summaryOrphans])];
+for (const key of allOrphans) {
   const existing = existingMap.get(key);
   lines.push("");
   lines.push(`  // ── ORPHANED (not in current XML — needs review) ──`);
   lines.push(`  ${buildEntry(key, existing.title, existing.partOf || "", existing)},`);
 }
 
-console.log(`\nMerge result: ${sortedSections.length + enrichedOrphans.length} total entries`);
+console.log(`\nMerge result: ${sortedSections.length + allOrphans.length} total entries`);
 console.log(`  Preserved from existing: ${preservedCount} (of which enriched: ${enrichedPreserved})`);
 console.log(`  New from XML: ${newCount}`);
-console.log(`  Enriched orphans kept for review: ${enrichedOrphans.length}`);
+console.log(`  Orphans kept for review: ${allOrphans.length} (${enrichedOrphans.length} enriched, ${summaryOrphans.length} summarized)`);
 
 const partsExportLines = orderedParts.map((label) => {
   const m = label.match(/^Part ([^\s—]+) — (.+)$/);
@@ -185,9 +201,20 @@ export function lookupSection(citation) {
 }
 `;
 
+const summaryCountAfter = (output.match(/\n {6}summary:\n/g) || []).length;
+if (summaryCountAfter !== summaryCountBefore) {
+  console.error(
+    `SAFETY CHECK FAILED: had ${summaryCountBefore} summary fields before the merge, ` +
+      `would have ${summaryCountAfter} after. A re-sync must never lose verified enrichment ` +
+      `content. Refusing to write ${DATA_PATH}.`,
+  );
+  process.exit(1);
+}
+
 writeFileSync(DATA_PATH, output);
 console.log(`\nWritten to ${DATA_PATH}`);
 console.log(`File size: ${(output.length / 1024).toFixed(1)} KB`);
+console.log(`Summary fields: ${summaryCountBefore} before -> ${summaryCountAfter} after (must match)`);
 
 // criminalCodeParts.js carries its own copy of this list so components can
 // avoid importing the full ~300KB dataset (see its file header) — keep it

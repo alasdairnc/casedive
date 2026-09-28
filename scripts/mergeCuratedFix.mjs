@@ -84,6 +84,8 @@ function buildEntry(sectionNum, existing) {
   return `[\n    "${sectionNum}",\n    {\n      ${lines.join(",\n      ")},\n    },\n  ]`;
 }
 
+const summaryCountBefore = [...existingMap.values()].filter((v) => v.summary).length;
+
 const sortedNums = [...existingMap.keys()].sort((a, b) => {
   const na = parseFloat(a);
   const nb = parseFloat(b);
@@ -159,8 +161,19 @@ export function lookupSection(citation) {
 }
 `;
 
+const summaryCountAfter = (output.match(/\n {6}summary:\n/g) || []).length;
+if (summaryCountAfter !== summaryCountBefore) {
+  console.error(
+    `SAFETY CHECK FAILED: had ${summaryCountBefore} summary fields before, would have ` +
+      `${summaryCountAfter} after. This script only touches curated entries and must never ` +
+      `affect summary fields. Refusing to write ${DATA_PATH}.`,
+  );
+  process.exit(1);
+}
+
 writeFileSync(DATA_PATH, output);
 
+console.log(`Summary fields: ${summaryCountBefore} before -> ${summaryCountAfter} after (must match)`);
 console.log(`Applied (approved rewrites): ${applied}`);
 console.log(`Rejected (left untouched, needs human review): ${rejected}`);
 console.log(`Untouched (not in this results file): ${untouched}`);

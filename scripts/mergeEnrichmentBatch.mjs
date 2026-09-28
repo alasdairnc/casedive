@@ -40,6 +40,7 @@ let applied = 0;
 let skippedCurated = 0;
 let skippedNoContent = 0;
 const mismatchReport = [];
+const penaltyIssueReport = [];
 
 function buildEntry(sectionNum, existing) {
   const url = `\`\${JUSTICE_LAWS_BASE}/section-${sectionNum}.html\``;
@@ -59,12 +60,22 @@ function buildEntry(sectionNum, existing) {
       });
     }
     skippedCurated++;
-  } else if (override?.summaryAccepted && override?.finalSummary) {
-    if (override.finalSeverity) severity = override.finalSeverity;
-    if (override.finalMaxPenalty) maxPenalty = override.finalMaxPenalty;
-    applied++;
   } else {
-    skippedNoContent++;
+    if (override?.existingPenaltyIssue) {
+      penaltyIssueReport.push({
+        section: sectionNum,
+        title: existing.title,
+        existingMaxPenalty: existing.maxPenalty || "",
+        existingPenaltyIssue: override.existingPenaltyIssue,
+      });
+    }
+    if (override?.summaryAccepted && override?.finalSummary) {
+      if (override.finalSeverity) severity = override.finalSeverity;
+      if (override.finalMaxPenalty) maxPenalty = override.finalMaxPenalty;
+      applied++;
+    } else {
+      skippedNoContent++;
+    }
   }
 
   lines.push(`severity: "${escapeStr(severity)}"`);
@@ -75,6 +86,8 @@ function buildEntry(sectionNum, existing) {
     lines.push(`definition:\n        "${escapeStr(existing.definition)}"`);
   } else if (override?.summaryAccepted && override?.finalSummary) {
     lines.push(`summary:\n        "${escapeStr(override.finalSummary)}"`);
+  } else if (existing.summary) {
+    lines.push(`summary:\n        "${escapeStr(existing.summary)}"`);
   }
 
   const relatedSections = existing.definition
@@ -96,6 +109,8 @@ function buildEntry(sectionNum, existing) {
   return `[\n    "${sectionNum}",\n    {\n      ${lines.join(",\n      ")},\n    },\n  ]`;
 }
 
+const summaryCountBefore = [...existingMap.values()].filter((v) => v.summary).length;
+
 const sortedNums = [...existingMap.keys()].sort((a, b) => {
   const na = parseFloat(a);
   const nb = parseFloat(b);
@@ -115,6 +130,9 @@ for (const num of sortedNums) {
   }
   lines.push(`  ${entry},`);
 }
+
+// Safety guard: this merge must never lose a previously-applied summary.
+// summaryCountAfter is computed from `lines` text below, once `output` exists.
 
 const enrichedCount = [...existingMap.values()].filter((v) => v.definition).length;
 const partsExportLines = CRIMINAL_CODE_PARTS.map(
@@ -171,8 +189,19 @@ export function lookupSection(citation) {
 }
 `;
 
+const summaryCountAfter = (output.match(/\n {6}summary:\n/g) || []).length;
+if (summaryCountAfter !== summaryCountBefore + applied) {
+  console.error(
+    `SAFETY CHECK FAILED: expected ${summaryCountBefore + applied} summary fields ` +
+      `(${summaryCountBefore} pre-existing + ${applied} newly applied), got ${summaryCountAfter}. ` +
+      `Refusing to write — this would silently drop existing enrichment work. Not writing ${DATA_PATH}.`,
+  );
+  process.exit(1);
+}
+
 writeFileSync(DATA_PATH, output);
 
+console.log(`Summary fields: ${summaryCountBefore} before -> ${summaryCountAfter} after (+${applied} applied)`);
 console.log(`Applied: ${applied}`);
 console.log(`Skipped (curated, untouched): ${skippedCurated}`);
 console.log(`Skipped (no accepted summary): ${skippedNoContent}`);
@@ -186,5 +215,23 @@ if (mismatchReport.length) {
   console.log(`Written to ${reportPath}`);
   for (const m of mismatchReport) {
     console.log(`  s.${m.section} (${m.title}): ${m.curatedMismatch}`);
+  }
+}
+
+if (penaltyIssueReport.length) {
+  const reportPath = resolve(ROOT, "reports/non-curated-penalty-issues.json");
+  // Append across runs rather than overwrite, since this script runs once per chunk.
+  let existingReport = [];
+  try {
+    existingReport = JSON.parse(readFileSync(reportPath, "utf-8"));
+  } catch {
+    // no prior report
+  }
+  const combined = [...existingReport, ...penaltyIssueReport];
+  writeFileSync(reportPath, JSON.stringify(combined, null, 2));
+  console.log(`\nPre-existing (unverified) maxPenalty issues found on non-curated sections: ${penaltyIssueReport.length} (report now has ${combined.length} total)`);
+  console.log(`Written to ${reportPath}`);
+  for (const p of penaltyIssueReport) {
+    console.log(`  s.${p.section} (${p.title}): "${p.existingMaxPenalty}" — ${p.existingPenaltyIssue}`);
   }
 }
