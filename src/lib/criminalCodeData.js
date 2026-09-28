@@ -841,7 +841,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Forgery of or uttering forged passport",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (forgery/uttering forged passport): indictable offence, imprisonment for a term not exceeding 14 years. Subsection (2) (false statement in relation to passport): (a) indictable offence, imprisonment not exceeding 2 years, or (b) offence punishable on summary conviction. Subsection (3) (possession of forged passport): (a) indictable offence, imprisonment not more than 5 years, or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-57.html`,
       summary:
         "Describes offences relating to forging a passport, using or dealing with a passport known to be forged, making false statements to procure a passport or its alteration, and possessing a forged passport, and sets out jurisdictional rules for offences committed outside Canada.",
@@ -951,7 +951,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment for unlawful assembly",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (member of unlawful assembly): offence punishable on summary conviction. Subsection (2) (concealment of identity while committing the subsection (1) offence): (a) indictable offence, imprisonment not exceeding 5 years, or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-66.html`,
       summary:
         "Describes the offence of being a member of an unlawful assembly, and a more serious version for doing so while wearing a mask or disguise without lawful excuse to conceal one's identity.",
@@ -3238,7 +3238,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Publication, etc., of an intimate image without consent",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (publishing, etc. an intimate image without consent): (a) indictable offence, imprisonment (i) not more than 10 years, or (ii) not more than 14 years if the accused knew or ought to have known that aggravated sexual assault was being, or had just been, committed against the person depicted when the image was made; or (b) offence punishable on summary conviction. Subsection (1.1) (threat to publish, etc.): (a) indictable offence, imprisonment not more than 10 years; or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-162.1.html`,
       summary:
         "Makes it an offence to knowingly or recklessly publish, distribute or make available an intimate image of a person without that person's consent, and separately makes it an offence to threaten to do so, defines intimate image to include certain AI-generated depictions, and provides a public good defence.",
@@ -3463,7 +3463,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Indecent acts",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (indecent act): (a) indictable offence, imprisonment not more than 2 years; or (b) offence punishable on summary conviction. Subsection (2) (sexual exposure to a person under 16): (a) indictable offence, imprisonment not more than 10 years and minimum punishment of imprisonment for a term of 90 days; or (b) offence punishable on summary conviction, imprisonment not more than 2 years less a day and minimum punishment of imprisonment for a term of 30 days.",
       url: `${JUSTICE_LAWS_BASE}/section-173.html`,
       summary:
         "Makes it an offence to wilfully do an indecent act in public in the presence of others, or in any place with intent to insult or offend someone, and separately makes it an offence to expose one's sexual organs for a sexual purpose to a person under 16.",
@@ -3499,7 +3499,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Obstructing or violence to or arrest of officiating clergyman",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (obstructing/violence to/arrest of an officiant under paragraph (a) or (b)): indictable offence, imprisonment not more than 2 years, or offence punishable on summary conviction. Subsection (2) (disturbing religious worship or certain meetings): offence punishable on summary conviction. Subsection (3) (disturbing the order or solemnity of such a meeting): offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-176.html`,
       summary:
         "Makes it an offence to obstruct or prevent an officiant from performing a religious or spiritual service by threats or force, or to assault or arrest an officiant travelling to or from such duties, and separately makes it an offence to wilfully disturb a religious, moral, social, or benevolent gathering.",
@@ -3908,7 +3908,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Keeping gaming or betting house",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (keeping a common gaming or betting house): (a) indictable offence, imprisonment not more than 2 years; or (b) offence punishable on summary conviction. Subsection (2) (found in, or as owner/landlord/etc. knowingly permitting use of, a common gaming or betting house): offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-201.html`,
       summary:
         "Makes it an offence to keep a common gaming house or common betting house, and separately makes it an offence to be found without lawful excuse in such a house or to knowingly permit a place to be used for that purpose.",
@@ -3920,7 +3920,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Betting, pool-selling, book-making, etc.",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "Indictable offence; liable (a) for a first offence, imprisonment not more than 2 years; (b) for a second offence, imprisonment not more than 2 years and not less than 14 days; (c) for each subsequent offence, imprisonment not more than 2 years and not less than 3 months.",
       url: `${JUSTICE_LAWS_BASE}/section-202.html`,
       summary:
         "Makes it an offence to engage in a wide range of activities connected to unlawful betting, book-making and pool-selling — including using premises, equipment, records, information or advertising for these purposes — and sets escalating penalties for first, second and subsequent offences.",
@@ -3932,7 +3932,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Placing bets on behalf of others",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "Indictable offence; liable (d) for a first offence, imprisonment not more than 2 years, (e) for a second offence, imprisonment not more than 2 years and not less than 14 days, (f) for each subsequent offence, imprisonment not more than 2 years and not less than 3 months.",
       url: `${JUSTICE_LAWS_BASE}/section-203.html`,
       summary:
         "Makes it an offence to place a bet on behalf of another person for consideration, to engage in the business of placing bets for others, or to hold oneself out as doing so, with escalating penalties for repeat offences.",
@@ -3944,7 +3944,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Exemption",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (10) (contravening or failing to comply with any provision of this section or of any regulations made under this section): (a) indictable offence, imprisonment not exceeding 2 years; or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-204.html`,
       summary:
         "Exempts certain activities from sections 201 and 202, including acting as custodian of staked property, private bets between individuals, and pari-mutuel betting on horse races conducted under specified conditions and regulatory approval.",
@@ -3957,7 +3957,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offence in relation to lotteries and games of chance",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (lottery/games-of-chance offences under paragraphs (a)-(j)): indictable offence, imprisonment not more than 2 years, or offence punishable on summary conviction. Subsection (4) (buying, taking or receiving a lot, ticket or other device mentioned in subsection (1)): offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-206.html`,
       summary:
         "Makes it an offence to create, advertise, sell, transport or manage lottery schemes or other property-disposal-by-chance arrangements, makes buying such a ticket an offence, voids related property transactions (with a bona fide purchaser exception), extends the section to foreign lotteries, and exempts certain lot-based divisions of jointly held property and specified recallable securities.",
@@ -3969,7 +3969,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Permitted lotteries",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (3) (doing anything for the purpose of a lottery scheme not authorized under this section): (a) in the case of the conduct, management or operation of the lottery scheme, (i) indictable offence, imprisonment not exceeding 2 years, or (ii) offence punishable on summary conviction; or (b) in the case of participating in the lottery scheme, offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-207.html`,
       summary:
         "Lists the circumstances in which provincial governments, charities, fairs, and licensed operators may lawfully conduct or manage lottery schemes, sets out what licence terms may cover, and defines what counts as a lottery scheme, a slot machine, and related exceptions.",
@@ -3982,7 +3982,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Exemption — lottery scheme on an international cruise ship",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (3) (doing anything for the purpose of a lottery scheme on an international cruise ship not authorized by this section): (a) in the case of the conduct, management or operation of the lottery scheme, (i) indictable offence, imprisonment not more than 2 years, or (ii) offence punishable on summary conviction; and (b) in the case of participating in the lottery scheme, offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-207.1.html`,
       summary:
         "Permits a lottery scheme to be conducted on an international cruise ship during a voyage if all participants are on the ship, it is not linked to any off-ship gambling, it stays outside a five-nautical-mile zone of Canadian ports, and the ship's registration and voyage meet specified conditions; conducting or participating in a lottery scheme outside these terms is an offence.",
@@ -4319,7 +4319,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment for infanticide",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "(a) Indictable offence, imprisonment not more than 5 years; or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-237.html`,
       summary:
         "Provides that infanticide may be prosecuted either as an indictable offence or as an offence punishable on summary conviction.",
@@ -4431,7 +4431,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Filing information — practitioners",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (4) (medical/nurse practitioner, preliminary-assessment person, pharmacist or pharmacy technician who knowingly fails to comply with the filing requirements in subsection (1), (1.1) or (2)): (a) indictable offence, imprisonment not more than 2 years; or (b) offence punishable on summary conviction. Subsection (5) (everyone who knowingly contravenes regulations made under subsection (3)): (a) indictable offence, imprisonment not more than 2 years; or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-241.31.html`,
       summary:
         "Requires medical practitioners, nurse practitioners, persons responsible for preliminary assessments, and pharmacists or pharmacy technicians to report specified information about medical assistance in dying requests to a recipient designated by regulations, and directs the Minister of Health to make those regulations governing what information is collected, used, and disclosed. Knowingly failing to file the required information, or knowingly contravening the regulations, is an offence.",
@@ -4579,8 +4579,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "263",
     {
       title: "Duty to safeguard opening in ice",
-      severity: "Summary",
-      maxPenalty: "",
+      severity: "Hybrid",
+      maxPenalty: "Subsection (3): failing to perform the duty imposed by subsection (1) (opening in ice) or (2) (excavation) is (a) manslaughter, if death results (punishment not stated in this section, see s. 236); (b) an offence under section 269, if bodily harm results (punishment per s. 269, not stated here); or (c) an offence punishable on summary conviction, in any other case.",
       url: `${JUSTICE_LAWS_BASE}/section-263.html`,
       summary:
         "Imposes a legal duty on anyone who makes an opening in ice open to or frequented by the public, or who leaves an excavation on land they own or control, to guard it adequately against accidental falls and to warn of its existence; failing this duty is an offence, with the specific offence depending on whether death or bodily harm results.",
@@ -4592,8 +4592,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "263.1",
     {
       title: "Violence against intimate partner",
-      severity: "",
-      maxPenalty: "",
+      severity: "Hybrid",
+      maxPenalty: "Subsection (1): (a) indictable offence, liable to the punishment provided for in subsection (3); or (b) offence punishable on summary conviction. Subsection (3) (punishment where found guilty of the indictable offence under subsection (1)): liable to imprisonment for a term of not more than (a) 5 years, if the maximum term of imprisonment for the included offence is 2 years or more but less than 5 years; (b) 10 years, if the maximum term for the included offence is 5 years or more but less than 10 years; (c) 14 years, if the maximum term for the included offence is 10 years or more but less than 14 years; or (d) life, if the maximum term for the included offence is 14 years or more and up to life.",
       url: `${JUSTICE_LAWS_BASE}/section-263.1.html`,
       summary:
         "Makes it an offence to commit any offence involving violence used, threatened, or attempted against one's intimate partner, sets limits on how such charges may be prosecuted based on how the underlying offence could be prosecuted, and sets punishment tiers and applicable procedures tied to the maximum sentence for the underlying offence.",
@@ -6154,8 +6154,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "320.1001",
     {
       title: "Offence motivated by hatred",
-      severity: "",
-      maxPenalty: "",
+      severity: "Hybrid",
+      maxPenalty: "Subsection (1): (a) indictable offence, liable to the punishment provided for in subsection (5); or (b) offence punishable on summary conviction. Subsection (5) (maximum penalty where found guilty of the indictable offence under subsection (1)): imprisonment for a term of not more than (a) 5 years, if the maximum term of imprisonment for the included offence is 2 years or more but less than 5 years; (b) 10 years, if the maximum term for the included offence is 5 years or more but less than 10 years; (c) 14 years, if the maximum term for the included offence is 10 years or more but less than 14 years; or (d) life, if the maximum term for the included offence is 14 years or more and up to life.",
       url: `${JUSTICE_LAWS_BASE}/section-320.1001.html`,
       summary:
         "Makes it an offence to commit any offence under this or another federal Act where the offence is motivated by hatred based on specified personal characteristics, sets out the resulting maximum penalties tied to the underlying offence's maximum, clarifies what does not count as hatred-motivated, and limits when this offence can be prosecuted by indictment.",
@@ -6860,7 +6860,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Taking possession, etc., of drift timber",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (fraudulently taking/holding/etc. drift lumber or lumbering equipment, or refusing to deliver it up, without owner's consent): indictable offence, imprisonment not more than 5 years, or offence punishable on summary conviction. Subsection (2) (dealer in second-hand goods trading in or possessing marked lumbering equipment without written consent): offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-339.html`,
       summary:
         "Makes it an offence to fraudulently take, possess, or deal with drift lumber or lumbering equipment without the owner's consent, to alter marks on it, or to refuse to deliver it to the owner, and provides related offences for second-hand dealers, peace officer search powers, and evidentiary presumptions based on marks and possession.",
@@ -7133,7 +7133,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Selling, etc., automobile master key",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (selling/purchasing/possessing an automobile master key without a licence): indictable offence, imprisonment not more than 2 years, or offence punishable on summary conviction. Subsection (4) (failing to keep or produce the record required by subsection (3)): offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-353.html`,
       summary:
         "Makes it an offence to sell, offer for sale, advertise, purchase, or possess an automobile master key without a provincial licence, exempts police officers authorized for duty purposes, allows provinces to set licence terms and fees, and requires sellers to keep and produce records of sales.",
@@ -7698,7 +7698,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraud in relation to fares, etc.",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (fare/toll collector who fails to collect, collects less, or accepts consideration for doing so): indictable offence, imprisonment not more than 2 years, or offence punishable on summary conviction. Subsection (2) (giving/offering consideration to a fare/toll collector for the same): indictable offence, imprisonment not more than 2 years, or offence punishable on summary conviction. Subsection (3) (fraudulently obtaining transportation): offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-393.html`,
       summary:
         "Makes it an offence for a person whose duty is to collect fares, tolls, tickets, or admission to intentionally fail to collect it, collect less than owed, or accept payment for doing so, and makes it an offence to offer such payment to that person; also makes it an offence to obtain transportation by false pretence or fraud.",
@@ -8252,7 +8252,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Unauthorized recording of a movie",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (unauthorized recording in a movie theatre): (a) indictable offence, imprisonment not more than 2 years; or (b) offence punishable on summary conviction. Subsection (2) (unauthorized recording for purpose of sale, rental or other commercial distribution): (a) indictable offence, imprisonment not more than 5 years; or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-432.html`,
       summary:
         "Makes it an offence to record a movie theatre performance or its soundtrack without the theatre manager's consent, with a distinct offence for doing so for the purpose of commercial sale or distribution. Allows a court to order forfeiture of anything used to commit the offence, except property belonging to someone not party to the offence.",
@@ -8348,7 +8348,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Interfering with saving of wrecked vessel",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (1) (intentionally preventing/impeding the saving of a wrecked, stranded, abandoned or distressed vessel, or a person attempting to save it): indictable offence, imprisonment not more than 5 years, or offence punishable on summary conviction. Subsection (2) (wilfully preventing/impeding the saving of wreck): offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-438.html`,
       summary:
         "Makes it an offence to intentionally prevent, impede, or attempt to prevent or impede the saving of a wrecked, stranded, abandoned, or distressed vessel, or a person attempting to save one. Also makes it an offence to wilfully prevent or impede the saving of wreck.",
@@ -8396,7 +8396,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Interfering with boundary lines",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-442.html`,
       summary:
         "Makes it an offence to wilfully pull down, deface, alter, or remove anything planted or set up as the boundary line, or part of the boundary line, of land.",
@@ -8493,7 +8493,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Order of prohibition or restitution",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Subsection (2) (contravening a prohibition order made under paragraph (1)(a)): offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-447.1.html`,
       summary:
         "Allows a court sentencing someone for an animal cruelty offence to also prohibit them from owning, having custody or control of, or residing with an animal or bird, and to order repayment of reasonable costs incurred by a person or organization caring for the animal or bird. Makes breaching the prohibition order a separate offence and applies certain restitution procedure provisions to a cost repayment order.",
@@ -8740,7 +8740,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Application for restraint order",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (11) (person served with a restraint order under subsection (3) who, while it is in force, contravenes or fails to comply with it): guilty of an indictable offence or an offence punishable on summary conviction (no specific term of imprisonment stated).",
       url: `${JUSTICE_LAWS_BASE}/section-462.33.html`,
       summary:
         "Sets out the process for the Attorney General to apply for a restraint order prohibiting anyone from disposing of or dealing with property believed to be proceeds of crime, including the application requirements, the judge's authority to impose conditions and require notice, the order's effect and duration, and the offence of contravening it.",
@@ -9024,7 +9024,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Counselling offence that is not committed",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "(a) Counselling another person to commit an indictable offence, where the offence is not committed: guilty of an indictable offence and liable to the same punishment to which a person who attempts to commit that offence is liable (sourceText does not name a specific section for the attempt punishment). (b) Counselling another person to commit an offence punishable on summary conviction, where the offence is not committed: guilty of an offence punishable on summary conviction. No single branch is itself hybrid: (a) is indictable, (b) is summary.",
       url: `${JUSTICE_LAWS_BASE}/section-464.html`,
       summary:
         "Makes it an offence to counsel another person to commit an indictable or summary conviction offence, even if the offence counselled is not actually committed.",
@@ -9904,7 +9904,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offence — destruction of preserved data",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-487.0199.html`,
       summary:
         "Makes it an offence, punishable on summary conviction, for a person to contravene section 487.0194 (the duty to destroy preserved data) without lawful excuse.",
@@ -10125,7 +10125,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Use of bodily substances — warrant",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Subsection (3) (contravening subsection (1) or (2), re use of bodily substances/results taken under a warrant): offence punishable on summary conviction. Subsection (4) (contravening subsection (1.1), re use of bodily substances taken under an order or authorization): (a) indictable offence, imprisonment not exceeding 2 years; or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-487.08.html`,
       summary:
         "Restricts the use of bodily substances and DNA analysis results obtained under warrants, orders, or authorizations to specific purposes, such as forensic analysis for designated offence investigations, transmission to the RCMP Commissioner, or use in related proceedings. Contravening these restrictions is an offence — punishable on summary conviction for use of warrant-based substances or results, or, for order- or authorization-based substances, either as an indictable offence or on summary conviction.",
@@ -19361,7 +19361,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Breach of recognizance",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "(a) Indictable offence, imprisonment not more than 4 years; or (b) offence punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-811.html`,
       summary:
         "Describes breaching a recognizance under specified peace-recognizance provisions as an offence that can be prosecuted either as an indictable offence or as an offence punishable on summary conviction.",
