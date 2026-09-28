@@ -1867,6 +1867,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.32.html`,
+      summary:
+        "Sets out when the powers in section 83.3 expire (five years after the National Security Act, 2017 receives royal assent) unless Parliament extends them by resolution, and requires a parliamentary committee review and report before that anniversary.",
+      relatedSections: ["83.3"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1877,6 +1880,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-83.33.html`,
+      summary:
+        "Subsection (1) is repealed. Provides that if section 83.3 ceases to have effect under section 83.32, a person detained under it must be released, except that subsections 83.3(7) to (14) continue to apply to a person already taken before a judge under subsection 83.3(6).",
+      relatedSections: ["83.3", "83.32"],
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1889,6 +1895,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-84.html`,
+      summary:
+        "Defines terms used in the Part dealing with firearms and weapons, such as ammunition, antique firearm, authorization, automatic firearm, cartridge magazine, chief firearms officer, cross-bow, and related expressions.",
+      relatedSections: ["91", "95", "99", "103", "107", "117.03"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -1957,8 +1966,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Carrying weapon while attending public meeting",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Summary conviction (no penalty amount specified in this section)",
       url: `${JUSTICE_LAWS_BASE}/section-89.html`,
+      summary:
+        "Makes it an offence to carry a weapon, prohibited device, ammunition, or prohibited ammunition without lawful excuse while attending or on the way to attend a public meeting.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -1967,8 +1978,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Carrying concealed weapon",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-90.html`,
+      summary:
+        "Makes it an offence to carry a weapon, prohibited device, or prohibited ammunition concealed, unless authorized under the Firearms Act to carry it concealed.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2007,8 +2020,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession at unauthorized place",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-93.html`,
+      summary:
+        "Makes it an offence for a holder of an authorization or licence to possess a firearm, weapon, device, or prohibited ammunition at a place other than where the authorization or licence permits, with an exception for replica firearms.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2017,8 +2032,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Unauthorized possession in motor vehicle",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-94.html`,
+      summary:
+        "Makes it an offence to be an occupant of a motor vehicle knowing it contains a firearm, a prohibited or restricted weapon, a prohibited device (other than a replica firearm), or prohibited ammunition, subject to exceptions where the occupant or another occupant holds the required licence, authorization, or registration.",
+      relatedSections: ["117.07", "117.1"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2042,8 +2060,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of weapon obtained by commission of offence",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-96.html`,
+      summary:
+        "Makes it an offence to possess a firearm, weapon, device, or prohibited ammunition known to have been obtained through the commission of an offence, with an exception for someone who acquires it by operation of law and disposes of it promptly.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2054,6 +2074,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-98.html`,
+      summary:
+        "Makes it an offence to break and enter, or break out of, a place with intent to steal a firearm located there, or to steal a firearm during such a break-in, and defines 'break' and 'place' for this purpose.",
+      relatedSections: ["321"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2064,6 +2087,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-98.1.html`,
+      summary:
+        "Makes it an offence to commit a robbery with intent to steal a firearm or in the course of which a firearm is stolen.",
+      relatedSections: ["343"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2074,6 +2100,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years (minimum 14 years)",
       url: `${JUSTICE_LAWS_BASE}/section-99.html`,
+      summary:
+        "Makes it an offence to manufacture, transfer, or offer to do so in respect of any firearm, prohibited or restricted weapon, prohibited device, firearm part, or ammunition, while knowing one is not authorized under the Firearms Act or other federal law or regulations.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2127,8 +2155,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of computer data",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-102.1.html`,
+      summary:
+        "Makes it an offence to possess or access, or to distribute or publish, computer data usable with a 3D printer or similar system to manufacture or traffic a firearm or prohibited device, where done without authority under the Firearms Act or knowing it is intended for that unauthorized purpose.",
+      relatedSections: ["84", "342.1"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2139,6 +2170,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years (minimum 14 years)",
       url: `${JUSTICE_LAWS_BASE}/section-103.html`,
+      summary:
+        "Makes it an offence to import or export a firearm, prohibited or restricted weapon, prohibited device, firearm part, or prohibited ammunition, or certain components for assembling an automatic firearm, knowing one is not authorized to do so under the Firearms Act or other federal law.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2147,8 +2180,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Unauthorized importing or exporting",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-104.html`,
+      summary:
+        "Makes it an offence to import or export a firearm, prohibited or restricted weapon, prohibited device, firearm part, or prohibited ammunition, or certain components for assembling an automatic firearm, without authority under the Firearms Act or other federal law.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2157,8 +2192,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Altering cartridge magazine",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-104.1.html`,
+      summary:
+        "Makes it an offence, without lawful excuse, to alter a cartridge magazine that is not a prohibited device so that it becomes a prohibited device.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2167,8 +2204,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Losing or finding",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-105.html`,
+      summary:
+        "Makes it an offence to fail to promptly report the loss or theft of a firearm, weapon, device, prohibited ammunition, authorization, licence, or registration certificate to a peace or firearms officer, or to fail to promptly report or deliver such an item that one finds and reasonably believes was lost or abandoned.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2177,8 +2216,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Destroying",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-106.html`,
+      summary:
+        "Makes it an offence to fail to promptly report the destruction of a prohibited or restricted firearm, a prohibited or restricted weapon, a prohibited device, or prohibited ammunition, whether one destroyed it oneself or becomes aware that an item formerly in one's possession was destroyed.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2187,8 +2228,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "False statements",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-107.html`,
+      summary:
+        "Makes it an offence to knowingly make a false report or statement to a peace, firearms, or chief firearms officer about the loss, theft, or destruction of a firearm, weapon, device, prohibited ammunition, authorization, licence, or registration certificate, and defines 'report or statement.'",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2197,8 +2240,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Tampering with serial number",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-108.html`,
+      summary:
+        "Makes it an offence, without lawful excuse, to alter, deface, or remove a firearm's serial number, or to possess a firearm knowing its serial number has been altered, defaced, or removed, subject to an exception and an evidentiary presumption regarding obliterated serial numbers.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2209,6 +2254,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-109.html`,
+      summary:
+        "Requires a court to impose a mandatory weapons prohibition order when a person is convicted or discharged of specified offences, including certain violent indictable offences, offences against an intimate partner or household member, and various firearms and drug offences.",
+      relatedSections: ["730", "85", "95", "99", "264", "113"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2219,6 +2267,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-110.html`,
+      summary:
+        "Requires a sentencing court to consider whether a discretionary weapons prohibition order is desirable for safety reasons when a person is convicted or discharged of an offence involving violence or involving a firearm or similar item, and sets the order's duration.",
+      relatedSections: ["730", "109", "113", "117"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2229,6 +2280,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-110.1.html`,
+      summary:
+        "Allows a person to apply ex parte to a provincial court judge for an emergency order prohibiting another person from possessing firearms or similar items on safety grounds, permits the hearing to be held in private, and lets the judge make an emergency order lasting up to 30 days.",
+      relatedSections: ["113", "114", "116", "110.4", "111", "112"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2239,6 +2293,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-110.2.html`,
+      summary:
+        "Allows a provincial court judge to make an order restricting access to and disclosure of information relating to an emergency prohibition order or related warrant or search, and sets when that order expires.",
+      relatedSections: ["110.1", "110.4", "111"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2249,6 +2306,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-110.3.html`,
+      summary:
+        "Allows a provincial court judge to order that identifying information about the applicant for an emergency prohibition order be deleted from copies of related documents made available to the public, and sets the duration and procedure for such an order.",
+      relatedSections: ["110.1", "110.2", "110.4", "111"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2259,6 +2319,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-110.4.html`,
+      summary:
+        "Lets a provincial court judge who makes an emergency prohibition order fix a hearing date for the related prohibition application and direct that notice be given, and sets related procedural rules including who becomes the applicant in certain cases.",
+      relatedSections: ["110.1", "111"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2269,6 +2332,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-111.html`,
+      summary:
+        "Allows a peace, firearms, or chief firearms officer to apply to a provincial court judge for an order prohibiting a person from possessing firearms or similar items on safety grounds, and sets out the hearing process, including when it may proceed ex parte.",
+      relatedSections: ["113", "114", "115", "116", "117"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2279,6 +2345,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-112.html`,
+      summary:
+        "Allows a provincial court judge to revoke a prohibition order made under subsection 110.1(3) or 111(5), on application by the person against whom it was made, if satisfied the circumstances that led to the order no longer exist.",
+      relatedSections: ["110.1", "111"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2289,6 +2358,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-113.html`,
+      summary:
+        "Allows a competent authority to order that a person subject to a prohibition order still be issued an authorization, licence, or registration certificate for sustenance hunting/trapping or employment purposes, after considering the person's criminal record, the offence, and safety.",
+      relatedSections: ["109", "110", "110.1", "111", "117.05", "515"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2299,6 +2371,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-114.html`,
+      summary:
+        "Allows a competent authority making a prohibition order to require the person to surrender prohibited items and related documents to a peace, firearms, or chief firearms officer within a specified period.",
+      relatedSections: ["117.01"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2309,6 +2384,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-115.html`,
+      summary:
+        "Provides that items whose possession is prohibited by a prohibition order are forfeited to the Crown if in the person's possession or seized/surrendered when the order begins, subject to an exception for certain order types, and that the Attorney General directs disposal of forfeited items.",
+      relatedSections: ["110.1", "515"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2319,6 +2397,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-116.html`,
+      summary:
+        "Provides that an authorization, licence, or registration certificate relating to a prohibited item is revoked or amended when a prohibition order takes effect, with the revocation or amendment lasting only as long as certain types of orders remain in force.",
+      relatedSections: ["110.1", "515"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2329,6 +2410,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.html`,
+      summary:
+        "Allows a competent authority to order that an item be returned to its rightful owner, or its value paid, where someone other than the person subject to the prohibition order owns the item and is lawfully entitled to possess it, subject to conditions about the owner's knowledge in certain cases.",
+      relatedSections: ["115", "109", "110"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2337,8 +2421,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession contrary to order",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-117.01.html`,
+      summary:
+        "Makes it an offence to possess a firearm, cross-bow, prohibited or restricted weapon, prohibited device, firearm part, ammunition, prohibited ammunition, or explosive substance while prohibited from doing so by an order made under this Act or any other Act of Parliament, and an offence to wilfully fail to surrender an authorization, licence, or registration certificate when required to do so by such an order. An exception applies to possession authorized under a licence issued following an order under subsection 113(1).",
+      relatedSections: ["113"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2349,6 +2436,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.0101.html`,
+      summary:
+        "Sets out the process for a person to apply ex parte to a provincial court judge for an emergency order limiting another person's access to firearms or related items, where the applicant believes that other person cohabits with or associates with someone already prohibited from possessing them. The judge may hear the application in private and, if satisfied of the circumstances, make a short-term order (up to 30 days) for any person's immediate protection.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2359,6 +2448,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.0102.html`,
+      summary:
+        "Allows a provincial court judge, after an emergency limitations on access order is made, to order that information about that order, related warrants, or related searches and seizures be kept from disclosure to protect a person's security. Sets out when such a non-disclosure order expires.",
+      relatedSections: ["117.0101", "117.0104", "117.011"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2369,6 +2461,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.0103.html`,
+      summary:
+        "Allows a provincial court judge to order that identifying information about the person who applied for an emergency limitations on access order be deleted from copies of related documents before they are disclosed or made public, to protect that person's or others' security. The order's duration and procedure for handling the original and edited documents are set out.",
+      relatedSections: ["117.0101", "117.0102", "117.0104", "117.011"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2379,6 +2474,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.0104.html`,
+      summary:
+        "Sets out the procedure once a provincial court judge makes an emergency limitations on access order, including fixing a hearing date for a related application and giving notice to the person against whom the order is sought. Also clarifies how the application is treated and who becomes the applicant in certain cases.",
+      relatedSections: ["117.0101", "117.011"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2389,6 +2487,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.011.html`,
+      summary:
+        "Allows a peace officer, firearms officer, or chief firearms officer to apply to a provincial court judge for an order limiting a person's access to firearms and related items, on the belief that the person cohabits with or associates with someone already prohibited from possessing them. Sets out the hearing process, including notice requirements and circumstances allowing the hearing to proceed ex parte.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2399,6 +2499,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.012.html`,
+      summary:
+        "Allows a provincial court judge to revoke an emergency limitations on access order made under section 117.0101(3) or a limitations on access order made under section 117.011(5), on application by the person subject to it, if satisfied the circumstances that led to the order no longer exist.",
+      relatedSections: ["117.0101", "117.011"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2409,6 +2512,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.02.html`,
+      summary:
+        "Allows a peace officer to search a person, vehicle, or place other than a dwelling-house without a warrant, and to seize weapons or related items, where there are reasonable grounds to believe a weapons offence is or was being committed and exigent circumstances make getting a warrant impracticable. Seized items are to be dealt with under sections 490 and 491.",
+      relatedSections: ["490", "491"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2419,6 +2525,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.03.html`,
+      summary:
+        "Allows a peace officer to seize a firearm, prohibited weapon, restricted weapon, prohibited device, or prohibited ammunition from a person who fails to produce a required authorization, licence, or registration certificate on demand, unless possession is otherwise authorized or the person is under lawful supervision. Allows the seized item to be returned if the person produces the required documents within 14 days.",
+      relatedSections: ["117.02"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2429,6 +2538,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.04.html`,
+      summary:
+        "Allows a justice to issue a warrant authorizing a peace officer to search a building, receptacle, or place and seize a weapon or related item and any related authorization or licence, where satisfied there are reasonable grounds that possession is not desirable for the safety of the person or others. Also allows a warrantless search and seizure by a peace officer in the same circumstances where danger to safety makes obtaining a warrant impracticable.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2439,6 +2550,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.05.html`,
+      summary:
+        "Sets out the process for a justice to hold a hearing, on a peace officer's application, to decide the disposition of a thing or document seized under section 117.04, including notice requirements and when the hearing may proceed without the person present. Where the justice finds possession undesirable for safety reasons, the section provides for forfeiture and a prohibition order.",
+      relatedSections: ["117.04", "113", "114", "115", "116", "117"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2449,6 +2563,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.06.html`,
+      summary:
+        "Requires a thing or document seized under section 117.04 to be returned to the person it was seized from if no disposition application is made within 30 days, or if an application is made but the justice does not make the relevant safety finding. Also allows the justice to order restoration of a revoked authorization, licence, or registration certificate when the seized item is returned.",
+      relatedSections: ["117.04", "117.05"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2459,6 +2576,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.07.html`,
+      summary:
+        "Exempts a public officer from being guilty of certain firearms and weapons offences where the listed conduct — such as possessing, manufacturing, transferring, exporting, importing, or altering a firearm, or failing to report loss or theft — occurs in the course of their duties or employment, subject to section 117.1.",
+      relatedSections: ["117.1"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2469,6 +2589,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.071.html`,
+      summary:
+        "Exempts a preclearance officer, as defined in the Preclearance Act, 2016, from being guilty of certain firearms and weapons offences where the listed conduct — possessing, transferring, exporting, importing, or failing to report loss, theft, or destruction — occurs in the course of their duties or employment, subject to section 117.1.",
+      relatedSections: ["117.1"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2479,6 +2602,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.08.html`,
+      summary:
+        "Exempts an individual from being guilty of certain firearms and weapons offences — including possession, manufacture, transfer, export, import, alteration, failure to report, or altering a serial number — when done on behalf of, and under the authority of, a police force, the Canadian Forces, a visiting force, or a department of the Government of Canada or of a province, subject to section 117.1.",
+      relatedSections: ["117.1"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2489,6 +2615,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.09.html`,
+      summary:
+        "Exempts a licensed individual employed by a licensed business from certain firearms and weapons offences — such as possessing, manufacturing, or transferring prohibited items, or altering a firearm for rapid fire or altering its serial number — when acting in the course of their duties in relation to the business's authorized activities, subject to section 117.1.",
+      relatedSections: ["117.1"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2499,6 +2628,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.1.html`,
+      summary:
+        "States that the exemptions in sections 117.07 to 117.09 do not apply if the public officer or individual is subject to a prohibition order and acts contrary to that order or to an authorization or licence issued under an order made under subsection 113(1).",
+      relatedSections: ["117.07", "117.08", "117.09", "113"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2509,6 +2641,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.11.html`,
+      summary:
+        "Places the onus on the accused, in proceedings for certain listed offences, to prove that a person is the holder of an authorization, licence, or registration certificate when that question arises.",
+      relatedSections: ["89", "90", "91", "93", "97", "101"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2519,6 +2654,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.12.html`,
+      summary:
+        "Provides that a document purporting to be an authorization, licence, or registration certificate is evidence of its contents in proceedings under the Act or other federal law, and that a certified true copy of such a document is admissible with the same evidentiary weight as the original.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2529,6 +2666,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.13.html`,
+      summary:
+        "Allows a certificate signed by an analyst stating the results of analyzing a weapon, prohibited device, ammunition, or explosive substance to be used as evidence in proceedings without proof of the analyst's signature, subject to advance notice being given and the opposing party's right to require the analyst's attendance for cross-examination with leave of the court.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2539,6 +2678,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.14.html`,
+      summary:
+        "Allows the Governor in Council to declare an amnesty period during which a person in possession of certain weapons or related items may deliver, register, destroy, dispose of, or alter them as specified in the order without committing an offence under this Part. Proceedings taken against a person for anything done in accordance with such an order are a nullity.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2549,6 +2690,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.15.html`,
+      summary:
+        "Allows the Governor in Council to make regulations prescribing anything that this Part permits or requires to be prescribed, but bars prescribing something as a prohibited or restricted firearm, weapon, device, or ammunition if it is reasonable for hunting or sporting use in Canada.",
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2561,6 +2704,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-118.html`,
+      summary:
+        "Defines terms used in this Part, including evidence or statement, government, judicial proceeding, office, official, and witness.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2569,8 +2714,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Bribery of judicial officers, etc.",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-119.html`,
+      summary:
+        "Makes it an offence for a holder of judicial office or a member of Parliament or a provincial legislature to corruptly accept or seek a benefit in relation to their official duties, and an offence to corruptly give or offer such a benefit to such a person. Proceedings against a judicial officeholder require the written consent of the Attorney General of Canada.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2579,8 +2726,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Bribery of officers",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-120.html`,
+      summary:
+        "Makes it an offence for a justice, police commissioner, peace officer, public officer, or person employed in criminal law administration to corruptly accept or seek a benefit with intent to interfere with justice, facilitate an offence, or protect someone from detection or punishment, and an offence to corruptly give or offer such a benefit for those purposes.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2589,8 +2738,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Frauds on the government",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-121.html`,
+      summary:
+        "Makes it an offence to give, offer, demand, or accept a loan, reward, advantage, or benefit connected to dealings or business with the government, or a claim against Her Majesty, including paying a commission or benefit to a government employee or official in connection with those dealings without the written consent of the head of the relevant branch of government, or that employee or official demanding or accepting such a benefit without that consent.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2599,8 +2750,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Selling, etc., of tobacco products and raw leaf tobacco",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-121.1.html`,
+      summary:
+        "Prohibits selling, offering for sale, transporting, delivering, distributing, or possessing for sale a tobacco product or unpackaged raw leaf tobacco unless it is stamped, subject to listed exceptions including for tobacco growers holding certain raw leaf tobacco.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2609,8 +2762,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Breach of trust by public officer",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-122.html`,
+      summary:
+        "Makes it an offence for an official to commit fraud or breach of trust in connection with the duties of their office, whether or not the same conduct would be an offence if done by a private person.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2619,8 +2774,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Municipal corruption",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-123.html`,
+      summary:
+        "Makes it an offence to give, offer, or agree to give a loan, reward, advantage, or benefit to a municipal official — or for a municipal official to demand, accept, or agree to accept one — in exchange for the official abstaining or voting a certain way, aiding or preventing a council decision, or performing or failing to perform an official act. Also makes it an offence to influence or attempt to influence a municipal official to do those things through suppression of the truth, threats, deceit, or other unlawful means, and defines municipal official.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2629,8 +2786,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Selling or purchasing office",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-124.html`,
+      summary:
+        "Makes it an offence to purport to sell or agree to sell an appointment to or resignation from an office, or a consent to such an appointment or resignation, or to receive a reward for the purported sale, and an offence to purport to purchase or pay a reward for such a purchase.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2639,8 +2798,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Influencing or negotiating appointments or dealing in offices",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-125.html`,
+      summary:
+        "Makes it an offence to give, receive, or procure a reward, advantage, or benefit as consideration for helping secure someone's appointment to an office, to solicit, recommend, or negotiate an appointment or resignation in expectation of such a benefit, or to keep a place for transacting business relating to filling, buying, or selling offices without lawful authority.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2649,8 +2810,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Disobeying a statute",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-126.html`,
+      summary:
+        "Makes it an offence, without lawful excuse, to intentionally contravene an Act of Parliament by doing something it forbids or omitting something it requires, unless another punishment is expressly provided by law. Proceedings for contravening an Act other than this one may be instituted and conducted by or on behalf of the Government of Canada.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2659,8 +2822,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Disobeying order of court",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-127.html`,
+      summary:
+        "Makes it an offence, without lawful excuse, to disobey a lawful order made by a court or an authorized person or body, other than an order to pay money, unless another punishment or procedure is expressly provided by law. Where the order arose from proceedings brought by the Government of Canada, related contravention proceedings may also be brought by or on behalf of that Government.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2669,8 +2834,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Misconduct of officers executing process",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-128.html`,
+      summary:
+        "Makes it an offence for a peace officer or coroner entrusted with executing a legal process to intentionally misconduct themselves in executing it or to make a false return to the process.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2679,8 +2846,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offences relating to public or peace officer",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-129.html`,
+      summary:
+        "Makes it an offence to resist or wilfully obstruct a public officer or peace officer in the execution of their duty, or anyone lawfully assisting them, to fail without reasonable excuse to assist an officer when properly called on to help arrest a person or preserve the peace, or to resist or wilfully obstruct a person lawfully executing a process against land or goods or making a lawful seizure.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2689,8 +2858,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Personating peace officer",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-130.html`,
+      summary:
+        "Makes it an offence to falsely claim to be a peace officer or public officer, or to use a badge or uniform item in a way likely to make people believe one is a peace officer or public officer.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2701,6 +2872,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-130.1.html`,
+      summary:
+        "Directs a sentencing court to treat it as an aggravating circumstance if a person convicted under section 130 personated a peace officer or public officer for the purpose of facilitating the commission of another offence.",
+      relatedSections: ["130"],
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2711,6 +2885,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Indictable",
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-131.html`,
+      summary:
+        "Defines perjury as intentionally making a false statement, knowing it is false, under oath, solemn affirmation, affidavit, declaration or deposition before someone authorized to take it, including certain statements given by video link or under specified mutual legal assistance provisions; it applies whether or not the statement was made in a judicial proceeding, but not to statements by a person not authorized or required by law to make them.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2719,8 +2895,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-132.html`,
+      summary:
+        "States that committing perjury is an indictable offence punishable by imprisonment for up to fourteen years.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2731,6 +2909,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-133.html`,
+      summary:
+        "Provides that a person cannot be convicted of an offence under section 132 (perjury) on the evidence of only one witness unless that witness's evidence is corroborated in a material way by other evidence implicating the accused.",
+      relatedSections: ["132"],
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2739,8 +2920,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Idem",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-134.html`,
+      summary:
+        "Makes it an offence to knowingly make a false statement under oath or solemn affirmation before an authorized person when not specially permitted, authorized or required by law to make such a statement, except where the statement is made during a criminal investigation.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2749,8 +2932,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Witness giving contradictory evidence",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-136.html`,
+      summary:
+        "Makes it an offence for a witness to give evidence in a judicial proceeding that contradicts evidence the person previously gave in another judicial proceeding, where the court is satisfied beyond a reasonable doubt the person intended to mislead; certain evidence is deemed given in a judicial proceeding for this purpose, non-material evidence is excluded, a certificate can prove the earlier proceeding occurred, and prosecution requires the Attorney General's consent.",
+      relatedSections: ["714.1", "714.2", "714.3", "118"],
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2759,8 +2945,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fabricating evidence",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-137.html`,
+      summary:
+        "Makes it an offence to fabricate something with intent that it be used as evidence in an existing or proposed judicial proceeding, with intent to mislead, by means other than perjury or incitement to perjury.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2769,8 +2957,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offences relating to affidavits",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-138.html`,
+      summary:
+        "Makes it an offence to sign a document as if it were a properly sworn or declared affidavit or statutory declaration when it was not (including when the signer knows they lack authority to administer the oath), to knowingly use or offer such a falsely-purporting document, or to sign as the affiant or declarant a document falsely purporting to have been sworn or declared.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2781,6 +2971,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years",
       url: `${JUSTICE_LAWS_BASE}/section-139.html`,
+      summary:
+        "Makes it an offence to wilfully attempt to obstruct, pervert or defeat the course of justice in a judicial proceeding, including by indemnifying a surety or, as a surety, accepting payment for release from custody, and separately makes it an offence to intentionally attempt to obstruct, pervert or defeat justice in any other manner; it also deems certain conduct, such as dissuading a witness or influencing a juror through threats or bribes, to constitute wilfully obstructing justice.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2789,8 +2981,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Public mischief",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-140.html`,
+      summary:
+        "Makes it an offence to intentionally mislead a peace officer into starting or continuing an investigation by falsely accusing someone of an offence, diverting suspicion, falsely reporting that an offence occurred, or falsely reporting that a person has died.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2799,8 +2993,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Compounding indictable offence",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-141.html`,
+      summary:
+        "Makes it an offence to ask for, obtain, or agree to receive payment for agreeing to compound or conceal an indictable offence, except where the payment is for compensation, restitution or services under an agreement made with the Attorney General's consent or as part of an approved diversion program.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2809,8 +3005,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Corruptly taking reward for recovery of goods",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-142.html`,
+      summary:
+        "Makes it an offence to corruptly accept payment, directly or indirectly, under the pretence of helping someone recover property obtained through an indictable offence.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2819,8 +3017,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Prison breach",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-144.html`,
+      summary:
+        "Makes it an offence to break out of a prison by force or violence with intent to free oneself or another confined person, or to forcibly break out of or breach a cell or other part of a prison with intent to escape.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2829,8 +3029,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Escape and being at large without excuse",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-145.html`,
+      summary:
+        "Makes it an offence to escape from lawful custody or to be unlawfully at large before a sentence expires, and separately makes it an offence to fail without lawful excuse to attend court, surrender, or comply with a release order, undertaking or related court order, or to fail to appear under an appearance notice or summons; it also sets out what is not a lawful excuse, an exception where the Crown elects under the Contraventions Act, and rules on proving these facts by certificate, including a right to cross-examine the certifier.",
+      relatedSections: ["515.01", "515", "516.1", "522", "508"],
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2839,8 +3042,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Permitting or assisting escape",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-146.html`,
+      summary:
+        "Makes it an offence to permit a person in one's lawful custody to escape by failing a legal duty, to convey anything into a prison intending to facilitate an escape, or to direct or procure a prisoner's discharge under pretended authority when the prisoner is not entitled to be discharged.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2849,8 +3054,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Rescue or permitting escape",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-147.html`,
+      summary:
+        "Makes it an offence to rescue a person from lawful custody or help someone escape or attempt to escape, or for a peace officer or prison official to wilfully permit a person in their custody to escape.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2859,8 +3066,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Assisting prisoner of war to escape",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-148.html`,
+      summary:
+        "Makes it an offence to knowingly assist a prisoner of war to escape from detention in Canada or from being at large on parole.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2871,6 +3080,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-149.html`,
+      summary:
+        "Allows a court, when convicting a person of escaping while imprisoned, to order that the sentence be served in a penitentiary even if it is less than two years, and defines escape for this purpose as breaking prison, escaping lawful custody, or being unlawfully at large before a sentence ends.",
+      relatedSections: ["743.1"],
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2883,6 +3095,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-150.html`,
+      summary:
+        "Defines terms used in this Part of the Act, including guardian, public place, sexual organs, and theatre.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -2893,6 +3107,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-150.1.html`,
+      summary:
+        "Sets out rules on when a complainant's consent is not a defence to certain sexual offences involving young complainants, including limited close-in-age exceptions for complainants aged 12-13 and 14-15, transitional exceptions, an exemption from trial for accused aged 12 or 13 in specified circumstances, and rules that mistaken belief in a complainant's age is not a defence unless the accused took all reasonable steps to ascertain age.",
+      relatedSections: ["151", "152", "153", "160", "173", "271"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -2946,8 +3163,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sexual exploitation of person with disability",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-153.1.html`,
+      summary:
+        "Makes it an offence for a person in a position of trust or authority toward, or in a relationship of dependency with, a person with a mental or physical disability to counsel or incite that person, for a sexual purpose and without consent, to touch a body or expose sexual organs; it defines consent, lists circumstances in which no consent is obtained, and sets out when a belief in consent is not available as a defence.",
+      relatedSections: ["265"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -2956,8 +3176,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Incest",
       severity: "Indictable",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable; minimum 5 years if the other person is under 16 years of age",
       url: `${JUSTICE_LAWS_BASE}/section-155.html`,
+      summary:
+        "Makes it an offence to have sexual intercourse with a person one knows by blood relationship to be a parent, child, sibling, grandparent or grandchild, provides a defence where the accused acted under restraint, duress or fear, and defines brother and sister to include half-siblings.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -2968,6 +3190,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-156.html`,
+      summary:
+        "Provides that a person cannot be convicted of a historical sexual offence under an earlier version of the Act unless the alleged conduct would still be an offence under the Act as it reads at the time the charge is laid.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -2978,6 +3202,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "10 years (general, s. 160(1)-(2)); 14 years, minimum 1 year indictable / minimum 6 months summary (if committed in presence of or by a person under 16, s. 160(3)); 5 years (representation of bestiality, s. 160(3.4))",
       url: `${JUSTICE_LAWS_BASE}/section-160.html`,
+      summary:
+        "Makes it an offence to commit bestiality, to compel another person to commit bestiality, to commit bestiality in the presence of a person under 16, or to incite a person under 16 to commit bestiality, and separately makes it an offence to publish or distribute a visual representation likely to be mistaken for a recording of bestiality, subject to a public good defence; it also allows a court to order prohibition from owning or being near animals and restitution of care costs, and defines bestiality.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -2986,8 +3212,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Order of prohibition",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "4 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-161.html`,
+      summary:
+        "Allows a court sentencing or discharging an offender convicted of a listed sexual offence against a person under 18 to make an order prohibiting the offender from being near places where children are likely present, seeking positions of trust or authority over children, contacting a person under 18, or using the Internet, sets the duration and variation of such orders, and makes breach of the order an offence.",
+      relatedSections: ["151", "152", "153", "155", "160", "163.1"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -2996,8 +3225,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Voyeurism",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "10 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-162.html`,
+      summary:
+        "Makes it an offence to surreptitiously observe or visually record a person in circumstances giving rise to a reasonable expectation of privacy in specified situations, such as where the person is nude or engaged in explicit sexual activity or the observation is for a sexual purpose, exempts peace officers acting under a warrant, and separately makes it an offence to print, publish or distribute a recording known to have been obtained through such an offence, subject to a public good defence.",
+      relatedSections: ["487.01"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3008,6 +3240,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-162.1.html`,
+      summary:
+        "Makes it an offence to knowingly or recklessly publish, distribute or make available an intimate image of a person without that person's consent, and separately makes it an offence to threaten to do so, defines intimate image to include certain AI-generated depictions, and provides a public good defence.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3016,8 +3250,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Prohibition order",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "4 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-162.2.html`,
+      summary:
+        "Allows a court sentencing or discharging an offender convicted under section 160(3.1) or 162.1 to order a prohibition on using the Internet or other digital network, sets the duration and variation of such an order, and makes breach of the order an offence.",
+      relatedSections: ["160", "162.1"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3028,6 +3265,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "2 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-163.html`,
+      summary:
+        "Makes it an offence to make, print, publish, distribute or possess for distribution any obscene matter, and separately makes it an offence to knowingly sell, expose to public view or publicly exhibit obscene material or a disgusting object or indecent show without lawful justification, subject to a public good defence, and deems a publication obscene if its dominant characteristic is undue exploitation of sex combined with crime, horror, cruelty or violence.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3038,6 +3277,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "14 years, minimum 1 year (making/distributing, s. 163.1(2)-(3)); 10 years indictable minimum 1 year / 2 years less a day summary minimum 6 months (possession/accessing, s. 163.1(4)-(4.1))",
       url: `${JUSTICE_LAWS_BASE}/section-163.1.html`,
+      summary:
+        "Defines child sexual abuse and exploitation material and makes it separate offences to make or possess for publication such material, to distribute or possess it for distribution, to simply possess it, to access it, and to threaten to publish or distribute it, while setting out limited defences relating to reasonable steps to verify age or legitimate purposes that pose no undue risk of harm.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3048,6 +3289,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-164.html`,
+      summary:
+        "Allows a judge to issue a warrant to seize copies of material believed to be illicit material kept for sale or distribution, sets out a process for summoning the occupier, hearing the owner or maker, and ordering forfeiture or restoration of the material, provides an appeal right, and defines terms including court and illicit material.",
+      relatedSections: ["160", "162", "162.1", "163", "163.1", "286.4"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3058,6 +3302,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-164.1.html`,
+      summary:
+        "Allows a judge to order the custodian of a computer system to provide a copy of, remove access to, and identify the poster of material believed to be illicit material online, sets out notice and hearing procedures for the person who posted it, and allows the court to order deletion of the material, including within 48 hours for a non-consensual intimate image.",
+      relatedSections: ["162.1", "342.1", "164"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3068,6 +3315,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-164.2.html`,
+      summary:
+        "Allows a court, on application of the Attorney General, to order forfeiture of property used in committing certain sexual offences involving images, sets out third-party notice and interest rights, and provides appeal rights to third parties and the Attorney General.",
+      relatedSections: ["162.1", "163.1", "172.1", "172.2"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3078,6 +3328,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-164.3.html`,
+      summary:
+        "Sets out the process by which a person who claims an interest in property forfeited under s.164.2 can apply to a judge, within thirty days, for a declaration that their interest is unaffected by the forfeiture, including notice, hearing, appeal, and return-of-property procedures.",
+      relatedSections: ["164.2"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3088,6 +3341,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-167.html`,
+      summary:
+        "Makes it an offence for a theatre's lessee, manager, agent, or person in charge to present or allow an immoral, indecent, or obscene performance, and separately makes it an offence to take part in such a performance.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3098,6 +3353,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "2 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-168.html`,
+      summary:
+        "Makes it an offence to use the mails to transmit or deliver obscene, indecent, immoral, or scurrilous matter, subject to exceptions for materials connected to judicial proceedings, court-directed notices, law reports, and technical legal or medical publications.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3106,8 +3363,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-169.html`,
+      summary:
+        "Sets out that a person who commits an offence under section 163, 165, 167, or 168 is guilty of either an indictable offence or an offence punishable on summary conviction.",
+      relatedSections: ["163", "165", "167", "168"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3115,9 +3375,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "169.1",
     {
       title: "Recruitment — young person",
-      severity: "",
-      maxPenalty: "",
+      severity: "Hybrid",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-169.1.html`,
+      summary:
+        "Makes it an offence for a person in a position of trust, power, or authority over a young person under 18 to recruit, counsel, encourage, or invite that young person to become a party to certain offences, if the young person later does so; belief the person was 18 or older is not a defence unless reasonable steps were taken to verify age.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3126,8 +3388,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Parent or guardian procuring sexual activity",
       severity: "Indictable",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable; minimum one year",
       url: `${JUSTICE_LAWS_BASE}/section-170.html`,
+      summary:
+        "Makes it an offence for a parent or guardian of a person under 18 to procure that person for the purpose of engaging in prohibited sexual activity with someone other than the parent or guardian.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3136,8 +3400,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Householder permitting prohibited sexual activity",
       severity: "Indictable",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable; minimum one year",
       url: `${JUSTICE_LAWS_BASE}/section-171.html`,
+      summary:
+        "Makes it an offence for an owner, occupier, manager, or other person with control of premises to knowingly permit a person under 18 to be on the premises for the purpose of engaging in prohibited sexual activity.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3146,8 +3412,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Making sexually explicit material available to child",
       severity: "Hybrid",
-      maxPenalty: "14 years, minimum 6 months indictable / 2 years less a day, minimum 90 days summary",
+      maxPenalty: "14 years, minimum 6 months indictable; 2 years less a day, minimum 90 days summary",
       url: `${JUSTICE_LAWS_BASE}/section-171.1.html`,
+      summary:
+        "Makes it an offence to transmit, make available, distribute, or sell sexually explicit material to a person believed to be under 18, 16, or 14 years old for the purpose of facilitating specified sexual or exploitation offences against them, and defines what counts as sexually explicit material for this purpose.",
+      relatedSections: ["153", "155", "163.1", "170", "171", "279.011"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3156,8 +3425,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Corrupting children",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-172.html`,
+      summary:
+        "Makes it an offence for a person to participate in adultery, sexual immorality, or habitual drunkenness or other vice in a child's home in a way that endangers the child's morals or makes the home unfit, and requires Attorney General consent (or referral by a child-protection society or juvenile court officer) to prosecute.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3166,8 +3437,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Luring a child",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable, minimum one year; 2 years less a day summary, minimum six months",
       url: `${JUSTICE_LAWS_BASE}/section-172.1.html`,
+      summary:
+        "Makes it an offence to communicate by telecommunication with a person believed to be under 18, 16, or 14 for the purpose of facilitating specified sexual offences against them, and states that a mistaken belief about the person's age is not a defence unless reasonable steps were taken to verify it.",
+      relatedSections: ["153", "155", "163.1", "170", "171", "279.011"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3176,8 +3450,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Agreement or arrangement — sexual offence against child",
       severity: "Hybrid",
-      maxPenalty: "14 years (minimum 14 years)",
+      maxPenalty: "14 years indictable, minimum one year; 2 years less a day summary, minimum six months",
       url: `${JUSTICE_LAWS_BASE}/section-172.2.html`,
+      summary:
+        "Makes it an offence to agree or arrange by telecommunication with another person to commit specified sexual offences against a person believed to be under 18, 16, or 14, and states that mistaken age belief or the other party being an undercover peace officer (or a non-existent person) is not a defence.",
+      relatedSections: ["153", "155", "163.1", "170", "171", "279.011"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3188,6 +3465,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-173.html`,
+      summary:
+        "Makes it an offence to wilfully do an indecent act in public in the presence of others, or in any place with intent to insult or offend someone, and separately makes it an offence to expose one's sexual organs for a sexual purpose to a person under 16.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3196,8 +3475,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Nudity",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-174.html`,
+      summary:
+        "Makes it an offence to be nude without lawful excuse in a public place or exposed to public view on private property, defines nudity for this purpose as dress that offends public decency, and requires Attorney General consent to prosecute.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3206,8 +3487,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Causing disturbance, indecent exhibition, loitering, etc.",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-175.html`,
+      summary:
+        "Makes it an offence to cause a disturbance near a public place through fighting, shouting, drunkenness, or obstructing others, to openly exhibit indecent material in public, to loiter and obstruct people in a public place, or to disturb dwelling occupants by discharging firearms or other disorderly conduct, and allows a court to infer a disturbance occurred from a peace officer's evidence.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3218,6 +3501,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-176.html`,
+      summary:
+        "Makes it an offence to obstruct or prevent an officiant from performing a religious or spiritual service by threats or force, or to assault or arrest an officiant travelling to or from such duties, and separately makes it an offence to wilfully disturb a religious, moral, social, or benevolent gathering.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3226,8 +3511,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Trespassing at night",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-177.html`,
+      summary:
+        "Makes it an offence to loiter or prowl at night, without lawful excuse, on another person's property near a dwelling-house situated on it.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3236,8 +3523,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Common nuisance",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-180.html`,
+      summary:
+        "Makes it an offence to commit a common nuisance that endangers the public's lives, safety, or health, or that causes physical injury, and defines a common nuisance as an unlawful act or omission that endangers the public or obstructs a right common to all Her Majesty's subjects in Canada.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3246,8 +3535,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Dead body",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-182.html`,
+      summary:
+        "Makes it an offence to neglect, without lawful excuse, a legal or undertaken duty relating to burial of a dead body or human remains, or to improperly or indecently interfere with or offer indignity to a dead body or remains, whether buried or not.",
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -3260,6 +3551,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-183.html`,
+      summary:
+        "Defines terms used throughout this Part, including authorization, electro-magnetic/acoustic/mechanical or other device, intercept, offence, police officer, private communication, public switched telephone network, radio-based telephone communication, sell, and solicitor.",
+      relatedSections: ["184.2", "186", "188", "47", "51", "52"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3270,6 +3564,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-183.1.html`,
+      summary:
+        "Provides that where a private communication has more than one originator or intended recipient, consent to its interception from any one of those persons is sufficient consent under this Part.",
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3278,8 +3574,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Interception",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-184.html`,
+      summary:
+        "Makes it an offence to knowingly intercept a private communication using an electro-magnetic, acoustic, mechanical, or other device, subject to exceptions for consenting parties, authorized interceptions, service providers doing quality control or protecting their rights, spectrum management officers, and computer system operators managing or protecting their systems, with limits on how such computer-system interceptions may be used or retained.",
+      relatedSections: ["184.4", "342.1", "430", "193"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3290,6 +3589,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-184.1.html`,
+      summary:
+        "Allows a state agent to intercept a private communication where one party has consented and there are reasonable grounds to believe there is a risk of bodily harm to that person, for the purpose of preventing the harm, restricts admissibility of the intercepted contents to bodily-harm-related proceedings, and requires destruction of recordings, transcripts, and notes if nothing suggests bodily harm occurred or is likely.",
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3300,6 +3601,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-184.2.html`,
+      summary:
+        "Sets out the process for a peace or public officer to apply, with a supporting affidavit, for judicial authorization to intercept a private communication where one party has consented, the grounds a judge must be satisfied of before granting it, and the required content and 60-day limit of such an authorization.",
+      relatedSections: ["552", "186", "487", "487.01", "487.014", "487.018"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3310,6 +3614,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-184.3.html`,
+      summary:
+        "Allows certain interception-related applications, extensions, and renewals to be submitted by telecommunication that produces a writing, and in limited circumstances by telecommunication that does not, sets requirements for recording, sealing, oaths, and the judge's method of granting the authorization by telecommunication.",
+      relatedSections: ["184.2", "185", "186", "188", "196", "196.1"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3320,6 +3627,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-184.4.html`,
+      summary:
+        "Allows a police officer to intercept a private communication without prior authorization if there are reasonable grounds to believe the situation is too urgent to obtain authorization, the interception is immediately necessary to prevent an offence causing serious harm, and one of the communicating parties is the likely offender or the victim.",
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3328,8 +3637,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Interception of radio-based telephone communications",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-184.5.html`,
+      summary:
+        "Makes it an offence to maliciously or for gain intercept a radio-based telephone communication where one party is in Canada, and applies several other sections of this Part, with modifications as needed, to such interceptions.",
+      relatedSections: ["183.1", "184", "184.1", "190", "194", "196"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3340,6 +3652,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-184.6.html`,
+      summary:
+        "Confirms that a single application for authorization under this Part may cover both private communications and radio-based telephone communications at the same time.",
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3350,6 +3664,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-185.html`,
+      summary:
+        "Sets out the process for the Attorney General, Minister of Public Safety, or a specially designated agent to apply ex parte, with a supporting affidavit, for a wiretap authorization under section 186, including required affidavit content, an exception removing the need to show other investigative procedures failed for certain organized crime, foreign interference, or terrorism offences, and a procedure for requesting an extended notification period.",
+      relatedSections: ["186", "52", "52.1", "52.2", "467.11", "467.111"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3360,6 +3677,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-186.html`,
+      summary:
+        "Sets out the grounds a judge must be satisfied of to give or renew a wiretap authorization, an exception to the investigative-necessity requirement for organized crime, foreign interference, and terrorism offences, restrictions and required conditions for intercepting communications at a solicitor's office, the required content and 60-day limit of an authorization, designation of persons who may intercept, authority to covertly install and remove devices, and the renewal process.",
+      relatedSections: ["52", "52.1", "52.2", "467.11", "467.111", "467.12"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
@@ -3370,6 +3690,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-186.1.html`,
+      summary:
+        "Allows a wiretap authorization or its renewal to be valid for one or more periods exceeding sixty days, up to one year each, where it relates to organized crime, foreign interference, or terrorism offences.",
+      relatedSections: ["184.2", "186", "52", "52.1", "52.2", "467.11"],
       partOf: "Part VI — Invasion of Privacy",
     },
   ],
