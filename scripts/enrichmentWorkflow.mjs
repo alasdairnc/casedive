@@ -7,6 +7,7 @@
 //   { mode: "curated-audit", batchPaths: [...] }
 //   { mode: "curated-rewrite", batchPaths: [...] }
 //   { mode: "penalty-audit", batchPaths: [...] }
+//   { mode: "summary-audit", batchPaths: [...] }
 //
 // "enrich" mode is the proven pilot pattern: writer drafts a plain-language
 // summary per section from sourceText only, an independent verifier re-checks
@@ -41,6 +42,16 @@
 // supports a confident correction. Apply corrections with:
 // node scripts/mergePenaltyFix.mjs <corrections-only.json> (filter results to
 // issue!=="" and finalMaxPenalty!=="" first — see script comments)
+//
+// "summary-audit" mode is verifier-only, independent-second-check for the
+// `summary` field on non-curated sections (a second reviewer beyond the
+// enrich-mode verifier that originally wrote/accepted it). Batch items are
+// shaped {section, title, sourceText, existingSummary} (built by a one-off
+// prep step). Deliberately terse: only sections with a real problem appear
+// in the output at all (nothing to report for an accurate summary) to
+// minimize output tokens across ~1,500 sections per run. Produces
+// {section, issue, finalSummary} for flagged sections only. Apply corrections
+// with: node scripts/mergeSummaryFix.mjs <results.json>
 //
 // Batch files for enrich/curated-audit are produced by prepareEnrichmentBatch.mjs.
 // After an enrich/curated-audit run, apply with: node scripts/mergeEnrichmentBatch.mjs <results.json>
@@ -245,6 +256,39 @@ For EVERY section, checking only against that section's own sourceText:
 Return one entry per section via the schema, section number exactly as given.`
 }
 
+const SUMMARY_AUDIT_SCHEMA = {
+  type: 'object',
+  properties: {
+    flagged: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          section: { type: 'string' },
+          issue: { type: 'string' },
+          finalSummary: { type: 'string' },
+        },
+        required: ['section', 'issue', 'finalSummary'],
+      },
+    },
+  },
+  required: ['flagged'],
+}
+
+function summaryAuditPrompt(batchPath) {
+  return `Read the JSON file at ${batchPath}. It is an array of Criminal Code of Canada sections, each shaped {section, title, sourceText, existingSummary}. existingSummary is a plain-language summary a PRIOR agent wrote and a PRIOR independent verifier already accepted — this is a THIRD read, a spot-audit looking for anything that slipped through twice.
+
+For EVERY section, compare existingSummary against sourceText and check:
+1. Does existingSummary state ONLY things actually in sourceText — no invented facts, no outside legal knowledge, nothing unsupported?
+2. Does existingSummary state a penalty, maximum sentence, or minimum sentence? It never should (that's a separate field) — flag this even if the number itself happens to be correct.
+3. Does existingSummary materially misdescribe what the section does — wrong conduct, wrong scope, backwards logic, a missing element that changes the meaning (not just missing minor procedural detail)?
+4. Is existingSummary simply accurate and reasonably complete, even if you'd have phrased it slightly differently? That is NOT a flag — this is an audit for real errors, not a rewrite pass. Stylistic difference, omitted minor procedural detail, or a shorter-than-ideal summary that is still accurate are NOT issues.
+
+THIS IS THE IMPORTANT PART: your output should be TERSE. Only include a section in your \`flagged\` array if you found a REAL problem per points 1-3 above. Do NOT include an entry for sections that are accurate — skip them entirely, do not list them, do not explain why they're fine. If all sections in this batch are accurate, return an empty flagged array. For each section you do flag, set issue to a one-sentence description of the specific problem, and finalSummary to a corrected 1-2 sentence summary grounded only in sourceText (or "" if you can't confidently write one).
+
+Return only the sections you're flagging via the schema, section number exactly as given.`
+}
+
 let verified
 if (MODE === 'curated-audit') {
   verified = await pipeline(
@@ -261,6 +305,14 @@ if (MODE === 'curated-audit') {
       label: `penalty-audit:batch-${i + 1}`,
       phase: 'Verify',
       schema: PENALTY_AUDIT_SCHEMA,
+    })
+  ))
+} else if (MODE === 'summary-audit') {
+  verified = await parallel(BATCH_PATHS.map((batchPath, i) => () =>
+    agent(summaryAuditPrompt(batchPath), {
+      label: `summary-audit:batch-${i + 1}`,
+      phase: 'Verify',
+      schema: SUMMARY_AUDIT_SCHEMA,
     })
   ))
 } else if (MODE === 'curated-rewrite') {
@@ -300,7 +352,7 @@ if (MODE === 'curated-audit') {
   )
 }
 
-const flat = verified.filter(Boolean).flatMap((v) => v.results ?? v)
+const flat = verified.filter(Boolean).flatMap((v) => v.results ?? v.flagged ?? v)
 log(`${MODE} produced ${flat.length} results across ${BATCH_PATHS.length} batches. Tokens spent: ${budget.spent()}`)
 
 return { mode: MODE, batches: BATCH_PATHS.length, results: flat, tokensSpent: budget.spent() }
