@@ -11011,6 +11011,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.1.html`,
+      summary:
+        "Requires a court to order forfeiture of offence-related property to the Crown when a person is convicted or discharged of an indictable offence under the Act (or the Corruption of Foreign Public Officials Act) and the property is found related to the offence on a balance of probabilities; also allows the court to order forfeiture of property proven beyond a reasonable doubt to be offence-related property even where its link to the offence isn't otherwise established, covers property located outside Canada, and allows appeal of the forfeiture decision.",
+      relatedSections: ["490.3", "490.41", "730"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11021,6 +11024,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.2.html`,
+      summary:
+        "Lets the Attorney General apply to a judge for forfeiture of property where an accused charged with an indictable offence has died or absconded, and sets out how an accused is deemed to have absconded and who disposes of the forfeited property, including property outside Canada.",
+      relatedSections: ["490.3", "490.41", "552", "490.5", "490.8"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11031,6 +11037,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.3.html`,
+      summary:
+        "Allows a court, before ordering forfeiture of offence-related property, to set aside a conveyance or transfer of that property made after seizure or a restraint order, unless the transfer was for valuable consideration to a good-faith purchaser.",
+      relatedSections: ["490.1", "490.2"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11041,6 +11050,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.4.html`,
+      summary:
+        "Requires a court to give notice to, and may hear, anyone appearing to have a valid interest in property before ordering its forfeiture, sets out how that notice must be given, and allows the court to order return of the property to an innocent lawful owner instead of forfeiting it.",
+      relatedSections: ["490.1", "490.2"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11051,6 +11063,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.41.html`,
+      summary:
+        "Requires notice to immediate family members residing in a dwelling-house before it is forfeited, and allows a court to decline ordering forfeiture of property (including a dwelling-house) where forfeiture would be disproportionate to the offence's nature and gravity, the circumstances, and the person's criminal record, with additional consideration for the impact on innocent family members when a dwelling-house is involved.",
+      relatedSections: ["490.1", "490.2", "490.4"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11061,6 +11076,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.5.html`,
+      summary:
+        "Allows a person claiming an interest in property already forfeited to the Crown (other than the convicted or charged person) to apply to a judge within 30 days for a declaration that their interest is unaffected by the forfeiture, sets out the hearing and notice procedure, and requires the Attorney General, on application after any appeals are resolved, to return the property (or the applicant's part) or pay the declared value of the applicant's interest.",
+      relatedSections: ["490.1", "490.2"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11071,6 +11089,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.6.html`,
+      summary:
+        "Allows a person aggrieved by a forfeiture order made under subsection 490.2(2) to appeal it as if it were an appeal against conviction or acquittal, with Part XXI's appeal procedures applying.",
+      relatedSections: ["490.2"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11081,6 +11102,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.7.html`,
+      summary:
+        "Suspends the operation of a forfeiture or restoration order in respect of property while any related application or appeal is pending, and bars disposing of the property until 30 days after such an order is made.",
+      relatedSections: ["490.1", "490.2", "490.5"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11089,8 +11113,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Application for restraint order",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Indictable offence: imprisonment for a term of not more than five years; or punishable on summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-490.8.html`,
+      summary:
+        "Allows the Attorney General to apply ex parte for a restraint order prohibiting dealing with offence-related property, sets out the required supporting affidavit, when the order applies to property outside Canada, service and registration requirements, when the order remains in force, and makes contravening the order an offence.",
+      relatedSections: ["490", "490.1", "490.2", "490.4", "490.41"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11101,6 +11128,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.81.html`,
+      summary:
+        "Allows a judge or justice to appoint a person to take control of and manage offence-related property that has been seized or restrained, including selling perishable property, destroying property of little value (after notice and a destruction order), or having certain property forfeited, and sets out when the management order ends and how conditions can be varied.",
+      relatedSections: ["487", "490.8"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11111,6 +11141,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.9.html`,
+      summary:
+        "Applies sections 489.1 and 490 to offence-related property subject to a restraint order under section 490.8, and allows a judge or justice ordering return of such property to require the applicant to enter into a recognizance or deposit money or security.",
+      relatedSections: ["489.1", "490", "490.1", "490.7", "490.8"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11121,6 +11154,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-491.html`,
+      summary:
+        "Requires forfeiture to the Crown of a weapon, imitation firearm, prohibited device, ammunition, or explosive substance that was used in or is the subject-matter of an offence and has been seized, unless the lawful owner was uninvolved in the offence and had no reasonable grounds to believe it would be used unlawfully, in which case it (or its value) is returned to that owner.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11131,6 +11166,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-491.1.html`,
+      summary:
+        "Requires a court, when it finds an offence was committed involving property obtained by that offence, to order the property returned to its known lawful owner or, if unknown, forfeited to the Crown, subject to exceptions for certain agents and for good-faith purchasers, paid instruments, or disputed ownership claims.",
+      relatedSections: ["490", "730", "330", "331", "332", "336"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11141,6 +11179,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-491.2.html`,
+      summary:
+        "Allows a peace officer to photograph certain property before it is returned or forfeited in proceedings for specified offences, and sets out when such photographs and accompanying certificates or affidavits are admissible as evidence, notice requirements, and the court's power to still require production of the actual property.",
+      relatedSections: ["334", "344", "348", "354", "489.1", "490"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11151,6 +11192,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.html`,
+      summary:
+        "Allows a person executing a search warrant to seize an explosive substance suspected of being intended for unlawful use and requires it be removed to safekeeping and detained until ordered dealt with; the substance is forfeited on conviction and sale proceeds go to the Attorney General.",
+      relatedSections: ["487"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11161,6 +11205,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.1.html`,
+      summary:
+        "Authorizes a justice or judge to issue a warrant permitting a peace officer or public officer to track the location of transactions, things, or individuals using a tracking device where there are reasonable grounds to suspect or believe it will assist an offence investigation, and sets validity periods, execution rules, and removal authorization after expiry.",
+      relatedSections: ["467.11", "467.13", "342.1"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11171,6 +11218,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-492.2.html`,
+      summary:
+        "Authorizes a justice or judge to issue a warrant permitting a peace officer or public officer to obtain transmission data using a transmission data recorder where there are reasonable grounds to suspect it will assist an offence investigation, while barring use of such a warrant to obtain tracking data, and sets validity periods and execution rules.",
+      relatedSections: ["467.11", "467.13", "342.1"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11321,6 +11371,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-493.html`,
+      summary:
+        "Defines terms used in this Part of the Act, including 'accused', 'judge' (by province/territory), and 'warrant', and notes that several other defined terms have been repealed.",
+      relatedSections: ["497"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11331,6 +11384,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-493.01.html`,
+      summary:
+        "Clarifies that a reference to an indictable offence includes an offence that may be punished on summary conviction if it may also be prosecuted by indictment, unless the prosecutor has elected to proceed by way of summary conviction.",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11341,6 +11396,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-493.1.html`,
+      summary:
+        "Directs a peace officer, justice, or judge making a release decision under this Part to give primary consideration to releasing the accused at the earliest reasonable opportunity on the least onerous appropriate conditions, while accounting for the applicable statutory grounds.",
+      relatedSections: ["498", "515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11351,6 +11409,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-493.11.html`,
+      summary:
+        "Clarifies that the principle of restraint does not require release, and sets out how it applies differently for peace officers versus justices or judges, including when detention or specific conditions are required based on public interest, victim/witness safety, or statutory exceptions.",
+      relatedSections: ["493.1", "498", "501", "515", "522", "524"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11361,6 +11422,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-493.2.html`,
+      summary:
+        "Directs a peace officer, justice, or judge making a release decision under this Part to give particular attention to the circumstances of Aboriginal accused and accused belonging to vulnerable, overrepresented populations disadvantaged in obtaining release.",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11371,6 +11434,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-494.html`,
+      summary:
+        "Authorizes any person to arrest without a warrant someone found committing an indictable offence, or someone reasonably believed to have committed a criminal offence and who is being freshly pursued while escaping; also allows a property owner or authorized person to arrest someone found committing an offence on that property, requires prompt delivery of the arrested person to a peace officer, and confirms such an arrest is lawful authority for purposes of section 25.",
+      relatedSections: ["25"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11381,6 +11447,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-495.html`,
+      summary:
+        "Authorizes a peace officer to arrest without warrant a person who has committed or is believed to be about to commit an indictable offence, a person found committing a criminal offence, or a person subject to an arrest warrant, but limits such arrests for certain lesser offences where public interest concerns can be addressed without arrest and the person is not believed likely to fail to attend court; also deems the arrest lawful unless it is shown these limits were not followed.",
+      relatedSections: ["553"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11391,6 +11460,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-495.1.html`,
+      summary:
+        "Allows a peace officer to arrest an accused without a warrant, for the purpose of bringing them before a judge or justice under section 524, where there are reasonable grounds to believe the accused has breached or is about to breach, or committed an offence while subject to, a summons, appearance notice, undertaking, or release order.",
+      relatedSections: ["524"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11401,6 +11473,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-496.html`,
+      summary:
+        "Allows a peace officer, without laying a charge, to issue an appearance notice requiring a person to attend a judicial referral hearing where there are reasonable grounds to believe the person failed to comply with a summons, appearance notice, undertaking or release order or to attend court, and that failure caused no harm to a victim, property damage or economic loss.",
+      relatedSections: ["523.1"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11411,6 +11486,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-497.html`,
+      summary:
+        "Allows a peace officer who does not arrest a person under subsection 495(2) to instead issue an appearance notice for indictable offences under section 553, offences that may be prosecuted either by indictment or summarily, or offences punishable on summary conviction.",
+      relatedSections: ["495", "553"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11421,6 +11499,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-498.html`,
+      summary:
+        "Requires a peace officer to release a person arrested without warrant for most offences as soon as practicable, by summons, appearance notice, or undertaking, unless the officer has reasonable grounds to believe detention or another release mechanism is necessary in the public interest or that the person will fail to attend court; sets out exceptions and deems compliant officers to have acted lawfully.",
+      relatedSections: ["469", "494", "503"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11431,6 +11512,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-499.html`,
+      summary:
+        "Allows a peace officer to release a person arrested with an endorsed warrant for most offences by issuing an appearance notice or having the person give an undertaking.",
+      relatedSections: ["469", "507"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11441,6 +11525,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-500.html`,
+      summary:
+        "Sets out the required contents of an appearance notice, including the accused's identifying information, the substance of the alleged offence, the required court attendance, a summary of consequences for failing to appear, possible attendance requirements under the Identification of Criminals Act, and signature procedures.",
+      relatedSections: ["523.1", "496", "145", "512.2", "524"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11451,6 +11538,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-501.html`,
+      summary:
+        "Sets out the required and optional contents of an undertaking given by an accused, including mandatory attendance at court and a range of permissible conditions such as reporting requirements, travel restrictions, no-contact provisions, surrendering weapons or passports, residence conditions, and monetary deposits, along with signature and deposit-handling procedures.",
+      relatedSections: ["498", "499", "503", "512", "512.2", "524"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11461,6 +11551,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-502.html`,
+      summary:
+        "Allows an undertaking to be varied by written consent of the accused and prosecutor, or, absent consent, allows either party to apply to a justice to replace the undertaking with a release order or to vary it, with three days' notice required if the prosecutor applies.",
+      relatedSections: ["498", "499", "503", "515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11471,6 +11564,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-502.1.html`,
+      summary:
+        "Requires an accused, participants, and the presiding justice in proceedings under this Part to attend in person but allows appearance by audioconference or videoconference in set circumstances (advance arrangements satisfactory to the justice for the accused; where the justice considers it necessary for the justice), permits witnesses in Canada to testify remotely if satisfactory to the justice, and applies sections 714.2 to 714.8 to witnesses outside Canada.",
+      relatedSections: ["714.1", "714.2", "714.8", "715.25"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11481,6 +11577,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-503.html`,
+      summary:
+        "Requires a peace officer who arrests someone and has not otherwise released them to bring the person before a justice within 24 hours, or as soon as possible if none is available. It also sets rules on re-evaluating detention before that deadline, applying the same timelines when a person is delivered into an officer's custody under other provisions, handling arrests outside the territorial division where the offence occurred, and releasing a person arrested for an anticipated indictable offence once detention is no longer necessary.",
+      relatedSections: ["705.1", "494", "528", "515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11491,6 +11590,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-504.html`,
+      summary:
+        "Allows a person who reasonably believes someone has committed an indictable offence to lay a sworn written information before a justice, who must receive it if the offence or accused has a specified connection to the justice's territorial jurisdiction (such as residence, location of the offence, or location of unlawfully obtained property).",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11501,6 +11602,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-505.html`,
+      summary:
+        "Requires that where an appearance notice has been issued or an accused released under sections 497, 498, or 503, an information about the alleged offence must be laid before a justice as soon as practicable, and in any case before the date stated for the accused's court attendance.",
+      relatedSections: ["497", "498", "503"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11511,6 +11615,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-506.html`,
+      summary:
+        "States that an information laid under section 504 or 505 may use the form designated as Form 2.",
+      relatedSections: ["504", "505"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11521,6 +11628,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-507.html`,
+      summary:
+        "Sets out the procedure a justice follows on receiving certain informations laid by a peace officer, public officer, or the Attorney General, including hearing evidence ex parte and in camera, and issuing a summons or warrant when a case is made out. It also addresses when a summons must be used instead of a warrant, restrictions on signing blank process, endorsement of warrants to authorize release, and issuing new process after an appeal or new trial is ordered.",
+      relatedSections: ["523", "504", "505", "540", "508", "512"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11531,6 +11641,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-507.1.html`,
+      summary:
+        "Requires a justice receiving certain informations (private prosecutions) to refer them to a judge or designated justice, who may issue a summons or warrant only after an ex parte, in camera hearing that gives the Attorney General notice and an opportunity to participate. It also sets out what happens when no summons or warrant is issued, limits on renewed hearings, and defines \"designated justice.\"",
+      relatedSections: ["504", "507", "810", "810.03", "810.1"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11541,6 +11654,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-508.html`,
+      summary:
+        "Sets out the procedure a justice follows on receiving an information laid under section 505, including hearing evidence, and then either confirming, cancelling, or amending the appearance notice or undertaking, or issuing a summons or warrant, depending on whether a case is made out.",
+      relatedSections: ["505", "507", "540"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11551,6 +11667,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-508.1.html`,
+      summary:
+        "Allows a peace officer to lay an information under sections 504 to 508 by telecommunication that produces a writing, using a written statement of truth in place of a sworn oath.",
+      relatedSections: ["504", "505", "506", "507", "508"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11561,6 +11680,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-509.html`,
+      summary:
+        "Sets out the required contents of a summons issued under this Part, how it must be served on an individual, and what statutory provisions it must summarize; it also allows a summons to require attendance for purposes of the Identification of Criminals Act.",
+      relatedSections: ["145", "512.1", "524"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11571,6 +11693,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-511.html`,
+      summary:
+        "Sets out the required contents of an arrest warrant, states that it remains in force until executed, allows cancellation by a judge or justice in the interests of justice, permits specifying a delay before execution to allow voluntary appearance, and deems the warrant executed if the accused appears voluntarily.",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11581,6 +11705,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-512.html`,
+      summary:
+        "Allows a justice to issue a summons or warrant despite an earlier confirmation, cancellation, or unconditional release, if satisfied it is necessary in the public interest, and allows a warrant to issue where an accused fails to attend court under a summons or confirmed appearance notice/undertaking or is evading service.",
+      relatedSections: ["508", "507"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11591,6 +11718,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-512.1.html`,
+      summary:
+        "Allows a justice to issue an arrest warrant where an accused fails to appear as required by a summons for purposes of the Identification of Criminals Act, unless a contravention election has been made under the Contraventions Act.",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11601,6 +11730,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-512.2.html`,
+      summary:
+        "Allows a justice to issue an arrest warrant where an accused fails to appear as required by an appearance notice or undertaking for purposes of the Identification of Criminals Act, provided that notice or undertaking was confirmed by a justice.",
+      relatedSections: ["508"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11611,6 +11743,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-512.3.html`,
+      summary:
+        "Allows a justice who is satisfied there are reasonable grounds to believe an accused has breached or is about to breach, or has offended while subject to, a summons, appearance notice, undertaking, or release order to issue a warrant to bring the accused before a justice under section 524.",
+      relatedSections: ["524"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11621,6 +11756,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-513.html`,
+      summary:
+        "Requires that a warrant issued under this Part be directed to the peace officers within the territorial jurisdiction of the justice, judge, or court that issued it.",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11631,6 +11768,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-514.html`,
+      summary:
+        "Sets out where a warrant under this Part may be executed, including anywhere within the issuing court's territorial jurisdiction or, in fresh pursuit, anywhere in Canada, and specifies who may execute it.",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11641,6 +11780,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-515.html`,
+      summary:
+        "Sets out the process by which a justice decides whether to release an accused charged with a non-section-469 offence, requiring release without conditions unless the prosecutor shows cause for detention or conditions, and prescribing the types and ordering of conditions (financial obligations, sureties, deposits) that may be imposed, favoring the least onerous form of release.",
+      relatedSections: ["469", "346", "423.1", "423.2", "423.3", "333.1"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11651,6 +11793,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-515.01.html`,
+      summary:
+        "Allows a judge or justice, when making a release order under section 515, to also order the accused to appear at a stated time and place for purposes of the Identification of Criminals Act if charged with an offence referred to in that Act.",
+      relatedSections: ["515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11661,6 +11806,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-515.1.html`,
+      summary:
+        "Requires a person being named as a surety to first provide a signed declaration under oath containing specified personal, financial, and relationship information and acknowledgments, unless the prosecutor consents or the court is satisfied a declaration cannot reasonably be provided and sufficient information has otherwise been received; the declaration may be provided by telecommunication that produces a writing.",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11671,6 +11818,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-516.html`,
+      summary:
+        "Allows a justice to adjourn proceedings under section 515 on application by the prosecutor or accused and remand the accused to custody, with adjournments limited to three clear days unless the accused consents to longer.",
+      relatedSections: ["515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11681,6 +11831,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-516.1.html`,
+      summary:
+        "Allows a justice remanding an accused to custody under specified provisions to order the accused not to communicate with a named victim, witness, or other person except as permitted, and sets out when that order ceases to be in force.",
+      relatedSections: ["503", "515", "516"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11689,8 +11842,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Order directing matters not to be published for specified period",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-517.html`,
+      summary:
+        "Allows or, on the accused's application, requires a justice to order that evidence, information, representations, and reasons given during a show-cause hearing not be published or broadcast until a preliminary inquiry accused is discharged or a trial ends; failing to comply without lawful excuse is a summary conviction offence.",
+      relatedSections: ["515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11701,6 +11857,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-518.html`,
+      summary:
+        "Sets out the inquiries a justice may make and the evidence that may be considered in proceedings under section 515, including limits on examining the accused, categories of evidence the prosecutor may lead, and matters the justice may take into account; it also allows release pending sentence if the accused pleads guilty during such proceedings.",
+      relatedSections: ["515", "189"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11711,6 +11870,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-519.html`,
+      summary:
+        "Sets out what a justice must do after making a release order under section 515, depending on whether the accused complies immediately, including directing release, issuing a committal warrant with authorization to release on compliance, and making conditions against communicating with specified persons effective immediately regardless of custody status.",
+      relatedSections: ["515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11721,6 +11883,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-519.1.html`,
+      summary:
+        "Allows a release order made under section 515 to be varied with the written consent of the accused, prosecutor, and any sureties, with the varied order still considered a release order under section 515.",
+      relatedSections: ["515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11731,6 +11896,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-520.html`,
+      summary:
+        "Sets out the process for an accused to apply to a judge for review of certain release-related orders before trial, including notice requirements, the accused's presence at the hearing, adjournment rules, a warrant for non-attendance, what evidence the judge may consider, and the judge's power to dismiss the application or vacate/vary the order; it also limits repeat applications within 30 days absent leave.",
+      relatedSections: ["515", "523", "521", "525", "517", "518"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11741,6 +11909,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-521.html`,
+      summary:
+        "Sets out the process for a prosecutor to apply to a judge for review of certain release-related orders before trial, including notice to the accused, the accused's presence at the hearing, adjournment rules, warrants for non-attendance or detention, what evidence the judge may consider, and the judge's power to dismiss the application or vacate/vary the order; it also limits repeat applications within 30 days absent leave.",
+      relatedSections: ["515", "523", "520", "525", "517", "518"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11751,6 +11922,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-522.html`,
+      summary:
+        "Restricts release of an accused charged with a section 469 offence to a superior court judge, who must order detention unless the accused shows their proposed release plan addresses relevant risks, and allows including a non-communication order with detention; such orders are reviewable only under section 680, and the section extends judicial interim release procedures to other offences charged alongside a section 469 offence.",
+      relatedSections: ["469", "515", "680", "517", "518", "519"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11761,6 +11935,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-523.html`,
+      summary:
+        "Sets out when an appearance notice, summons, undertaking or release order continues to apply to an accused, including when new charges or indictments arise, and describes who can vacate or vary a prior release/detention order and when.",
+      relatedSections: ["469", "515", "517", "518", "519", "673"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11771,6 +11948,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-523.1.html`,
+      summary:
+        "Sets out the process for a judicial referral hearing when an accused is alleged to have breached release conditions without causing harm, allowing the judge or justice to take no action, cancel and replace the order, or remand the accused, and to dismiss the related charge.",
+      relatedSections: ["522", "515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11781,6 +11961,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-524.html`,
+      summary:
+        "Sets out the process when an accused is arrested for breaching or being about to breach a release condition, or for committing an offence while subject to one, including when the judge or justice must cancel the order, detain the accused, or release them.",
+      relatedSections: ["515", "469", "520", "521", "522", "680"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11791,6 +11974,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-525.html`,
+      summary:
+        "Requires the custodian of an accused detained in custody awaiting trial to apply for a hearing on continued detention if trial has not begun within 90 days, and sets out the judge's powers at that hearing, including expediting proceedings or ordering release or continued detention.",
+      relatedSections: ["503", "521", "524", "520", "515", "519"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11801,6 +11987,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-526.html`,
+      summary:
+        "Allows a court, judge or justice to give directions to expedite proceedings involving an accused under this Part, subject to the 90-day detention review provision.",
+      relatedSections: ["525"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11811,6 +12000,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-527.html`,
+      summary:
+        "Allows a judge or provincial court judge to order that a person confined in prison be brought before a court to attend proceedings, and sets out how the order is delivered, executed, and how the prisoner is returned to custody afterward.",
+      relatedSections: ["718.3", "743.1"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11821,6 +12013,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-528.html`,
+      summary:
+        "Allows a justice, where an arrest or committal warrant cannot otherwise be executed, to endorse the warrant to authorize its execution within their jurisdiction, and describes the effect of that endorsement for peace officers.",
+      relatedSections: ["514", "703"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11831,6 +12026,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.html`,
+      summary:
+        "Allows a warrant of arrest to authorize a peace officer to enter a dwelling-house to arrest the named person if there are reasonable grounds the person is or will be present, subject to the officer confirming that belief immediately before entering.",
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11841,6 +12038,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.1.html`,
+      summary:
+        "Allows a judge or justice to issue a warrant authorizing a peace officer to enter a dwelling-house to arrest or apprehend a person, where there are reasonable grounds to believe the person is or will be present and another arrest authority exists.",
+      relatedSections: ["495", "672.91"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11851,6 +12051,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.2.html`,
+      summary:
+        "Requires the judge or justice issuing a warrant to enter a dwelling-house to include any terms and conditions considered advisable to ensure the entry is reasonable in the circumstances.",
+      relatedSections: ["529.4", "529", "529.1"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11861,6 +12064,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.3.html`,
+      summary:
+        "Allows a peace officer to enter a dwelling-house without a warrant to arrest or apprehend a person, if the warrant conditions would otherwise be met but exigent circumstances such as risk of imminent harm or loss of evidence make getting a warrant impracticable.",
+      relatedSections: ["529", "529.1"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11871,6 +12077,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.4.html`,
+      summary:
+        "Allows a judge or justice to authorize a peace officer to enter a dwelling-house without prior announcement where announcing would risk imminent bodily harm or death or the imminent loss of evidence, and sets conditions for exercising that authority, including in warrantless entries.",
+      relatedSections: ["529", "529.1", "529.3"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11881,6 +12090,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-529.5.html`,
+      summary:
+        "Allows applications for and issuance of dwelling-house entry warrants or authorizations to be made by means of telecommunication, applying section 487.1 with necessary modifications.",
+      relatedSections: ["529.1", "529", "529.4", "487.1"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
   ],
@@ -11893,6 +12105,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-530.html`,
+      summary:
+        "Sets out an accused's right to apply for trial before a justice, judge, or jury who speak the accused's official language (or both official languages), the requirement that the accused be informed of this right, and the court's power to order such a trial on its own initiative or vary the order later.",
       partOf: "Part XVII — Language of Accused",
     },
   ],
@@ -11903,6 +12117,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-530.01.html`,
+      summary:
+        "Requires the prosecutor, on an accused's application following a language order, to have relevant portions of the information or indictment translated into the accused's official language and provide a written copy, with the original version prevailing over the translation if they differ.",
+      relatedSections: ["530"],
       partOf: "Part XVII — Language of Accused",
     },
   ],
@@ -11913,6 +12130,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-530.1.html`,
+      summary:
+        "Sets out the rights and procedures that apply once a language order is granted, including the accused's right to use their official language throughout proceedings, to have a judge, justice and prosecutor who speak that language, to interpreter services, and to a bilingual record and judgment.",
+      relatedSections: ["530"],
       partOf: "Part XVII — Language of Accused",
     },
   ],
@@ -11923,6 +12143,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-530.2.html`,
+      summary:
+        "Allows the presiding justice or judge, where a trial is ordered to be conducted in both official languages, to set out at the start of proceedings how and to what extent each language will be used, while respecting the accused's right to be tried in their own official language.",
       partOf: "Part XVII — Language of Accused",
     },
   ],
@@ -11933,6 +12155,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-531.html`,
+      summary:
+        "Requires the court to order a change of venue to another territorial division in the same province (except New Brunswick) if a language-based trial order under section 530 cannot conveniently be complied with in the original division.",
+      relatedSections: ["530", "533"],
       partOf: "Part XVII — Language of Accused",
     },
   ],
@@ -11943,6 +12168,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-532.html`,
+      summary:
+        "States that this Part and the Official Languages Act do not remove or reduce any provincial-law right relating to language of proceedings or testimony in criminal matters, so long as that right is not inconsistent with this Part or that Act.",
       partOf: "Part XVII — Language of Accused",
     },
   ],
@@ -11953,6 +12180,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-533.html`,
+      summary:
+        "Authorizes provincial and territorial governments to make regulations to carry into effect the purposes and provisions of this Part within their jurisdictions.",
       partOf: "Part XVII — Language of Accused",
     },
   ],
@@ -11963,6 +12192,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-533.1.html`,
+      summary:
+        "Requires a parliamentary committee to undertake a comprehensive review of this Part's provisions and operation within three years of this section coming into force, and to report to Parliament with any recommended changes within a further year.",
       partOf: "Part XVII — Language of Accused",
     },
   ],
@@ -11975,6 +12206,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-535.html`,
+      summary:
+        "Requires a justice, when a preliminary inquiry has been requested (by either the accused or the prosecutor) for an accused charged with an indictable offence punishable by 14 years or more of imprisonment, to inquire into that charge and any other indictable offence connected to the same transaction that the evidence discloses.",
+      relatedSections: ["536", "536.1"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -11985,6 +12219,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-536.html`,
+      summary:
+        "Sets out the procedure for remanding an accused to a provincial court judge, putting the accused to an election on mode of trial depending on the offence, and handling requests for and endorsement of preliminary inquiries.",
+      relatedSections: ["553", "469", "577", "482", "482.1", "565"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -11995,6 +12232,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-536.1.html`,
+      summary:
+        "Sets out the Nunavut-specific procedure for remanding an accused, putting them to an election on mode of trial, and requesting and endorsing preliminary inquiries, applying in place of section 536 in that territory.",
+      relatedSections: ["553", "469", "577", "482", "482.1", "536"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12005,6 +12245,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-536.2.html`,
+      summary:
+        "Allows an accused's election or re-election of trial mode to be made in writing without a personal court appearance.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12015,6 +12257,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-536.3.html`,
+      summary:
+        "Requires the party requesting a preliminary inquiry to provide the court and the other party with a statement identifying the issues on which evidence is sought and the witnesses to be heard at the inquiry.",
+      relatedSections: ["482", "482.1"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12025,6 +12270,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-536.4.html`,
+      summary:
+        "Allows the justice to order a pre-inquiry hearing to help the parties identify issues and witnesses and encourage measures for a fair, efficient preliminary inquiry, and requires the justice to record any resulting admissions or agreements.",
+      relatedSections: ["482", "482.1"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12035,6 +12283,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-536.5.html`,
+      summary:
+        "Allows the prosecutor and accused to agree to limit the scope of a preliminary inquiry to specific issues, with that agreement filed with the court or recorded at a pre-inquiry hearing.",
+      relatedSections: ["536.4"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12045,6 +12296,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-537.html`,
+      summary:
+        "Sets out a justice's procedural powers when conducting a preliminary inquiry, including adjourning or changing venue, remanding the accused, regulating the conduct of the inquiry, restricting courtroom access, and stopping abusive or inappropriate questioning.",
+      relatedSections: ["536.4", "536.5", "715", "715.01"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12055,6 +12309,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-538.html`,
+      summary:
+        "Applies subsections 556(1) and (2), with necessary modifications, where the accused is an organization.",
+      relatedSections: ["556"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12063,8 +12320,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Order restricting publication of evidence taken at preliminary inquiry",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-539.html`,
+      summary:
+        "Allows or requires a justice at a preliminary inquiry to order a publication ban on evidence taken until the accused is discharged or, if ordered to stand trial, until the trial ends, and requires an unrepresented accused be told of the right to apply for such an order; breaching the order is an offence punishable on summary conviction.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12075,6 +12334,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-540.html`,
+      summary:
+        "Sets out how a justice at a preliminary inquiry must take and record witness evidence under oath, including by written deposition, stenographer, or sound recording, and allows the justice to receive otherwise inadmissible information considered credible or trustworthy, subject to notice requirements.",
+      relatedSections: ["537"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12085,6 +12347,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-541.html`,
+      summary:
+        "Sets out the procedure for hearing defence witnesses at a preliminary inquiry after prosecution evidence is taken, including the required caution given to an unrepresented accused before they may respond to the charges or call witnesses.",
+      relatedSections: ["537", "540"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12093,8 +12358,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Confession or admission of accused",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-542.html`,
+      summary:
+        "Allows a prosecutor to enter an accused's admission or confession into evidence at a preliminary inquiry, and makes it an offence to publish or broadcast a report of such an admission or confession before the accused is discharged or the trial has ended.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12105,6 +12372,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-543.html`,
+      summary:
+        "Lets a justice, when an accused is charged with an offence alleged to have occurred outside the justice's jurisdiction, order the accused transferred to a justice with jurisdiction over that place, with the evidence and documents transmitted along and deemed taken by the receiving justice.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12115,6 +12384,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-544.html`,
+      summary:
+        "Sets out what happens if an accused absconds during a preliminary inquiry: the accused is deemed to have waived the right to be present, the justice may continue or adjourn the inquiry, may draw an adverse inference from the absconding, and an accused who reappears is not entitled to reopen proceedings held in their absence absent exceptional circumstances.",
+      relatedSections: ["548", "537", "541"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12125,6 +12397,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-545.html`,
+      summary:
+        "Allows a justice to adjourn a preliminary inquiry and commit to prison, for up to eight days at a time, a witness who without reasonable excuse refuses to be sworn, refuses to answer questions, fails to produce required writings, or refuses to sign a deposition.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12135,6 +12409,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-546.html`,
+      summary:
+        "States that irregularities or defects in a summons or warrant, or variances between the charge in those documents and the information or the evidence given, do not affect the validity of preliminary inquiry proceedings.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12145,6 +12421,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-547.html`,
+      summary:
+        "Allows a justice to adjourn a preliminary inquiry and remand or release the accused if it appears the accused was deceived or misled by an irregularity, defect, or variance described in section 546.",
+      relatedSections: ["546"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12155,6 +12434,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-547.1.html`,
+      summary:
+        "Provides that if a justice conducting a preliminary inquiry dies or cannot continue, another justice may pick up the inquiry where it left off if the evidence was recorded, or must otherwise start taking evidence over again.",
+      relatedSections: ["540"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12165,6 +12447,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-548.html`,
+      summary:
+        "Requires a justice, once all evidence at a preliminary inquiry has been heard, to order the accused to stand trial if there is sufficient evidence or discharge the accused if there is not, and sets out related endorsement and validity rules.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12175,6 +12459,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-549.html`,
+      summary:
+        "Allows a justice, with the consent of the accused and prosecutor, to order the accused to stand trial at any stage of a preliminary inquiry without taking further evidence, including where the inquiry's scope has been limited by agreement.",
+      relatedSections: ["536.5", "548"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12185,6 +12472,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-550.html`,
+      summary:
+        "Allows a justice who orders an accused to stand trial to require a material witness to enter into a recognizance to appear and give evidence at trial, with conditions, sureties, or a deposit, and permits committing a non-complying witness to prison until the requirement is met or the trial ends.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12195,6 +12484,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.html`,
+      summary:
+        "Requires a justice who orders an accused to stand trial to immediately send the information, evidence, exhibits, and related documents to the court where the accused will be tried.",
+      relatedSections: ["541"],
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12207,6 +12499,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.1.html`,
+      summary:
+        "Allows the Chief Justice or Chief Judge to appoint a case management judge for a trial before jury selection or presentation of evidence on the merits, where necessary for the proper administration of justice, and permits a conference or hearing on whether to make the appointment.",
       partOf: "Part XVIII.1 — Case Management Judge",
     },
   ],
@@ -12217,6 +12511,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.2.html`,
+      summary:
+        "States that the case management judge's role is to help promote a fair and efficient trial, including ensuring evidence on the merits is presented without interruption where possible.",
       partOf: "Part XVIII.1 — Case Management Judge",
     },
   ],
@@ -12227,6 +12523,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.3.html`,
+      summary:
+        "Sets out the case management judge's powers before evidence on the merits is presented, including scheduling, encouraging admissions, hearing guilty pleas, and deciding matters such as disclosure, admissibility of evidence, Charter issues, expert witnesses, severance of counts, and change of venue.",
+      relatedSections: ["551.7", "599"],
       partOf: "Part XVIII.1 — Case Management Judge",
     },
   ],
@@ -12237,6 +12536,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.4.html`,
+      summary:
+        "Requires the case management judge, once pre-trial measures are complete, to ensure the court record includes information relevant to the evidence-on-merits stage, such as witness lists, admissions, time estimates, and orders.",
       partOf: "Part XVIII.1 — Case Management Judge",
     },
   ],
@@ -12247,6 +12548,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.5.html`,
+      summary:
+        "States that a trial must proceed continuously, subject to court adjournment, even if the judge hearing the evidence on the merits differs from the case management judge.",
       partOf: "Part XVIII.1 — Case Management Judge",
     },
   ],
@@ -12257,6 +12560,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.6.html`,
+      summary:
+        "Requires the case management judge to adjudicate any issue referred by the trial judge during presentation of the evidence on the merits, exercising the powers of a trial judge to do so.",
       partOf: "Part XVIII.1 — Case Management Judge",
     },
   ],
@@ -12267,6 +12572,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-551.7.html`,
+      summary:
+        "Allows the Chief Justice or Chief Judge to order a joint hearing before one appointed judge to adjudicate a common issue across related trials in the same province, and sets out the procedure, powers, and record-keeping for that joint hearing.",
+      relatedSections: ["551.3"],
       partOf: "Part XVIII.1 — Case Management Judge",
     },
   ],
@@ -12279,6 +12587,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-552.html`,
+      summary:
+        "Defines which judge in each province or territory is meant by the term \"judge\" for the purposes of this Part.",
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12289,6 +12599,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-553.html`,
+      summary:
+        "Gives a provincial court judge (or, in Nunavut, a judge of the Nunavut Court of Justice) absolute jurisdiction, not depending on the accused's consent, to try an accused charged with theft (other than cattle theft), obtaining property by false pretences, possession of property obtained by crime, fraud, or mischief under subsection 430(4) where the value involved does not exceed $5,000, as well as specified gaming, betting, fraud-in-fares, breach of recognizance, and probation-breach offences, and counselling, conspiracy, attempt, or accessory after the fact in relation to those offences.",
+      relatedSections: ["201", "202", "203", "206", "209", "393"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12299,6 +12612,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-554.html`,
+      summary:
+        "Allows a provincial court judge to try an accused charged with an indictable offence, other than one listed in section 469 or one over which the judge has absolute jurisdiction, if the accused elects to be tried by a provincial court judge.",
+      relatedSections: ["469", "553"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12309,6 +12625,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-555.html`,
+      summary:
+        "Allows a provincial court judge who decides a charge should instead be prosecuted by indictment to stop adjudicating and put the accused to an election of trial mode, and sets out the wording of that election and the resulting procedure, including where the offence's value exceeds $5,000.",
+      relatedSections: ["553", "536"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12319,6 +12638,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-555.1.html`,
+      summary:
+        "Sets out the Nunavut equivalent of section 555, allowing a judge who decides a charge should be prosecuted by indictment to stop adjudicating and put the accused to an election of trial mode, with the prescribed wording and resulting procedure.",
+      relatedSections: ["555", "553", "536.1"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12329,6 +12651,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-556.html`,
+      summary:
+        "Requires an accused organization to appear by counsel or agent, and sets out what a judge does if the organization does not appear or if a preliminary inquiry is not requested, including fixing a trial date.",
+      relatedSections: ["536", "536.1"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12339,6 +12664,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-557.html`,
+      summary:
+        "Requires that evidence of witnesses in a trial before a provincial court judge or Nunavut Court of Justice judge be taken in accordance with the preliminary inquiry provisions of Part XVIII, apart from certain excepted subsections.",
+      relatedSections: ["540"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12349,6 +12677,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-558.html`,
+      summary:
+        "Provides that an accused charged with an indictable offence (other than one in section 469) who elects or re-elects to be tried by a judge without a jury shall be tried that way.",
+      relatedSections: ["469", "536", "536.1", "561", "561.1"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12359,6 +12690,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-559.html`,
+      summary:
+        "Declares that a judge holding a trial under this Part sits as a court of record, and requires the trial record to be kept in that judge's court.",
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12369,6 +12702,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-560.html`,
+      summary:
+        "Sets out a judge's duty to fix a time and place for trial after being notified that an accused who elected trial by judge without a jury is in or out of custody, and describes related notice and attendance duties on the sheriff and the accused.",
+      relatedSections: ["536", "536.1"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12379,6 +12715,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-561.html`,
+      summary:
+        "Sets out an accused's rights and procedures to re-elect a different mode of trial than originally chosen, including time limits, when prosecutorial consent is required, and how notice of re-election is given and acted on.",
+      relatedSections: ["536", "566", "574", "577"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12389,6 +12728,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-561.1.html`,
+      summary:
+        "Sets out the Nunavut equivalent of section 561, describing an accused's rights and procedures to re-elect a different mode of trial, including time limits, consent requirements, and notice procedures.",
+      relatedSections: ["561", "536.1", "566", "574", "577"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12399,6 +12741,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-562.html`,
+      summary:
+        "Directs the judge or provincial court judge to proceed with the trial or fix a trial date, or to proceed with a preliminary inquiry, depending on which re-election provision under section 561 the accused used.",
+      relatedSections: ["561", "536"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12409,6 +12754,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-562.1.html`,
+      summary:
+        "Sets out the Nunavut equivalent of section 562, directing the judge to proceed with trial, fix a trial date, or proceed with a preliminary inquiry depending on which re-election provision under section 561.1 was used.",
+      relatedSections: ["561.1", "536.1", "562"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12419,6 +12767,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-563.html`,
+      summary:
+        "Provides that an accused who re-elects to be tried by a provincial court judge is tried on the existing information, subject to permitted amendments, and requires the judge to endorse the information with a record of the re-election.",
+      relatedSections: ["561"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12429,6 +12780,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-563.1.html`,
+      summary:
+        "Sets out the Nunavut equivalent of section 563, providing that an accused who re-elects to be tried by a judge without a jury is tried on the existing information, subject to permitted amendments, with the re-election endorsed on the information.",
+      relatedSections: ["561.1", "536.1", "563"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12439,6 +12793,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-565.html`,
+      summary:
+        "Deems an accused to have elected trial by judge and jury in certain circumstances, such as when an election was declined to be recorded or none was made, or when an indictment was preferred directly, and sets out how such an accused may still re-elect.",
+      relatedSections: ["567", "567.1", "536", "536.1", "577", "578"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12449,6 +12806,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-566.html`,
+      summary:
+        "Requires that trial for an indictable offence, other than before a provincial court judge, proceed on a written indictment, and allows an indictment to be preferred where the accused elected or re-elected trial by judge without jury.",
+      relatedSections: ["536", "561", "574", "576"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12459,6 +12819,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-566.1.html`,
+      summary:
+        "Sets out the Nunavut equivalent of section 566, requiring trial for most indictable offences to proceed on a written indictment and allowing an indictment to be preferred where a preliminary inquiry was requested after election or re-election of trial by judge without a jury.",
+      relatedSections: ["553", "536.1", "561.1", "574", "576", "566"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12469,6 +12832,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-567.html`,
+      summary:
+        "Allows a justice or judge to decline to record an election, re-election, or deemed election for trial by provincial court judge or judge without a jury when two or more jointly charged accused have not all chosen the same mode of trial.",
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12479,6 +12844,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-567.1.html`,
+      summary:
+        "Sets out the Nunavut equivalent of section 567, allowing a justice of the peace or judge to decline to record an election, re-election, or deemed election for trial by judge without a jury when jointly charged accused have not chosen the same mode of trial.",
+      relatedSections: ["567"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12489,6 +12857,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-568.html`,
+      summary:
+        "Allows the Attorney General to require trial by judge and jury despite an accused's election of another mode, unless the offence carries a maximum of five years or less imprisonment, and removes the judge's jurisdiction to try the accused in that case.",
+      relatedSections: ["536", "561", "565"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12499,6 +12870,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-569.html`,
+      summary:
+        "Sets out the Nunavut equivalent of section 568, allowing the Attorney General to require trial by judge and jury despite an accused's election, unless the offence carries a maximum of five years or less imprisonment.",
+      relatedSections: ["536.1", "561.1", "565", "568"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12509,6 +12883,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-570.html`,
+      summary:
+        "Sets out the procedures for recording a conviction or acquittal after trial under this Part, including endorsing the information, drawing up conviction, order, or acquittal forms, transmitting records, and issuing a warrant of committal.",
+      relatedSections: ["528"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12519,6 +12896,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-571.html`,
+      summary:
+        "Allows a judge or provincial court judge to adjourn a trial from time to time until it concludes, and requires consideration of the interests of justice, including victims' interests, in deciding whether to adjourn.",
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12529,6 +12908,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-572.html`,
+      summary:
+        "Applies the provisions of Parts XVI, XVIII, XX, and XXIII, to the extent not inconsistent with this Part, to proceedings under this Part.",
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
   ],
@@ -12541,6 +12922,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-573.html`,
+      summary:
+        "Allows a judge of the Nunavut Court of Justice to exercise the powers and duties of various other courts and judicial officers under the Act, specifies that they do so as a superior court judge, and clarifies this does not extend to granting Charter section 24 remedies while presiding at a preliminary inquiry.",
       partOf: "Part XIX.1 — Nunavut Court of Justice",
     },
   ],
