@@ -12934,6 +12934,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-573.1.html`,
+      summary:
+        "Sets out who may apply to a Nunavut Court of Appeal judge for review of certain decisions or orders made by a Nunavut Court of Justice judge, the grounds on which review may be granted, and the powers that judge has on such an application.",
+      relatedSections: ["548", "552"],
       partOf: "Part XIX.1 — Nunavut Court of Justice",
     },
   ],
@@ -12944,6 +12947,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-573.2.html`,
+      summary:
+        "Allows habeas corpus proceedings to be brought before a Nunavut Court of Appeal judge regarding an order or warrant of a Nunavut Court of Justice judge, subject to certain exceptions, and applies related provisions to such proceedings.",
+      relatedSections: ["552", "784"],
       partOf: "Part XIX.1 — Nunavut Court of Justice",
     },
   ],
@@ -12956,6 +12962,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-574.html`,
+      summary:
+        "Sets out when and on what charges a prosecutor may prefer an indictment against a person ordered to stand trial or against whom no preliminary inquiry was held, including combining charges and requiring judicial consent for private prosecutions.",
+      relatedSections: ["536", "536.1", "478"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -12966,6 +12975,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-576.html`,
+      summary:
+        "Provides that no indictment may be preferred except as provided in the Act, that no criminal information or grand jury bill of indictment may be used, and that no person may be tried on a coroner's inquisition.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -12976,6 +12987,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-577.html`,
+      summary:
+        "Allows an indictment to be preferred without a completed preliminary inquiry if the Attorney General personally consents in writing or a judge orders it.",
+      relatedSections: ["574"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -12986,6 +13000,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-578.html`,
+      summary:
+        "Allows a court to issue a summons or arrest warrant to compel an accused to appear when proceedings recommence or an indictment has been filed, and applies Part XVI procedures to that summons or warrant.",
+      relatedSections: ["579"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -12996,6 +13013,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-579.html`,
+      summary:
+        "Allows the Attorney General to direct that proceedings against an accused be stayed by an entry on the court record, and sets out how and within what time such stayed proceedings may be recommenced before they are deemed never to have been commenced.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13006,6 +13025,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-579.001.html`,
+      summary:
+        "Requires the Attorney General to direct a stay of proceedings against a preclearance officer where the United States has given notice of exercising primary criminal jurisdiction, and sets out how and when such proceedings may later be recommenced.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13016,6 +13037,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-579.01.html`,
+      summary:
+        "Allows the Attorney General, where they intervene in proceedings without staying them, to call and examine witnesses, present evidence, and make submissions without conducting the proceedings.",
+      relatedSections: ["579"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13026,6 +13050,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-579.1.html`,
+      summary:
+        "Sets out the circumstances in which the Attorney General of Canada or the Director of Public Prosecutions may intervene in proceedings, and applies the stay and intervention provisions of sections 579 and 579.01 to such interventions.",
+      relatedSections: ["579", "579.01"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13036,6 +13063,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-580.html`,
+      summary:
+        "States that an indictment is sufficient if it is on paper and in Form 4.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13046,6 +13075,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-581.html`,
+      summary:
+        "Sets out the requirements for the content and form of a count in an indictment, including that it generally cover a single transaction, state the offence in sufficient detail, and may reference the relevant statutory provision.",
+      relatedSections: ["47", "50", "51", "52", "53"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13056,6 +13088,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-582.html`,
+      summary:
+        "Prohibits conviction for high treason or first degree murder unless the indictment specifically charges that offence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13066,6 +13100,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-583.html`,
+      summary:
+        "Lists particular omissions of detail, such as not naming the victim or the means of the offence, that do not by themselves make a count in an indictment insufficient.",
+      relatedSections: ["581"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13076,6 +13113,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-584.html`,
+      summary:
+        "Provides that a count for publishing a libel or selling obscene material is not insufficient merely for not setting out the exact words or material, and allows a libel count to specify an innuendo meaning and be proved as libellous with or without innuendo.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13086,6 +13125,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-585.html`,
+      summary:
+        "Provides that a count charging perjury, false oath or statement, fabricating evidence, or procuring such an offence is not insufficient merely for lacking certain details like the tribunal's authority or the words used.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13096,6 +13137,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-586.html`,
+      summary:
+        "Provides that a count alleging false pretences, fraud, or fraud-related attempt or conspiracy is not insufficient merely for not detailing the nature of the false pretence or fraud.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13106,6 +13149,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-587.html`,
+      summary:
+        "Allows a court, where necessary for a fair trial, to order the prosecutor to provide further particulars on specified aspects of the charge, and sets out how such particulars are delivered and their effect on the trial.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13116,6 +13161,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-588.html`,
+      summary:
+        "Deems property under a person's legal management, control or custody to be that person's property for the purposes of an indictment or proceeding about an offence involving that property.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13126,6 +13173,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-589.html`,
+      summary:
+        "Restricts joining a count for an offence other than murder to a murder count in an indictment, unless the other offence arises from the same transaction or the accused consents.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13136,6 +13185,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-590.html`,
+      summary:
+        "Provides that a count is not objectionable merely for charging alternative matters or being double or multifarious, and allows an accused to apply to have such a count amended or divided if it embarrasses their defence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13146,6 +13197,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-591.html`,
+      summary:
+        "Allows multiple counts for multiple offences to be joined in one indictment, treats each count as a separate indictment, and allows the court to order separate trials of an accused or counts where the interests of justice require it, including delayed or later-effective severance orders.",
+      relatedSections: ["589"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13156,6 +13210,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-592.html`,
+      summary:
+        "Allows a person charged as an accessory after the fact to be indicted regardless of whether the principal or other party has been indicted, convicted, or is amenable to justice.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13166,6 +13222,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-593.html`,
+      summary:
+        "Allows multiple persons to be jointly charged in one indictment for certain property offences even where the property was possessed at different times or the person who obtained it is not charged or available, and allows conviction of any one or more of them.",
+      relatedSections: ["354", "355.4", "356"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13176,6 +13235,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-597.html`,
+      summary:
+        "Allows a court to issue a bench warrant for an accused who fails to appear or remain for trial, sets out its execution anywhere in Canada, interim release on arrest, and provisions for delayed execution or deemed execution on voluntary appearance.",
+      relatedSections: ["515"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13186,6 +13248,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-598.html`,
+      summary:
+        "Provides that an accused who failed to appear or remain for a jury trial and had not re-elected trial without a jury generally may not be tried by jury unless they show a legitimate excuse or the Attorney General requires a jury trial, and deems such an accused to have elected trial without a jury.",
+      relatedSections: ["597", "568", "569", "536", "536.1", "561"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13196,6 +13261,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-599.html`,
+      summary:
+        "Allows a court or judge to order a change of venue for a trial to another territorial division in the same province where it serves the ends of justice or a jury cannot be summoned, and sets out conditions on expenses and transmission of court records following such an order.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13206,6 +13273,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-600.html`,
+      summary:
+        "Provides that an order changing venue under section 599 authorizes sheriffs, prison keepers, and peace officers to remove, transport, and receive the accused accordingly.",
+      relatedSections: ["599"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13216,6 +13286,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-601.html`,
+      summary:
+        "Sets out the procedure and grounds for objecting to or amending a defective indictment or count, the factors a court must consider, and the effect of amendments on the record and proceedings.",
+      relatedSections: ["587", "50", "51", "53"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13226,6 +13299,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-603.html`,
+      summary:
+        "Entitles an accused, after being ordered to stand trial or at trial, to inspect without charge and obtain copies for a fee of the indictment, evidence, exhibits, and their own statement, without postponing trial for this purpose absent due diligence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13236,6 +13311,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-605.html`,
+      summary:
+        "Allows a judge to order release of an exhibit for scientific testing on application with notice, subject to safeguarding conditions, and makes failure to comply with such an order contempt of court.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13246,6 +13323,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-606.html`,
+      summary:
+        "Sets out the pleas an accused may enter, the conditions a court must be satisfied of before accepting a guilty plea, procedure where an accused refuses to plead, allowance of time before pleading, acceptance of a guilty plea to a lesser or different offence, and requirements to inform victims of plea agreements in serious cases.",
+      relatedSections: ["752"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13256,6 +13336,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-607.html`,
+      summary:
+        "Lists the special pleas an accused may enter, including autrefois acquit, autrefois convict, pardon, and an expungement order, sets out how libel and these pleas are handled, and limits the autrefois convict plea in certain foreign trial in absentia cases.",
+      relatedSections: ["611", "612", "730", "7"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13266,6 +13349,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-608.html`,
+      summary:
+        "Makes the evidence, adjudication, and judge's and stenographer's notes from a former trial, along with the transmitted record, admissible to prove or disprove the identity of charges when a plea of autrefois acquit or autrefois convict is tried.",
+      relatedSections: ["551"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13276,6 +13362,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-609.html`,
+      summary:
+        "Sets out how a judge determines whether a plea of autrefois acquit or autrefois convict succeeds by comparing the matter and possible convictions in the former and current trials, including partial allowance of the plea.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13286,6 +13374,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-610.html`,
+      summary:
+        "Provides that a prior conviction or acquittal bars a subsequent indictment for substantially the same offence with added aggravating circumstances, and sets out corresponding bars between murder, manslaughter, infanticide, and first or second degree murder charges for the same homicide.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13296,6 +13386,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-611.html`,
+      summary:
+        "Allows an accused charged with publishing defamatory libel to plead that the matter published was true and for the public benefit, sets out how such a plea addresses different senses of the matter, requires the plea in writing with supporting facts, and allows the prosecutor to reply denying its truth.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13306,6 +13398,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-612.html`,
+      summary:
+        "Restricts inquiry into the truth of an alleged libel absent a plea of justification, except where the accused is charged with knowingly publishing a false libel, allows combining a justification plea with not guilty, and allows the plea to affect sentencing on conviction.",
+      relatedSections: ["611"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13316,6 +13411,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-613.html`,
+      summary:
+        "Allows any ground of defence not covered by a specific special plea to be relied on under a plea of not guilty.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13326,6 +13423,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-620.html`,
+      summary:
+        "Requires an organization against which an indictment is filed to appear and plead through counsel or agent.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13336,6 +13435,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-621.html`,
+      summary:
+        "Allows the clerk of the court or prosecutor to serve an organization with notice of an indictment, and sets out the required contents of that notice, including the consequence of not appearing to plead.",
+      relatedSections: ["548"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13346,6 +13448,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-622.html`,
+      summary:
+        "Allows the presiding judge, on proof the organization was served notice and did not appear, to order a not guilty plea entered on its behalf with the same effect as if the organization had appeared and pleaded.",
+      relatedSections: ["621"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13356,6 +13461,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-623.html`,
+      summary:
+        "Requires the court to proceed with trial once an organization appears and pleads or a not guilty plea is entered by court order, and applies section 735 if the organization is convicted.",
+      relatedSections: ["622", "735"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13366,6 +13474,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-624.html`,
+      summary:
+        "Provides that a conviction or acquittal record on an indictment may simply copy the indictment and plea without formal heading, and requires the court to keep a record of arraignments and subsequent proceedings.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13376,6 +13486,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-625.html`,
+      summary:
+        "Provides that a formal record of amended indictment proceedings shall be drawn up in the form the indictment took after amendment, without noting that it was amended.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13386,6 +13498,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-625.1.html`,
+      summary:
+        "Allows a court to order a pre-hearing conference between the prosecutor and accused to address matters that would promote a fair and expeditious hearing, and requires such a conference before any jury trial.",
+      relatedSections: ["482", "482.1"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13396,6 +13511,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-626.html`,
+      summary:
+        "Provides that a person qualified and summoned as a juror under provincial law is qualified to serve as a juror in criminal proceedings in that province, and prohibits disqualifying, exempting or excusing anyone from jury service based on sex.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13406,6 +13523,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-626.1.html`,
+      summary:
+        "Allows the judge presiding at trial to be either the judge who presided over jury selection matters or another judge of the same court.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13416,6 +13535,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-627.html`,
+      summary:
+        "Allows a judge to permit a qualified juror with a physical disability to have technical, personal, interpretative or other support services.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13426,6 +13547,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-629.html`,
+      summary:
+        "Allows the accused or prosecutor to challenge the jury panel only on the ground of partiality, fraud or wilful misconduct by the officer who returned it, and requires such a challenge to be in writing stating the ground.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13436,6 +13559,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-630.html`,
+      summary:
+        "Requires the judge to determine whether an alleged ground for challenging the jury panel is true and, if so, to direct that a new panel be returned.",
+      relatedSections: ["629"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13446,6 +13572,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-631.html`,
+      summary:
+        "Sets out the procedure for placing jurors' names on cards, drawing them randomly in open court to form the jury and any alternate or additional jurors, swearing them in, and allows a publication or access ban on juror-identifying information.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13456,6 +13584,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-631.1.html`,
+      summary:
+        "Allows electronic or other automated means to be used to select jurors as long as selection remains random as required by the jury selection process.",
+      relatedSections: ["631"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13466,6 +13597,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-632.html`,
+      summary:
+        "Allows the judge to excuse a juror from service before trial begins for reasons including personal interest in the matter, relationship with the judge, prosecutor, accused, counsel or a witness, or personal hardship or other reasonable cause.",
+      relatedSections: ["631"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13476,6 +13610,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-633.html`,
+      summary:
+        "Allows the judge to direct a called juror to stand by for reasons of personal hardship, maintaining public confidence in the administration of justice, or other reasonable cause.",
+      relatedSections: ["631"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13486,6 +13623,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-635.html`,
+      summary:
+        "Sets out the order in which the accused and prosecutor are called on to declare whether they challenge each juror, including the order of challenges where multiple accused are tried together.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13496,6 +13635,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-638.html`,
+      summary:
+        "Lists the specific grounds on which a prosecutor or accused may challenge a juror for cause, such as lack of impartiality, a prior conviction carrying a two-year or longer prison sentence with no pardon or record suspension in effect, not being a Canadian citizen, physical inability to perform juror duties, or lacking required language ability, and prohibits challenges on other grounds.",
+      relatedSections: ["627", "530"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13506,6 +13648,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-639.html`,
+      summary:
+        "Allows a court to require a challenge for cause to be put in writing, permits use of a specified form, and allows the other party to deny the challenge as untrue.",
+      relatedSections: ["638"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13516,6 +13661,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-640.html`,
+      summary:
+        "Requires the judge to determine whether an alleged ground for challenging a juror for cause is true and, if so, that the juror not be sworn, and allows the judge to exclude other jurors from the courtroom while this is determined if necessary to preserve impartiality.",
+      relatedSections: ["638"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13526,6 +13674,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-641.html`,
+      summary:
+        "Sets out how jurors previously directed to stand by are recalled and sworn if a full jury has not been sworn and no cards remain to be drawn, and how newly available panel members are dealt with first if they become available before that.",
+      relatedSections: ["631"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13536,6 +13687,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-642.html`,
+      summary:
+        "Allows the court, at the prosecutor's request, to order additional persons summoned (by word of mouth if necessary) to complete a jury when the existing panel cannot provide a full jury, and requires their names to be added to the general panel and treated the same as originally named jurors.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13546,6 +13699,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-642.1.html`,
+      summary:
+        "Requires alternate jurors to attend when evidence presentation begins and to replace any absent juror in the order their cards were drawn, and requires any alternate not needed as a substitute to be excused.",
+      relatedSections: ["631"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13556,6 +13712,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-643.html`,
+      summary:
+        "Sets out that the 12 to 14 sworn jurors present when evidence begins form the jury, requires jurors' names to be kept apart until discharge or verdict, allows the same jury to try another issue by consent with replacement procedures if objected to, and provides that failure to follow these directions does not invalidate the proceeding.",
+      relatedSections: ["631", "635", "641"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13566,6 +13725,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-644.html`,
+      summary:
+        "Allows a judge to discharge a juror who cannot continue due to illness or other reasonable cause and to select a replacement before evidence begins, allows the trial to continue with a reduced jury (not below ten) after a discharge or death, and allows the judge to discharge the jury and continue without one if the jury falls below ten, with the parties' consent.",
+      relatedSections: ["642"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13576,6 +13738,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-645.html`,
+      summary:
+        "Requires a trial to proceed continuously subject to the court's power to adjourn it without needing formal adjournment, and directs the judge to weigh the interests of justice, including any victim's interests, when deciding on an adjournment. Also allows a judge in a non-jury trial to reserve final decision on questions raised at trial or in a pre-hearing conference (deemed given at trial), and gives a judge in a jury trial jurisdiction to deal with matters ordinarily handled in the jury's absence before jurors are called under subsection 631(3) or (3.1).",
+      relatedSections: ["631"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13586,6 +13751,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-646.html`,
+      summary:
+        "Provides that witness evidence and closing addresses in an indictable trial are to be taken according to the rules in Part XVIII governing evidence at preliminary inquiries, apart from certain excluded subsections.",
+      relatedSections: ["540"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13596,6 +13764,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-647.html`,
+      summary:
+        "Allows a judge to permit jurors to separate before they retire to consider the verdict, and if separation is not permitted, requires an officer to keep the jury under charge and prevent unauthorized communication; a failure to comply does not affect validity, but the judge may discharge the jury and order a new trial if it might cause a miscarriage of justice, and the sheriff must provide the sworn jury with food, refreshment and lodging while together.",
+      relatedSections: ["648"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13604,8 +13775,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Restriction on publication",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-648.html`,
+      summary:
+        "Prohibits publishing, broadcasting or transmitting information about any part of a trial the jury was absent from once jurors have been permitted to separate and before they retire to consider the verdict, and makes failing to comply an offence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13614,8 +13787,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Disclosure of jury proceedings",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-649.html`,
+      summary:
+        "Makes it an offence for a jury member or a person providing support services to a juror with a disability to disclose information about jury deliberations that was not disclosed in open court, subject to exceptions for investigating or prosecuting related offences and for post-trial health care treatment, and requires that any health care professional providing such treatment be authorized under provincial law.",
+      relatedSections: ["139"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13626,6 +13802,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-650.html`,
+      summary:
+        "Requires an accused, other than an organization, to be present in court for their trial subject to certain exceptions, allows appearance by counsel with consent for parts of the trial not involving witness testimony, allows the court to remove a disruptive accused or permit the accused to be absent or removed during a fitness hearing, and entitles the accused to make full answer and defence after the prosecution's case closes.",
+      relatedSections: ["650.01", "715.231", "715.241"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13636,6 +13815,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-650.01.html`,
+      summary:
+        "Allows an accused to appoint counsel of record by filing a designation, sets out what the designation must contain, and describes the effect of the designation including when the accused may appear only by counsel and when the court may still require the accused's own presence, including means to compel that presence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13646,6 +13827,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-650.02.html`,
+      summary:
+        "Allows the prosecutor or designated counsel to appear before the court by audioconference or videoconference if the technology is satisfactory to the court.",
+      relatedSections: ["650.01"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13656,6 +13840,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-650.1.html`,
+      summary:
+        "Allows a judge in a jury trial to confer with the accused or their counsel and the prosecutor before charging the jury about what should be explained to the jury and the choice of jury instructions.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13666,6 +13852,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-651.html`,
+      summary:
+        "Sets out the order and entitlement of the prosecution and defence to address the jury by way of summing up, depending on whether the defence calls evidence and whether one or multiple accused are tried together.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13676,6 +13864,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-652.html`,
+      summary:
+        "Allows a judge, where it is in the interests of justice, to direct the jury to view a place, thing or person after being sworn and before verdict, with directions on how the view is conducted, directions to prevent improper communication with jurors (non-compliance with which does not affect validity), and requires the accused and judge to attend the view.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13686,6 +13876,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-652.1.html`,
+      summary:
+        "Requires the jury to retire to consider the verdict after the judge's charge, and sets out a procedure using numbered cards drawn from a box for reducing the jury to 12 members if more than 12 remain.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13696,6 +13888,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-653.html`,
+      summary:
+        "Allows a judge who is satisfied a jury cannot agree and that further detention would be useless to discharge the jury and either empanel a new jury or adjourn the trial, and provides that this discretion is not reviewable.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13706,6 +13900,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-653.1.html`,
+      summary:
+        "Provides that in the case of a mistrial, rulings on disclosure, admissibility of evidence, or the Charter made (or that could have been made) before evidence on the merits began remain binding on the parties at a new trial, unless the court is satisfied that would not be in the interests of justice.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13716,6 +13912,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-654.html`,
+      summary:
+        "States that taking a jury's verdict, or any related proceeding, is not invalid simply because it occurs on a Sunday or holiday.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13726,6 +13924,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-655.html`,
+      summary:
+        "Allows an accused or their counsel, at trial for an indictable offence, to admit any alleged fact in order to dispense with the need to prove it.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13736,6 +13936,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-656.html`,
+      summary:
+        "Creates a presumption that a person actively engaged in or on a mine who is found to possess a valuable unrefined or unprocessed mineral has stolen or unlawfully possessed it, unless evidence raises a reasonable doubt to the contrary.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13746,6 +13948,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-657.html`,
+      summary:
+        "Allows a statement made by an accused under subsection 541(3) and appearing to be signed by the justice who took it to be given in evidence at trial without proving the justice's signature, unless it is proved the justice did not sign it.",
+      relatedSections: ["541"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13756,6 +13961,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-657.1.html`,
+      summary:
+        "Allows an affidavit or solemn declaration by the owner or another knowledgeable person about property that was the subject of an offence, containing specified statements about ownership, value and how it was lost, to be admitted as evidence of those statements without proving the signature, provided notice is given, and allows the court to require the person to appear for examination.",
+      relatedSections: ["342", "321"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13766,6 +13974,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-657.2.html`,
+      summary:
+        "Allows evidence that another person was convicted or discharged of theft of property to be used against an accused charged with possessing that property as proof it was stolen, and allows evidence of another person's conviction or discharge of an offence to be used against an accused charged as accessory after the fact as proof the offence was committed.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13776,6 +13986,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-657.3.html`,
+      summary:
+        "Allows expert evidence to be given by written report accompanied by an affidavit or solemn declaration if the court recognizes the person as an expert and notice was given, allows the court to require the expert to appear for examination, and sets out notice requirements for calling expert witnesses along with remedies available if those notice requirements are not met or a party cannot adequately prepare.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13786,6 +13998,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-657.4.html`,
+      summary:
+        "Allows an affidavit or solemn declaration from a person whose identity information was used to commit certain fraud-related offences, stating specified facts including lack of consent, to be admitted as evidence of those statements without proving the signature, subject to notice requirements and the court's power to require the person to appear for examination.",
+      relatedSections: ["402.2", "403", "402.1"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13796,6 +14011,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-658.html`,
+      summary:
+        "Allows a person's own testimony, or a parent's testimony, about a person's date of birth or age to be admitted as evidence of that fact, allows certain documents such as birth or baptismal certificates or institutional records to serve as evidence of age, and allows a court to rely on other reliable information or on a person's appearance to infer age in the absence of such records.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13806,6 +14023,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-659.html`,
+      summary:
+        "Abolishes any mandatory requirement for a court to warn the jury about convicting an accused based on a child's evidence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13816,6 +14035,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-660.html`,
+      summary:
+        "Allows an accused to be convicted of an attempt where the complete offence charged is not proved but the evidence establishes an attempt to commit it.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13826,6 +14047,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-661.html`,
+      summary:
+        "Provides that where an attempt is charged but the evidence proves the complete offence, the accused cannot be acquitted and the jury may convict of the attempt unless the judge discharges the jury and directs the accused be indicted for the complete offence, and provides that a conviction under this section bars a later trial for the completed offence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13836,6 +14059,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-662.html`,
+      summary:
+        "Allows an accused to be convicted of an included lesser offence or an attempt at it when the full offence charged is not proved, and sets out specific rules for convicting of lesser included offences in murder, infanticide, dangerous operation, child-luring, break and enter, and impaired-driving-causing-death type charges where the greater offence is not proved but a lesser included one is.",
+      relatedSections: ["243", "220", "221", "236", "320.13", "263.1"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13846,6 +14072,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-663.html`,
+      summary:
+        "Allows a female person charged with infanticide to be convicted even if the evidence does not establish that she had not recovered from childbirth or lactation effects and that her mind was disturbed by those effects, unless the evidence shows the act or omission was not wilful.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13856,6 +14084,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-664.html`,
+      summary:
+        "Prohibits an indictment from referring to previous convictions when those convictions would allow a greater punishment to be imposed for the current offence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13866,6 +14096,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-666.html`,
+      summary:
+        "Allows the prosecutor to respond to defence evidence of the accused's good character by introducing evidence of the accused's previous convictions, including ones that could increase punishment, before a verdict is returned.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13876,6 +14108,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-667.html`,
+      summary:
+        "Sets out how certificates, fingerprint comparisons, and copies of prior convictions or discharges may be used as evidence of an accused's identity and criminal record without needing to prove the signature of the person who signed them, subject to notice requirements and the accused's right to require the certifying person to attend for cross-examination.",
+      relatedSections: ["730"],
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13886,6 +14121,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-669.1.html`,
+      summary:
+        "Gives any judge or court with jurisdiction to try an accused authority to hear and adjudicate a matter if the original judge who took the plea has not yet begun hearing evidence, and allows adjournment of proceedings by various courts or officials at any stage before or after plea.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13896,6 +14133,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-669.2.html`,
+      summary:
+        "Allows proceedings to continue before a different judge, provincial court judge, justice or other person if the original one dies or becomes unable to continue, and sets out rules for how the continuing decision-maker proceeds depending on whether a verdict or adjudication was already made, including rules specific to jury trials and treatment of previously given evidence.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13906,6 +14145,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-669.3.html`,
+      summary:
+        "Provides that a judge or provincial court judge conducting a trial retains jurisdiction over that trial until its completion even if appointed to another court during the trial.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13916,6 +14157,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-670.html`,
+      summary:
+        "Prevents a judgment from being stayed or reversed after a jury verdict because of irregularities in summoning or empanelling the jury, or because a juror was not returned by a sheriff or other officer.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13926,6 +14169,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-671.html`,
+      summary:
+        "Prevents a verdict from being impeached or quashed because of any omission to follow legislative directions about juror qualification, selection, balloting, distribution, the jurors' book, jury lists, or panel drafting.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13936,6 +14181,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.html`,
+      summary:
+        "Preserves any powers, authority, practices or forms relating to jury trials that existed before April 1, 1955, except where this Act expressly alters them or is inconsistent with them.",
       partOf: "Part XX — Procedure in Jury Trials and General Provisions",
     },
   ],
@@ -13948,6 +14195,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.1.html`,
+      summary:
+        "Defines terms used throughout this Part, including accused, assessment, chairperson, court, disposition, dual status offender, high-risk accused, hospital, medical practitioner, party, placement decision, prescribed, Review Board and verdict of not criminally responsible on account of mental disorder, and clarifies how references to a province's Attorney General apply for territories or federal proceedings.",
+      relatedSections: ["672.11", "672.121", "785", "673", "672.54", "672.58"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -13958,6 +14208,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.11.html`,
+      summary:
+        "Allows a court with jurisdiction over an accused to order an assessment of the accused's mental condition where it has reasonable grounds to believe such evidence is needed to decide specified matters, including fitness to stand trial, criminal responsibility due to mental disorder, disturbed mind in an infanticide-related case, revocation of a high-risk designation, or a stay of proceedings for unfitness.",
+      relatedSections: ["16", "672.84", "672.851"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -13968,6 +14221,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.12.html`,
+      summary:
+        "Allows the court to order an assessment on its own motion, on application of the accused, or on application of the prosecutor subject to specific limits requiring reasonable grounds or the accused having raised the relevant issue when the prosecutor applies regarding fitness for a summary offence or criminal responsibility due to mental disorder.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -13978,6 +14233,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.121.html`,
+      summary:
+        "Allows a Review Board with jurisdiction over an accused found unfit or not criminally responsible to order an assessment on its own motion or on application, where needed to make a recommendation to the court, to make certain dispositions, or to decide whether to refer a high-risk finding for court review.",
+      relatedSections: ["672.851", "672.54", "672.86", "672.84"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -13988,6 +14246,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.13.html`,
+      summary:
+        "Sets out what an assessment order must specify, including who will conduct the assessment, whether the accused will be detained in custody, and the period the order will be in force, and states the prescribed forms it may use.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -13998,6 +14258,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.14.html`,
+      summary:
+        "Limits how long an assessment order may remain in force, with a general maximum of thirty days, a shorter maximum of five days for fitness assessments unless the parties agree to a longer period up to thirty days, and an exception allowing up to sixty days where compelling circumstances exist.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14008,6 +14270,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.15.html`,
+      summary:
+        "Allows a court or Review Board to extend an assessment order for the period required to complete the assessment, subject to a maximum extension of thirty days and an overall maximum of sixty days including the initial order.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14018,6 +14282,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.16.html`,
+      summary:
+        "Sets out when an accused may be detained in custody under a court-ordered or Review Board-ordered assessment, generally presuming against custody unless specific grounds such as necessity, desirability with consent, other legal requirements, or existing detention circumstances apply, and allows medical evidence to be given by written report if the parties agree.",
+      relatedSections: ["672.54", "672.121", "515", "522"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14028,6 +14295,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.17.html`,
+      summary:
+        "Prevents any order for interim release or detention from being made under Part XVI or section 679 in respect of an offence, or an included offence, while a court-ordered assessment order concerning that offence is in force.",
+      relatedSections: ["679"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14038,6 +14308,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.18.html`,
+      summary:
+        "Allows the court to vary the terms of a court-made assessment order regarding the accused's interim release or detention if the prosecutor or accused shows cause while the order is in force.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14048,6 +14320,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.19.html`,
+      summary:
+        "Prohibits an assessment order from directing that the accused undergo psychiatric or other treatment or be required to submit to such treatment.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14058,6 +14332,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.191.html`,
+      summary:
+        "Requires an accused subject to an assessment order to appear before the court or Review Board that made the order as soon as practicable after the assessment is completed, and no later than the last day the order is in force.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14068,6 +14344,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.2.html`,
+      summary:
+        "Allows an assessment order to require a written assessment report, requires the report to be filed with the court or Review Board within a set period, requires the court to forward a copy to the Review Board, and requires copies to be provided to the prosecutor, accused and defence counsel.",
+      relatedSections: ["672.51"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14078,6 +14357,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.21.html`,
+      summary:
+        "Defines a protected statement made by an accused during an assessment or treatment, generally makes such statements inadmissible without the accused's consent, and lists specific exceptions where such statements may be used, including fitness determinations, dispositions, high-risk reviews, criminal responsibility determinations, credibility challenges, and perjury prosecutions.",
+      relatedSections: ["672.84", "16"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14088,6 +14370,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.22.html`,
+      summary:
+        "Establishes a presumption that an accused is fit to stand trial unless the court is satisfied on the balance of probabilities that the accused is unfit.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14098,6 +14382,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.23.html`,
+      summary:
+        "Allows the court, where it has reasonable grounds to believe an accused is unfit to stand trial before a verdict is rendered, to direct that the issue of fitness be tried, and places the burden of proof on whichever party — accused or prosecutor — applies to have the issue tried.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14108,6 +14394,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.24.html`,
+      summary:
+        "Requires the court to order that an unrepresented accused be represented by counsel where there are reasonable grounds to believe the accused is unfit to stand trial, provides that the Attorney General pays counsel's fees where legal aid is unavailable and the accused cannot pay, and allows fee disputes to be taxed by the court registrar.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14118,6 +14406,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.25.html`,
+      summary:
+        "Requires the court to postpone trying the issue of an accused's fitness until the prosecutor elects between indictment and summary conviction where that election is required, and allows postponement of the fitness trial to specified later points during a preliminary inquiry or trial.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14128,6 +14418,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.26.html`,
+      summary:
+        "Sets out how a jury is sworn to try the issue of an accused's fitness when the trial is before a judge and jury, depending on whether the fitness issue is directed before or after the jury has been given the indictment.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14138,6 +14430,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.27.html`,
+      summary:
+        "Requires the court itself to try the issue of an accused's fitness and render a verdict where the trial is not before a judge and jury, or where the issue arises at a preliminary inquiry or another stage of proceedings.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14148,6 +14442,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.28.html`,
+      summary:
+        "Provides that if the verdict on the fitness issue is that the accused is fit to stand trial, the proceeding continues as if the fitness issue had never been raised.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14158,6 +14454,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.29.html`,
+      summary:
+        "Allows a court to order an accused who has been found fit to stand trial, but remains in custody, to be detained in a hospital until trial ends if there are reasonable grounds to believe the accused would become unfit if released.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14168,6 +14466,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.3.html`,
+      summary:
+        "Provides that if trial of the fitness issue was postponed and the accused is discharged or acquitted before it is tried, the fitness issue shall not be tried.",
+      relatedSections: ["672.25"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14178,6 +14479,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.31.html`,
+      summary:
+        "States that when the verdict on the fitness issue is that the accused is unfit to stand trial, any plea already made is set aside and any jury is discharged.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14188,6 +14491,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.32.html`,
+      summary:
+        "States that a verdict of unfit to stand trial does not prevent a later trial once the accused becomes fit, and that whoever asserts the accused has become fit bears the burden of proving it on a balance of probabilities.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14198,6 +14503,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.33.html`,
+      summary:
+        "Requires the court to hold an inquiry at least every two years (or sooner on application) to decide whether enough evidence exists to put an unfit accused on trial, sets the burden of proof on the prosecutor, and requires acquittal if that evidence cannot be produced.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14208,6 +14515,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.34.html`,
+      summary:
+        "Requires the trier of fact to render a verdict that the accused committed the act or omission charged but is not criminally responsible on account of mental disorder, where it finds the accused did the act but was exempt from responsibility under subsection 16(1).",
+      relatedSections: ["16"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14218,6 +14528,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.35.html`,
+      summary:
+        "Sets out that a verdict of not criminally responsible on account of mental disorder is not a conviction, but allows the accused to plead autrefois acquit later, and permits courts and parole boards to take the verdict into account in later release, sentencing, or parole decisions.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14228,6 +14540,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.36.html`,
+      summary:
+        "States that a verdict of not criminally responsible on account of mental disorder does not count as a previous conviction for purposes of enhanced punishment provisions tied to prior convictions.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14236,8 +14550,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Definition of application for federal employment",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-672.37.html`,
+      summary:
+        "Defines \"application for federal employment\" and prohibits such applications from requiring disclosure of a charge or finding of not criminally responsible on account of mental disorder where the applicant was absolutely discharged or is no longer subject to any disposition; using a form that violates this is an offence punishable on summary conviction.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14248,6 +14564,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.38.html`,
+      summary:
+        "Requires each province to establish or designate a Review Board of at least five members, appointed provincially, to make or review dispositions for accused persons found NCRMD or unfit to stand trial, and shields members from personal liability for good-faith acts.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14258,6 +14576,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.39.html`,
+      summary:
+        "Requires a Review Board to include at least one member entitled to practise psychiatry, and if only one such member exists, at least one other member with mental health training entitled to practise medicine or psychology.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14268,6 +14588,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.4.html`,
+      summary:
+        "Requires the chairperson of a Review Board to be a judge or a person qualified for or retired from such judicial office, with a transitional exception allowing an existing non-judicial chairperson to continue under certain conditions.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14278,6 +14600,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.41.html`,
+      summary:
+        "Sets the quorum of a Review Board as the chairperson, a psychiatrist member, and one other member, with a modified quorum rule during a transitional period for boards whose chairperson does not meet the usual judicial qualification.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14288,6 +14612,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.42.html`,
+      summary:
+        "States that a decision of a majority of members present and voting constitutes the decision of a Review Board.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14298,6 +14624,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.43.html`,
+      summary:
+        "Gives the chairperson of a Review Board, at a disposition hearing, the same powers conferred on commissioners under the Inquiries Act.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14308,6 +14636,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.44.html`,
+      summary:
+        "Allows a Review Board to make rules of practice and procedure subject to provincial approval and publication in the Canada Gazette, while permitting the Governor in Council to make overriding regulations to standardize Review Board procedure.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14318,6 +14648,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.45.html`,
+      summary:
+        "Allows a court to hold, and requires it to hold on application, a disposition hearing after a verdict of NCRMD or unfit to stand trial, requires transmittal of proceedings to the Review Board if the court does not hold a hearing, and requires the court to make a disposition if it can readily do so without delay.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14328,6 +14660,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.46.html`,
+      summary:
+        "Provides that if the court does not make a disposition at a disposition hearing, any existing detention or release order continues in force until the Review Board acts, but allows the court to vary that order for cause pending the Review Board's decision.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14338,6 +14672,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.47.html`,
+      summary:
+        "Requires the Review Board to hold a hearing and make a disposition within set time limits (generally 45 or 90 days, with possible extensions) after a verdict of NCRMD or unfit to stand trial where the court itself made no disposition, or after certain court dispositions, including special timelines where the accused is found to be high-risk.",
+      relatedSections: ["672.54", "672.64"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14348,6 +14685,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.48.html`,
+      summary:
+        "Requires the Review Board, when holding a hearing for an accused found unfit to stand trial, to determine current fitness and send the accused back to court if fit, and allows the chairperson to do the same with the accused's and hospital's consent under specified conditions.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14358,6 +14697,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.49.html`,
+      summary:
+        "Allows the Review Board or chairperson to require continued hospital detention of an accused pending a court determination of fitness where there are reasonable grounds the accused would become unfit if released, and requires a copy of the disposition be sent to the court and Attorney General.",
+      relatedSections: ["672.47"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14368,6 +14710,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.5.html`,
+      summary:
+        "Sets out detailed procedural rules for disposition hearings before a court or Review Board, covering party status, notice, public exclusion, right to counsel, the accused's presence and removal, evidence and cross-examination, remote appearance, adjournments, and victim impact statement procedures.",
+      relatedSections: ["672.84", "672.54", "672.45", "672.47", "672.64"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14376,8 +14721,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Order restricting publication — sexual offences",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-672.501.html`,
+      summary:
+        "Requires or allows a Review Board to order publication bans protecting the identity of victims or young witnesses in certain hearings, sets factors for granting a discretionary ban, and makes it a summary offence to breach such an order.",
+      relatedSections: ["672.5", "486.4", "163.1"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14388,6 +14736,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.5011.html`,
+      summary:
+        "Requires the Review Board, on application and generally without a hearing, to vary or revoke a publication-ban order made under section 672.501, unless doing so could affect another protected person's privacy interests, in which case a hearing is held.",
+      relatedSections: ["672.501"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14398,6 +14749,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.51.html`,
+      summary:
+        "Defines \"disposition information\" and sets rules for when it must be disclosed to parties, when it must or may be withheld from the accused or other parties to protect safety or treatment, and when it may be released to researchers or others in the public interest.",
+      relatedSections: ["672.5"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14408,6 +14762,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.52.html`,
+      summary:
+        "Requires a record of disposition hearing proceedings, including assessment reports, to be kept, requires transmittal of the transcript to the Review Board where applicable, and requires reasons for the disposition to be stated and provided to the parties.",
+      relatedSections: ["672.45"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14418,6 +14775,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.53.html`,
+      summary:
+        "States that a procedural irregularity in a disposition hearing does not invalidate the hearing unless it causes the accused substantial prejudice.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14428,6 +14787,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.54.html`,
+      summary:
+        "Sets out the three dispositions a court or Review Board may make (absolute discharge, conditional discharge, or hospital detention), directing that public safety is the paramount consideration alongside the accused's mental condition, reintegration, and other needs.",
+      relatedSections: ["672.45", "672.47", "672.64", "672.83", "672.84"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14438,6 +14800,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.5401.html`,
+      summary:
+        "Defines \"significant threat to the safety of the public\" as a risk of serious physical or psychological harm to the public, including victims, witnesses, or persons under 18, from criminal but not necessarily violent conduct.",
+      relatedSections: ["672.54"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14448,6 +14813,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.541.html`,
+      summary:
+        "Requires the court or Review Board to consider a victim's filed impact statement when determining the appropriate disposition, conditions, or when deciding whether an accused is or remains a high-risk accused, at various specified hearings.",
+      relatedSections: ["672.45", "672.47", "672.64", "672.81", "672.82", "672.84"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14458,6 +14826,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.542.html`,
+      summary:
+        "Requires the court or Review Board to consider including conditions in a disposition, such as no-contact or exclusion-zone conditions, to protect the safety of victims, witnesses, or justice system participants.",
+      relatedSections: ["672.5"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14468,6 +14839,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.55.html`,
+      summary:
+        "Prohibits a disposition from directing that the accused undergo psychiatric or other treatment, except that a condition regarding treatment may be included if the accused consents and the court or Review Board considers it reasonable and necessary.",
+      relatedSections: ["672.54"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14478,6 +14852,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.56.html`,
+      summary:
+        "Allows a Review Board to delegate authority to a hospital's person in charge to vary restrictions on the accused's liberty within set limits, subject to added restrictions for high-risk accused, and requires notice and record-keeping when restrictions are significantly increased.",
+      relatedSections: ["672.54", "672.64"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14488,6 +14865,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.57.html`,
+      summary:
+        "Requires a warrant of committal to be issued when the court or Review Board orders hospital detention under paragraph 672.54(c).",
+      relatedSections: ["672.54"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14498,6 +14878,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.58.html`,
+      summary:
+        "Allows a court, on the prosecutor's application, to order treatment of an accused found unfit to stand trial for up to sixty days, on specified conditions, where no other disposition has been made.",
+      relatedSections: ["672.54"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14508,6 +14891,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.59.html`,
+      summary:
+        "Sets the criteria for a treatment order under section 672.58, requiring a medical practitioner's testimony that the accused is unfit, that specified treatment will likely restore fitness within sixty days, that the treatment's risk is not disproportionate to its benefit, and that it is the least restrictive and intrusive option available.",
+      relatedSections: ["672.58"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14518,6 +14904,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.6.html`,
+      summary:
+        "Requires the prosecutor to notify the accused in writing of an application for a treatment order before the court may make it, and allows the accused to challenge the application and present evidence.",
+      relatedSections: ["672.58"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14528,6 +14917,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.61.html`,
+      summary:
+        "Bars a treatment order from including psychosurgery, electro-convulsive therapy, or any other prescribed prohibited treatment, and defines those two terms.",
+      relatedSections: ["672.58"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14538,6 +14930,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.62.html`,
+      summary:
+        "Requires the consent of the hospital's person in charge or the person assigned responsibility for treatment before a treatment order can be made, but allows the court to order treatment without the accused's own consent.",
+      relatedSections: ["672.58"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14548,6 +14943,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.63.html`,
+      summary:
+        "States that a disposition comes into force on the day made or a later specified day and remains in force until the Review Board reviews it and makes another disposition.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14558,6 +14955,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.64.html`,
+      summary:
+        "Allows a court, on the prosecutor's application, to find an accused a high-risk accused where certain violence or brutality criteria are met, sets the factors the court must consider, requires hospital detention with restricted absence conditions for such accused, and makes the finding (or a refusal to make it) appealable.",
+      relatedSections: ["672.81", "672.54", "672.72", "672.78"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14568,6 +14968,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.67.html`,
+      summary:
+        "Provides that where a dual status offender receives both a prison sentence and a custodial disposition, whichever is imposed later takes precedence over the earlier one pending a Review Board placement decision.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14578,6 +14980,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.68.html`,
+      summary:
+        "Defines \"Minister\" for these provisions and sets out the process and factors by which the Review Board decides whether a dual status offender should be held in a hospital or a prison, including timelines for making that placement decision.",
+      relatedSections: ["672.69", "672.7"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14588,6 +14993,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.69.html`,
+      summary:
+        "Gives the Minister and Review Board access to a dual status offender for purposes of reviewing a sentence or disposition, sets out when the Review Board must or may hold a hearing to review a placement decision, and requires the Minister to be a party to such proceedings.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14598,6 +15005,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.7.html`,
+      summary:
+        "Requires the Minister and Review Board to give each other written notice of the time, place, and conditions when intending to discharge a dual status offender from custody, and requires a warrant of committal when a placement decision is made.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14608,6 +15017,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.71.html`,
+      summary:
+        "Provides that each day a dual status offender is detained under a placement decision or custodial disposition counts as a day served on their prison term, and that a custodial disposition takes precedence over a probation order in specified circumstances.",
+      relatedSections: ["730", "732.2"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14618,6 +15030,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.72.html`,
+      summary:
+        "Allows any party to appeal a disposition or placement decision to the court of appeal on questions of law, fact, or mixed law and fact, sets a fifteen-day notice period, and requires the appeal to be heard expeditiously.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14628,6 +15042,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.73.html`,
+      summary:
+        "Requires an appeal of a disposition or placement decision to be based on the transcript of proceedings and any additional evidence the court of appeal finds necessary, applying the usual rules for admitting additional evidence.",
+      relatedSections: ["683"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14638,6 +15055,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.74.html`,
+      summary:
+        "Sets out the administrative steps for notifying the court or Review Board of an appeal, transmitting the record to the court of appeal, keeping that record, and providing a transcript, while providing that the appeal is not dismissed solely for another person's non-compliance.",
+      relatedSections: ["540"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14648,6 +15068,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.75.html`,
+      summary:
+        "States that filing a notice of appeal against a treatment order made under section 672.58 automatically suspends that order pending the appeal's outcome.",
+      relatedSections: ["672.58"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14658,6 +15081,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.76.html`,
+      summary:
+        "Allows a party to apply to a judge of the court of appeal for orders respecting a disposition or placement decision under appeal, including directing that a treatment order proceed, suspending certain dispositions, making interim dispositions or placement decisions, and giving directions to expedite the appeal.",
+      relatedSections: ["672.58", "672.54", "672.75"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14668,6 +15094,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.77.html`,
+      summary:
+        "Provides that when a disposition or placement decision under appeal is suspended, the prior disposition or release/detention order that was in effect remains in force pending the appeal, subject to any interim disposition made under paragraph 672.76(2)(c).",
+      relatedSections: ["672.76"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14678,6 +15107,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.78.html`,
+      summary:
+        "Sets out when a court of appeal may allow an appeal against a Review Board disposition or placement decision (unreasonable, wrong in law, or a miscarriage of justice) versus dismiss it, and the orders it may make if the appeal is allowed, including making its own disposition or sending the matter back for re-hearing.",
+      relatedSections: ["672.54"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14688,6 +15120,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.81.html`,
+      summary:
+        "Requires a Review Board to hold periodic hearings to review dispositions it has made, sets rules for extending the time between hearings in certain cases (including for high-risk accused), and requires additional reviews when custody status or restrictions on liberty change.",
+      relatedSections: ["672.54", "672.51", "672.121", "672.47", "672.56", "672.72"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14698,6 +15133,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.82.html`,
+      summary:
+        "Allows a Review Board to hold a discretionary hearing to review any of its dispositions at any time, on its own motion or on request, and provides that requesting such a review is deemed abandonment of any pending appeal of that disposition.",
+      relatedSections: ["672.72"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14708,6 +15146,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.83.html`,
+      summary:
+        "Requires the Review Board, at a mandatory or discretionary review hearing, to review the existing disposition and make whatever new disposition it considers appropriate, unless the accused has been found fit to stand trial.",
+      relatedSections: ["672.81", "672.82", "672.48"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14718,6 +15159,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.84.html`,
+      summary:
+        "Sets out the process for reviewing findings about a high-risk accused, including when the Review Board must refer the matter to a superior court, what the court does on review, and how conditions of detention are reviewed depending on the outcome.",
+      relatedSections: ["672.81", "672.82", "672.51", "672.121", "672.64", "672.54"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14728,6 +15172,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.85.html`,
+      summary:
+        "Authorizes the chairperson of the Review Board to order that an accused be brought to a hearing, or to issue a summons or warrant to compel an accused who is not in custody to appear.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14738,6 +15184,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.851.html`,
+      summary:
+        "Sets out when a Review Board or a court may inquire into whether a stay of proceedings should be ordered for an accused found unfit to stand trial who is unlikely to ever become fit, including the notice, assessment, and factors the court considers, and the effect of granting or not granting a stay.",
+      relatedSections: ["672.81", "672.82", "672.51", "672.121", "672.33", "672.83"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14748,6 +15197,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.852.html`,
+      summary:
+        "Allows the Court of Appeal to allow an appeal against an order staying proceedings if the order is unreasonable or unsupported by the evidence, and if allowed, to set aside the stay and restore the earlier unfit-to-stand-trial finding and disposition.",
+      relatedSections: ["672.851"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14758,6 +15210,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.86.html`,
+      summary:
+        "Sets out the conditions under which an accused subject to a custody or hospital-attendance disposition may be transferred to another province, including required recommendations and consents, and how a warrant is issued for the transfer.",
+      relatedSections: ["672.54", "672.58"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14768,6 +15223,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.87.html`,
+      summary:
+        "Provides that a transfer warrant authorizes custodial staff to convey the accused to the receiving location and authorizes the person there to detain the accused under the existing disposition.",
+      relatedSections: ["672.86", "672.54"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14778,6 +15236,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.88.html`,
+      summary:
+        "Gives the Review Board of the receiving province exclusive jurisdiction over a transferred accused, exercising the same powers as if it had made the disposition itself, unless the provinces agree otherwise.",
+      relatedSections: ["672.86", "672.5", "672.81", "672.82", "672.83", "672.84"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14788,6 +15249,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.89.html`,
+      summary:
+        "Addresses interprovincial transfers made outside the section 672.86 process, providing that the Review Board of the originating province keeps jurisdiction unless the provinces enter into an agreement transferring it to the receiving province's Review Board.",
+      relatedSections: ["672.86", "672.5", "672.81", "672.82", "672.83", "672.84"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14798,6 +15262,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.9.html`,
+      summary:
+        "Allows any warrant or process related to an assessment order or disposition to be executed or served anywhere in Canada outside the province where it was made.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14808,6 +15274,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.91.html`,
+      summary:
+        "Authorizes a peace officer to arrest an accused without a warrant anywhere in Canada if there are reasonable grounds to believe the accused has breached, or is about to breach, an assessment order or disposition or its conditions.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14818,6 +15286,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.92.html`,
+      summary:
+        "Sets out a peace officer's options after arresting an accused under section 672.91 for breaching a disposition or assessment order, including when the accused may be released and required to attend a specified place or appear before a justice, versus when the accused must be brought before a justice within 24 hours.",
+      relatedSections: ["672.91", "672.54"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14828,6 +15299,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.93.html`,
+      summary:
+        "Requires a justice to release an arrested accused unless satisfied there are reasonable grounds to believe a breach occurred, and sets out what orders the justice may make pending a Review Board or court hearing, along with notice requirements.",
+      relatedSections: ["672.92"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14838,6 +15312,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.94.html`,
+      summary:
+        "Provides that when a Review Board receives notice of a justice's release or interim order, it may exercise the same powers and duties as when reviewing a disposition.",
+      relatedSections: ["672.93", "672.5", "672.81", "672.82", "672.83"],
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14848,6 +15325,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-672.95.html`,
+      summary:
+        "Authorizes the Governor in Council to make regulations prescribing matters under this Part and generally carrying out its purposes.",
       partOf: "Part XX.1 — Mental Disorder",
     },
   ],
@@ -14860,6 +15339,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-673.html`,
+      summary:
+        "Defines terms used in this Part, including 'court of appeal', 'indictment', 'registrar', 'sentence', and 'trial court'.",
+      relatedSections: ["199", "109", "110", "161", "164.2", "194"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14870,6 +15352,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-674.html`,
+      summary:
+        "Provides that no appeal proceedings in respect of indictable offences may be taken except as authorized by this Part and Part XXVI.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14880,6 +15364,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-675.html`,
+      summary:
+        "Sets out the grounds and conditions on which a person convicted by indictment may appeal their conviction or sentence to the court of appeal, including special rules for certain sentences, summary conviction matters, mental disorder verdicts, and refused leave applications.",
+      relatedSections: ["236", "743.6", "745.51"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14890,6 +15377,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-676.html`,
+      summary:
+        "Sets out the grounds on which the Attorney General may appeal acquittals, verdicts of not criminally responsible, jurisdictional rulings, stays, sentences, unfitness verdicts, and certain parole-ineligibility decisions to the court of appeal.",
+      relatedSections: ["730", "236", "743.6", "745.51"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14900,6 +15390,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-676.1.html`,
+      summary:
+        "Allows a party ordered to pay costs to appeal that order or the amount, with leave of the court of appeal or one of its judges.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14910,6 +15402,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-677.html`,
+      summary:
+        "Requires that when a judge of the court of appeal dissents, the court's judgment must specify the legal grounds on which the dissent is based.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14920,6 +15414,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-678.html`,
+      summary:
+        "Requires an appellant to give notice of appeal or of an application for leave to appeal in the manner and time set by rules of court, and allows the court of appeal to extend that time.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14930,6 +15426,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-678.1.html`,
+      summary:
+        "Allows substitutional service of a notice of appeal or leave application on a respondent who cannot be found, in the manner and period a judge of the court of appeal directs.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14940,6 +15438,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-679.html`,
+      summary:
+        "Sets out the process and conditions for a court of appeal judge to release an appellant from custody pending determination of an appeal, including notice requirements, the tests to be met, required release conditions, and related provisions for new trials and expediting appeals.",
+      relatedSections: ["678", "515", "522", "524", "696.3", "495.1"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14950,6 +15451,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-680.html`,
+      summary:
+        "Allows certain bail-related decisions of a single judge to be reviewed by the court of appeal on direction of the chief justice, which may confirm, vary, or substitute the decision, and allows this power to be exercised by a single judge on consent of the parties.",
+      relatedSections: ["522", "524", "320.25", "679"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14960,6 +15464,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-682.html`,
+      summary:
+        "Requires the trial judge to provide the court of appeal with a report on the case when requested, and sets out what transcripts and materials must be furnished to the court of appeal and to parties or the Minister of Justice.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14970,6 +15476,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-683.html`,
+      summary:
+        "Grants the court of appeal broad powers in the interests of justice, including ordering production of evidence, examining witnesses, referring complex questions to a commissioner, amending the indictment, and suspending certain sentence obligations pending appeal.",
+      relatedSections: ["738", "739", "737", "731", "742.1", "714.1"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14980,6 +15489,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-684.html`,
+      summary:
+        "Allows a court of appeal or judge to assign counsel to an accused who needs legal assistance for an appeal and cannot afford it, and sets out how counsel's fees are paid and disputes over fees resolved.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -14990,6 +15501,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-685.html`,
+      summary:
+        "Allows the registrar to refer an appeal lacking a substantial legal ground to the court of appeal for summary dismissal as frivolous or vexatious, and allows a judge to summarily dismiss an appeal that was filed with the wrong court.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15000,6 +15513,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-686.html`,
+      summary:
+        "Sets out the court of appeal's powers when hearing an appeal against conviction or a mental-disorder-related verdict, including when it must allow or may dismiss the appeal, substitute verdicts, order new trials, and the procedures that apply to new trials under Part XIX.",
+      relatedSections: ["672.45", "553", "561", "561.1"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15010,6 +15526,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-687.html`,
+      summary:
+        "Requires the court of appeal, on a sentence appeal, to consider the fitness of the sentence and either vary it within legal limits or dismiss the appeal, with a varied sentence having the same effect as one passed by the trial court.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15020,6 +15538,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-688.html`,
+      summary:
+        "Sets out an appellant's right to be present at the hearing of an appeal while in custody, exceptions where represented appellants are not entitled to attend certain proceedings, provisions for remote appearance, and the court's power to impose sentence in the appellant's absence.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15030,6 +15550,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-689.html`,
+      summary:
+        "Provides that compensation, restitution, or forfeiture orders made at trial are suspended pending the appeal period or an appeal's determination, and allows the court of appeal to annul or vary such orders.",
+      relatedSections: ["738", "739", "164.2", "462.37"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15040,6 +15563,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-691.html`,
+      summary:
+        "Sets out when a person convicted of an indictable offence, or whose acquittal was set aside by the court of appeal, may appeal further to the Supreme Court of Canada.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15050,6 +15575,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-692.html`,
+      summary:
+        "Sets out when a person found not criminally responsible on account of mental disorder, or found unfit to stand trial, whose verdict is affirmed by the court of appeal, may appeal to the Supreme Court of Canada.",
+      relatedSections: ["686"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15060,6 +15588,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-693.html`,
+      summary:
+        "Sets out when the Attorney General may appeal to the Supreme Court of Canada after a court of appeal sets aside a conviction or dismisses certain Attorney General appeals, and allows the Supreme Court to impose terms when granting leave.",
+      relatedSections: ["675", "676"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15070,6 +15601,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-694.html`,
+      summary:
+        "Provides that no appeal lies to the Supreme Court of Canada unless written notice of appeal is served on the respondent as required by the Supreme Court Act.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
