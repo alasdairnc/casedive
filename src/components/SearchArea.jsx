@@ -51,6 +51,7 @@ export default function SearchArea({
           ref={inputRef}
           data-testid="scenario-input"
           aria-label="Legal scenario"
+          aria-describedby="cd-scenario-privacy-hint"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
@@ -96,6 +97,30 @@ export default function SearchArea({
           </div>
         )}
       </div>
+
+      <p
+        id="cd-scenario-privacy-hint"
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: 12,
+          lineHeight: 1.5,
+          color: t.textTertiary,
+          margin: "8px 0 0",
+        }}
+      >
+        Leave out names and other details that could identify you or anyone
+        else.{" "}
+        <Button
+          variant="link"
+          size="sm"
+          href="/privacy.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontSize: 12 }}
+        >
+          How we handle what you type
+        </Button>
+      </p>
 
       <div
         style={{

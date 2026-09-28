@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { buildSystemPrompt } from "../../src/lib/prompts.js";
+import { analyzeResponse } from "../e2e/helpers/analyzeFixture.js";
 
 // ── Module mocks (must be declared before dynamic import) ─────────────────────
 
@@ -847,5 +849,99 @@ describe("analyze response request IDs", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.meta.requestId).toBe("req-cache-456");
     expect(cachedPayload.meta.requestId).toBeUndefined();
+  });
+});
+
+// ── Contract with the E2E fixture ─────────────────────────────────────────────
+// The E2E specs mock /api/analyze with tests/e2e/helpers/analyzeFixture.js.
+// These tests fail when that fixture drifts from the prompt's JSON template
+// or from the meta the handler builds. Item fields from retrieval are not
+// covered: the handler passes them through and retrieval is mocked here.
+
+describe("analyze response contract with the E2E fixture", () => {
+  // Reads the JSON template in the system prompt: top-level keys sit at two
+  // spaces, item fields at six.
+  function promptSchema() {
+    const lines = buildSystemPrompt({}).split("\n");
+    const start = lines.indexOf("{");
+    const end = lines.indexOf("}", start);
+    const schema = {};
+    let group = null;
+    for (const line of lines.slice(start + 1, end)) {
+      const top = line.match(/^ {2}"(\w+)":/);
+      if (top) {
+        group = top[1];
+        schema[group] = [];
+        continue;
+      }
+      const field = line.match(/^ {6}"(\w+)":/);
+      if (field) schema[group].push(field[1]);
+    }
+    return schema;
+  }
+
+  it("mocks the top-level keys the prompt asks Claude for, plus meta", () => {
+    const schema = promptSchema();
+
+    expect(Object.keys(schema)).toContain("criminal_code");
+    expect(Object.keys(analyzeResponse()).sort()).toEqual(
+      [...Object.keys(schema), "meta"].sort(),
+    );
+  });
+
+  it("mocks Claude-written items with only the fields the prompt defines", () => {
+    const schema = promptSchema();
+    const fixture = analyzeResponse();
+
+    expect(fixture.criminal_code.length).toBeGreaterThan(0);
+    for (const group of ["criminal_code", "civil_law", "charter"]) {
+      for (const item of fixture[group]) {
+        expect(schema[group]).toEqual(
+          expect.arrayContaining(Object.keys(item)),
+        );
+      }
+    }
+  });
+
+  it("mocks the same response and meta keys the handler returns", async () => {
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [
+        {
+          citation: "R v Grant, 2009 SCC 32",
+          title: "R v Grant",
+          summary: "Charter s.24(2) exclusion",
+          url_canlii:
+            "https://www.canlii.org/en/ca/scc/doc/2009/2009scc32/2009scc32.html",
+          year: 2009,
+        },
+      ],
+      meta: { reason: "verified_results", verificationCalls: 1 },
+    });
+
+    const res = createRes();
+    await handler(
+      createReq({ body: { scenario: "charter evidence exclusion grant" } }),
+      res,
+    );
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.case_law).toHaveLength(1);
+
+    const fixture = analyzeResponse({ case_law: res.body.case_law });
+    const keysOf = (value) => Object.keys(value).sort();
+    expect(keysOf(res.body)).toEqual(keysOf(fixture));
+    expect(keysOf(res.body.meta)).toEqual(keysOf(fixture.meta));
+    expect(keysOf(res.body.meta.case_law)).toEqual(
+      keysOf(fixture.meta.case_law),
+    );
+    expect(keysOf(res.body.meta.case_law.retrieval)).toEqual(
+      keysOf(fixture.meta.case_law.retrieval),
+    );
+    expect(res.body.meta.case_law).toMatchObject({
+      source: fixture.meta.case_law.source,
+      verifiedCount: fixture.meta.case_law.verifiedCount,
+      reason: fixture.meta.case_law.reason,
+    });
   });
 });
