@@ -111,6 +111,23 @@ describe("AuthModal component", () => {
     expect(screen.getByText(/at least 8 characters\./i)).toBeDefined();
   });
 
+  it("links the Terms and Privacy Policy in new tabs on account flows", async () => {
+    const AuthModal = await getModal();
+    render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signup" />);
+    const terms = screen.getByRole("link", { name: "Terms" });
+    const privacy = screen.getByRole("link", { name: "Privacy Policy" });
+    expect(terms.getAttribute("href")).toBe("/terms.html");
+    expect(privacy.getAttribute("href")).toBe("/privacy.html");
+    expect(terms.getAttribute("target")).toBe("_blank");
+    expect(privacy.getAttribute("rel")).toContain("noopener");
+  });
+
+  it("leaves the Terms line off the password-reset screen", async () => {
+    const AuthModal = await getModal();
+    render(<AuthModal isOpen={true} onClose={vi.fn()} mode="forgot" />);
+    expect(screen.queryByRole("link", { name: "Privacy Policy" })).toBeNull();
+  });
+
   it("focuses the email field when opened", async () => {
     const AuthModal = await getModal();
     render(<AuthModal isOpen={true} onClose={vi.fn()} mode="signin" />);

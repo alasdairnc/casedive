@@ -2,7 +2,7 @@
 /**
  * CaseDive — RAG Poisoning Simulator
  *
- * NOTE: This script temporarily modifies retrieve-caselaw.js to accept a
+ * NOTE: This script temporarily modifies the CanLII retrieval code to accept a
  * CANLII_API_BASE_URL override. Revert after testing. See the "Pipeline
  * Interception Setup" section below for full instructions.
  *
