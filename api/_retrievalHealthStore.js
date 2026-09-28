@@ -5,7 +5,10 @@ import { redis } from "./_rateLimit.js";
 import { RETRIEVAL_HEALTH_STORE_REDIS_TIMEOUT_MS } from "./_constants.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
 
-const EVENT_LIST_KEY = "metrics:retrieval:events:v1";
+// v1 holds a JSON string written before events moved to a Redis list; a list
+// command on it fails with WRONGTYPE, so the list lives under a new key.
+const EVENT_LIST_KEY = "metrics:retrieval:events:v2";
+const EVENT_LIST_TTL_S = 60 * 60 * 24 * 30;
 const LAST_EVENT_KEY = "metrics:retrieval:last-event:v1";
 const EVENT_COUNT_KEY = "metrics:retrieval:event-count:v1";
 const ALLTIME_KEY = "metrics:retrieval:alltime:v1";
@@ -103,8 +106,7 @@ function normalizeEvent(raw) {
 }
 
 function buildStoredEvent(metricsPayload = {}) {
-  // Truncate scenarioSnippet to 100 chars and add TTL for Redis storage
-  const event = normalizeEvent({
+  return normalizeEvent({
     ts: Date.now(),
     endpoint: metricsPayload.endpoint,
     source: metricsPayload.source,
@@ -128,9 +130,7 @@ function buildStoredEvent(metricsPayload = {}) {
     semanticFilterDropCount: metricsPayload.semanticFilterDropCount,
     candidateSourceMix: metricsPayload.candidateSourceMix,
     errorMessage: metricsPayload.errorMessage,
-    scenarioSnippet: (metricsPayload.scenarioSnippet || "").slice(0, 100),
   });
-  return event;
 }
 
 function getFailureEvents(events = []) {
@@ -238,19 +238,10 @@ function pruneMemory(nowMs = Date.now()) {
 }
 
 async function readRedisEvents() {
-  const raw = await withRedisTimeout(
-    redis.get(EVENT_LIST_KEY),
+  const rows = await withRedisTimeout(
+    redis.lrange(EVENT_LIST_KEY, 0, -1),
     REDIS_TIMEOUT_MS,
   );
-  let rows = raw;
-
-  if (typeof raw === "string") {
-    try {
-      rows = JSON.parse(raw);
-    } catch {
-      rows = [];
-    }
-  }
 
   if (!Array.isArray(rows)) return [];
   const out = [];
@@ -743,49 +734,21 @@ export async function recordRetrievalMetricsEvent(metricsPayload = {}) {
     }
 
     try {
-      const timeout = () =>
-        new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error("Redis timeout")),
-            REDIS_TIMEOUT_MS,
-          ),
-        );
-      const existing = await Promise.race([readRedisEvents(), timeout()]);
-      const merged = [...existing, event];
-      const capped =
-        merged.length > MAX_PERSISTED_EVENTS
-          ? merged.slice(merged.length - MAX_PERSISTED_EVENTS)
-          : merged;
-
-      // Use Redis list for events, enforce cap with LTRIM
-      const eventStr = JSON.stringify(event);
-
-      // Store event with TTL for scenario snippet
-      await Promise.race([redis.rpush(EVENT_LIST_KEY, eventStr), timeout()]);
-      await Promise.race([
+      await withRedisTimeout(
+        redis.rpush(EVENT_LIST_KEY, JSON.stringify(event)),
+        REDIS_TIMEOUT_MS,
+      );
+      await withRedisTimeout(
         redis.ltrim(EVENT_LIST_KEY, -MAX_PERSISTED_EVENTS, -1),
-        timeout(),
-      ]);
-      // Set TTL for the event list (e.g., 30 days)
-      await Promise.race([
-        redis.expire(EVENT_LIST_KEY, 60 * 60 * 24 * 30),
-        timeout(),
-      ]);
-
-      // Backup channel: keep at least the latest event available for health checks.
-      try {
-        await writeRedisLastEvent(event);
-      } catch {
-        // Non-fatal backup write failure.
-      }
+        REDIS_TIMEOUT_MS,
+      );
+      await withRedisTimeout(
+        redis.expire(EVENT_LIST_KEY, EVENT_LIST_TTL_S),
+        REDIS_TIMEOUT_MS,
+      );
       return true;
     } catch {
       // fall through to in-memory store
-      try {
-        await writeRedisLastEvent(event);
-      } catch {
-        // Ignore backup write failures.
-      }
     }
   }
 
@@ -795,7 +758,7 @@ export async function recordRetrievalMetricsEvent(metricsPayload = {}) {
 }
 
 export async function getRetrievalEvents({ nowMs = Date.now() } = {}) {
-  let events = [];
+  let events;
   if (redis) {
     try {
       events = await readRedisEvents();

@@ -8,7 +8,6 @@ import StagedLoading from "./components/StagedLoading.jsx";
 import Results from "./components/Results.jsx";
 import SearchSummaryBar from "./components/SearchSummaryBar.jsx";
 import ErrorMessage from "./components/ErrorMessage.jsx";
-import RetrievalHealthDashboard from "./components/RetrievalHealthDashboard.jsx";
 import Button from "./components/ui/Button.jsx";
 import { MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH } from "./lib/caseLawReportReasons.js";
 import {
@@ -31,6 +30,9 @@ const CriminalCodeExplorer = lazy(
   () => import("./components/CriminalCodeExplorer.jsx"),
 );
 const AuthModal = lazy(() => import("./components/AuthModal.jsx"));
+const RetrievalHealthDashboard = lazy(
+  () => import("./components/RetrievalHealthDashboard.jsx"),
+);
 
 // NOTE: Sensitive user scenario data is no longer stored in localStorage. AdSense script context is restricted.
 const EXAMPLE_SCENARIOS = [
@@ -363,12 +365,14 @@ function AppInner() {
 
   if (pathname === "/internal/retrieval-health") {
     return (
-      <RetrievalHealthDashboard
-        onNavigateHome={() => {
-          window.history.pushState({}, "", "/");
-          setPathname("/");
-        }}
-      />
+      <Suspense fallback={null}>
+        <RetrievalHealthDashboard
+          onNavigateHome={() => {
+            window.history.pushState({}, "", "/");
+            setPathname("/");
+          }}
+        />
+      </Suspense>
     );
   }
 
