@@ -9438,6 +9438,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-484.html`,
+      summary:
+        "Gives judges and provincial court judges the same power to preserve order in their courtrooms as the superior court of criminal jurisdiction has in that province.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9448,6 +9450,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-485.html`,
+      summary:
+        "Provides that jurisdiction over an offence or accused is not lost merely because a court failed to act at a particular time or the accused did not appear personally, and sets out how a summons or warrant can be issued to regain jurisdiction, when proceedings are deemed dismissed for want of prosecution, and how a court may adjourn and make orders if a party was misled or prejudiced.",
+      relatedSections: ["482", "482.1", "485.1"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9458,6 +9463,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-485.1.html`,
+      summary:
+        "Bars laying a new information or preferring a new indictment for the same transaction after a dismissal for want of prosecution, unless the Attorney General consents in writing or a judge issues a written order permitting it.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9468,6 +9475,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-485.2.html`,
+      summary:
+        "Lets a justice or judge issue a summons requiring an accused or offender to appear for identification measurements under the Identification of Criminals Act where an earlier required appearance did not result in the measurements being completed for exceptional reasons, and sets out the application process, contents, and service of that summons.",
+      relatedSections: ["145", "512.1", "524"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9478,6 +9488,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.html`,
+      summary:
+        "Requires criminal proceedings to be held in open court but allows a judge or justice to exclude the public or let a witness testify behind a screen where it serves public morals, order, the administration of justice, or protects international relations, national defence, or national security, listing factors to weigh and requiring reasons in certain sexual-offence cases when no order is made.",
+      relatedSections: ["151", "152", "153", "153.1", "155", "160"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9488,6 +9501,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.1.html`,
+      summary:
+        "Requires a judge or justice, on application, to permit a support person or support animal to be present with a witness under 18, a witness with a disability, or certain victims while they testify, unless it would interfere with justice, and sets out related procedural and evidentiary requirements.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9498,6 +9513,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.2.html`,
+      summary:
+        "Requires a judge or justice, on application, to allow certain witnesses (those under 18, those with disabilities, and victims of specified offences) to testify outside the courtroom or behind a screen so they need not see the accused, subject to conditions ensuring the accused and court can still observe the testimony.",
+      relatedSections: ["650"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9508,6 +9526,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.3.html`,
+      summary:
+        "Requires a judge or justice, on application, to bar an accused from personally cross-examining a witness under 18 or a victim of specified offences and to appoint counsel to conduct that cross-examination instead, unless the proper administration of justice requires the accused to do it personally.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9518,6 +9538,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.31.html`,
+      summary:
+        "Allows a judge or justice, on application, to order that information identifying a witness not be disclosed during proceedings if doing so is in the interest of the proper administration of justice, and lists factors the judge must weigh in deciding.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9528,6 +9550,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.4.html`,
+      summary:
+        "Allows and, in specified circumstances, requires a judge or justice to order that information identifying a victim or witness not be published, broadcast, or transmitted in proceedings for certain sexual and related offences or where the victim is under 18, and sets out limited exceptions and notification duties.",
+      relatedSections: ["151", "152", "153", "153.1", "155", "160"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9538,6 +9563,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.5.html`,
+      summary:
+        "Allows a judge or justice to order that information identifying a victim, witness, or justice system participant not be published, broadcast, or transmitted where it is in the interest of the proper administration of justice, sets out the application and hearing process, the factors to be considered, and limited exceptions to the order.",
+      relatedSections: ["486.4", "423.1", "467.11", "467.111", "467.12", "467.13"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9548,6 +9576,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.51.html`,
+      summary:
+        "Sets out the process for varying or revoking a publication-ban order made under section 486.4 or 486.5, including when the prosecutor must apply on the subject's behalf, when a hearing is required, and that the accused is not given notice or allowed to make submissions.",
+      relatedSections: ["486.4", "486.5"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9556,8 +9587,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offence",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-486.6.html`,
+      summary:
+        "Makes it an offence, punishable on summary conviction, to fail to comply with a publication-ban order made under section 486.4 or 486.5, and limits when a prosecutor may pursue such a prosecution.",
+      relatedSections: ["486.4", "486.5"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9568,6 +9602,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.7.html`,
+      summary:
+        "Allows a judge or justice to make any order not otherwise available under sections 486 to 486.5 if necessary to protect a witness's security and consistent with the proper administration of justice, and lists the factors to be considered.",
+      relatedSections: ["486", "486.5"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9578,6 +9615,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-486.71.html`,
+      summary:
+        "Clarifies that a judge or justice may make more than one order regarding the same witness under sections 486 to 486.5 or 486.7.",
+      relatedSections: ["486", "486.5", "486.7"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9588,6 +9628,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.html`,
+      summary:
+        "Authorizes a justice, on sworn information showing reasonable grounds, to issue a warrant letting a peace or public officer search a building, receptacle, or place for things connected to an offence and seize them, including searching and copying data on a computer system found there, and requires anyone in possession of the premises to permit that computer search.",
+      relatedSections: ["489.1"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9598,6 +9641,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.01.html`,
+      summary:
+        "Allows a judge to issue a general warrant authorizing a peace officer to use a device, technique, or procedure that would otherwise be an unreasonable search or seizure, where there are reasonable grounds to believe an offence has been or will be committed and no other warrant provision applies, subject to conditions ensuring reasonableness and privacy protection, including for covert entry and video surveillance.",
+      relatedSections: ["183", "183.1", "184.2", "184.3", "185", "188.2"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9608,6 +9654,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.011.html`,
+      summary:
+        "Defines terms — including computer data, data, document, judge, public officer, tracking data, and transmission data — used in this section and in sections 487.012 to 487.0199.",
+      relatedSections: ["342.1", "487.012", "487.0199"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9618,6 +9667,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.012.html`,
+      summary:
+        "Allows a peace or public officer to demand that a person preserve computer data in their possession where there are reasonable grounds to suspect an offence has been or will be committed and the data will assist the investigation, subject to conditions, a time limit, and a bar on repeat demands for the same data.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9628,6 +9679,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.013.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application, to order a person to preserve computer data in their possession where there are reasonable grounds to suspect an offence and that the officer intends to seek a warrant or order to obtain that data, with the order expiring after 90 days.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9638,6 +9691,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0131.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application, to order a person to keep a specified account open or active where there are reasonable grounds to suspect an offence and that doing so will assist the investigation, with the order expiring after 60 days but renewable.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9648,6 +9703,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.014.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application, to order a person to produce or prepare a document or data in their possession where there are reasonable grounds to believe it will afford evidence of an offence.",
+      relatedSections: ["487.015", "487.018"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9658,6 +9716,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0141.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application, to order a person to produce a document or data that is or was in their possession on specified dates, with limits on the number of dates, frequency of production, and expiry after 60 days, renewable, and provision for producing certain money-laundering reports.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9668,6 +9728,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.015.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application, to order a person to prepare and produce transmission data to help identify a device or person involved in transmitting a communication, with rules on service of the order and a report back to the court once the person is identified or the service period expires.",
+      relatedSections: ["467.11", "467.12", "467.13"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9678,6 +9741,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.016.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application, to order a person to prepare and produce transmission data in their possession where there are reasonable grounds to suspect an offence and that the data will assist the investigation.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9688,6 +9753,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.017.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application, to order a person to prepare and produce tracking data in their possession where there are reasonable grounds to suspect an offence and that the data will assist the investigation.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9698,6 +9765,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.018.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application by a peace or public officer, to order a financial institution or similar entity to produce account data such as account numbers, type, status, and open/close dates, and, to confirm identity, a person's date of birth and current or previous addresses. The order requires reasonable grounds to suspect an offence has been or will be committed and that the entity holds data that will assist the investigation, and cannot be made against an institution or entity that is itself under investigation for that offence.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9708,6 +9777,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.019.html`,
+      summary:
+        "Sets out that an order under sections 487.013 to 487.018 may include conditions the justice or judge considers appropriate, including protecting privileged communications, and that such an order has effect throughout Canada. It also allows the justice or judge who made the order, or a judge in that judicial district, to revoke or vary it on ex parte application, with notice given to the person subject to the order.",
+      relatedSections: ["487.013", "487.014", "487.0141", "487.018"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9718,6 +9790,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0191.html`,
+      summary:
+        "Allows a justice or judge, on ex parte application, to order a person not to disclose the existence or contents of a preservation demand or production order for a set period, if satisfied there are reasonable grounds to believe disclosure would jeopardize the investigation. It also allows the affected peace officer, public officer, person, institution, or entity to apply in writing to revoke or vary the order.",
+      relatedSections: ["487.012", "487.013", "487.018"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9728,6 +9803,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0192.html`,
+      summary:
+        "Specifies procedural requirements for production orders, including that documents be produced to a named officer within a specified time, place, and form, and that certain sections do not apply to documents produced under these orders. It also provides that copies of documents produced under section 487.014 or 487.0141 are admissible as evidence, on proof by affidavit that they are true copies, with the same probative force as the originals, and that prepared documents are considered originals under the Canada Evidence Act.",
+      relatedSections: ["487.014", "487.0141", "487.015", "487.018", "489.1", "490"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9738,6 +9816,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.01921.html`,
+      summary:
+        "Allows a person who is subject to a keep-account-open-or-active order to apply in writing to have it revoked or varied, provided they give at least three days' notice and continue complying until a decision is made. The hearing must begin within 14 days, or as soon as practicable after that period, and the judge may revoke or vary the order if satisfied it is unreasonable to require the account be kept open or active.",
+      relatedSections: ["487.0131"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9748,6 +9829,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0193.html`,
+      summary:
+        "Allows a person, financial institution, or entity subject to a production order to apply in writing before complying to have the order revoked or varied, provided notice is given within 30 days, and they are not required to produce the document until a final decision is made. The order may be revoked or varied if compliance is unreasonable or would disclose privileged or legally protected information.",
+      relatedSections: ["487.014", "487.018"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9758,6 +9842,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0194.html`,
+      summary:
+        "Requires a person to destroy computer data that would not be retained in the ordinary course of business, and any document prepared to preserve it, once a preservation demand or preservation order expires or is revoked (unless subject to a further order), or, for a production order, once it is revoked or the data is produced, whichever is earlier. It also requires destruction of that preserved data when a document containing it is instead obtained under a warrant.",
+      relatedSections: ["487.012", "487.013", "487.014", "487.017"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9768,6 +9855,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0195.html`,
+      summary:
+        "Clarifies that no preservation demand, preservation order, keep-account-open-or-active order, or production order is required for a peace or public officer to ask a person to voluntarily preserve data, keep an account open or active, or provide a document that the person is not otherwise prohibited from disclosing. It also states that a person who complies voluntarily in these circumstances incurs no criminal or civil liability.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9778,6 +9867,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0196.html`,
+      summary:
+        "States that a person cannot refuse to comply with a production order on the ground that the document might incriminate them, but prohibits using a document an individual was required to prepare against them in a later criminal proceeding, except for prosecutions under sections 132, 136, or 137.",
+      relatedSections: ["487.014", "487.018", "132", "136", "137"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9786,8 +9878,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offence — preservation demand",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Fine of not more than $5,000",
       url: `${JUSTICE_LAWS_BASE}/section-487.0197.html`,
+      summary:
+        "Makes it an offence for a person to contravene a preservation demand made under section 487.012 without lawful excuse, punishable on summary conviction.",
+      relatedSections: ["487.012"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9796,8 +9891,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offence — preservation or production order",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Fine of not more than $250,000, imprisonment for not more than two years less a day, or both",
       url: `${JUSTICE_LAWS_BASE}/section-487.0198.html`,
+      summary:
+        "Makes it an offence for a person, financial institution, or entity to contravene a preservation or production order made under sections 487.013 to 487.018 without lawful excuse.",
+      relatedSections: ["487.013", "487.018"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9808,6 +9906,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0199.html`,
+      summary:
+        "Makes it an offence, punishable on summary conviction, for a person to contravene section 487.0194 (the duty to destroy preserved data) without lawful excuse.",
+      relatedSections: ["487.0194"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9818,6 +9919,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.02.html`,
+      summary:
+        "Allows the judge or justice who grants certain interception authorizations or issues a warrant to also order a person to provide assistance reasonably required to give effect to it, with the order taking effect throughout Canada. If the authorization or warrant is issued by telecommunication, the assistance order may also be issued that way, subject to the applicable section.",
+      relatedSections: ["184.2", "186", "188", "184.3", "487.1"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9828,6 +9932,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.021.html`,
+      summary:
+        "Requires a House of Commons committee to undertake a comprehensive review of the provisions and operation of sections 487.011 to 487.02 within seven years of this section coming into force, and to submit a report with any recommended changes within a year of that review.",
+      relatedSections: ["487.011", "487.02"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9838,6 +9945,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.04.html`,
+      summary:
+        "Defines terms used in this section and sections 487.05 to 487.0911, including adult, designated offence, DNA, forensic DNA analysis, primary designated offence, provincial court judge, secondary designated offence, Young Offenders Act, and young person, and lists the specific offences that qualify as primary or secondary designated offences.",
+      relatedSections: ["487.05", "487.051", "487.055", "487.091", "487.0911"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9848,6 +9958,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.05.html`,
+      summary:
+        "Allows a provincial court judge to issue a warrant authorizing the taking of bodily substance samples for forensic DNA analysis from a person, on ex parte application, if satisfied there are reasonable grounds to believe a designated offence was committed, a bodily substance was found connected to the offence, the person was a party to it, and DNA analysis would show whether the substance came from that person. The judge must also consider factors such as the nature of the offence and whether a qualified person is available to take the samples, and the warrant may be executed anywhere in Canada by an authorized peace officer.",
+      relatedSections: ["487.06"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9858,6 +9971,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.051.html`,
+      summary:
+        "Requires or allows a court to order the taking of bodily substance samples for DNA analysis from a person convicted, discharged, or found guilty of certain designated offences, with the requirement varying by offence category and being discretionary for persons found not criminally responsible or for secondary designated offences. In some cases the court must consider factors such as the person's criminal record and the impact on their privacy before deciding, and may also order the person to report to submit to sample collection.",
+      relatedSections: ["487.04", "730"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9868,6 +9984,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.053.html`,
+      summary:
+        "Allows the court to order the taking of bodily substance samples at the time of sentencing, a finding of not criminally responsible, or a discharge, or, if not addressed then, requires the court to set a hearing date within 90 days while retaining jurisdiction over the matter. The court may also require the person to appear by closed-circuit television or videoconference, with the opportunity to consult privately with counsel.",
+      relatedSections: ["487.051", "730"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9878,6 +9997,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.054.html`,
+      summary:
+        "Allows the offender or the prosecutor to appeal a court's decision made under subsections 487.051(1) to (3).",
+      relatedSections: ["487.051"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9888,6 +10010,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.055.html`,
+      summary:
+        "Allows a provincial court judge to authorize, on ex parte application, the taking of bodily substance samples for DNA analysis from certain persons declared dangerous offenders, convicted of murder, attempted murder, manslaughter, or specified sexual offences before June 30, 2000, and sets out the certificate, hearing, appearance, and notice or summons procedures involved. It also defines \"sexual offence\" for this purpose and describes how a summons must be served if the person is on conditional release and does not appear.",
+      relatedSections: ["667", "348", "487.06", "487.07"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9898,6 +10023,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0551.html`,
+      summary:
+        "Allows a justice of the peace to issue an arrest warrant if a person fails to appear as required by certain orders or summonses to provide bodily substance samples, and the warrant may be executed anywhere in Canada by a peace officer with jurisdiction over the person or place, remaining in force until executed.",
+      relatedSections: ["487.051", "487.055", "487.091"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9906,8 +10034,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Failure to comply with order or summons",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Indictable offence: imprisonment for not more than two years; or an offence punishable on summary conviction",
       url: `${JUSTICE_LAWS_BASE}/section-487.0552.html`,
+      summary:
+        "Makes it an offence, prosecutable either as an indictable offence or by summary conviction, for a person without reasonable excuse to fail to comply with certain orders or summonses to provide bodily substance samples. It also clarifies that a lawful military command preventing compliance counts as a reasonable excuse for a person subject to the Code of Service Discipline.",
+      relatedSections: ["487.051", "487.055", "487.091"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9918,6 +10049,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.056.html`,
+      summary:
+        "Sets out when bodily substance samples must be taken under various orders, authorizations, or summonses, generally at the specified place, day, and time or as soon as feasible afterward, including after an arrest warrant is executed for failing to appear. It also allows samples to be taken anywhere in Canada by an authorized peace officer or someone acting under their direction, and provides that these timing rules apply even if the order is under appeal.",
+      relatedSections: ["487.051", "487.055", "487.091", "487.0551"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9928,6 +10062,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.057.html`,
+      summary:
+        "Requires a peace officer who takes or directs the taking of bodily substance samples to file a written report with the relevant judge or court as soon as feasible, stating the time, date, and description of the samples taken, and to send a copy to another requesting peace officer if applicable.",
+      relatedSections: ["487.05", "487.055", "487.091", "487.051"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9938,6 +10075,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.058.html`,
+      summary:
+        "States that no peace officer, or person acting under a peace officer's direction, incurs criminal or civil liability for anything necessarily done with reasonable care and skill while taking bodily substance samples under an applicable warrant, order, or authorization.",
+      relatedSections: ["487.05", "487.051", "487.055", "487.091"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9948,6 +10088,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.06.html`,
+      summary:
+        "Authorizes a peace officer or person acting under their direction to take bodily substance samples by plucking hairs, taking buccal swabs, or pricking the skin for blood, under an applicable warrant, order, or authorization, which may include terms and conditions to ensure the process is reasonable. It also allows fingerprints to be taken from the person for purposes of the DNA Identification Act.",
+      relatedSections: ["487.05", "487.051", "487.055", "487.091"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9958,6 +10101,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.07.html`,
+      summary:
+        "Requires a peace officer, before taking bodily substance samples under certain orders or authorizations, to inform the person of the contents of the warrant, order, or authorization, the procedures to be used, the purpose, the authority to use necessary force, and, for warrant-based samples, that DNA results may be used in evidence and the rights of a young person. It also allows detention for a period that is reasonable in the circumstances, requires privacy be respected, and sets out a young person's right to consult counsel and have the warrant executed in the presence of counsel and a parent, adult relative, or other appropriate adult, along with how those rights may be waived.",
+      relatedSections: ["487.05", "487.051", "487.055", "487.091"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9968,6 +10114,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.071.html`,
+      summary:
+        "Requires a peace officer, before taking bodily substance samples under certain orders or authorizations, to check whether the person's DNA profile is already in the national DNA data bank's convicted offenders index. If it is, no sample may be taken and written confirmation must be sent to the RCMP Commissioner; if not, the order is executed and the samples and related information are transmitted to the Commissioner.",
+      relatedSections: ["487.051", "487.055", "487.091"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9978,6 +10127,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Hybrid",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.08.html`,
+      summary:
+        "Restricts the use of bodily substances and DNA analysis results obtained under warrants, orders, or authorizations to specific purposes, such as forensic analysis for designated offence investigations, transmission to the RCMP Commissioner, or use in related proceedings. Contravening these restrictions is an offence — punishable on summary conviction for use of warrant-based substances or results, or, for order- or authorization-based substances, either as an indictable offence or on summary conviction.",
+      relatedSections: ["487.05", "487.051", "487.055", "487.091"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9988,6 +10140,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.09.html`,
+      summary:
+        "Requires bodily substances and DNA analysis results obtained under a warrant, or provided voluntarily, to be destroyed or have electronic access permanently removed without delay in specified circumstances, such as acquittal, a finding the substance did not match, or after set time limits following discharge, dismissal, or a stay of proceedings. A provincial court judge may order that destruction be delayed if the substances or results might reasonably be needed for another investigation or prosecution.",
+      relatedSections: ["487.05", "579", "572", "795"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -9998,6 +10153,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.091.html`,
+      summary:
+        "Allows a provincial court judge, on ex parte application, to authorize taking additional bodily substance samples from a person if a DNA profile could not be derived from earlier samples or required information was not properly transmitted or was lost, and requires the application to state the reasons for this. If the person is not in custody, a summons must direct them to report and submit to sample collection, applying related service provisions with necessary modifications.",
+      relatedSections: ["487.051", "487.055", "487.06", "487.07"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10008,6 +10166,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.0911.html`,
+      summary:
+        "Requires the Attorney General, on notice from the RCMP Commissioner that an order or authorization appears defective, to review the order and court record. Depending on the nature of the defect, the Attorney General must apply to correct a clerical error and notify the Commissioner, or inform the Commissioner whether the offence referenced is or is not a designated offence.",
+      relatedSections: ["487.051", "487.091"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10018,6 +10179,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.092.html`,
+      summary:
+        "Allows a justice to issue a warrant authorizing a peace officer to obtain handprints, fingerprints, footprints, or other body impressions from a person, if satisfied there are reasonable grounds an offence was committed, the print will provide relevant information, and issuing the warrant is in the best interests of the administration of justice. Sets conditions requiring the warrant to be reasonable and specifies it can be executed anywhere in Canada by an officer with authority to act there.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10028,6 +10191,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.093.html`,
+      summary:
+        "Requires a person executing certain listed warrants to give a copy of the warrant and a notice with court information to whoever is present and in control of the place searched, to post it at the location if no one is present, or to give it to the person searched. This duty does not apply where the warrant authorizes search of something already lawfully seized and detained.",
+      relatedSections: ["110.1", "117.0101", "117.04", "199", "395", "487"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10038,6 +10204,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.1.html`,
+      summary:
+        "Allows the Attorney General, a peace officer, or a public officer to submit applications for a range of listed warrants, orders, and authorizations by telecommunication, and sets out procedures for oaths, certification by the judicial officer, and the conditions under which a means of telecommunication that does not produce a writing may be used. Defines \"judicial officer\" and \"public officer\" for the section.",
+      relatedSections: ["83.222", "83.223", "110.1", "117.0101", "117.04", "164"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10048,6 +10217,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.11.html`,
+      summary:
+        "Allows a peace officer or authorized public officer to exercise search or seizure powers described in section 487(1) or 492.1(1) without a warrant if the conditions for a warrant exist but exigent circumstances make it impracticable to obtain one.",
+      relatedSections: ["487", "492.1"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10056,8 +10228,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Restriction on publication",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-487.2.html`,
+      summary:
+        "Makes it an offence, punishable on summary conviction, to publish or broadcast the location of a place searched under a section 487 warrant, or the identity of a person who occupies or is suspected of involvement at that place, without their consent, unless a charge has been laid in relation to the warrant.",
+      relatedSections: ["487"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10068,6 +10243,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-487.3.html`,
+      summary:
+        "Allows a justice or judge to order that information relating to a warrant, order, or authorization not be disclosed, where disclosure would subvert the ends of justice or be used improperly and this outweighs the public interest in access. Sets out the grounds for such orders, the procedure for sealing related documents, and how to apply to vary or terminate the order.",
+      relatedSections: ["529", "529.4", "487.013", "487.014", "487.015", "487.016"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10078,6 +10256,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-488.html`,
+      summary:
+        "Requires a search warrant issued under section 487 to be executed during the day, unless the justice is satisfied there are reasonable grounds for night execution, those grounds are included in the information, and the warrant specifically authorizes night execution.",
+      relatedSections: ["487"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10088,6 +10269,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-488.01.html`,
+      summary:
+        "Defines terms used in this section and section 488.02, and requires that applications for certain warrants, authorizations, or orders relating to a journalist's communications or materials be made to a superior court judge with exclusive jurisdiction, who may issue them only if satisfied there is no other reasonable way to get the information and the public interest outweighs the journalist's privacy interest. Sets out special advocate involvement, exceptions where the application concerns an offence by the journalist, permissible conditions, and the process for an officer who discovers mid-execution that a warrant relates to a journalist.",
+      relatedSections: ["487", "487.01", "492.1", "492.2", "184.2", "488.02"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10098,6 +10282,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-488.02.html`,
+      summary:
+        "Requires documents obtained under a warrant, authorization, or order covered by section 488.01 to be sealed and kept by the court, and sets out the process by which a journalist or media outlet can apply to prevent disclosure of a document on the ground it would identify a journalistic source. A judge may examine the document and order it either returned undisclosed or delivered to the officer, depending on whether disclosure is justified.",
+      relatedSections: ["488.01"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10108,6 +10295,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-488.1.html`,
+      summary:
+        "Defines terms used in the section and sets out the procedure when an officer seeks to examine, copy, or seize a document held by a lawyer over which solicitor-client privilege is claimed: the document is sealed and placed with a custodian, and the client, lawyer, or Attorney General may apply to a judge to determine whether it should be disclosed. Describes the judge's process for inspecting the document, hearing representations, and ordering it either returned to the lawyer/client or delivered to the officer, and states the section does not apply to privilege claims under certain other Acts.",
+      relatedSections: ["321"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10118,6 +10308,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-489.html`,
+      summary:
+        "Allows a person executing a warrant, or a peace officer or authorized public officer lawfully present in a place, to seize anything beyond what is listed in the warrant, or without a warrant, if they believe on reasonable grounds it was obtained by, used in, or will provide evidence of an offence.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10128,6 +10320,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-489.1.html`,
+      summary:
+        "Requires a peace officer, or other person, who has seized something under a warrant or during their duties to either return it to the lawful possessor and report to a justice, or bring it before a justice or report the seizure, depending on whether there is a dispute over ownership or a continuing need to detain it. Sets out the required report form and excludes computer data other than virtual currency or other digital assets from the section.",
+      relatedSections: ["487.11", "489", "490", "342.1"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10138,6 +10333,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.html`,
+      summary:
+        "Sets out what a justice does when seized property is brought before them or reported: return it to the known lawful owner unless continued detention is justified for an investigation or proceeding, or otherwise order it detained. Establishes time limits on detention (180 days, then up to one year, and beyond with further orders), the process for further detention applications, disposal of the property (including forfeiture), access to detained items, and the right to appeal detention-related orders.",
+      relatedSections: ["489.1", "552", "673", "812", "678", "813"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10148,6 +10346,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.01.html`,
+      summary:
+        "Allows a person who seized a perishable or rapidly depreciating item to return it to its lawful owner, or, with a justice's authorization on an ex parte application, to dispose of it and give the proceeds to the lawful owner if they were not a party to the offence (or forfeit the proceeds to the Crown if the lawful owner's identity cannot be reasonably ascertained), or to destroy it.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10158,6 +10358,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.011.html`,
+      summary:
+        "Defines terms used in this section and sections 490.012 to 490.07, including \"primary offence\" and \"secondary offence\" by listing specific Criminal Code provisions (current and historical) that qualify, and terms related to sex offender registration such as \"database,\" \"pardon,\" and \"record suspension.\" Clarifies that a young person is not treated as convicted of a designated offence for these purposes unless given an adult sentence or convicted in ordinary court, as applicable.",
+      relatedSections: ["151", "152", "153", "153.1", "155", "160"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10168,6 +10371,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.012.html`,
+      summary:
+        "Requires a court to order a person to comply with the Sex Offender Information Registration Act after sentencing for a designated offence in specified circumstances, including certain indictable offences with a two-year-plus sentence against a victim under 18, prior related convictions or obligations, or other cases unless the person establishes the order would have no connection to preventing sexual crimes or would be grossly disproportionate. Lists factors the court considers and limits orders for secondary offences to cases where intent to commit a primary offence is proven beyond a reasonable doubt.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10178,6 +10383,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.013.html`,
+      summary:
+        "Sets out when an order made under section 490.012 begins and how long it lasts, based on whether the offence was prosecuted summarily, its maximum term of imprisonment, or whether multiple designated offences or prior related convictions or obligations are involved. Certain circumstances make the order apply for life.",
+      relatedSections: ["490.012"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10188,6 +10396,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.0131.html`,
+      summary:
+        "Requires the court to state the designated offence and the term of imprisonment imposed that form the basis of an order made under section 490.012(1), and to give reasons for decisions made under section 490.012(3) or paragraph 490.013(3)(b).",
+      relatedSections: ["490.012", "490.013"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10198,6 +10409,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.0132.html`,
+      summary:
+        "Requires a court that does not deal with the section 490.012 order at the time of sentencing or verdict to set a hearing date within 90 days, retain jurisdiction over the matter, and allows the person to appear by videoconference with an opportunity to consult counsel privately, and permits issuing a summons to compel attendance.",
+      relatedSections: ["490.012"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10208,6 +10422,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.014.html`,
+      summary:
+        "Allows the prosecutor or a person subject to an order made under section 490.012 to appeal a decision made under section 490.012 or 490.013 on a question of law or mixed law and fact, and the appeal court may dismiss the appeal or allow it and order a new hearing, quash or amend the order, or make an order under section 490.012.",
+      relatedSections: ["490.012", "490.013"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10218,6 +10435,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.015.html`,
+      summary:
+        "Sets out when a person subject to an order may apply for a termination order, based on how much time has elapsed since the order was made or upon receiving a pardon, record suspension, or absolute discharge. Describes the scope of such applications, conditions for re-applying after a refusal, and which court has jurisdiction to hear the application.",
+      relatedSections: ["490.013", "490.012", "672.54", "490.019", "490.02901"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10228,6 +10448,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.016.html`,
+      summary:
+        "Requires a court to make a termination order if the person establishes that continuing the order or obligation has no connection to preventing sexual crimes through offender registration or that its impact would be grossly disproportionate to the public interest, and lists factors the court must consider. Requires the court to give reasons and to notify the RCMP Commissioner and the relevant Attorney General or territorial minister of justice of the decision.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10238,6 +10460,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.017.html`,
+      summary:
+        "Allows the prosecutor or the applicant to appeal a decision on a termination order on a question of law or mixed law and fact, and sets out what the appeal court may do. If the appeal court makes such an order, it must ensure the RCMP Commissioner and the relevant Attorney General or minister of justice are notified.",
+      relatedSections: ["490.016"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10248,6 +10473,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.018.html`,
+      summary:
+        "Sets out the notice steps a court must follow when it makes an order under section 490.012, including having the order read to and given to the person, informing them of related provisions, and sending copies to specified officials and institutions. Also addresses endorsement of the order, notice by a Review Board on discharge, and timing of notice before release.",
+      relatedSections: ["490.012", "490.031", "490.0311", "672.54"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10258,6 +10486,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.019.html`,
+      summary:
+        "Requires a person served with a notice in Form 53 to comply with the Sex Offender Information Registration Act for the period set out in section 490.022, unless a court grants an exemption order.",
+      relatedSections: ["490.022", "490.023"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10268,6 +10499,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02.html`,
+      summary:
+        "Sets out who may be served with a notice under this scheme, based on conviction or NCR findings for specified designated offences and status at the time the Sex Offender Information Registration Act came into force, and lists exceptions where a notice cannot be served.",
+      relatedSections: ["490.011", "490.021", "490.012", "748"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10278,6 +10512,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.021.html`,
+      summary:
+        "Sets out the time limits and methods, including personal service and registered mail in specified circumstances, for serving a notice, and how service can be proven by affidavit and reported to the relevant Attorney General or minister of justice.",
+      relatedSections: ["490.02"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10288,6 +10525,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.022.html`,
+      summary:
+        "Sets out when the obligation under section 490.019 begins and ends, including the specific durations (10 years, 20 years, or life) that apply depending on how the underlying offence was prosecuted or its maximum penalty, and rules for multiple offences.",
+      relatedSections: ["490.019", "490.023", "490.02", "490.011"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10298,6 +10538,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.023.html`,
+      summary:
+        "Allows a person to apply for an order exempting them from the registration obligation within one year of being served notice, sets out which court has jurisdiction, and requires the court to grant the exemption if the obligation's impact would be grossly disproportionate to the public interest, with reasons given and database information removed if granted.",
+      relatedSections: ["490.012", "490.021", "490.019"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10308,6 +10551,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.024.html`,
+      summary:
+        "Allows the Attorney General or the applicant to appeal a decision on an exemption order on a question of law or mixed law and fact, and requires removal of database information if the appeal court makes an exemption order.",
+      relatedSections: ["490.023"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10318,6 +10564,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.025.html`,
+      summary:
+        "Requires that if a court refuses to make an exemption order, or an appeal court dismisses the appeal or quashes the order, the RCMP Commissioner and relevant Attorney General or minister of justice be notified, and the applicant be informed of related provisions.",
+      relatedSections: ["490.031", "490.0311"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10328,6 +10577,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.026.html`,
+      summary:
+        "Allows a person subject to the registration obligation to apply for a termination order, sets out the waiting periods before applying based on the offence's prosecution mode or maximum penalty, rules for multiple offences, early eligibility on a pardon, record suspension or absolute discharge, re-application limits, and which court has jurisdiction.",
+      relatedSections: ["490.019", "490.02901", "490.012", "672.54"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10338,6 +10590,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.027.html`,
+      summary:
+        "Requires a court to terminate the registration obligation if satisfied that continuing it has no connection to preventing or investigating sexual offences or would be grossly disproportionate to the public interest, and lists factors the court must consider, plus notice and reasons requirements.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10348,6 +10602,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.028.html`,
+      summary:
+        "Provides that where a person is eligible to apply for both an exemption order and a termination order within the same one-year window, an application for one is deemed to be an application for both.",
+      relatedSections: ["490.023", "490.026", "490.021"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10358,6 +10615,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.029.html`,
+      summary:
+        "Allows the Attorney General or the applicant to appeal a decision on a termination order on a question of law or mixed law and fact, and requires notice to the RCMP Commissioner and relevant Attorney General or minister of justice if the appeal court makes such an order.",
+      relatedSections: ["490.027"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10368,6 +10628,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02901.html`,
+      summary:
+        "Requires a person served with a notice in Form 54 to comply with the Sex Offender Information Registration Act for the period set out in section 490.02904, unless a court makes an exemption order.",
+      relatedSections: ["490.02904", "490.02905"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10378,6 +10641,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02902.html`,
+      summary:
+        "Sets out who may be served with a notice in Form 54, based on arriving in Canada on or after April 15, 2011 and being convicted or found NCR for a foreign offence equivalent to a primary offence, and provides an exception for persons acquitted of the relevant offence.",
+      relatedSections: ["490.011", "490.02903"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10388,6 +10654,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02903.html`,
+      summary:
+        "Requires a notice in Form 54 to be personally served, and sets out how service is proven by affidavit and reported to the relevant Attorney General or minister of justice.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10398,6 +10666,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02904.html`,
+      summary:
+        "Sets out when the obligation under section 490.02901 begins and ends, including durations of 10 years, 20 years, or life depending on the equivalent offence's maximum penalty in Canadian law, and rules for multiple equivalent offences.",
+      relatedSections: ["490.02901"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10408,6 +10679,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02905.html`,
+      summary:
+        "Allows a person served with a Form 54 notice to apply for an exemption order within one year, sets out the grounds on which the court must grant it, factors the court must consider, provisions for correcting the notice instead, and requirements for reasons, database removal, and notification.",
+      relatedSections: ["490.02903", "490.011"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10418,6 +10692,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.029051.html`,
+      summary:
+        "Allows a person subject to a lifetime obligation under Form 54 to apply for a variation order where none of the listed offences have a Canadian equivalent carrying a life sentence, and requires the court to grant the order if satisfied the offences don't show a pattern indicating increased reoffending risk, setting the varied duration and giving reasons.",
+      relatedSections: ["490.02903", "490.02904"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10428,6 +10705,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02906.html`,
+      summary:
+        "Allows the Attorney General or the applicant to appeal a decision on an exemption or variation order under the Form 54 scheme, and requires database removal if the appeal court makes an exemption order.",
+      relatedSections: ["490.02905", "490.029051"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10438,6 +10718,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02907.html`,
+      summary:
+        "Requires notice to the RCMP Commissioner and relevant Attorney General or minister of justice if an appeal court quashes an exemption order or a variation order under the Form 54 scheme; if the exemption order is quashed, the applicant must also be informed of related provisions.",
+      relatedSections: ["490.031", "490.0311"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10448,6 +10731,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02908.html`,
+      summary:
+        "Allows a person subject to the Form 54 obligation to apply for a termination order, sets out waiting periods based on the equivalent offence's maximum penalty, rules for multiple offences, and re-application limits.",
+      relatedSections: ["490.02901", "490.019", "490.012", "490.02903"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10458,6 +10744,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02909.html`,
+      summary:
+        "Requires a court to terminate the Form 54 registration obligation if satisfied that continuing it has no connection to preventing or investigating sexual offences or would be grossly disproportionate to the public interest, listing factors to consider and requiring reasons and notification.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10468,6 +10756,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.0291.html`,
+      summary:
+        "Allows the Attorney General or the applicant to appeal a decision on a termination order under the Form 54 scheme, and requires notification of the RCMP Commissioner and relevant Attorney General or minister of justice if the appeal court makes such an order.",
+      relatedSections: ["490.02909"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10478,6 +10769,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02911.html`,
+      summary:
+        "Requires a person convicted outside Canada of an offence equivalent to a primary offence to advise a police service within seven days of arriving in Canada, providing specified personal and offence details, and to report any later change of address, with the obligation to report address changes ending on service under section 490.02902 or after one year.",
+      relatedSections: ["490.011", "490.02902"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10488,6 +10782,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.029111.html`,
+      summary:
+        "Allows a person subject to an obligation under the International Transfer of Offenders Act to apply for an exemption order within one year of transfer to Canada, requires the court to grant it on specified grounds, lists factors to consider, and requires reasons and database removal if granted.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10498,6 +10794,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.029112.html`,
+      summary:
+        "Allows a person subject to a lifetime obligation under the International Transfer of Offenders Act to apply for a variation order where no listed offence has a Canadian equivalent carrying a life sentence, and requires the court to grant it if satisfied there is no pattern showing increased reoffending risk, setting the varied duration and giving reasons and notification.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10508,6 +10806,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.029113.html`,
+      summary:
+        "Allows the Attorney General or the applicant to appeal a decision on an exemption or variation order made under the International Transfer of Offenders Act provisions, and requires database removal if the appeal court makes an exemption order.",
+      relatedSections: ["490.029111", "490.029112"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10518,6 +10819,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.029114.html`,
+      summary:
+        "Requires notice to the RCMP Commissioner and relevant Attorney General or minister of justice if an appeal court quashes an exemption order or a variation order under the International Transfer of Offenders Act provisions; if the exemption order is quashed, the applicant must also be informed of related provisions.",
+      relatedSections: ["490.031", "490.0311"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10528,6 +10832,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02912.html`,
+      summary:
+        "Allows a person subject to the International Transfer of Offenders Act obligation to apply for a termination order, sets out waiting periods based on the equivalent offence's maximum penalty, rules for multiple offences, early eligibility on absolute discharge, and re-application limits.",
+      relatedSections: ["490.019", "490.02901", "490.012", "672.54"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10538,6 +10845,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02913.html`,
+      summary:
+        "Requires a court to terminate the International Transfer of Offenders Act registration obligation if satisfied that continuing it has no connection to preventing or investigating sexual offences or would be grossly disproportionate to the public interest, listing factors to consider and requiring reasons and notification.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10548,6 +10857,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02914.html`,
+      summary:
+        "Allows the Attorney General or the applicant to appeal a decision on a termination order made under the International Transfer of Offenders Act provisions, and requires notification of the RCMP Commissioner and relevant Attorney General or minister of justice if the appeal court makes such an order.",
+      relatedSections: ["490.02913"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10558,6 +10870,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.02915.html`,
+      summary:
+        "Requires the person in charge of custody to give a person subject to an International Transfer of Offenders Act obligation a copy of the relevant Form 1 no earlier than 10 days before release, and requires a Review Board to provide the form on an absolute discharge or, unless the conditions prevent compliance, a conditional discharge.",
+      relatedSections: ["490.02912", "672.54"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10568,6 +10883,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.03.html`,
+      summary:
+        "Requires the RCMP Commissioner or an authorized person to disclose database information to a prosecutor or Attorney General when necessary for specified proceedings, sets out related disclosure rules, and allows disclosure to the presiding court where relevant.",
+      relatedSections: ["490.012", "490.016", "490.023", "490.027", "490.02905", "490.029051"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10575,9 +10893,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "490.031",
     {
       title: "Offence",
-      severity: "Summary",
-      maxPenalty: "",
+      severity: "Hybrid",
+      maxPenalty: "On indictment: fine of not more than $10,000 or imprisonment for not more than two years, or both. On summary conviction: fine of not more than $10,000 or imprisonment for not more than two years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-490.031.html`,
+      summary:
+        "Makes it an offence to fail, without reasonable excuse, to comply with an order or obligation to register under the Sex Offender Information Registration Act scheme, and sets out fine and imprisonment penalties on indictment or summary conviction, what counts as a reasonable excuse for military personnel, and rules for proving non-compliance by certificate.",
+      relatedSections: ["490.012", "490.019", "490.02901"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10585,9 +10906,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "490.0311",
     {
       title: "Offence",
-      severity: "Summary",
-      maxPenalty: "",
+      severity: "Hybrid",
+      maxPenalty: "On indictment: fine of not more than $10,000 or imprisonment for not more than two years, or both. On summary conviction: fine of not more than $10,000 or imprisonment for not more than two years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-490.0311.html`,
+      summary:
+        "Makes it an offence to knowingly provide false or misleading information when reporting or providing information under the Sex Offender Information Registration Act, punishable by fine, imprisonment, or both on indictment or summary conviction.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10596,8 +10919,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offence",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Punishable on summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-490.0312.html`,
+      summary:
+        "Makes it an offence, without reasonable excuse, to fail to comply with the obligation to advise police of a foreign conviction or address change under subsection 490.02911(1) or (2), punishable on summary conviction.",
+      relatedSections: ["490.02911"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10608,6 +10934,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.03121.html`,
+      summary:
+        "Allows a justice, on reasonable grounds a person has contravened specified reporting provisions of the Sex Offender Information Registration Act, to issue a warrant authorizing a peace officer to arrest the person and bring them to a registration centre, sets conditions on the warrant, allows execution anywhere in Canada, states when it stays in force, and bars laying a charge if the contravention is remedied after the warrant issues.",
+      relatedSections: ["490.031"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10618,6 +10947,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.032.html`,
+      summary:
+        "Allows the Governor in Council to make regulations requiring additional information in a Form 53 or Form 54 notice and prescribing its form and content for one or more provinces.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10628,6 +10959,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.04.html`,
+      summary:
+        "Allows a person to apply for an order exempting them from certain pre-existing orders or obligations, sets out limits on who may apply and when an exemption cannot be granted, the grounds and factors for granting an exemption, and requires reasons and database removal if granted.",
+      relatedSections: ["490.012", "490.02901", "490.02905", "490.029111"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10638,6 +10972,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.05.html`,
+      summary:
+        "Allows a person to apply to vary the duration of a lifetime order or obligation under specified provisions where certain conditions are met, sets limits on applying, requires the court to grant the variation if satisfied the offences don't show a pattern of increased reoffending risk, and sets how the varied duration is determined, with reasons and notification required.",
+      relatedSections: ["490.012", "490.013", "490.019", "490.022", "490.02901", "490.02904"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10648,6 +10985,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.06.html`,
+      summary:
+        "Allows the Attorney General or the applicant to appeal a decision on an exemption or variation order made under sections 490.04 or 490.05, and requires database removal if the appeal court makes an exemption order.",
+      relatedSections: ["490.04", "490.05", "490.012", "490.02901"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -10658,6 +10998,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-490.07.html`,
+      summary:
+        "Requires notice to the RCMP Commissioner and relevant Attorney General or minister of justice if an appeal court quashes an exemption order or a variation order made under sections 490.04 or 490.05; if the exemption order is quashed, the applicant must also be informed of related provisions.",
+      relatedSections: ["490.031", "490.0311"],
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
