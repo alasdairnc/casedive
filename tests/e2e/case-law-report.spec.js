@@ -1,18 +1,9 @@
 import { test, expect } from "@playwright/test";
 import { expandSearchIfCollapsed } from "./helpers/search.js";
+import { analyzeResponse } from "./helpers/analyzeFixture.js";
 
 function makeAnalyzeResponse(requestId = "analysis-1") {
-  return {
-    summary:
-      "A person entered a residential property at night without permission and stole jewelry.",
-    criminal_code: [
-      {
-        citation: "s. 348(1)(b)",
-        title: "Breaking and Entering",
-        summary:
-          "Breaking and entering a place with intent to commit an indictable offence.",
-      },
-    ],
+  return analyzeResponse({
     case_law: [
       {
         citation: "R v Dorfer, 2014 BCCA 449",
@@ -24,11 +15,8 @@ function makeAnalyzeResponse(requestId = "analysis-1") {
           "https://www.canlii.org/en/bc/bcca/doc/2014/2014bcca449/2014bcca449.html",
       },
     ],
-    civil_law: [],
-    charter: [],
     analysis:
       "This scenario involves a classic residential break and enter with theft.",
-    suggestions: [],
     meta: {
       requestId,
       case_law: {
@@ -42,7 +30,7 @@ function makeAnalyzeResponse(requestId = "analysis-1") {
         },
       },
     },
-  };
+  });
 }
 
 const MOCK_VERIFY_RESPONSE = {
