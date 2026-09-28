@@ -6,6 +6,7 @@
 //   { mode: "enrich", batchPaths: ["reports/criminal-code-enrichment/full-batches/batch-01.json", ...] }
 //   { mode: "curated-audit", batchPaths: [...] }
 //   { mode: "curated-rewrite", batchPaths: [...] }
+//   { mode: "penalty-audit", batchPaths: [...] }
 //
 // "enrich" mode is the proven pilot pattern: writer drafts a plain-language
 // summary per section from sourceText only, an independent verifier re-checks
@@ -27,6 +28,19 @@
 // the flagged gap and any other gap it notices; verifier independently
 // re-checks the rewrite against sourceText before it's approved. Apply
 // approved results with: node scripts/mergeCuratedFix.mjs <results.json>
+//
+// "penalty-audit" mode is verifier-only, independent-second-check for sections
+// that already carry a non-empty maxPenalty a prior pass set with no second
+// reviewer (either an untouched pre-enrichment value, or a value the "enrich"
+// verifier wrote itself from sourceText during its own SEVERITY/PENALTY step —
+// in both cases only ONE agent's judgment, never cross-checked). Batch items
+// are shaped {section, title, sourceText, existing: {maxPenalty, severity}}
+// (built by a one-off prep step). Produces {section, issue, finalMaxPenalty,
+// finalSeverity} — issue="" means confirmed accurate; finalMaxPenalty/
+// finalSeverity are only populated when issue is non-empty AND sourceText
+// supports a confident correction. Apply corrections with:
+// node scripts/mergePenaltyFix.mjs <corrections-only.json> (filter results to
+// issue!=="" and finalMaxPenalty!=="" first — see script comments)
 //
 // Batch files for enrich/curated-audit are produced by prepareEnrichmentBatch.mjs.
 // After an enrich/curated-audit run, apply with: node scripts/mergeEnrichmentBatch.mjs <results.json>
@@ -198,6 +212,39 @@ You are the independent verifier. You did NOT write these summaries — your job
 Return one entry per section via the schema, section number exactly as given.`
 }
 
+const PENALTY_AUDIT_SCHEMA = {
+  type: 'object',
+  properties: {
+    results: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          section: { type: 'string' },
+          issue: { type: 'string' },
+          finalMaxPenalty: { type: 'string' },
+          finalSeverity: { type: 'string' },
+        },
+        required: ['section', 'issue', 'finalMaxPenalty', 'finalSeverity'],
+      },
+    },
+  },
+  required: ['results'],
+}
+
+function penaltyAuditPrompt(batchPath) {
+  return `Read the JSON file at ${batchPath}. It is an array of Criminal Code of Canada sections, each shaped {section, title, sourceText, existing: {maxPenalty, severity}}. sourceText is the section's actual current statute text. existing.maxPenalty is a value a PRIOR pass wrote — some were never independently checked, others were set by a single agent's own reading of sourceText with no second reviewer. Your job is that second, independent check.
+
+For EVERY section, checking only against that section's own sourceText:
+
+1. If sourceText contains its own clear punishment clause(s) for this section, verify existing.maxPenalty (and existing.severity — Indictable/Hybrid/Summary) against it: right tier(s), right years, right minimum(s) if any, right severity classification (does sourceText actually offer a summary-conviction option, or is it indictable-only?). If accurate and complete, set issue="".
+2. If existing.maxPenalty is wrong, incomplete (e.g. conflates two different tiers into one, omits a minimum, omits a branch with a different penalty), or overstates/understates something, set issue to a specific one-sentence description of the discrepancy, and — ONLY if sourceText itself clearly supports a specific correct answer — set finalMaxPenalty and finalSeverity to the corrected values. If you can identify the problem but sourceText doesn't let you construct full corrected text with confidence, still describe the issue but leave finalMaxPenalty/finalSeverity as empty strings.
+3. If sourceText has NO punishment clause of its own for this section (the real penalty is stated in a different, cross-referenced section — common in this Code), set issue="unverifiable — sourceText has no penalty clause of its own" and leave finalMaxPenalty/finalSeverity empty. Do not guess whether the existing value happens to be right.
+4. Do not invent anything not traceable to sourceText. Do not use outside legal knowledge beyond what's needed to parse the statute text correctly.
+
+Return one entry per section via the schema, section number exactly as given.`
+}
+
 let verified
 if (MODE === 'curated-audit') {
   verified = await pipeline(
@@ -208,6 +255,14 @@ if (MODE === 'curated-audit') {
       schema: VERIFIER_SCHEMA,
     }),
   )
+} else if (MODE === 'penalty-audit') {
+  verified = await parallel(BATCH_PATHS.map((batchPath, i) => () =>
+    agent(penaltyAuditPrompt(batchPath), {
+      label: `penalty-audit:batch-${i + 1}`,
+      phase: 'Verify',
+      schema: PENALTY_AUDIT_SCHEMA,
+    })
+  ))
 } else if (MODE === 'curated-rewrite') {
   verified = await pipeline(
     BATCH_PATHS,
