@@ -70,9 +70,10 @@ describe("case-law corpus fallback (2026-06 expansion)", () => {
 
   // 2026-09-28: the local issue fallback no longer keeps a weak best-guess
   // when nothing clears the strict/moderate relevance threshold (PR #57
-  // experiment). This scenario's fallback score is too weak to separate it
-  // from irrelevant fallback hits (e.g. R v Stewart for a stolen chair), so
-  // it now correctly returns no case law instead of a low-confidence guess.
+  // experiment). R v Briscoe does fit these facts, but its fallback score
+  // can't be separated from irrelevant fallback hits (e.g. R v Stewart for a
+  // stolen chair), so it is dropped along with them: a known trade-off, not
+  // a relevance judgement. Revisit if the fallback gets a better signal.
   it("returns no case law for a weak-scoring fallback match (R v Briscoe, getaway-driver facts)", async () => {
     const { retrieveVerifiedCaseLaw } = await import(
       "../../api/_caseLawRetrieval.js"
@@ -92,7 +93,7 @@ describe("case-law corpus fallback (2026-06 expansion)", () => {
       landmarkMatches: [],
       maxResults: 3,
     });
-    expect(cases.map((c) => c.citation)).not.toContain("2010 SCC 13");
+    expect(cases).toEqual([]);
   });
 
   it("includes the new verified cases in MASTER_CASE_LAW_DB with their real citations", async () => {
