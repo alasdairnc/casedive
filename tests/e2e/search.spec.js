@@ -1,18 +1,15 @@
 import { test, expect } from "@playwright/test";
+import { analyzeResponse } from "./helpers/analyzeFixture.js";
 
-const MOCK_ANALYZE_RESPONSE = {
-  summary:
-    "A person entered a residential property at night without permission and stole jewelry.",
+const MOCK_ANALYZE_RESPONSE = analyzeResponse({
   criminal_code: [
     {
       citation: "s. 348(1)(b)",
-      title: "Breaking and Entering",
       summary:
         "Breaking and entering a place with intent to commit an indictable offence.",
     },
     {
       citation: "s. 334(b)",
-      title: "Theft Under $5,000",
       summary: "Theft of property valued under $5,000.",
     },
   ],
@@ -27,8 +24,6 @@ const MOCK_ANALYZE_RESPONSE = {
         "Residential break and enter sentencing principles tied to the user scenario.",
     },
   ],
-  civil_law: [],
-  charter: [],
   analysis:
     "This scenario involves a classic residential break and enter with theft.",
   suggestions: [
@@ -39,7 +34,7 @@ const MOCK_ANALYZE_RESPONSE = {
     },
     { type: "canlii", label: "theft under 5000", term: "theft under 5000" },
   ],
-};
+});
 
 const MOCK_VERIFY_RESPONSE = {
   "R v Dorfer, 2014 BCCA 449": {
