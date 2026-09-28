@@ -1,14 +1,19 @@
 /**
  * useCloudSync — wraps useBookmarks + useSearchHistory with cloud persistence.
  *
- * When the user is authenticated (user + token present):
- *  - On login: fetches bookmarks, history, and scenarios from the server and
- *    replaces local state.
- *  - On mutations: updates local state immediately (optimistic), then syncs
- *    the full array to the server in the background.
+ * Guests: the plain local hooks; nothing is sent anywhere.
  *
- * When the user is a guest (user === null):
- *  - Falls back to the underlying localStorage hooks transparently.
+ * Signed in:
+ *  - First the account's copy is fetched and merged with this device's (see
+ *    src/lib/syncMerge.js). Nothing is written before that merge: every write
+ *    to api/user-data.js replaces the whole list, so an early write would
+ *    delete whatever the account had. Removals and clears made while it loads
+ *    are remembered so the merge doesn't undo them. If the fetch fails, it is
+ *    retried on the next change or token refresh, and still nothing is written.
+ *  - After the merge, each change sends the full list, one write at a time.
+ *    A list that matches what the account already has isn't sent.
+ *  - On sign-out this device's copy is cleared, since it lives in the account,
+ *    unless the last save failed; then it is kept so nothing is lost.
  *
  * Returns the same interface as useBookmarks + useSearchHistory combined,
  * so App.jsx can use a single hook for both.
@@ -17,6 +22,15 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useBookmarks } from "./useBookmarks.js";
 import { useSearchHistory } from "./useSearchHistory.js";
+import {
+  ACCOUNT_BOOKMARK_LIMIT,
+  ACCOUNT_HISTORY_LIMIT,
+  GUEST_BOOKMARK_LIMIT,
+  GUEST_HISTORY_LIMIT,
+  mergeBookmarks,
+  mergeHistory,
+  stableStringify,
+} from "../lib/syncMerge.js";
 
 const API_BASE = "/api/user-data";
 
@@ -91,184 +105,243 @@ function historyToRow(entry) {
   };
 }
 
+const TO_ROW = { bookmarks: bookmarkToRow, history: historyToRow };
+
+function rowsKey(type, list) {
+  return stableStringify(list.map(TO_ROW[type]));
+}
+
+// Sync state for one signed-in user (or none). It is replaced, never reset,
+// when the user changes, so work started for an earlier user can tell.
+function syncStateFor(userId) {
+  return {
+    userId,
+    // "idle" → "loading" → "ready", or "failed" if the first fetch failed.
+    phase: "idle",
+    // Citations removed while the account's copy was loading.
+    removed: new Set(),
+    // Lists cleared while it was loading; the account's copy is dropped.
+    cleared: { bookmarks: false, history: false },
+    // What the account holds as far as we know, and the last list queued.
+    saved: { bookmarks: null, history: null },
+    queued: { bookmarks: null, history: null },
+  };
+}
+
 export function useCloudSync(user, token) {
-  const bm = useBookmarks();
-  const sh = useSearchHistory();
+  const userId = user?.id ?? null;
+  const {
+    bookmarks,
+    addBookmark: addLocalBookmark,
+    removeBookmark: removeLocalBookmark,
+    clearBookmarks: clearLocalBookmarks,
+    replaceBookmarks,
+    isBookmarked,
+  } = useBookmarks(userId ? ACCOUNT_BOOKMARK_LIMIT : GUEST_BOOKMARK_LIMIT);
+  const {
+    history,
+    addToHistory: addLocalHistory,
+    clearHistory: clearLocalHistory,
+    replaceHistory,
+    rerunQuery,
+    getHistory,
+  } = useSearchHistory(userId ? ACCOUNT_HISTORY_LIMIT : GUEST_HISTORY_LIMIT);
 
-  // Track whether we've done the initial cloud fetch for this session.
-  const fetchedRef = useRef(false);
+  const syncRef = useRef(syncStateFor(null));
+  const tokenRef = useRef(token);
+  const listsRef = useRef({ bookmarks, history });
+  const writerRef = useRef({ running: false, pending: new Map() });
 
-  // Sync the full bookmarks array to the cloud (best-effort, no throw).
-  const syncBookmarks = useCallback(
-    async (items) => {
-      if (!token) return;
-      try {
-        await apiFetch(token, "POST", "bookmarks", items.map(bookmarkToRow));
-      } catch (err) {
-        console.warn("[useCloudSync] bookmark sync failed:", err.message);
-      }
-    },
-    [token],
-  );
-
-  // Sync the full history array to the cloud (best-effort, no throw).
-  const syncHistory = useCallback(
-    async (items) => {
-      if (!token) return;
-      try {
-        await apiFetch(token, "POST", "history", items.map(historyToRow));
-      } catch (err) {
-        console.warn("[useCloudSync] history sync failed:", err.message);
-      }
-    },
-    [token],
-  );
-
-  // On login: fetch cloud data and replace local state once per session.
+  // Latest values for async work. Declared first so the effects below see
+  // this render's values.
   useEffect(() => {
-    if (!user || !token || fetchedRef.current) return;
-    fetchedRef.current = true;
+    tokenRef.current = token;
+    listsRef.current = { bookmarks, history };
+  });
 
-    (async () => {
-      try {
-        const [bmData, histData] = await Promise.all([
-          apiFetch(token, "GET", "bookmarks"),
-          apiFetch(token, "GET", "history"),
-        ]);
-
-        const cloudBookmarks = (bmData.bookmarks ?? []).map(dbRowToBookmark);
-        const cloudHistory = (histData.history ?? []).map(dbRowToHistory);
-
-        // Replace local state with cloud data (cloud is authoritative on login).
-        if (cloudBookmarks.length > 0) {
-          bm.clearBookmarks();
-          // Re-add in reverse order so newest ends up at front.
-          [...cloudBookmarks].reverse().forEach((b) => {
-            bm.addBookmark(
-              { citation: b.citation, summary: b.summary },
-              b.type,
-              b.verification,
-            );
-          });
+  // Sends queued lists one at a time, only the newest list per type. A write
+  // queued before the user signed out or switched accounts is dropped.
+  const drainWrites = useCallback(async () => {
+    const writer = writerRef.current;
+    if (writer.running) return;
+    writer.running = true;
+    try {
+      while (writer.pending.size > 0) {
+        const [type, job] = writer.pending.entries().next().value;
+        writer.pending.delete(type);
+        if (syncRef.current !== job.sync || job.sync.phase !== "ready") {
+          continue;
         }
-
-        if (cloudHistory.length > 0) {
-          sh.clearHistory();
-          // History hook maintains newest-first; add in reverse (oldest first)
-          // so the final state matches the cloud ordering.
-          [...cloudHistory].reverse().forEach((h) => {
-            sh.addToHistory(h.query, h.filters, {
-              criminal_code: new Array(h.resultCounts?.criminal_code ?? 0),
-              case_law: new Array(h.resultCounts?.case_law ?? 0),
-              civil_law: new Array(h.resultCounts?.civil_law ?? 0),
-              charter: new Array(h.resultCounts?.charter ?? 0),
-            });
-          });
+        try {
+          await apiFetch(tokenRef.current, "POST", type, job.rows);
+          job.sync.saved[type] = job.key;
+        } catch (err) {
+          console.warn(`[useCloudSync] ${type} sync failed:`, err.message);
         }
-      } catch (err) {
-        console.warn("[useCloudSync] initial fetch failed:", err.message);
       }
-    })();
-  }, [user, token]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Reset fetchedRef on sign-out so next login re-fetches.
-  useEffect(() => {
-    if (!user) {
-      fetchedRef.current = false;
+    } finally {
+      writer.running = false;
     }
-  }, [user]);
+  }, []);
 
-  // --- Cloud-aware mutations ---
+  const queueWrite = useCallback(
+    (type, list) => {
+      const sync = syncRef.current;
+      if (sync.phase !== "ready") return;
+      const key = rowsKey(type, list);
+      if (key === sync.queued[type]) return;
+      sync.queued[type] = key;
+      writerRef.current.pending.set(type, {
+        sync,
+        rows: list.map(TO_ROW[type]),
+        key,
+      });
+      drainWrites();
+    },
+    [drainWrites],
+  );
+
+  const loadAccountCopy = useCallback(async () => {
+    const sync = syncRef.current;
+    const authToken = tokenRef.current;
+    if (!sync.userId || !authToken) return;
+    if (sync.phase === "loading" || sync.phase === "ready") return;
+    sync.phase = "loading";
+
+    let cloud;
+    try {
+      const [bmData, histData] = await Promise.all([
+        apiFetch(authToken, "GET", "bookmarks"),
+        apiFetch(authToken, "GET", "history"),
+      ]);
+      cloud = {
+        bookmarks: (bmData.bookmarks ?? []).map(dbRowToBookmark),
+        history: (histData.history ?? []).map(dbRowToHistory),
+      };
+    } catch (err) {
+      if (syncRef.current === sync) sync.phase = "failed";
+      console.warn("[useCloudSync] initial fetch failed:", err.message);
+      return;
+    }
+    // Signed out or switched accounts while this loaded: not ours to merge.
+    if (syncRef.current !== sync) return;
+
+    for (const type of ["bookmarks", "history"]) {
+      sync.saved[type] = rowsKey(type, cloud[type]);
+      sync.queued[type] = sync.saved[type];
+    }
+    // Copied out of the refs so the updaters below stay pure (StrictMode
+    // runs them twice).
+    const removed = new Set(sync.removed);
+    const cloudBookmarks = sync.cleared.bookmarks ? [] : cloud.bookmarks;
+    const cloudHistory = sync.cleared.history ? [] : cloud.history;
+    sync.phase = "ready";
+    // The write effects below send the merged lists if they differ from
+    // what the account has.
+    replaceBookmarks((local) =>
+      mergeBookmarks(local, cloudBookmarks, {
+        limit: ACCOUNT_BOOKMARK_LIMIT,
+        removed,
+      }),
+    );
+    replaceHistory((local) =>
+      mergeHistory(local, cloudHistory, { limit: ACCOUNT_HISTORY_LIMIT }),
+    );
+  }, [replaceBookmarks, replaceHistory]);
+
+  // A different user, or none: leave the old account first, so nothing
+  // after this can be sent to it, then clear what this device held for it.
+  useEffect(() => {
+    const previous = syncRef.current;
+    if (previous.userId === userId) return;
+    const lists = listsRef.current;
+    const everythingSaved =
+      previous.phase === "ready" &&
+      rowsKey("bookmarks", lists.bookmarks) === previous.saved.bookmarks &&
+      rowsKey("history", lists.history) === previous.saved.history;
+
+    syncRef.current = syncStateFor(userId);
+    writerRef.current.pending.clear();
+    if (previous.userId && everythingSaved) {
+      replaceBookmarks(() => []);
+      replaceHistory(() => []);
+    }
+  }, [userId, replaceBookmarks, replaceHistory]);
+
+  // Signed in: fetch and merge the account's copy. A token refresh retries
+  // a failed fetch.
+  useEffect(() => {
+    if (userId && token) loadAccountCopy();
+  }, [userId, token, loadAccountCopy]);
+
+  useEffect(() => {
+    queueWrite("bookmarks", bookmarks);
+  }, [bookmarks, queueWrite]);
+
+  useEffect(() => {
+    queueWrite("history", history);
+  }, [history, queueWrite]);
+
+  const retryIfFailed = useCallback(() => {
+    if (syncRef.current.phase === "failed") loadAccountCopy();
+  }, [loadAccountCopy]);
+
+  // --- Cloud-aware mutations: local first; the effects above send them ---
 
   const addBookmark = useCallback(
     (item, type, verification) => {
-      bm.addBookmark(item, type, verification);
-      if (token) {
-        // Get updated array after React state schedules the update.
-        // We capture current + new entry to avoid stale closure.
-        const id = item.citation || item.section || "";
-        if (!id) return;
-        const newEntry = bookmarkToRow({
-          id,
-          citation: id,
-          summary: item.summary || item.description || "",
-          type,
-          bookmarkedAt: Date.now(),
-          verification: verification || null,
-        });
-        // Sync with current local bookmarks + new entry.
-        // useBookmarks enforces dedup internally; we mirror that here.
-        const existing = bm.bookmarks.filter((b) => b.id !== id);
-        const updated = [{ ...newEntry, id }, ...existing].slice(0, 200);
-        syncBookmarks(updated);
-      }
+      addLocalBookmark(item, type, verification);
+      syncRef.current.removed.delete(item.citation || item.section || "");
+      retryIfFailed();
     },
-    [bm, token, syncBookmarks],
+    [addLocalBookmark, retryIfFailed],
   );
 
   const removeBookmark = useCallback(
     (id) => {
-      bm.removeBookmark(id);
-      if (token) {
-        const updated = bm.bookmarks.filter((b) => b.id !== id);
-        syncBookmarks(updated);
-      }
+      removeLocalBookmark(id);
+      const sync = syncRef.current;
+      if (sync.userId && sync.phase !== "ready") sync.removed.add(id);
+      retryIfFailed();
     },
-    [bm, token, syncBookmarks],
+    [removeLocalBookmark, retryIfFailed],
   );
 
   const clearBookmarks = useCallback(() => {
-    bm.clearBookmarks();
-    if (token) {
-      syncBookmarks([]);
-    }
-  }, [bm, token, syncBookmarks]);
+    clearLocalBookmarks();
+    const sync = syncRef.current;
+    if (sync.userId && sync.phase !== "ready") sync.cleared.bookmarks = true;
+    retryIfFailed();
+  }, [clearLocalBookmarks, retryIfFailed]);
 
   const addToHistory = useCallback(
     (query, filters, result) => {
-      sh.addToHistory(query, filters, result);
-      if (token) {
-        const newEntry = historyToRow({
-          query,
-          filters,
-          resultCounts: {
-            criminal_code: result?.criminal_code?.length ?? 0,
-            case_law: result?.case_law?.length ?? 0,
-            civil_law: result?.civil_law?.length ?? 0,
-            charter: result?.charter?.length ?? 0,
-          },
-          timestamp: Date.now(),
-        });
-        const updated = [newEntry, ...sh.history.map(historyToRow)].slice(
-          0,
-          100,
-        );
-        syncHistory(updated);
-      }
+      addLocalHistory(query, filters, result);
+      retryIfFailed();
     },
-    [sh, token, syncHistory],
+    [addLocalHistory, retryIfFailed],
   );
 
   const clearHistory = useCallback(() => {
-    sh.clearHistory();
-    if (token) {
-      syncHistory([]);
-    }
-  }, [sh, token, syncHistory]);
+    clearLocalHistory();
+    const sync = syncRef.current;
+    if (sync.userId && sync.phase !== "ready") sync.cleared.history = true;
+    retryIfFailed();
+  }, [clearLocalHistory, retryIfFailed]);
 
   return {
     // Bookmarks
-    bookmarks: bm.bookmarks,
+    bookmarks,
     addBookmark,
     removeBookmark,
-    isBookmarked: bm.isBookmarked,
+    isBookmarked,
     clearBookmarks,
 
     // History
-    history: sh.history,
+    history,
     addToHistory,
     clearHistory,
-    rerunQuery: sh.rerunQuery,
-    getHistory: sh.getHistory,
+    rerunQuery,
+    getHistory,
   };
 }
