@@ -695,7 +695,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-48.html`,
       summary:
-        "Sets time limits for starting proceedings for treason involving overthrowing the government, and requires that proceedings for treasonable speech be based on an information laid under oath within six days and an arrest warrant issued within ten days.",
+        "Sets a three-year limitation period for prosecuting the treason offence under paragraph 46(2)(a), and requires that proceedings for treasonable speech be based on a sworn information laid within six days of the words being spoken, with an arrest warrant issued within ten days after that information is laid.",
       relatedSections: ["46", "47"],
       partOf: "Part II — Offences Against Public Order",
     },
@@ -1186,7 +1186,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-82.3.html`,
       summary:
-        "Describes the offence of, with intent to cause death, serious bodily harm, or substantial damage to property or the environment, making, possessing, using, transferring, exporting, importing, altering, or disposing of nuclear or radioactive material or a device, or committing an act against a nuclear facility that seriously interferes with or disrupts its operations.",
+        "Describes the offence of, with intent to cause death, serious bodily harm, or substantial damage to property or the environment, making a device, possessing, using, transferring, exporting, importing, altering, or disposing of nuclear or radioactive material or a device, or committing an act against a nuclear facility, or an act causing serious interference with or serious disruption of its operations.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -1198,7 +1198,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-82.4.html`,
       summary:
-        "Describes the offence of, with intent to compel a person, government, or international organization to act or refrain from acting, using or altering nuclear or radioactive material or a device, or committing an act against a nuclear facility that seriously interferes with or disrupts its operations.",
+        "Describes the offence of, with intent to compel a person, government, or international organization to do or refrain from doing any act, using or altering nuclear or radioactive material or a device, or committing an act against a nuclear facility, or an act causing serious interference with or serious disruption of its operations.",
       partOf: "Part II — Offences Against Public Order",
     },
   ],
@@ -1830,7 +1830,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "Life imprisonment",
       url: `${JUSTICE_LAWS_BASE}/section-83.27.html`,
       summary:
-        "Provides that a person convicted of an indictable offence whose underlying act also constitutes a terrorist activity is liable to life imprisonment (unless a minimum life sentence already applies), but only if the prosecutor gave notice before the plea that this provision would be sought.",
+        "Provides that, despite any other provision of the Act, a conviction for an indictable offence whose underlying act or omission also constitutes a terrorist activity triggers an enhanced sentence (unless a minimum life sentence already applies to the offence), but only if the prosecutor gave notice before the plea that this provision would be sought.",
       partOf: "Part II.1 — Terrorism",
     },
   ],
@@ -1896,7 +1896,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-84.html`,
       summary:
-        "Defines terms used in the Part dealing with firearms and weapons, such as ammunition, antique firearm, authorization, automatic firearm, cartridge magazine, chief firearms officer, cross-bow, and related expressions.",
+        "Defines terms used in the Part dealing with firearms and weapons (e.g. ammunition, antique firearm, authorization, automatic firearm, prohibited/restricted firearm), sets out how barrel length is measured, deems certain weapons (antique firearms, signalling/animal-handling devices, and low-velocity devices) not to be firearms for specified sections, and provides that certain earlier convictions count as prior offences when determining repeat offences under sections 99(2), 100(2), and 103(2).",
       relatedSections: ["91", "95", "99", "103", "107", "117.03"],
       partOf: "Part III — Firearms and Other Weapons",
     },
@@ -2616,7 +2616,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-117.09.html`,
       summary:
-        "Exempts a licensed individual employed by a licensed business from certain firearms and weapons offences — such as possessing, manufacturing, or transferring prohibited items, or altering a firearm for rapid fire or altering its serial number — when acting in the course of their duties in relation to the business's authorized activities, subject to section 117.1.",
+        "Exempts several categories of individuals from certain firearms and weapons offences when acting in the course of their duties: licensed individuals employed by a licensed business handling prohibited firearms, weapons, devices or ammunition; employees of a licensed business who possess or transfer certain unfinished barrelled weapons; employees of licensed carriers; and employees of licensed museums who possess or transfer certain firearms, including under a provincial minister's designation, subject to section 117.1.",
       relatedSections: ["117.1"],
       partOf: "Part III — Firearms and Other Weapons",
     },
@@ -2741,7 +2741,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "5 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-121.html`,
       summary:
-        "Makes it an offence to give, offer, demand, or accept a loan, reward, advantage, or benefit connected to dealings or business with the government, or a claim against Her Majesty, including paying a commission or benefit to a government employee or official in connection with those dealings without the written consent of the head of the relevant branch of government, or that employee or official demanding or accepting such a benefit without that consent.",
+        "Makes it an offence to give, demand, or accept a benefit connected to government business or a claim against Her Majesty, including paying or accepting a commission from a government employee or official without consent, exercising or paying for influence over an appointment to office, and paying or accepting money to withdraw a tender for a government contract; also makes it an offence to make political contributions in order to obtain or retain a government contract.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -2898,7 +2898,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "14 years indictable",
       url: `${JUSTICE_LAWS_BASE}/section-132.html`,
       summary:
-        "States that committing perjury is an indictable offence punishable by imprisonment for up to fourteen years.",
+        "States that committing perjury, as defined in section 131, is an indictable offence.",
       partOf: "Part IV — Offences Against the Administration of Law and Justice",
     },
   ],
@@ -3923,7 +3923,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "Indictable offence; liable (a) for a first offence, imprisonment not more than 2 years; (b) for a second offence, imprisonment not more than 2 years and not less than 14 days; (c) for each subsequent offence, imprisonment not more than 2 years and not less than 3 months.",
       url: `${JUSTICE_LAWS_BASE}/section-202.html`,
       summary:
-        "Makes it an offence to engage in a wide range of activities connected to unlawful betting, book-making and pool-selling — including using premises, equipment, records, information or advertising for these purposes — and sets escalating penalties for first, second and subsequent offences.",
+        "Makes it an offence to engage in a wide range of activities connected to unlawful betting, book-making and pool-selling, including using premises, equipment, records, information or advertising for these purposes.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -3935,7 +3935,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "Indictable offence; liable (d) for a first offence, imprisonment not more than 2 years, (e) for a second offence, imprisonment not more than 2 years and not less than 14 days, (f) for each subsequent offence, imprisonment not more than 2 years and not less than 3 months.",
       url: `${JUSTICE_LAWS_BASE}/section-203.html`,
       summary:
-        "Makes it an offence to place a bet on behalf of another person for consideration, to engage in the business of placing bets for others, or to hold oneself out as doing so, with escalating penalties for repeat offences.",
+        "Makes it an offence to place a bet on behalf of another person for consideration, to engage in the business of placing bets for others, or to hold oneself out as doing so.",
       partOf: "Part VII — Disorderly Houses, Gaming and Betting",
     },
   ],
@@ -7532,7 +7532,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-380.2.html`,
       summary:
-        "Allows a sentencing or discharging court to order a person convicted of certain fraud to be prohibited from seeking or holding employment or volunteer positions involving authority over another person's property, money, or securities, sets out how such an order may be varied, and makes it an offence to breach the order.",
+        "Allows a sentencing or discharging court to order a person convicted of certain fraud to be prohibited from seeking or holding employment or volunteer positions involving authority over another person's real property, money, or valuable security, sets out how such an order may be varied, and makes it an offence to breach the order.",
       relatedSections: ["730", "380"],
       partOf: "Part X — Fraudulent Transactions Relating to Contracts and Trade",
     },
@@ -10897,7 +10897,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "On indictment: fine of not more than $10,000 or imprisonment for not more than two years, or both. On summary conviction: fine of not more than $10,000 or imprisonment for not more than two years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-490.031.html`,
       summary:
-        "Makes it an offence to fail, without reasonable excuse, to comply with an order or obligation to register under the Sex Offender Information Registration Act scheme, and sets out fine and imprisonment penalties on indictment or summary conviction, what counts as a reasonable excuse for military personnel, and rules for proving non-compliance by certificate.",
+        "Makes it an offence to fail, without reasonable excuse, to comply with a registration order or obligation under the Sex Offender Information Registration Act scheme, clarifies that a lawful military command preventing compliance is a reasonable excuse, and sets out rules for proving non-compliance by certificate, including notice and cross-examination rights.",
       relatedSections: ["490.012", "490.019", "490.02901"],
       partOf: "Part XV — Special Procedure and Powers",
     },
@@ -10910,7 +10910,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "On indictment: fine of not more than $10,000 or imprisonment for not more than two years, or both. On summary conviction: fine of not more than $10,000 or imprisonment for not more than two years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-490.0311.html`,
       summary:
-        "Makes it an offence to knowingly provide false or misleading information when reporting or providing information under the Sex Offender Information Registration Act, punishable by fine, imprisonment, or both on indictment or summary conviction.",
+        "Makes it an offence to knowingly provide false or misleading information under subsection 5(1), 6(1), or 6(1.01) of the Sex Offender Information Registration Act.",
       partOf: "Part XV — Special Procedure and Powers",
     },
   ],
@@ -11845,7 +11845,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-517.html`,
       summary:
-        "Allows or, on the accused's application, requires a justice to order that evidence, information, representations, and reasons given during a show-cause hearing not be published or broadcast until a preliminary inquiry accused is discharged or a trial ends; failing to comply without lawful excuse is a summary conviction offence.",
+        "Allows a justice to order, and requires the justice to order on the accused's application, that the evidence, information, representations, and reasons given at a show-cause hearing under section 515 not be published or broadcast until the accused is discharged at a preliminary inquiry or, if tried, until the trial ends.",
       relatedSections: ["515"],
       partOf: "Part XVI — Compelling Appearance of Accused Before a Justice and Interim Release",
     },
@@ -12323,7 +12323,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-539.html`,
       summary:
-        "Allows or requires a justice at a preliminary inquiry to order a publication ban on evidence taken until the accused is discharged or, if ordered to stand trial, until the trial ends, and requires an unrepresented accused be told of the right to apply for such an order; breaching the order is an offence punishable on summary conviction.",
+        "Allows a justice at a preliminary inquiry to order, and requires the justice to order on an accused's application, a ban on publishing the evidence taken at the inquiry until the accused is discharged or, if ordered to stand trial, until the trial ends, and requires an unrepresented accused be told of the right to apply for such an order.",
       partOf: "Part XVIII — Procedure on Preliminary Inquiry",
     },
   ],
@@ -12600,7 +12600,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-553.html`,
       summary:
-        "Gives a provincial court judge (or, in Nunavut, a judge of the Nunavut Court of Justice) absolute jurisdiction, not depending on the accused's consent, to try an accused charged with theft (other than cattle theft), obtaining property by false pretences, possession of property obtained by crime, fraud, or mischief under subsection 430(4) where the value involved does not exceed $5,000, as well as specified gaming, betting, fraud-in-fares, breach of recognizance, and probation-breach offences, and counselling, conspiracy, attempt, or accessory after the fact in relation to those offences.",
+        "Gives a provincial court judge (or, in Nunavut, a judge of the Nunavut Court of Justice) absolute jurisdiction, not depending on the accused's consent, to try an accused charged with theft (other than cattle theft), obtaining property by false pretences, possession of property obtained by crime, fraud, or mischief under subsection 430(4), where in each case the subject matter is not a testamentary instrument and its alleged value does not exceed $5,000, as well as specified gaming, betting, fraud-in-fares, breach of recognizance, and probation-breach offences, and counselling, conspiracy, attempt, or accessory after the fact in relation to those offences.",
       relatedSections: ["201", "202", "203", "206", "209", "393"],
       partOf: "Part XIX — Indictable Offences — Trial Without Jury",
     },
@@ -15576,7 +15576,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-692.html`,
       summary:
-        "Sets out when a person found not criminally responsible on account of mental disorder, or found unfit to stand trial, whose verdict is affirmed by the court of appeal, may appeal to the Supreme Court of Canada.",
+        "Sets out when a person found not criminally responsible on account of mental disorder — either because the court of appeal affirms that finding or because it instead enters a verdict of guilty against them — or a person whose unfit-to-stand-trial finding is affirmed by the court of appeal, may appeal to the Supreme Court of Canada.",
       relatedSections: ["686"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
@@ -18047,7 +18047,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "Imprisonment for a term not exceeding five years",
       url: `${JUSTICE_LAWS_BASE}/section-743.html`,
       summary:
-        "Sets the general liability to imprisonment for an indictable offence for which no punishment is otherwise specified, capping the term at five years.",
+        "Sets the default liability to imprisonment for a person convicted of an indictable offence for which no punishment is otherwise specified in the Act.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
