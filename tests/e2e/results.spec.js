@@ -1,16 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { analyzeResponse } from "./helpers/analyzeFixture.js";
 
-const MOCK_ANALYZE_RESPONSE = {
-  summary:
-    "A person entered a residential property at night without permission and stole jewelry.",
-  criminal_code: [
-    {
-      citation: "s. 348(1)(b)",
-      title: "Breaking and Entering",
-      summary:
-        "Breaking and entering a place with intent to commit an indictable offence.",
-    },
-  ],
+const MOCK_ANALYZE_RESPONSE = analyzeResponse({
   case_law: [
     {
       citation: "R v Briscoe, 2010 SCC 13",
@@ -21,9 +12,6 @@ const MOCK_ANALYZE_RESPONSE = {
         "Wilful blindness can substitute for knowledge as a fault element.",
     },
   ],
-  civil_law: [],
-  charter: [],
-  analysis: "This scenario involves a residential break and enter.",
   suggestions: [
     {
       type: "canlii",
@@ -31,7 +19,7 @@ const MOCK_ANALYZE_RESPONSE = {
       label: "Search CanLII for break and enter",
     },
   ],
-};
+});
 
 const MOCK_VERIFY_RESPONSE = {
   "s. 348(1)(b)": {

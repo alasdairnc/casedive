@@ -668,6 +668,45 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                 >
                   {submitting ? "Please wait…" : copy.submit}
                 </Button>
+
+                {(mode === "signin" ||
+                  mode === "signup" ||
+                  mode === "magic") && (
+                  <p
+                    style={{
+                      margin: "12px 0 0",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      lineHeight: 1.5,
+                      color: t.textTertiary,
+                      textAlign: "center",
+                    }}
+                  >
+                    By continuing, you accept the{" "}
+                    <Button
+                      variant="link"
+                      size="sm"
+                      href="/terms.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: 12 }}
+                    >
+                      Terms
+                    </Button>
+                    . The{" "}
+                    <Button
+                      variant="link"
+                      size="sm"
+                      href="/privacy.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: 12 }}
+                    >
+                      Privacy Policy
+                    </Button>{" "}
+                    explains what your account stores.
+                  </p>
+                )}
               </form>
 
               <div
