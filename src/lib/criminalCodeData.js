@@ -1547,10 +1547,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Using firearm in commission of offence",
       severity: "Indictable",
-      maxPenalty: "14 years; minimum 1 year (1st offence) / 3 years (subsequent); consecutive to other sentence",
+      maxPenalty: "14 years indictable; no mandatory minimum; served consecutively to sentences for an offence arising from the same event or series of events and to any sentence the person is already subject to.",
       url: `${JUSTICE_LAWS_BASE}/section-85.html`,
       definition:
-        "Every person commits an offence who uses a firearm, whether or not the person causes or means to cause bodily harm to any person as a result, while committing or attempting to commit an indictable offence, during flight after committing or attempting to commit an indictable offence, or while attempting to resist or prevent the lawful arrest of the person or another person.",
+        "Every person commits an offence who uses a firearm, whether or not the person causes or means to cause bodily harm to any person as a result, while committing an indictable offence (other than an offence under section 220 (criminal negligence causing death), 236 (manslaughter), 239 (attempted murder), 244 (discharging firearm with intent), 244.2 (discharging firearm — recklessness), 272 (sexual assault with a weapon), 273 (aggravated sexual assault), subsection 279(1) (kidnapping), section 279.1 (hostage taking), 344 (robbery) or 346 (extortion)), while attempting to commit an indictable offence, or during flight after committing or attempting to commit an indictable offence. It is also an offence to use an imitation firearm while committing or attempting to commit any indictable offence, or during flight after doing so, whether or not the person causes or means to cause bodily harm to any person as a result. A sentence imposed for an offence under this section must be served consecutively to any other sentence arising from the same event or series of events and to any sentence the person is already subject to.",
       relatedSections: ["86", "87", "88", "91", "92", "95"],
       defences: ["no knowledge item was a firearm"],
       topicsTagged: ["firearm", "weapon", "indictable offence"],
@@ -1562,10 +1562,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Careless use of firearm, etc.",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable; minimum 1 year (indictable) if criminal org. / 2 years less a day summary",
+      maxPenalty: "Indictable: 2 years (first offence) or 5 years (second or subsequent offence), with no minimum stated; summary conviction also available.",
       url: `${JUSTICE_LAWS_BASE}/section-86.html`,
       definition:
-        "Every person commits an offence who, without lawful excuse, uses, carries, handles, ships, transports or stores a firearm, a prohibited weapon, a restricted weapon, a prohibited device or any ammunition or prohibited ammunition in a careless manner or without reasonable precautions for the safety of other persons.",
+        "Every person commits an offence who, without lawful excuse, uses, carries, handles, ships, transports or stores a firearm, a prohibited weapon, a restricted weapon, a prohibited device or any ammunition or prohibited ammunition in a careless manner or without reasonable precautions for the safety of other persons. It is also an offence to contravene a regulation made under paragraph 117(h) of the Firearms Act respecting the storage, handling, transportation, shipping, display, advertising and mail-order sales of firearms and restricted weapons.",
       relatedSections: ["85", "87", "88"],
       defences: ["lawful excuse", "reasonable precautions taken"],
       topicsTagged: ["firearm", "careless use", "safety"],
@@ -1642,10 +1642,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of firearm knowing its possession is unauthorized",
       severity: "Indictable",
-      maxPenalty: "10 years; minimum 1 year (1st offence) / 3 years (subsequent)",
+      maxPenalty: "10 years indictable; no mandatory minimum.",
       url: `${JUSTICE_LAWS_BASE}/section-92.html`,
       definition:
-        "Every person commits an offence who possesses a prohibited firearm, a restricted firearm or a non-restricted firearm knowing that the person is not the holder of a licence under which the person may possess it and, in the case of a prohibited firearm or a restricted firearm, a registration certificate for it.",
+        "Subject to the exceptions in subsection (4), every person commits an offence who possesses a prohibited firearm, a restricted firearm or a non-restricted firearm knowing that they are not the holder of a licence under which they may possess it and, in the case of a prohibited firearm or a restricted firearm, a registration certificate for it. It is also an offence, subject to the same exceptions, to possess a prohibited weapon, a restricted weapon, a prohibited device (other than a replica firearm) or any prohibited ammunition knowing that the person is not the holder of a licence under which they may possess it.",
       relatedSections: ["91", "95", "86"],
       defences: ["honest belief in lawful possession"],
       topicsTagged: ["firearm", "knowing possession", "unauthorized"],
@@ -1677,10 +1677,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of prohibited or restricted firearm with ammunition",
       severity: "Hybrid",
-      maxPenalty: "14 years indictable; minimum 3 years (1st offence) / 5 years (subsequent)",
+      maxPenalty: "14 years indictable; summary conviction also available; no mandatory minimum.",
       url: `${JUSTICE_LAWS_BASE}/section-95.html`,
       definition:
-        "Subject to subsection (3), every person commits an offence who, without being the holder of an authorization or a licence under which the person may possess it and a registration certificate for it, possesses a loaded prohibited firearm or restricted firearm, or an unloaded prohibited firearm or restricted firearm together with readily accessible ammunition that is capable of being discharged from it.",
+        "Subject to subsection (3), every person commits an offence who, in any place, possesses a loaded prohibited firearm or restricted firearm, or an unloaded prohibited firearm or restricted firearm together with readily accessible ammunition that is capable of being discharged in the firearm, without being the holder of an authorization or a licence under which the person may possess the firearm in that place and the registration certificate for the firearm.",
       relatedSections: ["91", "92", "86", "85"],
       defences: ["valid authorization and registration"],
       topicsTagged: ["firearm", "prohibited", "restricted", "loaded"],
@@ -1732,10 +1732,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession for purpose of weapons trafficking",
       severity: "Indictable",
-      maxPenalty: "14 years; minimum 1 year (1st offence) / 3 years (subsequent)",
+      maxPenalty: "14 years indictable (3-year minimum for a first offence / 5-year minimum for a subsequent offence when the object is a prohibited firearm, restricted firearm, non-restricted firearm, prohibited device, firearm part, ammunition or prohibited ammunition; no minimum in any other case).",
       url: `${JUSTICE_LAWS_BASE}/section-100.html`,
       definition:
-        "Every person commits an offence who possesses any firearm, cross-bow, prohibited weapon, restricted weapon, prohibited device, ammunition, prohibited ammunition or explosive substance for the purpose of transferring it to any person, whether or not such person is in Canada, without being authorized to transfer it under the Firearms Act, any other Act of Parliament or any regulations made under any Act of Parliament.",
+        "Every person commits an offence who possesses a prohibited firearm, a restricted firearm, a non-restricted firearm, a prohibited weapon, a restricted weapon, a prohibited device, a firearm part, any ammunition or any prohibited ammunition for the purpose of transferring it, whether or not for consideration, or offering to transfer it, knowing that the person is not authorized to transfer it under the Firearms Act or any other Act of Parliament or any regulations made under any Act of Parliament.",
       relatedSections: ["91", "92", "95", "101"],
       defences: ["authorized transfer under Firearms Act"],
       topicsTagged: ["weapons trafficking", "firearm", "transfer"],
@@ -1747,10 +1747,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Transfer without authority",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable / 2 years less a day summary",
+      maxPenalty: "5 years indictable; summary conviction also available.",
       url: `${JUSTICE_LAWS_BASE}/section-101.html`,
       definition:
-        "Every person commits an offence who transfers any firearm, cross-bow, prohibited weapon, restricted weapon, prohibited device, ammunition or prohibited ammunition to any person otherwise than under the authority of and in accordance with the Firearms Act or any other Act of Parliament or any regulations made under any Act of Parliament.",
+        "Every person commits an offence who transfers a prohibited firearm, a restricted firearm, a non-restricted firearm, a prohibited weapon, a restricted weapon, a prohibited device, a firearm part, any ammunition or any prohibited ammunition to any person otherwise than under the authority of the Firearms Act or any other Act of Parliament or any regulations made under an Act of Parliament.",
       relatedSections: ["100", "91", "92"],
       defences: ["authorized transfer under Firearms Act"],
       topicsTagged: ["weapons", "transfer", "unauthorized"],
@@ -1762,10 +1762,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Making automatic firearm",
       severity: "Hybrid",
-      maxPenalty: "10 years indictable / 2 years less a day summary",
+      maxPenalty: "10 years indictable with a 1-year mandatory minimum; summary conviction also available.",
       url: `${JUSTICE_LAWS_BASE}/section-102.html`,
       definition:
-        "Every person commits an offence who, without lawful excuse, alters a firearm so that it is capable of, or manufactures a firearm that is capable of, discharging projectiles in rapid succession during one pressure of the trigger.",
+        "Every person commits an offence who, without lawful excuse, alters a firearm so that it is capable of, or manufactures or assembles any firearm that is capable of, discharging projectiles in rapid succession during one pressure of the trigger.",
       relatedSections: ["84", "91", "95"],
       defences: ["lawful excuse (e.g., licensed manufacturer)"],
       topicsTagged: ["automatic firearm", "prohibited", "manufacturing"],
@@ -2566,10 +2566,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Invitation to sexual touching or exposure",
       severity: "Hybrid",
-      maxPenalty: "14 years indictable; mandatory minimum 1 year (indictable) / 90 days (summary)",
+      maxPenalty: "14 years indictable, minimum 1 year; 2 years less a day summary, minimum 90 days.",
       url: `${JUSTICE_LAWS_BASE}/section-152.html`,
       definition:
-        "Every person who, for a sexual purpose, invites, counsels or incites a person under the age of 16 years to touch, directly or indirectly, with a part of the body or with an object, the body of any person, including the body of the person who so invites, counsels or incites and the body of the person under the age of 16 years, is guilty of an offence.",
+        "Every person commits an offence who, for a sexual purpose, invites, counsels or incites a person under the age of 16 years to touch, directly or indirectly, with a part of the body or with an object, their own body, the body of the person who so invites, counsels or incites, or the body of any other person, or to expose their own sexual organs.",
       relatedSections: ["151", "153", "271"],
       defences: ["mistaken belief in age (s. 150.1)"],
       topicsTagged: ["sexual offence", "child", "minor"],
@@ -2581,10 +2581,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sexual exploitation",
       severity: "Hybrid",
-      maxPenalty: "14 years indictable; mandatory minimum 1 year (indictable) / 90 days (summary)",
+      maxPenalty: "14 years indictable, minimum 1 year; 2 years less a day summary, minimum 90 days.",
       url: `${JUSTICE_LAWS_BASE}/section-153.html`,
       definition:
-        "Every person commits an offence who is in a position of trust or authority towards a young person, who is a person with whom the young person is in a relationship of dependency or who is in a relationship with a young person that is exploitative of the young person, and who for a sexual purpose touches, directly or indirectly, with a part of the body or with an object, any part of the body of the young person, or invites, counsels or incites the young person to touch, directly or indirectly, with a part of the body or with an object, the body of any person.",
+        "Every person commits an offence who is in a position of trust or authority towards a young person, who is a person with whom the young person is in a relationship of dependency, or who is in a relationship with the young person that is exploitative of the young person, and who, for a sexual purpose, touches, directly or indirectly, with a part of the body or with an object, any part of the body of the young person; invites, counsels or incites the young person to touch, directly or indirectly, with a part of the body or with an object, their own body, the body of the person who so invites, counsels or incites, or the body of any other person; or invites, counsels or incites the young person to expose their own sexual organs. A judge may infer that a relationship is exploitative from factors including the young person's age, the age difference between the parties, how the relationship developed, and the degree of control or influence the person has over the young person. For the purposes of this section, a young person is a person 16 years of age or more but under the age of eighteen years.",
       relatedSections: ["151", "152", "153.1"],
       defences: [],
       topicsTagged: ["sexual offence", "exploitation", "trust", "young person"],
@@ -3882,7 +3882,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "See s. 266-268",
       url: `${JUSTICE_LAWS_BASE}/section-265.html`,
       definition:
-        "A person commits an assault when (a) without the consent of another person, he applies force intentionally to that other person, directly or indirectly; (b) he attempts or threatens, by an act or a gesture, to apply force to another person, if he has, or causes that other person to believe on reasonable grounds that he has, present ability to effect his purpose; or (c) while openly wearing or carrying a weapon or an imitation thereof, he accosts or impedes another person or begs.",
+        "A person commits an assault when, without the other person's consent, they intentionally apply force to that person directly or indirectly; attempt or threaten, by an act or gesture, to apply force to another person while having, or causing that person to reasonably believe they have, the present ability to do so; or, while openly carrying a weapon or an imitation of one, accost or impede another person or beg. This section applies to all forms of assault, including sexual assault and its aggravated forms. No consent is obtained where the complainant submits or fails to resist because of force or threats of force against them or another person, fraud, or the exercise of authority. Where an accused claims an honest belief that the complainant consented, a judge satisfied there is sufficient evidence to support that defence must instruct the jury to consider whether there were reasonable grounds for that belief.",
       relatedSections: ["266", "267", "268", "269"],
       defences: ["consent (s. 265(3))", "self-defence (s. 34)"],
       topicsTagged: ["violence", "person", "force", "consent"],
@@ -3909,11 +3909,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Assault with a weapon or causing bodily harm",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable; summary conviction also available.",
       url: `${JUSTICE_LAWS_BASE}/section-267.html`,
       definition:
-        "Every one who, in committing an assault, (a) carries, uses or threatens to use a weapon or an imitation thereof, or (b) causes bodily harm to the complainant, is guilty of an indictable offence and liable to imprisonment for a term not exceeding ten years or an offence punishable on summary conviction.",
-      relatedSections: ["265", "266", "268", "2"],
+        "Every person is guilty of an indictable offence and liable to imprisonment for a term of not more than 10 years, or is guilty of an offence punishable on summary conviction, who, in committing an assault, carries, uses or threatens to use a weapon or an imitation of a weapon, causes bodily harm to the complainant, or chokes, suffocates or strangles the complainant.",
+      relatedSections: ["265", "266", "268"],
       defences: ["consent", "self-defence (s. 34)"],
       topicsTagged: ["violence", "weapon", "bodily harm"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
@@ -3927,10 +3927,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "14 years",
       url: `${JUSTICE_LAWS_BASE}/section-268.html`,
       definition:
-        "Every one commits an aggravated assault who wounds, maims, disfigures or endangers the life of the complainant.",
+        "Every one commits an aggravated assault who wounds, maims, disfigures or endangers the life of the complainant. For this section and section 265, 'wounds' or 'maims' includes excising, infibulating or mutilating, in whole or in part, a person's labia majora, labia minora or clitoris, except where a person duly qualified to practise medicine performs a surgical procedure for the person's physical health or normal reproductive or sexual function, or where the person is at least 18 years old and no bodily harm results. No consent to such excision, infibulation or mutilation is valid outside those two exceptions.",
       relatedSections: ["265", "267", "269"],
       defences: ["self-defence (s. 34)"],
-      topicsTagged: ["violence", "serious injury", "wounding"],
+      topicsTagged: ["violence", "serious injury", "wounding", "female genital mutilation"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -4032,7 +4032,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "10 years indictable / 2 years less a day summary (general); if complainant under 16: 14 years indictable minimum 1 year / 2 years less a day summary minimum 6 months",
       url: `${JUSTICE_LAWS_BASE}/section-271.html`,
       definition:
-        "Every one who commits a sexual assault is guilty of (a) an indictable offence and is liable to imprisonment for a term not exceeding fourteen years and to a minimum punishment of imprisonment for a term of one year; or (b) an offence punishable on summary conviction and is liable to imprisonment for a term not exceeding two years less a day and to a minimum punishment of imprisonment for a term of six months.",
+        "Every person who commits a sexual assault is guilty of an indictable offence and liable to imprisonment for a term of not more than 10 years, or, if the complainant is under the age of 16 years, to imprisonment for a term of not more than 14 years and to a minimum punishment of imprisonment for a term of one year; or is guilty of an offence punishable on summary conviction and liable to imprisonment for a term of not more than two years less a day, or, if the complainant is under the age of 16 years, to imprisonment for a term of not more than two years less a day and to a minimum punishment of imprisonment for a term of six months.",
       relatedSections: ["265", "272", "273", "273.1"],
       defences: ["consent (s. 273.1)", "mistaken belief in consent (s. 273.2)"],
       topicsTagged: ["sexual offence", "assault", "consent"],
@@ -4044,10 +4044,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Sexual assault with a weapon, threats to a third party or causing bodily harm",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment; minimum 4 years",
+      maxPenalty: "14 years indictable generally (no minimum), rising to a 4-year minimum if any firearm is used, a 5-year minimum (7 years for a subsequent offence) if a restricted or prohibited firearm is used, or if any firearm is used for the benefit of, at the direction of, or in association with a criminal organization, and to life imprisonment with a 5-year minimum if the complainant is under 16.",
       url: `${JUSTICE_LAWS_BASE}/section-272.html`,
       definition:
-        "Every person commits an offence who, in committing a sexual assault, carries, uses or threatens to use a weapon or an imitation of a weapon, threatens to cause bodily harm to a person other than the complainant, causes bodily harm to the complainant, or is a party to the offence with any other person.",
+        "Every person commits an offence who, in committing a sexual assault, carries, uses or threatens to use a weapon or an imitation of a weapon; threatens to cause bodily harm to a person other than the complainant; causes bodily harm to the complainant; chokes, suffocates or strangles the complainant; or is a party to the offence with any other person.",
       relatedSections: ["271", "273", "265"],
       defences: ["consent (s. 273.1)", "mistaken belief in consent (s. 273.2)"],
       topicsTagged: ["sexual offence", "weapon", "bodily harm"],
@@ -4059,10 +4059,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Aggravated sexual assault",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment; minimum 4 years",
+      maxPenalty: "Life imprisonment; no minimum in the general case, rising to a 4-year minimum if any firearm is used, a 5-year minimum (7 years for a subsequent offence) if a restricted or prohibited firearm is used, or if any firearm is used for the benefit of, at the direction of, or in association with a criminal organization, and a 5-year minimum if the complainant is under 16.",
       url: `${JUSTICE_LAWS_BASE}/section-273.html`,
       definition:
-        "Every one commits an aggravated sexual assault who, in committing a sexual assault, wounds, maims, disfigures or endangers the life of the complainant.",
+        "Every person commits an aggravated sexual assault who, in committing a sexual assault, wounds, maims, disfigures or endangers the life of the complainant.",
       relatedSections: ["271", "272", "268"],
       defences: [],
       topicsTagged: ["sexual offence", "aggravated", "serious injury"],
@@ -4584,10 +4584,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Kidnapping",
       severity: "Hybrid",
-      maxPenalty: "Life imprisonment; minimum 4 years (with firearm / criminal org.)",
+      maxPenalty: "Life imprisonment for kidnapping. Mandatory minimum of 5 years (7 years for a second or subsequent offence) if a restricted or prohibited firearm is used, or any firearm is used for the benefit of, at the direction of, or in association with a criminal organization; 4 years if any other firearm is used; 5 years if the victim is under 16, unless the offender is the victim's parent, guardian, or a person having lawful care or charge of the victim (in which case this 5-year minimum does not apply); otherwise life imprisonment with no minimum. Forcible confinement under subsection (2) is separately punishable by up to 10 years' imprisonment on indictment, or by summary conviction.",
       url: `${JUSTICE_LAWS_BASE}/section-279.html`,
       definition:
-        "Every one who kidnaps a person with intent to cause the person to be confined or imprisoned against the person's will, to cause the person to be unlawfully sent or transported out of Canada against the person's will, or to hold the person for ransom or to service against the person's will is guilty of an indictable offence.",
+        "Every person commits an offence who kidnaps a person with intent to cause the person to be confined or imprisoned against the person's will, to cause the person to be unlawfully sent or transported out of Canada against the person's will, or to hold the person for ransom or to service against the person's will; the offence is indictable and liable to imprisonment for life, subject to mandatory minimum sentences that vary depending on firearm use and the age of the victim. Every person who, without lawful authority, confines, imprisons or forcibly seizes another person is separately guilty of an indictable offence and liable to imprisonment for a term not exceeding ten years, or of an offence punishable on summary conviction.",
       relatedSections: ["279.01", "279.011", "280", "281"],
       defences: ["consent"],
       topicsTagged: ["kidnapping", "confinement", "liberty"],
@@ -5191,11 +5191,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Operation while impaired",
       severity: "Hybrid",
-      maxPenalty: "2 years less a day (no bodily harm) / 10 years (bodily harm) / life (death); mandatory minimum $1,000",
+      maxPenalty: "10 years indictable or summary conviction (up to $5,000 fine or 2 years less a day, or both), with a minimum fine of $1,000 for a first offence, imprisonment for 30 days for a second, and 120 days for each subsequent (higher first-offence minimum fines of $1,500-$2,000 apply at high blood alcohol concentrations); 14 years indictable/summary with the same minimums if bodily harm results; life imprisonment with the same minimums if death results; the standalone low-blood-drug-concentration offence is summary conviction only, maximum $1,000 fine (s. 320.19, 320.2, 320.21).",
       url: `${JUSTICE_LAWS_BASE}/section-320.14.html`,
       definition:
-        "Everyone commits an offence who operates a conveyance while the person's ability to operate it is impaired to any degree by alcohol or a drug or by a combination of alcohol and a drug; has, within two hours after ceasing to operate a conveyance, a blood alcohol concentration that is equal to or exceeds 80 mg of alcohol in 100 mL of blood; or has, within two hours after ceasing to operate a conveyance, a blood drug concentration that is equal to or exceeds the blood drug concentration for the drug that is prescribed by regulation.",
-      relatedSections: ["320.15", "320.16", "320.17", "320.13"],
+        "Everyone commits an offence who operates a conveyance while their ability to operate it is impaired to any degree by alcohol, a drug, or a combination of the two; who has, within two hours after ceasing to operate, a blood alcohol concentration at or above 80 mg of alcohol per 100 mL of blood; who has, within that period, a blood drug concentration at or above the level prescribed by regulation for that drug; or who has, within that period, a blood alcohol concentration and a blood drug concentration that each meet or exceed the levels prescribed by regulation for that combination of alcohol and drug. A person who commits any of these offences and, while operating the conveyance, causes bodily harm to, or the death of, another person commits a separate offence. It is also an offence to have, within two hours after ceasing to operate a conveyance, a blood drug concentration that meets or exceeds the regulated level but is below the level required for the paragraph (1)(c) offence. No offence is committed under the blood-alcohol, blood-drug, or combined-concentration provisions where the alcohol or drug was consumed after the person stopped operating the conveyance, the person had no reasonable expectation at that time of being required to provide a bodily sample, and, for the alcohol-based provisions, their consumption is consistent with having had a blood alcohol concentration below the relevant threshold while actually operating the conveyance.",
+      relatedSections: ["320.15", "320.16", "320.17", "320.19"],
       defences: ["bolus drinking defence (limited)", "consumption after driving"],
       topicsTagged: ["impaired driving", "alcohol", "drug", "BAC"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
@@ -5206,11 +5206,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Failure or refusal to comply with demand",
       severity: "Hybrid",
-      maxPenalty: "2 years less a day; mandatory minimum $2,000",
+      maxPenalty:
+        "10 years indictable or summary conviction (up to $5,000 fine or 2 years less a day, or both), with a minimum fine of $2,000 for a first offence, imprisonment for 30 days for a second, and 120 days for each subsequent; 14 years indictable/summary with the same minimums if bodily harm results; life imprisonment with the same minimums if death results (s. 320.19(1), (4), 320.2, 320.21).",
       url: `${JUSTICE_LAWS_BASE}/section-320.15.html`,
       definition:
-        "Everyone commits an offence who, without reasonable excuse, fails or refuses to comply with a demand made under sections 320.27 or 320.28 (breath/blood demands).",
-      relatedSections: ["320.14", "320.27", "320.28"],
+        "Everyone commits an offence who, knowing that a demand has been made, fails or refuses to comply, without reasonable excuse, with a demand made under section 320.27 or 320.28. A person who commits this offence and, at the time, knows or is reckless as to whether they were involved in an accident causing bodily harm to another person commits a separate, more serious offence, as does a person who knows or is reckless as to whether the accident caused death or caused bodily harm from which death results. A person cannot be convicted of more than one offence under this section arising from the same transaction.",
+      relatedSections: ["320.14", "320.16", "320.19", "320.27", "320.28"],
       defences: ["reasonable excuse (e.g., medical condition)", "incapability of providing sample"],
       topicsTagged: ["breathalyzer", "refusal", "demand"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
@@ -5221,11 +5222,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Failure to stop after accident",
       severity: "Hybrid",
-      maxPenalty: "10 years (bodily harm) / life (death) / 2 years less a day (property damage)",
+      maxPenalty: "10 years indictable or summary conviction for the base offence; 14 years indictable/summary with escalating minimums ($1,000 fine first offence, 30 days second, 120 days subsequent) if the accident caused bodily harm; life imprisonment with the same escalating minimums if the accident caused death (s. 320.19(5), 320.2, 320.21).",
       url: `${JUSTICE_LAWS_BASE}/section-320.16.html`,
       definition:
-        "Everyone commits an offence who operates a conveyance and who at the time of, or after, the accident, with intent to escape civil or criminal liability fails to stop the conveyance, give their name and address and, if any person has been injured or appears to require assistance, offer assistance.",
-      relatedSections: ["320.14", "320.17"],
+        "Everyone commits an offence who operates a conveyance and, at the time of operating it, knows that, or is reckless as to whether, the conveyance has been involved in an accident with a person or another conveyance, and who fails, without reasonable excuse, to stop the conveyance, give their name and address, and, if any person has been injured or appears to require assistance, offer assistance. A person who commits this offence while knowing, or being reckless as to whether, the accident resulted in bodily harm to another person commits a separate offence, as does a person who commits it while knowing, or being reckless as to whether, the accident resulted in the death of another person or in bodily harm to another person whose death ensues.",
+      relatedSections: ["320.14", "320.17", "320.19"],
       defences: ["did not know accident occurred", "fear for personal safety"],
       topicsTagged: ["hit and run", "accident", "failure to stop"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
@@ -5236,11 +5237,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Flight from peace officer",
       severity: "Hybrid",
-      maxPenalty: "14 years (bodily harm) / life (death) / 5 years (no bodily harm)",
+      maxPenalty: "10 years indictable, or summary conviction (s. 320.19(5)).",
       url: `${JUSTICE_LAWS_BASE}/section-320.17.html`,
       definition:
-        "Everyone commits an offence who operates a conveyance while being pursued by a peace officer and who fails, without reasonable excuse, to stop the conveyance as soon as is reasonable in the circumstances.",
-      relatedSections: ["320.14", "320.16"],
+        "Everyone commits an offence who operates a motor vehicle or vessel while being pursued by a peace officer and fails, without reasonable excuse, to stop the motor vehicle or vessel as soon as is reasonable in the circumstances.",
+      relatedSections: ["320.14", "320.16", "320.19"],
       defences: ["reasonable excuse for not stopping (e.g., unsafe location)"],
       topicsTagged: ["flight", "police pursuit", "conveyance"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
@@ -5496,7 +5497,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       maxPenalty: "See s. 334",
       url: `${JUSTICE_LAWS_BASE}/section-322.html`,
       definition:
-        "Every one commits theft who fraudulently and without colour of right takes, or fraudulently and without colour of right converts to his use or to the use of another person, anything, whether animate or inanimate, with intent to deprive, temporarily or absolutely, the owner of it, or a person who has a special property or interest in it, of the thing or of his property or interest in it.",
+        "Every one commits theft who, fraudulently and without colour of right, takes or converts to their own or another's use anything, whether animate or inanimate, intending to deprive the owner or a person with a special property or interest in it of the thing (temporarily or absolutely), to pledge or deposit it as security, to part with it under a condition they may be unable to perform, or to deal with it so that it cannot be restored in its original condition. Theft is complete once, with intent to steal, the thing is moved or begins to be made movable, and a taking or conversion may be fraudulent even without secrecy or concealment.",
       relatedSections: ["334", "343", "354", "380"],
       defences: ["colour of right", "claim of right"],
       topicsTagged: ["theft", "property", "fraud"],
@@ -5638,10 +5639,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment for theft",
       severity: "Hybrid",
-      maxPenalty: "10 years (over $5,000 indictable) / 2 years less a day (under $5,000 summary)",
+      maxPenalty: "10 years indictable, or summary conviction available, if the stolen property is a testamentary instrument or worth more than $5,000; 2 years indictable, or summary conviction available, if $5,000 or less.",
       url: `${JUSTICE_LAWS_BASE}/section-334.html`,
       definition:
-        "Except where otherwise provided by law, every one who commits theft is guilty of (a) an indictable offence and liable to imprisonment for a term not exceeding ten years, where the property stolen is a testamentary instrument or the value of what is stolen exceeds five thousand dollars; or (b) an offence punishable on summary conviction, where the value of what is stolen does not exceed five thousand dollars.",
+        "Except where otherwise provided by law, every one who commits theft is guilty, where the property stolen is a testamentary instrument or the value of what is stolen is more than $5,000, of an indictable offence liable to imprisonment for a term not exceeding ten years, or of an offence punishable on summary conviction; and, where the value of what is stolen is not more than $5,000, is guilty of an indictable offence liable to imprisonment for a term not exceeding two years, or of an offence punishable on summary conviction.",
       relatedSections: ["322", "343", "354"],
       defences: ["colour of right", "claim of right"],
       topicsTagged: ["theft", "sentencing", "property value"],
@@ -5778,10 +5779,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Robbery",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment; minimum 4 years (firearm) or 5 years (restricted/prohibited firearm)",
+      maxPenalty: "Life imprisonment. Mandatory minimum of 5 years for a first offence or 7 years for a second or subsequent offence if a restricted or prohibited firearm is used, or any firearm is used for the benefit of, at the direction of, or in association with a criminal organization; no minimum in any other case.",
       url: `${JUSTICE_LAWS_BASE}/section-344.html`,
       definition:
-        "Every person who commits robbery is guilty of an indictable offence and liable to imprisonment for life and to a minimum punishment of imprisonment for a term of four years if a restricted firearm or prohibited firearm is used in the commission of the offence.",
+        "Every person who commits robbery is guilty of an indictable offence and liable to imprisonment for life. Where a restricted or prohibited firearm is used in the commission of the offence, or where any firearm is used for the benefit of, at the direction of, or in association with a criminal organization, the person is liable to a minimum punishment of five years' imprisonment for a first offence or seven years' imprisonment for a second or subsequent offence; in any other case, no minimum punishment applies.",
       relatedSections: ["343", "85", "95"],
       defences: [],
       topicsTagged: ["robbery", "sentencing", "firearm"],
@@ -5853,10 +5854,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Breaking and entering with intent, committing offence or breaking out",
       severity: "Hybrid",
-      maxPenalty: "Life imprisonment (dwelling-house) / 10 years (other place)",
+      maxPenalty: "Life imprisonment where the offence is committed in relation to a dwelling-house; 10 years indictable, or summary conviction, where it is committed in relation to any other place.",
       url: `${JUSTICE_LAWS_BASE}/section-348.html`,
       definition:
-        "Every one who breaks and enters a place with intent to commit an indictable offence therein; or breaks and enters a place and commits an indictable offence therein; or breaks out of a place after committing an indictable offence therein or after entering the place with intent to commit an indictable offence therein, is guilty of an indictable offence and liable to life imprisonment if the offence is committed in relation to a dwelling-house, or to imprisonment for a term not exceeding ten years in any other case.",
+        "Every one who breaks and enters a place with intent to commit an indictable offence in it, breaks and enters a place and commits an indictable offence in it, or breaks out of a place after committing an indictable offence in it or after entering it with intent to commit an indictable offence in it, is guilty of an indictable offence and liable to imprisonment for life where the offence is committed in relation to a dwelling-house, or, where it is committed in relation to any other place, is guilty of an indictable offence liable to imprisonment for a term not exceeding ten years or of an offence punishable on summary conviction. Evidence that an accused broke and entered, or attempted to break and enter, a place is, absent evidence to the contrary, proof that the person did so with intent to commit an indictable offence in it, and evidence that an accused broke out of a place is, absent evidence to the contrary, proof that the person did so after committing an indictable offence in it or after entering it with intent to commit one. For these purposes, a place means a dwelling-house, any other building or structure or part of one, a railway vehicle, vessel, aircraft or trailer, or a pen or enclosure in which fur-bearing animals are kept in captivity for breeding or commercial purposes.",
       relatedSections: ["349", "350", "351", "322"],
       defences: ["colour of right", "consent of owner"],
       topicsTagged: ["break and enter", "dwelling", "property offence"],
@@ -5878,10 +5879,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Being unlawfully in dwelling-house",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable, or summary conviction available.",
       url: `${JUSTICE_LAWS_BASE}/section-349.html`,
       definition:
-        "Every person who is, without lawful excuse, in a dwelling-house at night is guilty of an offence. For the purposes of this section, a person who enters or is in a dwelling-house is deemed to have entered or been in without lawful excuse unless the contrary is proved.",
+        "Every person who, without lawful excuse, enters or is in a dwelling-house with intent to commit an indictable offence in it is guilty of an indictable offence and liable to imprisonment for a term of not more than 10 years, or of an offence punishable on summary conviction. Evidence that an accused, without lawful excuse, entered or was in a dwelling-house is, in the absence of evidence to the contrary, proof that the person did so with intent to commit an indictable offence in it.",
       relatedSections: ["348", "350", "177"],
       defences: ["lawful excuse", "consent"],
       topicsTagged: ["trespass", "dwelling-house", "night"],
@@ -5943,7 +5944,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of property obtained by crime",
       severity: "Hybrid",
-      maxPenalty: "10 years (over $5,000 indictable) / 2 years less a day (under $5,000 summary)",
+      maxPenalty:
+        "10 years indictable, or summary conviction available, if the property is a testamentary instrument or worth more than $5,000; 2 years indictable, or summary conviction available, if $5,000 or less (s. 355).",
       url: `${JUSTICE_LAWS_BASE}/section-354.html`,
       definition:
         "Every one commits an offence who has in his possession any property or thing or any proceeds of any property or thing knowing that all or part of the property or thing or of the proceeds was obtained by or derived directly or indirectly from the commission in Canada of an offence punishable by indictment or an act or omission anywhere that, if it had occurred in Canada, would have constituted an offence punishable by indictment.",
@@ -6058,10 +6060,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "False pretence or false statement",
       severity: "Hybrid",
-      maxPenalty: "10 years (indictable) / 2 years less a day (summary)",
+      maxPenalty: "For an offence of obtaining property by false pretence (paragraph (1)(a)): 10 years indictable, or summary conviction available, if the property is a testamentary instrument or worth more than $5,000; 2 years indictable, or summary conviction available, if $5,000 or less. For obtaining credit by false pretence or fraud, or making or acting on a false financial statement (paragraphs (1)(b), (c) or (d)): 10 years indictable, or summary conviction available.",
       url: `${JUSTICE_LAWS_BASE}/section-362.html`,
       definition:
-        "Every one commits an offence who by a false pretence, whether directly or through the medium of a contract obtained by a false pretence, obtains anything in respect of which the offence of theft may be committed or causes it to be delivered to another person, obtains credit by a false pretence or by fraud, knowingly makes or causes to be made a false statement in writing, with intent that it should be relied on, with respect to the financial condition or means or ability to pay of himself or herself or any other person, firm or corporation in whom or in which he or she is interested or for whom or for which he or she acts, or knowingly makes a false statement in writing that is intended to be published in a newspaper, periodical or other publication.",
+        "Every one commits an offence who, by a false pretence, whether directly or through the medium of a contract obtained by a false pretence, obtains anything in respect of which the offence of theft may be committed, or causes it to be delivered to another person, or who obtains credit by a false pretence or by fraud. It is also an offence to knowingly make or cause to be made, directly or indirectly, a false statement in writing, intending it to be relied on, about the financial condition, means or ability to pay of oneself or of a person or organization one is interested in or acts for, for the purpose of procuring the delivery of personal property, the payment of money, the making of a loan, the grant or extension of credit, the discount of an account receivable, or the making, accepting, discounting or endorsing of a bill of exchange, cheque, draft or promissory note. It is a further offence, knowing that such a false statement has been made, to procure any of those things on the faith of it. Where anything is obtained under the false-pretence branch of this offence by means of a cheque that is dishonoured on presentment for insufficient or no funds, it is presumed to have been obtained by false pretence unless the accused is shown to have believed on reasonable grounds that the cheque would be honoured if presented within a reasonable time.",
       relatedSections: ["380", "366", "368"],
       defences: ["honest belief in truth of statement"],
       topicsTagged: ["fraud", "false pretence", "misrepresentation"],
@@ -6092,8 +6094,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "366",
     {
       title: "Forgery",
-      severity: "Indictable",
-      maxPenalty: "10 years",
+      severity: "Hybrid",
+      maxPenalty: "10 years indictable; summary conviction also available (s. 367).",
       url: `${JUSTICE_LAWS_BASE}/section-366.html`,
       definition:
         "Every one commits forgery who makes a false document, knowing it to be false, with intent that it should in any way be used or acted on as genuine, to the prejudice of any one whether within Canada or not, or that a person should be induced by the belief that it is genuine to do or to refrain from doing anything, whether within Canada or not.",
@@ -6118,10 +6120,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Use, trafficking or possession of forged document",
       severity: "Hybrid",
-      maxPenalty: "10 years (indictable) / 2 years less a day (summary)",
+      maxPenalty: "10 years indictable, or summary conviction available.",
       url: `${JUSTICE_LAWS_BASE}/section-368.html`,
       definition:
-        "Every one commits an offence who, knowing or believing that a document is forged, uses, deals with or acts on it as if it were genuine, causes or attempts to cause any person to use, deal with or act on it as if it were genuine, transfers it to any person or has it in their possession.",
+        "Everyone commits an offence who, knowing or believing that a document is forged, uses, deals with or acts on it as if it were genuine; causes or attempts to cause any person to use, deal with or act on it as if it were genuine; transfers, sells, offers to sell, or makes it available to any person, knowing that or being reckless as to whether an offence of using, dealing with, acting on, or causing another to act on the document as genuine will be committed; or possesses the document with intent to commit any of those offences.",
       relatedSections: ["366", "367", "380"],
       defences: ["no knowledge document was forged"],
       topicsTagged: ["forgery", "fraud", "document"],
@@ -6235,10 +6237,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Fraud",
       severity: "Hybrid",
-      maxPenalty: "14 years (over $1,000,000 minimum 2 years) / 14 years (over $5,000) / 2 years less a day (under $5,000)",
+      maxPenalty: "14 years indictable if the subject-matter is a testamentary instrument or worth more than $5,000; 2 years indictable, or summary conviction available, if the subject-matter is worth $5,000 or less; a mandatory minimum of 2 years' imprisonment applies on indictment where the total value of the subject-matter of the offence or offences exceeds $1,000,000; up to 14 years indictable for affecting the public market price under subsection (2).",
       url: `${JUSTICE_LAWS_BASE}/section-380.html`,
       definition:
-        "Every one who, by deceit, falsehood or other fraudulent means, whether or not it is a false pretence within the meaning of this Act, defrauds the public or any person, whether ascertained or not, of any property, money or valuable security or any service, is guilty of an indictable offence and liable to a term of imprisonment not exceeding fourteen years, where the subject-matter of the offence is a testamentary instrument or the value of the subject-matter of the offence exceeds five thousand dollars.",
+        "Every one who, by deceit, falsehood or other fraudulent means, whether or not it is a false pretence within the meaning of this Act, defrauds the public or any person, whether ascertained or not, of any property, money, valuable security or service is guilty, where the subject-matter is a testamentary instrument or is worth more than $5,000, of an indictable offence liable to imprisonment for up to fourteen years; and, where the value is $5,000 or less, of an indictable offence liable to imprisonment for up to two years, or of an offence punishable on summary conviction. A minimum punishment of two years' imprisonment applies on indictment where the total value of the subject-matter of the offence or offences exceeds one million dollars. It is a separate offence, punishable on indictment by up to fourteen years' imprisonment, to affect the public market price of stocks, shares, merchandise, or anything offered for sale to the public, by deceit, falsehood or other fraudulent means, with intent to defraud.",
       relatedSections: ["362", "366", "368", "382"],
       defences: ["honest belief in entitlement", "no intent to defraud"],
       topicsTagged: ["fraud", "deceit", "property"],
@@ -6812,11 +6814,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Mischief",
       severity: "Hybrid",
-      maxPenalty: "Life imprisonment (property endangering life) / 10 years (over $5,000 or data) / 2 years less a day (under $5,000)",
+      maxPenalty: "Life imprisonment for mischief causing danger to life; 10 years indictable (mischief involving a testamentary instrument, or property over $5,000; computer data; hate-motivated mischief against religious, educational or community property; or cultural property), with summary conviction also available; for war memorials, cenotaphs and cemeteries, 10 years indictable or up to 2 years less a day summary, plus mandatory minimums escalating from a $1,000 fine (1st offence) to 14 days (2nd) to 30 days (subsequent offences); 2 years indictable for other property, with summary conviction available; 5 years indictable for an act or omission likely to constitute mischief, with summary conviction available.",
       url: `${JUSTICE_LAWS_BASE}/section-430.html`,
       definition:
-        "Every one commits mischief who wilfully destroys or damages property; renders property dangerous, useless, inoperative or ineffective; obstructs, interrupts or interferes with the lawful use, enjoyment or operation of property; or obstructs, interrupts or interferes with any person in the lawful use, enjoyment or operation of property.",
-      relatedSections: ["431", "432", "433", "434"],
+        "Every person commits mischief who wilfully destroys or damages property, renders it dangerous, useless, inoperative or ineffective, or obstructs, interrupts or interferes with the lawful use, enjoyment or operation of property or with any person's lawful use, enjoyment or operation of it; the same conduct toward computer data — destroying or altering it, rendering it meaningless, useless or ineffective, obstructing or interfering with its lawful use, or denying access to a person entitled to it — is a separate mischief offence. Mischief that causes actual danger to life is punishable by imprisonment for life, while mischief in relation to a testamentary instrument or property over $5,000, mischief in relation to computer data, mischief motivated by bias, prejudice or hate based on colour, race, religion, national or ethnic origin, age, sex, sexual orientation, gender identity or expression, or mental or physical disability and directed at religious property, educational institutions, or buildings used by an identifiable group for administrative, social, cultural, sports or seniors-residence purposes, and mischief in relation to cultural property protected under the Hague Convention are each punishable by up to ten years' imprisonment on indictment or as summary conviction offences. Mischief in relation to a war memorial, cenotaph or related object, or a cemetery, carries mandatory minimum penalties escalating from a $1,000 fine for a first offence to 14 days' imprisonment for a second offence and 30 days for each subsequent offence, on top of a maximum of ten years on indictment or two years less a day on summary conviction. Mischief in relation to property other than a testamentary instrument or property over $5,000 is punishable by up to two years' imprisonment on indictment or as a summary conviction offence, and wilfully doing an act, or wilfully omitting to do an act that it is a person's duty to do, where the act or omission is likely to constitute any of these forms of mischief, is itself punishable by up to five years on indictment or as a summary conviction offence. No one commits mischief within the meaning of this section merely by stopping work as a result of the failure of the person and their employer to agree on any matter relating to their employment, whether acting alone or through a bargaining agent acting on their behalf, or as a result of taking part in a combination of workers for their own reasonable protection as workers, or merely by attending at, near, or approaching a dwelling-house or place for the purpose only of obtaining or communicating information.",
+      relatedSections: ["318", "342.1"],
       defences: ["colour of right", "consent of owner"],
       topicsTagged: ["mischief", "property damage", "destruction"],
       partOf: "Part XI — Wilful and Forbidden Acts in Respect of Certain Property",
