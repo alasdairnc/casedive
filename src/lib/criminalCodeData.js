@@ -667,7 +667,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "High treason",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment (high treason)",
+      maxPenalty: "See s. 47.",
       url: `${JUSTICE_LAWS_BASE}/section-46.html`,
       summary:
         "Defines the conduct that constitutes high treason (such as killing or harming the Sovereign, levying war against Canada, or assisting an enemy) and treason (such as using force to overthrow government or communicating military/scientific information to a state other than Canada), including conspiracy and forming an intention manifested by an overt act. Also states these provisions apply to Canadian citizens whether the conduct occurs in or out of Canada.",
@@ -679,7 +679,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment for high treason",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "Life imprisonment (mandatory minimum under s. 47(4)) for high treason; treason is liable to life imprisonment for paragraphs 46(2)(a), (c) or (d), or (b)/(e) committed during a state of war; or to 14 years indictable for paragraph 46(2)(b) or (e) committed when no state of war exists.",
       url: `${JUSTICE_LAWS_BASE}/section-47.html`,
       summary:
         "Sets the conviction consequences for high treason and treason described in section 46, requires corroborating evidence beyond a single witness for conviction, and states the mandatory imprisonment is a minimum punishment.",
@@ -963,7 +963,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Reading proclamation",
       severity: "",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-67.html`,
       summary:
         "Requires specified officials (such as a justice, mayor, sheriff, or prison warden) who learn that twelve or more persons are unlawfully and riotously assembled to go to the scene and, if satisfied a riot is occurring, command silence and read a proclamation in specified words ordering dispersal.",
@@ -1538,8 +1538,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "83.12",
     {
       title: "Offences — freezing of property, disclosure or audit",
-      severity: "Summary",
-      maxPenalty: "10 years",
+      severity: "Hybrid",
+      maxPenalty: "10 years indictable; or summary conviction, liable to a fine of up to $100,000 or imprisonment of up to 2 years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-83.12.html`,
       summary:
         "Makes it an offence to contravene the freezing-of-property, disclosure, or audit obligations in sections 83.08, 83.1, and 83.11.",
@@ -1764,7 +1764,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Concealing person who carried out terrorist activity",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "14 years indictable if the person harboured or concealed carried out a terrorist activity punishable by life imprisonment; 10 years indictable in any other case, including where the person is only likely to carry out a terrorist activity.",
       url: `${JUSTICE_LAWS_BASE}/section-83.23.html`,
       summary:
         "Makes it an offence to knowingly harbour or conceal a person known to have carried out, or to be likely to carry out, terrorist activity for the purpose of enabling further terrorist activity, with the penalty for concealing someone who already carried out terrorist activity varying based on the punishment that person themselves would face.",
@@ -2098,7 +2098,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Weapons trafficking",
       severity: "Indictable",
-      maxPenalty: "14 years (minimum 14 years)",
+      maxPenalty: "14 years indictable, with a minimum of 3 years for a first offence or 5 years for a subsequent offence when the object is a prohibited firearm, restricted firearm, non-restricted firearm, prohibited device, firearm part, ammunition or prohibited ammunition; 14 years indictable with no minimum in any other case.",
       url: `${JUSTICE_LAWS_BASE}/section-99.html`,
       summary:
         "Makes it an offence to manufacture, transfer, or offer to do so in respect of any firearm, prohibited or restricted weapon, prohibited device, firearm part, or ammunition, while knowing one is not authorized under the Firearms Act or other federal law or regulations.",
@@ -2168,7 +2168,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Importing or exporting knowing it is unauthorized",
       severity: "Indictable",
-      maxPenalty: "14 years (minimum 14 years)",
+      maxPenalty: "14 years indictable, with a minimum of 3 years for a first offence or 5 years for a subsequent offence when the object is a prohibited firearm, restricted firearm, non-restricted firearm, prohibited device, firearm part, or prohibited ammunition; 14 years indictable with no minimum in any other case.",
       url: `${JUSTICE_LAWS_BASE}/section-103.html`,
       summary:
         "Makes it an offence to import or export a firearm, prohibited or restricted weapon, prohibited device, firearm part, or prohibited ammunition, or certain components for assembling an automatic firearm, knowing one is not authorized to do so under the Firearms Act or other federal law.",
@@ -2643,7 +2643,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       url: `${JUSTICE_LAWS_BASE}/section-117.11.html`,
       summary:
         "Places the onus on the accused, in proceedings for certain listed offences, to prove that a person is the holder of an authorization, licence, or registration certificate when that question arises.",
-      relatedSections: ["89", "90", "91", "93", "97", "101"],
+      relatedSections: ["89", "90", "91", "93", "101"],
       partOf: "Part III — Firearms and Other Weapons",
     },
   ],
@@ -2969,7 +2969,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Obstructing justice",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable, or summary conviction available, for the general obstruction offence (s. 139(2)); 2 years indictable, or summary conviction available, for the surety-related obstruction offence in s. 139(1).",
       url: `${JUSTICE_LAWS_BASE}/section-139.html`,
       summary:
         "Makes it an offence to wilfully attempt to obstruct, pervert or defeat the course of justice in a judicial proceeding, including by indemnifying a surety or, as a surety, accepting payment for release from custody, and separately makes it an offence to intentionally attempt to obstruct, pervert or defeat justice in any other manner; it also deems certain conduct, such as dissuading a witness or influencing a juror through threats or bribes, to constitute wilfully obstructing justice.",
@@ -3200,7 +3200,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Bestiality",
       severity: "Hybrid",
-      maxPenalty: "10 years (general, s. 160(1)-(2)); 14 years, minimum 1 year indictable / minimum 6 months summary (if committed in presence of or by a person under 16, s. 160(3)); 5 years (representation of bestiality, s. 160(3.4))",
+      maxPenalty: "10 years indictable, or summary conviction available, for the base bestiality or compelling-bestiality offence; 14 years indictable with a 1-year minimum, or 2 years less a day summary with a 6-month minimum, if committed in the presence of or incited in a person under 16 (s. 160(3)); 5 years indictable, or summary conviction available, for the separate representation-of-bestiality offence (s. 160(3.1), (3.4)).",
       url: `${JUSTICE_LAWS_BASE}/section-160.html`,
       summary:
         "Makes it an offence to commit bestiality, to compel another person to commit bestiality, to commit bestiality in the presence of a person under 16, or to incite a person under 16 to commit bestiality, and separately makes it an offence to publish or distribute a visual representation likely to be mistaken for a recording of bestiality, subject to a public good defence; it also allows a court to order prohibition from owning or being near animals and restitution of care costs, and defines bestiality.",
@@ -3263,7 +3263,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Obscene materials",
       severity: "Hybrid",
-      maxPenalty: "2 years indictable",
+      maxPenalty: "2 years indictable, or summary conviction available (s. 169).",
       url: `${JUSTICE_LAWS_BASE}/section-163.html`,
       summary:
         "Makes it an offence to make, print, publish, distribute or possess for distribution any obscene matter, and separately makes it an offence to knowingly sell, expose to public view or publicly exhibit obscene material or a disgusting object or indecent show without lawful justification, subject to a public good defence, and deems a publication obscene if its dominant characteristic is undue exploitation of sex combined with crime, horror, cruelty or violence.",
@@ -3351,7 +3351,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Mailing obscene matter",
       severity: "Hybrid",
-      maxPenalty: "2 years indictable",
+      maxPenalty: "2 years indictable, or summary conviction available (s. 169).",
       url: `${JUSTICE_LAWS_BASE}/section-168.html`,
       summary:
         "Makes it an offence to use the mails to transmit or deliver obscene, indecent, immoral, or scurrilous matter, subject to exceptions for materials connected to judicial proceedings, court-directed notices, law reports, and technical legal or medical publications.",
@@ -3367,7 +3367,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       url: `${JUSTICE_LAWS_BASE}/section-169.html`,
       summary:
         "Sets out that a person who commits an offence under section 163, 165, 167, or 168 is guilty of either an indictable offence or an offence punishable on summary conviction.",
-      relatedSections: ["163", "165", "167", "168"],
+      relatedSections: ["163", "167", "168"],
       partOf: "Part V — Sexual Offences, Public Morals and Disorderly Conduct",
     },
   ],
@@ -4618,7 +4618,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Uttering threats",
       severity: "Hybrid",
-      maxPenalty: "5 years indictable",
+      maxPenalty: "5 years indictable, or summary conviction available, for threats to cause death or bodily harm; 2 years indictable, or summary conviction available, for threats to property or to an animal.",
       url: `${JUSTICE_LAWS_BASE}/section-264.1.html`,
       summary:
         "Makes it an offence to knowingly utter, convey, or cause a person to receive a threat to cause death or bodily harm, to damage property, or to kill, poison, or injure an animal or bird belonging to someone.",
@@ -5524,7 +5524,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Trafficking in persons",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment (minimum 14 years)",
+      maxPenalty: "Life imprisonment with a 5-year minimum if the offence involved kidnapping, aggravated assault, aggravated sexual assault, or death; 14 years indictable with a 4-year minimum in any other case.",
       url: `${JUSTICE_LAWS_BASE}/section-279.01.html`,
       summary:
         "Makes it an offence to recruit, transport, transfer, receive, hold, conceal, harbour, or exercise control over the movements of a person for the purpose of exploiting them or facilitating their exploitation. Consent to the conduct is not a valid defence, and living with or habitually associating with an exploited person is presumed evidence of exercising control for exploitation absent contrary evidence.",
@@ -5537,7 +5537,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Trafficking of a person under the age of eighteen years",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "Life imprisonment with a 6-year minimum if the offence involved kidnapping, aggravated assault, aggravated sexual assault, or death; 14 years indictable with a 5-year minimum in any other case.",
       url: `${JUSTICE_LAWS_BASE}/section-279.011.html`,
       summary:
         "Makes it an offence to recruit, transport, transfer, receive, hold, conceal, harbour, or exercise control over the movements of a person under 18 for the purpose of exploiting them or facilitating their exploitation. Consent to the conduct is not a valid defence.",
@@ -5549,7 +5549,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Material benefit — trafficking",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "10 years indictable, or summary conviction available, for receiving a benefit from trafficking an adult (s. 279.02(1)); 14 years indictable with a 2-year minimum for receiving a benefit from trafficking a person under 18 (s. 279.02(2)).",
       url: `${JUSTICE_LAWS_BASE}/section-279.02.html`,
       summary:
         "Makes it an offence to knowingly receive a financial or other material benefit derived from human trafficking under the referenced sections, with a separate, more serious version of the offence where the trafficking victim is under 18.",
@@ -5562,7 +5562,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Withholding or destroying documents — trafficking",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "5 years indictable, or summary conviction available, for concealing or destroying documents to facilitate trafficking an adult (s. 279.03(1)); 10 years indictable with a 1-year minimum for doing so to facilitate trafficking a person under 18 (s. 279.03(2)).",
       url: `${JUSTICE_LAWS_BASE}/section-279.03.html`,
       summary:
         "Makes it an offence to conceal, remove, withhold, or destroy another person's travel or identity/immigration document in order to commit or facilitate human trafficking, with a separate, more serious version of the offence where the trafficking victim is under 18.",
@@ -5588,7 +5588,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Hostage taking",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment (minimum 10 years)",
+      maxPenalty: "Life imprisonment, with a minimum of 5 years (first offence) or 7 years (subsequent offence) if a restricted or prohibited firearm is used, or any firearm is used for a criminal organization; a minimum of 4 years if any other firearm is used; no minimum in any other case.",
       url: `${JUSTICE_LAWS_BASE}/section-279.1.html`,
       summary:
         "Defines hostage taking as confining, imprisoning, seizing, or detaining a person while threatening death, bodily harm, or continued detention in order to compel a third party or organization to act, and makes hostage taking an indictable offence with escalating minimum penalties depending on whether a firearm was used, whether the offence involved a criminal organization, and whether it is a repeat offence.",
@@ -5695,7 +5695,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       url: `${JUSTICE_LAWS_BASE}/section-286.1.html`,
       summary:
         "Makes it an offence to obtain, or communicate to obtain, sexual services for consideration, with minimum fines that increase for offences occurring near places where minors may reasonably be present or for repeat offences, and creates a separate, more serious offence with mandatory minimum imprisonment where the person providing the sexual services is under 18.",
-      relatedSections: ["212", "197"],
+      relatedSections: ["197"],
       partOf: "Part VIII — Offences Against the Person and Reputation",
     },
   ],
@@ -5704,7 +5704,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Material benefit from sexual services",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "10 years indictable, or summary conviction available, for receiving a benefit from an adult's sexual services (s. 286.2(1)); 14 years indictable with a 2-year minimum for receiving a benefit from a person under 18's sexual services (s. 286.2(2)).",
       url: `${JUSTICE_LAWS_BASE}/section-286.2.html`,
       summary:
         "Makes it an offence to knowingly receive a financial or other material benefit derived from obtaining sexual services for consideration, with a more serious minimum-sentence version where the services were provided by a person under 18, subject to listed exceptions for legitimate living or business arrangements that do not apply where coercion, abuse of trust, intoxicants, exploitation-related conduct, or a commercial sexual-services enterprise are involved.",
@@ -5717,7 +5717,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Procuring",
       severity: "Indictable",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable for procuring (s. 286.3(1)); 14 years indictable with a 5-year minimum for procuring a person under 18 (s. 286.3(2)).",
       url: `${JUSTICE_LAWS_BASE}/section-286.3.html`,
       summary:
         "Makes it an offence to procure a person to offer or provide sexual services for consideration, or to recruit, hold, conceal, harbour, or control the movements of such a person to facilitate that offence, with a more serious mandatory-minimum version where the person procured is under 18.",
@@ -6244,7 +6244,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Dangerous operation",
       severity: "Hybrid",
-      maxPenalty: "10 years / life if death",
+      maxPenalty: "10 years indictable, or summary conviction, for the base dangerous-operation offence (s. 320.19(5)); 14 years indictable/summary with escalating minimums if bodily harm results (s. 320.2); life imprisonment with escalating minimums if death results (s. 320.21).",
       url: `${JUSTICE_LAWS_BASE}/section-320.13.html`,
       summary:
         "Makes it an offence to operate a conveyance in a manner dangerous to the public, and makes it a further offence where that dangerous operation causes bodily harm or death to another person.",
@@ -6316,7 +6316,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Operation while prohibited",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable, or summary conviction (s. 320.19(5)).",
       url: `${JUSTICE_LAWS_BASE}/section-320.18.html`,
       summary:
         "Makes it an offence to operate a conveyance while prohibited from doing so by a court order or other legal restriction, with an exception for a person properly registered in and complying with an alcohol ignition interlock device program.",
@@ -6329,7 +6329,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment",
       severity: "Hybrid",
-      maxPenalty: "10 years (minimum 10 years)",
+      maxPenalty: "10 years indictable or summary conviction (up to $5,000 fine or 2 years less a day, or both) for the base impaired/refusal offences, with a minimum fine of $1,000 for a first offence, 30 days for a second, 120 days for each subsequent (higher first-offence minimums apply for high blood alcohol concentration or refusal); summary conviction only, maximum $1,000 fine, for the low-blood-drug-concentration offence; 10 years indictable or summary conviction, no minimum, for the dangerous-operation/fail-to-stop/prohibited-driving base offences.",
       url: `${JUSTICE_LAWS_BASE}/section-320.19.html`,
       summary:
         "Sets out the punishment for offences under subsection 320.14(1) or 320.15(1), including minimum punishments that escalate for repeat offences and higher minimum fines tied to specified higher blood alcohol concentrations, a separate summary conviction penalty for an offence under subsection 320.14(4), and punishment for offences under subsection 320.13(1) or 320.16(1), section 320.17, or subsection 320.18(1).",
@@ -6424,7 +6424,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       url: `${JUSTICE_LAWS_BASE}/section-320.26.html`,
       summary:
         "Sets out which prior convictions count as an earlier offence when determining whether a current offence under subsection 320.14(1) or 320.15(1) is a second, third, or subsequent offence for sentencing purposes.",
-      relatedSections: ["320.14", "320.15", "253", "254", "255"],
+      relatedSections: ["320.14", "320.15"],
       partOf: "Part VIII.1 — Offences Relating to Conveyances",
     },
   ],
@@ -6758,7 +6758,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Motor vehicle theft",
       severity: "Hybrid",
-      maxPenalty: "10 years (minimum 14 years)",
+      maxPenalty: "10 years indictable, with a 6-month minimum for a third or subsequent offence, or 2 years less a day summary, for motor vehicle theft; 14 years indictable if violence is used, threatened, or attempted, or if committed for a criminal organization.",
       url: `${JUSTICE_LAWS_BASE}/section-333.1.html`,
       summary:
         "Makes theft of a motor vehicle an offence, with escalated penalties for repeat offences and separate, more serious offences where violence is used, threatened, or attempted, or where the theft benefits a criminal organization.",
@@ -6989,7 +6989,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Extortion",
       severity: "Indictable",
-      maxPenalty: "Life imprisonment; if a firearm is used, minimum 5 years (first offence) / 7 years (subsequent offence)",
+      maxPenalty: "Life imprisonment, with a minimum of 5 years (first offence) or 7 years (subsequent offence) if a restricted or prohibited firearm is used, or any firearm is used for a criminal organization; no minimum in any other case, including where an ordinary firearm with no criminal-organization connection is used.",
       url: `${JUSTICE_LAWS_BASE}/section-346.html`,
       summary:
         "Makes it an offence (extortion) to induce or attempt to induce a person to do or cause anything to be done through threats, accusations, menaces, or violence without reasonable justification; sets an enhanced minimum sentence where a restricted or prohibited firearm is used, or where any firearm is used and the offence is committed for the benefit of, at the direction of, or in association with a criminal organization; defines how prior offences count toward repeat-offence determinations; directs courts to treat a sexual purpose as an aggravating factor; and excludes a threat of civil proceedings from the offence.",
@@ -7234,7 +7234,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Punishment",
       severity: "Hybrid",
-      maxPenalty: "14 years",
+      maxPenalty: "14 years indictable if the value of the subject matter exceeds $5,000; 5 years indictable, or summary conviction available, if $5,000 or less.",
       url: `${JUSTICE_LAWS_BASE}/section-355.5.html`,
       summary:
         "Sets out penalty classifications for offences under sections 355.2 or 355.4, based on whether the value of the subject matter exceeds $5,000.",
@@ -7566,7 +7566,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Prohibited insider trading",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable, or summary conviction available, for the main insider-trading offence (s. 382.1(1)); 5 years indictable, or summary conviction available, for the separate tipping offence (s. 382.1(2)).",
       url: `${JUSTICE_LAWS_BASE}/section-382.1.html`,
       summary:
         "Makes it an offence to buy or sell a security while knowingly using inside information obtained through specified relationships to the issuer, and separately makes it an offence to knowingly convey such inside information to another person who might use it to trade or pass it on; excludes conduct authorized or required by law and defines \"inside information.\"",
@@ -8420,7 +8420,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Injuring or endangering other animals",
       severity: "Hybrid",
-      maxPenalty: "5 years",
+      maxPenalty: "5 years indictable; or summary conviction, liable to a fine of up to $10,000 or imprisonment of up to 2 years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-445.html`,
       summary:
         "Makes it an offence to wilfully and without lawful excuse kill, maim, wound, poison, or injure dogs, birds, or animals kept for a lawful purpose, or to place poison where such animals may easily consume it.",
@@ -8432,7 +8432,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Killing or injuring certain animals",
       severity: "Hybrid",
-      maxPenalty: "5 years",
+      maxPenalty: "5 years indictable, with a minimum of 6 months if a law enforcement animal is killed in the commission of the offence; or summary conviction, liable to a fine of up to $10,000 or imprisonment of up to 2 years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-445.01.html`,
       summary:
         "Makes it an offence to wilfully and without lawful excuse kill, maim, wound, poison, or injure a law enforcement animal while it is aiding a law enforcement officer, a military animal while it is aiding a member of the Canadian Forces, or a service animal. Requires a sentence for an offence committed against a law enforcement animal to be served consecutively to any other sentence arising from the same event, and defines the animal categories and law enforcement officer.",
@@ -8445,7 +8445,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Causing unnecessary suffering",
       severity: "Hybrid",
-      maxPenalty: "5 years",
+      maxPenalty: "5 years indictable; or summary conviction, liable to a fine of up to $10,000 or imprisonment of up to 2 years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-445.1.html`,
       summary:
         "Makes it an offence to wilfully cause or permit unnecessary pain, suffering, or injury to an animal or bird, to take part in or encourage animal or bird fighting or baiting, to administer a poisonous or injurious substance to a domestic or captive wild animal or bird, or to organize or allow premises to be used for events where captive birds are released to be shot. States that a failure to exercise reasonable care causing pain, suffering, or injury is proof of wilful conduct for the pain-or-suffering offence, and that presence at an animal fight or baiting is proof of encouraging, aiding, or assisting at it, in each case absent contrary evidence.",
@@ -8469,7 +8469,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Causing damage or injury",
       severity: "Hybrid",
-      maxPenalty: "2 years",
+      maxPenalty: "2 years indictable, or summary conviction available.",
       url: `${JUSTICE_LAWS_BASE}/section-446.html`,
       summary:
         "Makes it an offence to cause damage or injury to animals or birds being driven or conveyed through wilful neglect, or, as an owner or custodian of a domestic or captive wild animal or bird, to abandon it in distress or wilfully neglect or fail to provide adequate food, water, shelter, or care. States that, for the conveyance offence, a failure to exercise reasonable care or supervision causing damage or injury is proof of wilful neglect absent contrary evidence.",
@@ -8481,7 +8481,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Arena for animal fighting",
       severity: "Hybrid",
-      maxPenalty: "5 years",
+      maxPenalty: "5 years indictable; or summary conviction, liable to a fine of up to $10,000 or imprisonment of up to 2 years less a day, or both.",
       url: `${JUSTICE_LAWS_BASE}/section-447.html`,
       summary:
         "Makes it an offence to build, make, maintain, keep, or allow to be built, made, maintained, or kept an arena for animal fighting on premises one owns or occupies.",
@@ -8702,7 +8702,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Laundering proceeds of crime",
       severity: "Hybrid",
-      maxPenalty: "10 years",
+      maxPenalty: "10 years indictable, or summary conviction available, for the base laundering offence; 14 years indictable if done for the benefit of, at the direction of, or in association with a criminal organization.",
       url: `${JUSTICE_LAWS_BASE}/section-462.31.html`,
       summary:
         "Makes it an offence to deal with property or its proceeds in various ways, with intent to conceal or convert it, knowing, believing, or being reckless as to whether it derives from a designated offence, with an enhanced offence where done for the benefit of, at the direction of, or in association with a criminal organization. Unless the accused is also charged with the designated offence, the prosecution need not prove knowledge of its specific nature, and the court may infer the required knowledge, belief, or recklessness from markedly unusual dealings or dealings inconsistent with lawful activity in that sector; peace officers acting in their investigative duties are exempted.",
@@ -9012,7 +9012,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Attempts, accessories",
       severity: "Hybrid",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "14 years indictable for attempting or being an accessory after the fact to an offence carrying life imprisonment; otherwise half of the underlying offence's maximum indictable term, or summary conviction if the underlying offence is summary or hybrid.",
       url: `${JUSTICE_LAWS_BASE}/section-463.html`,
       summary:
         "Sets out that a person who attempts to commit, or is an accessory after the fact to, an indictable or summary conviction offence is themselves guilty of an offence, whether the underlying offence is indictable, hybrid, or summary.",
@@ -9036,7 +9036,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Conspiracy",
       severity: "Hybrid",
-      maxPenalty: "Life imprisonment",
+      maxPenalty: "Life imprisonment for conspiracy to commit murder; 10 years indictable or summary conviction for conspiring to falsely prosecute someone for an offence carrying life or up to 14 years, or 5 years indictable or summary conviction if the underlying offence carries less than 14 years; the same punishment as the underlying offence for conspiring to commit any other indictable offence; summary conviction for conspiring to commit a summary offence.",
       url: `${JUSTICE_LAWS_BASE}/section-465.html`,
       summary:
         "Makes it an offence to conspire with another person to commit murder, to prosecute a person known to be innocent, or to commit any other indictable or summary conviction offence, and extends jurisdiction to conspiracies formed partly in or affecting Canada.",
@@ -19519,7 +19519,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       url: `${JUSTICE_LAWS_BASE}/section-822.html`,
       summary:
         "Applies certain provisions on appeals (sections 683 to 689) to appeals under section 813, sets rules for where a new trial is held, and governs release or detention pending a new trial. Also allows the appeal court to order a trial de novo in certain circumstances, sets rules for using prior witness evidence, and governs how sentence appeals and defects in process are to be handled.",
-      relatedSections: ["813", "683", "689", "515", "793", "809"],
+      relatedSections: ["813", "683", "689", "515", "809"],
       partOf: "Part XXVII — Summary Convictions",
     },
   ],
