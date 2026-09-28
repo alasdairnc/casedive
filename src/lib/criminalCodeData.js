@@ -15613,6 +15613,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-694.1.html`,
+      summary:
+        "Allows the Supreme Court of Canada to assign counsel to an accused who cannot afford legal assistance for an appeal, with fees paid by the Attorney General and taxed by the Registrar if disputed.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15623,6 +15625,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-694.2.html`,
+      summary:
+        "Gives an accused in custody the right to attend their Supreme Court of Canada appeal hearing, but if represented by counsel they are not entitled to be present at certain proceedings unless the rules or the Court permit it.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15633,6 +15637,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-695.html`,
+      summary:
+        "Allows the Supreme Court of Canada to make any order a court of appeal could have made, and sets out how an accused may elect the mode of a new trial ordered by the Court, including special rules for Nunavut.",
+      relatedSections: ["561", "561.1"],
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15643,6 +15650,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.html`,
+      summary:
+        "Gives the Attorney General of Canada the same rights of appeal in federally instituted proceedings as a provincial Attorney General has under this Part.",
       partOf: "Part XXI — Appeals — Indictable Offences",
     },
   ],
@@ -15655,6 +15664,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.1.html`,
+      summary:
+        "Sets out who may apply to the Minister of Justice for review on grounds of miscarriage of justice and requires the application to follow the form and content prescribed by regulations.",
       partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
@@ -15665,6 +15676,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.2.html`,
+      summary:
+        "Describes the Minister of Justice's review process for such applications, including investigative powers under the Inquiries Act and the ability to delegate those powers to qualified individuals.",
       partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
@@ -15675,6 +15688,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.3.html`,
+      summary:
+        "Defines 'court of appeal' for this section and sets out the Minister of Justice's powers to refer questions to a court of appeal, order a new trial or hearing, refer the matter to the court of appeal, or dismiss the application, with no appeal from that decision.",
+      relatedSections: ["2"],
       partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
@@ -15685,6 +15701,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.4.html`,
+      summary:
+        "Lists factors the Minister of Justice must consider in deciding an application, including new significant information, reliability of information presented, and that the remedy is extraordinary rather than a further appeal.",
+      relatedSections: ["696.3"],
       partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
@@ -15695,6 +15714,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.5.html`,
+      summary:
+        "Requires the Minister of Justice to submit an annual report to Parliament on applications made under this Part.",
       partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
@@ -15705,6 +15726,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.6.html`,
+      summary:
+        "Authorizes the Governor in Council to make regulations governing application form and content, the review process, and the annual report.",
+      relatedSections: ["696.5"],
       partOf: "Part XXI.1 — Applications for Ministerial Review — Miscarriages of Justice",
     },
   ],
@@ -15717,6 +15741,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.7.html`,
+      summary:
+        "Defines terms used in this Part, including 'applicant,' 'Commission' (the Miscarriage of Justice Review Commission), and 'Minister.'",
+      relatedSections: ["696.71"],
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15727,6 +15754,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.71.html`,
+      summary:
+        "Establishes the Miscarriage of Justice Review Commission, sets its composition of a Chief Commissioner and four to eight other commissioners, and requires a Canadian head office.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15737,6 +15766,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.72.html`,
+      summary:
+        "Sets out the Commission's mandate to review miscarriage of justice applications and make recommendations addressing systemic issues to relevant authorities.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15747,6 +15778,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.73.html`,
+      summary:
+        "Requires the Minister, in recommending commissioner appointments, to seek diversity reflecting Canadian society, including gender equality and the overrepresentation of certain groups.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15757,6 +15790,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.74.html`,
+      summary:
+        "States that the Chief Commissioner is a full-time commissioner, while other commissioners may be appointed full-time or part-time.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15767,6 +15802,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.75.html`,
+      summary:
+        "Requires commissioners to have relevant knowledge and experience, sets a minimum proportion who must be lawyers with criminal law experience, and requires diversity among the remaining commissioners.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15777,6 +15814,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.76.html`,
+      summary:
+        "Makes the Chief Commissioner the chief executive of the Commission and allows another qualified commissioner to act in that role temporarily if the Chief Commissioner is absent, incapacitated, or the office is vacant.",
+      relatedSections: ["696.75"],
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15787,6 +15827,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.77.html`,
+      summary:
+        "Sets commissioners' terms of office at up to seven years, staggered where possible, allows reappointment, and permits removal for cause by the Governor in Council.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15797,6 +15839,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.78.html`,
+      summary:
+        "Provides for commissioners' remuneration and reasonable expenses and deems them employees for compensation and aeronautics regulation purposes.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15807,6 +15851,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.79.html`,
+      summary:
+        "Sets out meeting procedures for the Commission, including who presides, the quorum, and how decisions are made.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15817,6 +15863,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.8.html`,
+      summary:
+        "Requires the Commission to ensure applicants and potential applicants can communicate with it readily from anywhere in Canada.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15827,6 +15875,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.81.html`,
+      summary:
+        "Requires the Commission to publish information about its mandate and provide the public with information about its mandate and miscarriages of justice.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15837,6 +15887,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.82.html`,
+      summary:
+        "Requires the Commission to operate transparently and publish its decisions online while protecting confidential information and the integrity of matters directed to courts.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15847,6 +15899,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.83.html`,
+      summary:
+        "Allows the Commission to adopt policies on its work and requires it to adopt specific policies on applications and processes, publish them online, and exempts them from the Statutory Instruments Act.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15857,6 +15911,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.84.html`,
+      summary:
+        "Lists the Commission's powers, including directing employees to inform applicants and correctional/parole authorities, entering contracts, and providing supports to applicants in need such as translation, referrals, and legal assistance.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15867,6 +15923,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.85.html`,
+      summary:
+        "Requires the Commission and its employees to follow established security procedures for handling information and documents.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15877,6 +15935,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.86.html`,
+      summary:
+        "Requires Commission employees to be appointed in accordance with the Public Service Employment Act.",
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15887,6 +15947,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-696.87.html`,
+      summary:
+        "Requires the Chief Commissioner to submit a detailed annual report to the Minister, requires the Minister to table it in Parliament, and requires the Commission to publish it online afterward.",
+      relatedSections: ["696.84"],
       partOf: "Part XXI.2 — Miscarriage of Justice Review Commission",
     },
   ],
@@ -15899,6 +15962,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-697.html`,
+      summary:
+        "States that this Part applies where a person is required to attend to give evidence in a proceeding under this Act, except where section 527 applies.",
+      relatedSections: ["527"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15909,6 +15975,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-698.html`,
+      summary:
+        "Allows issuance of a subpoena requiring a person likely to give material evidence to attend, and allows a warrant for arrest instead if the person will not attend or is evading service, generally requiring a subpoena to be issued first.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15919,6 +15987,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-699.html`,
+      summary:
+        "Sets out which court or official issues a subpoena depending on the court level and the location of the person required to attend, plus formal requirements for sealing and signing subpoenas and warrants, with special rules for sexual offence records.",
+      relatedSections: ["278.11", "278.1", "278.19"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15929,6 +16000,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-700.html`,
+      summary:
+        "Requires a subpoena to state the time and place for the witness to attend and bring specified items, and requires the witness to remain in attendance until excused.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15939,6 +16012,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-700.1.html`,
+      summary:
+        "Provides for issuing a subpoena for a person to give evidence by video link under specified provisions, applying other subpoena-related sections with necessary modifications.",
+      relatedSections: ["714.1", "699", "700", "701", "703.2"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15949,6 +16025,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-701.html`,
+      summary:
+        "Sets out who may serve a subpoena and how, requiring personal service in certain circumstances.",
+      relatedSections: ["509", "699"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15959,6 +16038,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-701.1.html`,
+      summary:
+        "Allows service of documents in a province to instead follow that province's own laws relating to provincial offences.",
+      relatedSections: ["701"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15969,6 +16051,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-702.html`,
+      summary:
+        "States that a subpoena issued by certain higher courts or judges has effect throughout Canada, while one issued by a justice has effect only within that province.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15979,6 +16063,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-703.html`,
+      summary:
+        "States that warrants of arrest or committal issued by certain higher courts may be executed anywhere in Canada, while those issued by a justice or provincial court judge may generally be executed only within that province.",
+      relatedSections: ["812", "487.0551", "490.03121", "705"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15989,6 +16076,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-703.1.html`,
+      summary:
+        "States that a summons may be served and is effective anywhere in Canada regardless of the territorial jurisdiction of the issuing authority.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -15999,6 +16088,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-703.2.html`,
+      summary:
+        "Sets out how a summons, notice, or process may be served on an organization when no other method is specified, naming the officials to whom delivery may be made for municipalities and other organizations.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16009,6 +16100,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-704.html`,
+      summary:
+        "Allows a justice, on sworn information that a person bound to give evidence is about to abscond or has absconded, to issue a warrant for that person's arrest, and entitles the arrested person to a copy of the information on request.",
+      relatedSections: ["528"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16019,6 +16113,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-705.html`,
+      summary:
+        "Allows a warrant for arrest of a witness who fails to attend or remain in attendance after being subpoenaed or bound by recognizance, and allows the warrant to be endorsed to permit release on an undertaking with conditions.",
+      relatedSections: ["705.1"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16029,6 +16126,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-705.1.html`,
+      summary:
+        "Sets out the process for releasing a person arrested under such a warrant on an undertaking, including required information, mandatory and other conditions, and how long the conditions remain in effect.",
+      relatedSections: ["705"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16039,6 +16139,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-706.html`,
+      summary:
+        "Allows a court or judicial official to order that a witness brought in on a warrant be detained in custody or released on recognizance to ensure future attendance to give evidence.",
+      relatedSections: ["698", "704", "705"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16049,6 +16152,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-707.html`,
+      summary:
+        "Limits detention of a witness to thirty days without being brought before a superior court judge, sets out the process for a witness to apply for review, and caps total detention at ninety days.",
+      relatedSections: ["550"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16056,9 +16162,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "708",
     {
       title: "Contempt",
-      severity: "",
-      maxPenalty: "",
+      severity: "Summary",
+      maxPenalty: "Fine not exceeding $5,000 or imprisonment for a term not exceeding two years less a day, or both",
       url: `${JUSTICE_LAWS_BASE}/section-708.html`,
+      summary:
+        "Makes it contempt of court for a person required to attend and give evidence to fail, without lawful excuse, to attend or remain in attendance, and allows the court to deal with the matter summarily.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16069,6 +16177,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-708.1.html`,
+      summary:
+        "Gives an electronically transmitted copy of a summons, warrant, or subpoena the same evidentiary weight as the original.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16079,6 +16189,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-709.html`,
+      summary:
+        "Allows a party to apply for an order appointing a commissioner to take the evidence of a witness who is unlikely to be able to attend trial due to illness or other good cause, or who is outside Canada.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16089,6 +16201,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-710.html`,
+      summary:
+        "Sets out which court or judge hears an application to appoint a commissioner where a witness is ill, and allows such an application to be granted on a doctor's evidence.",
+      relatedSections: ["709"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16099,6 +16214,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-711.html`,
+      summary:
+        "Sets conditions for admitting evidence taken by a commissioner from an ill witness, including proof of inability to attend, a signed transcript, and proof that the other party had a full opportunity to cross-examine.",
+      relatedSections: ["709", "710"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16109,6 +16227,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-712.html`,
+      summary:
+        "Sets out which court or judge hears an application to appoint a commissioner where a witness is outside Canada, and allows evidence taken by that commissioner to be admitted.",
+      relatedSections: ["709"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16119,6 +16240,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-713.html`,
+      summary:
+        "Allows the judge appointing a commissioner to provide for the accused's presence or representation by counsel when evidence is taken, and requires the order to designate the court officer to whom the evidence is returned.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16129,6 +16252,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-713.1.html`,
+      summary:
+        "Prevents evidence taken by a commissioner outside Canada from being excluded merely because it would have been taken differently in Canada, provided the process was lawful where taken and consistent with fundamental justice.",
+      relatedSections: ["712"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16139,6 +16265,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.html`,
+      summary:
+        "States that, except as otherwise provided, the practice for appointing commissioners and taking, certifying, and using their evidence follows civil proceeding practice in the relevant provincial superior court.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16149,6 +16277,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.1.html`,
+      summary:
+        "Allows a court to order a witness in Canada to give evidence by audio- or videoconference, having regard to listed factors such as the witness's circumstances, costs, and fairness to the accused.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16159,6 +16289,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.2.html`,
+      summary:
+        "Requires a court to receive evidence from a witness outside Canada by videoconference unless a party shows it would be contrary to fundamental justice, and requires advance notice of intent to call such a witness.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16169,6 +16301,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.3.html`,
+      summary:
+        "Allows a court to receive evidence from a witness outside Canada by audioconference where appropriate, having regard to the same factors as for in-Canada video evidence.",
+      relatedSections: ["714.1"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16179,6 +16314,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.4.html`,
+      summary:
+        "Requires the court to record its reasons if it declines to order or receive evidence by audio- or videoconference under these provisions.",
+      relatedSections: ["714.1", "714.2", "714.3"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16189,6 +16327,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.41.html`,
+      summary:
+        "Allows the court to stop using audio- or videoconference technology at any time and take other appropriate measures for the witness to give evidence.",
+      relatedSections: ["714.1", "714.2", "714.3"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16199,6 +16340,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.5.html`,
+      summary:
+        "Sets out the acceptable ways a witness located outside Canada may be sworn or affirmed before giving remote evidence.",
+      relatedSections: ["714.2", "714.3"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16209,6 +16353,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.6.html`,
+      summary:
+        "Deems evidence given remotely by a witness outside Canada to have been given in Canada under Canadian oath, for purposes of laws relating to evidence, procedure, perjury, and contempt of court.",
+      relatedSections: ["714.2", "714.3"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16219,6 +16366,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.7.html`,
+      summary:
+        "Requires the party who calls a witness to testify remotely to pay the associated technology costs, unless the court orders otherwise.",
+      relatedSections: ["714.1", "714.2", "714.3"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16229,6 +16379,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-714.8.html`,
+      summary:
+        "Clarifies that nothing in the remote-evidence provisions prevents a court from receiving evidence by audio- or videoconference where the parties consent.",
+      relatedSections: ["714.1", "714.7"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16239,6 +16392,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.html`,
+      summary:
+        "Allows evidence given by a witness at a previous trial or investigation to be read into evidence at a later trial if the witness refuses to testify or is shown to be dead, insane, too ill, or absent from Canada, provided it was taken in the accused's presence with opportunity to cross-examine; also addresses use for other charges and treats an absconding accused as having been present.",
+      relatedSections: ["537", "540"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16249,6 +16405,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.01.html`,
+      summary:
+        "Allows the transcript of a police officer's preliminary inquiry or voir dire testimony to be admitted at trial with notice to the other party, subject to the court requiring the officer's attendance for examination.",
+      relatedSections: ["183", "715", "537", "540"],
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16259,6 +16418,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.1.html`,
+      summary:
+        "Allows a video recording made shortly after an alleged offence, in which a victim or witness under 18 describes the acts, to be admitted as evidence if the witness adopts it while testifying, unless admission would interfere with justice, and allows the judge to restrict other uses of the recording.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16269,6 +16430,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.2.html`,
+      summary:
+        "Allows a video recording made within a reasonable time after the alleged offence, in which a victim or witness who has difficulty testifying due to a mental or physical disability describes the acts complained of, to be admitted as evidence if the witness adopts it while testifying, unless admission would interfere with the proper administration of justice, and allows the judge to prohibit other uses of the recording.",
       partOf: "Part XXII — Procuring Attendance",
     },
   ],
@@ -16281,6 +16444,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.21.html`,
+      summary:
+        "Requires that, except as otherwise provided, a person appearing at, participating in, or presiding over a proceeding do so in person.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16291,6 +16456,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.22.html`,
+      summary:
+        "States that the purpose of provisions allowing remote appearance is to serve the proper administration of justice, including fair, efficient proceedings and enhanced access to justice.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16301,6 +16468,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.221.html`,
+      summary:
+        "Requires the court to record its reasons if it denies a request for a person's appearance or participation by audioconference or videoconference.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16311,6 +16480,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.222.html`,
+      summary:
+        "Allows the court to stop a person's remote appearance or participation at any time and take other appropriate measures.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16321,6 +16492,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.23.html`,
+      summary:
+        "Requires the court, before allowing an accused or offender to appear remotely under certain sections, to consider factors such as location, cost, suitability, fair hearing rights, and the nature and seriousness of the offence.",
+      relatedSections: ["715.231", "715.241"],
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16331,6 +16505,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.231.html`,
+      summary:
+        "Allows the court, with the consent of the prosecutor and the accused, to let the accused appear by videoconference at a preliminary inquiry.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16341,6 +16517,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.232.html`,
+      summary:
+        "Allows an accused to appear by videoconference at a summary conviction trial, with consent required from both parties if the accused is not in custody, or from the accused alone if in custody.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16351,6 +16529,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.233.html`,
+      summary:
+        "Allows an accused, with consent of both prosecutor and accused, to appear by videoconference at a trial for an indictable offence, except during a jury trial when evidence is being presented to the jury.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16361,6 +16541,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.234.html`,
+      summary:
+        "Allows an accused, with consent of both parties, to appear by audio- or videoconference to enter a plea, with audioconference permitted only if videoconferencing isn't available and the guilty-plea inquiry can still be conducted.",
+      relatedSections: ["606"],
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16371,6 +16554,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.235.html`,
+      summary:
+        "Allows an offender, with consent of the prosecutor and offender, to appear by audio- or videoconference for sentencing, with audioconference limited to cases where videoconferencing is not readily available.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16381,6 +16566,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.24.html`,
+      summary:
+        "Allows an accused or offender to appear by audio- or videoconference in proceedings not otherwise expressly addressed by the Act.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16391,6 +16578,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.241.html`,
+      summary:
+        "Allows an accused in custody with access to legal advice to appear by videoconference in the listed proceedings, except in any part where a witness's evidence is being taken.",
+      relatedSections: ["715.231", "715.233"],
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16401,6 +16591,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.242.html`,
+      summary:
+        "Requires the court, before allowing remote appearance by someone without access to legal advice, to be satisfied they will understand the proceedings and that their decisions will be voluntary.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16411,6 +16603,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.243.html`,
+      summary:
+        "Requires that an accused or offender appearing remotely be given the opportunity to communicate privately with their counsel.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16421,6 +16615,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.25.html`,
+      summary:
+        "Defines 'participant' and allows the court to let a participant take part in a proceeding remotely, considering listed factors, with costs generally borne by the party who arranged the remote participation.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16431,6 +16627,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.26.html`,
+      summary:
+        "Allows a judge or justice to preside remotely where considered necessary, having regard to listed factors, requires recorded reasons for the decision, and allows ending remote presiding at any time.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16441,6 +16639,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.27.html`,
+      summary:
+        "Defines 'prospective juror' and allows the court, with consent of both parties, to permit remote participation in jury selection, subject to an approved location being provided, with in-person participation offered if none is provided.",
       partOf: "Part XXII.01 — Remote Attendance by Certain Persons",
     },
   ],
@@ -16453,6 +16653,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.3.html`,
+      summary:
+        "Defines terms for the remediation agreement Part, including 'court,' 'offence,' 'organization,' 'remediation agreement,' and 'victim,' and allows a third party to act on a victim's behalf with court authorization.",
+      relatedSections: ["2", "2.2"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16463,6 +16666,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.31.html`,
+      summary:
+        "States the purpose of the remediation agreement regime, including denouncing wrongdoing, holding organizations accountable, promoting compliance, encouraging disclosure, providing reparations, and reducing harm to innocent stakeholders.",
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16473,6 +16678,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.32.html`,
+      summary:
+        "Sets out the conditions under which a prosecutor may negotiate a remediation agreement with an organization, and lists factors the prosecutor must, and for foreign corruption offences must not, consider in deciding whether negotiation is in the public interest.",
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16483,6 +16690,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.33.html`,
+      summary:
+        "Requires the prosecutor, if seeking to negotiate a remediation agreement with an organization, to give written notice setting out the offence, the voluntary nature and legal effects of negotiations, disclosure obligations, and a deadline to accept. Admissions made during negotiations generally cannot be used against the organization in related civil or criminal proceedings, except for the statement of facts and admission of responsibility in an approved agreement.",
+      relatedSections: ["715.34"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16493,6 +16703,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.34.html`,
+      summary:
+        "Sets out the mandatory contents a remediation agreement must contain, including a statement of facts, admission of responsibility, cooperation and disclosure obligations, forfeiture, penalty, reparations, victim surcharge, reporting duties, and a compliance deadline. Also describes what admissions are inadmissible in other proceedings and lists optional terms such as compliance measures and appointment of an independent monitor.",
+      relatedSections: ["738"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16503,6 +16716,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.35.html`,
+      summary:
+        "Requires a candidate for appointment as independent monitor to notify the prosecutor in writing of any past or ongoing relationship that could affect their independence.",
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16513,6 +16728,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.36.html`,
+      summary:
+        "Requires the prosecutor to take reasonable steps to inform victims once an organization has agreed to negotiate a remediation agreement, and specifies that this duty must be applied reasonably so as not to interfere with the proper administration of justice.",
+      relatedSections: ["715.33"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16523,6 +16741,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.37.html`,
+      summary:
+        "Sets out the process for the prosecutor to apply to the court for approval of a remediation agreement, the factors the court must consider (including victim impact and reparations), the conditions for approval, and the resulting stay of proceedings and suspension of limitation periods.",
+      relatedSections: ["715.34", "715.36", "722", "722.1", "722.2"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16533,6 +16754,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.38.html`,
+      summary:
+        "Requires the court, on application by the prosecutor, to approve a modification to a remediation agreement if satisfied it still meets the required conditions, at which point the modification becomes part of the agreement.",
+      relatedSections: ["715.37"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16543,6 +16767,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.39.html`,
+      summary:
+        "Requires the court, on application by the prosecutor, to terminate a remediation agreement if the organization has breached its terms, and sets out how and when the stayed proceedings may be recommenced.",
+      relatedSections: ["715.37"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16553,6 +16780,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.4.html`,
+      summary:
+        "Requires the court, on application by the prosecutor, to declare that the terms of a remediation agreement were met if satisfied of compliance, which stays the proceedings, deems them never commenced, and bars other proceedings for the same offence.",
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16563,6 +16792,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.41.html`,
+      summary:
+        "Requires the prosecutor to apply to the court after the agreement's deadline for a variation, termination, or completion order, and provides that the agreement remains in force until the court terminates it or declares its terms met.",
+      relatedSections: ["715.34", "715.38", "715.39", "715.4"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16573,6 +16805,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.42.html`,
+      summary:
+        "Requires the court to publish approved remediation agreements and related orders and reasons, but allows non-publication in whole or in part if necessary for the proper administration of justice, subject to listed factors, conditions, and review on application by any person.",
+      relatedSections: ["715.37", "715.38", "715.39", "715.4", "715.41"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16583,6 +16818,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.43.html`,
+      summary:
+        "Authorizes the Governor in Council, on the Minister of Justice's recommendation, to make regulations governing remediation agreements and to amend the schedule of eligible offences, while preserving the Part's application to organizations already given notice before an offence is deleted.",
+      relatedSections: ["715.33"],
       partOf: "Part XXII.1 — Remediation Agreements",
     },
   ],
@@ -16595,6 +16833,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.44.html`,
+      summary:
+        "Defines terms used in this Part, including \"alternative measures\" and \"restorative justice process.\"",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16605,6 +16845,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.45.html`,
+      summary:
+        "States the purpose of this Part, including holding offenders accountable, repairing harm to victims and community, and promoting rehabilitation and reintegration.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16615,6 +16857,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.46.html`,
+      summary:
+        "Sets out the principles that apply to this Part, including the appropriate use of judicial resources, timely intervention, and consideration of victims' interests and offenders' circumstances.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16625,6 +16869,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.47.html`,
+      summary:
+        "Requires a police officer, where appropriate and safe, to consider taking no further action, issuing a warning, or referring the person to a program, agency, or alternative measure instead of laying charges; failure to consider these options does not invalidate later charges.",
+      relatedSections: ["715.45", "715.46"],
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16635,6 +16882,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.48.html`,
+      summary:
+        "Requires a prosecutor, where appropriate and safe, to consider issuing a warning or referring the person to a program, agency, or alternative measure before proceeding with charges; failure to consider these options does not invalidate proceedings.",
+      relatedSections: ["715.45", "715.46"],
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16645,6 +16895,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.49.html`,
+      summary:
+        "Lists the conditions that must be met for alternative measures to be used with a person alleged to have committed an offence, including authorization of the program, informed and free consent, acceptance of responsibility, and sufficiency of evidence.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16655,6 +16907,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.5.html`,
+      summary:
+        "Prohibits the use of alternative measures for a person who denies involvement in the offence or who wants the charge dealt with by the court.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16665,6 +16919,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.51.html`,
+      summary:
+        "Provides that an admission or statement of responsibility made as a condition of being dealt with by alternative measures cannot be used as evidence against that person in any civil or criminal proceeding.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16675,6 +16931,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.52.html`,
+      summary:
+        "Provides that using alternative measures does not bar later proceedings, but the court must dismiss a subsequent charge if satisfied the person fully complied with the measures, and may dismiss it if the person partially complied and prosecution would be unfair.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16685,6 +16943,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.53.html`,
+      summary:
+        "Sets out additional principles applicable to the use of restorative justice processes, including that they prioritize acknowledgment of harm, are voluntary, and account for participant safety.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16695,6 +16955,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.54.html`,
+      summary:
+        "States that a restorative justice process may be used at any stage of the criminal justice process and may take various forms, and that certain alternative-measures provisions apply when it is used as an alternative measure.",
+      relatedSections: ["715.49", "715.5", "715.51", "715.52"],
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16705,6 +16968,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.55.html`,
+      summary:
+        "Allows a judge, justice, or authorized person to convene a conference involving the prosecutor, the alleged offender or offender, and others, to facilitate alternative measures or restorative justice and make related recommendations, and permits provinces to establish rules for conferences not convened by a judge or justice.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16715,6 +16980,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.56.html`,
+      summary:
+        "States that the record-keeping provisions in sections 715.57 to 715.6 apply only to persons who have received a warning or referral under section 715.47 or 715.48, regardless of their compliance.",
+      relatedSections: ["715.57", "715.58", "715.59", "715.6", "715.47", "715.48"],
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16725,6 +16993,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.57.html`,
+      summary:
+        "Requires the police officer who issues a warning or makes a referral to keep a record of it, including the identity of the person involved.",
+      relatedSections: ["715.47"],
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16735,6 +17006,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.58.html`,
+      summary:
+        "Allows a police force to keep records relating to an alleged offence, including fingerprints and photographs, and permits disclosure of that information where necessary for investigations or to insurance companies investigating related claims.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16745,6 +17018,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.59.html`,
+      summary:
+        "Allows government departments and agencies to keep records obtained for investigating offences, proceedings, or the use of alternative measures, and allows any person or organization to keep records obtained through the use of alternative measures.",
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16755,6 +17030,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-715.6.html`,
+      summary:
+        "Sets out to whom records kept under sections 715.57 to 715.59 may be disclosed, including judges, peace officers, and government officials, and under what conditions further disclosure or access is permitted, while making certain evidence of warnings or referrals inadmissible and limiting how long such records may be used as evidence.",
+      relatedSections: ["715.57", "715.58", "715.59", "721"],
       partOf: "Part XXII.2 — Alternative Measures and Restorative Justice Processes",
     },
   ],
@@ -16767,6 +17045,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-716.html`,
+      summary:
+        "Defines terms used in this Part, including \"accused,\" \"court,\" and \"fine\"; the former definition of \"alternative measures\" has been repealed.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16777,6 +17057,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.html`,
+      summary:
+        "States the fundamental purpose of sentencing and lists its objectives, including denunciation, deterrence, separation from society where necessary, rehabilitation, reparations, and promoting responsibility.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16787,6 +17069,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.01.html`,
+      summary:
+        "Requires a court to give primary consideration to denunciation and deterrence when sentencing for an offence involving abuse of a person under eighteen.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16797,6 +17081,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.02.html`,
+      summary:
+        "Requires a court to give primary consideration to denunciation and deterrence when sentencing for specified offences against a peace officer or other justice system participant.",
+      relatedSections: ["270", "270.01", "270.02", "423.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16807,6 +17094,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.03.html`,
+      summary:
+        "Requires a court to give primary consideration to denunciation and deterrence when sentencing for an offence under subsection 445.01(1), which involves certain animals.",
+      relatedSections: ["445.01"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16817,6 +17107,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.04.html`,
+      summary:
+        "Requires a court to give primary consideration to denunciation and deterrence when sentencing for an offence involving abuse of a vulnerable person, including because the person is Aboriginal and female.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16827,6 +17119,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.05.html`,
+      summary:
+        "Requires a court to give primary consideration to denunciation and deterrence when sentencing for a second or subsequent offence of motor vehicle theft involving violence under subsection 333.1(3).",
+      relatedSections: ["333.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16837,6 +17132,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.06.html`,
+      summary:
+        "Requires a court to give primary consideration to denunciation and deterrence when sentencing for a second or subsequent breaking and entering offence under section 348.",
+      relatedSections: ["348"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16847,6 +17145,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.07.html`,
+      summary:
+        "Requires a court to give primary consideration to denunciation and deterrence when sentencing for an offence committed for the benefit of, at the direction of, or in association with a criminal organization.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16857,6 +17157,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.1.html`,
+      summary:
+        "States that a sentence must be proportionate to the gravity of the offence and the offender's degree of responsibility.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16867,6 +17169,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.2.html`,
+      summary:
+        "Lists additional sentencing principles a court must consider, including deemed aggravating circumstances (such as bias motivation, abuse of a partner, child, or position of trust), parity between similar offenders, avoiding unduly harsh combined sentences, and preferring less restrictive sanctions where appropriate.",
+      relatedSections: ["742.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16877,6 +17182,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.201.html`,
+      summary:
+        "Requires a court sentencing for an offence involving abuse of an intimate partner to consider the increased vulnerability of female victims, with particular attention to Aboriginal female victims.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16887,6 +17194,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.21.html`,
+      summary:
+        "Lists additional factors a court must consider when sentencing an organization, including any advantage gained, planning involved, attempts to conceal assets, economic impact of the sentence, related regulatory penalties, and remedial measures taken.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16897,6 +17206,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.3.html`,
+      summary:
+        "Sets out how a court's sentencing discretion operates where an enactment prescribes different or specific punishments, addresses default imprisonment terms for unpaid fines, and requires the court to consider consecutive sentences in listed situations, including repeat violent offences, and requires consecutive sentences for multiple sexual offences against children.",
+      relatedSections: ["734", "163.1", "743.5"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16907,6 +17219,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-718.4.html`,
+      summary:
+        "Requires a court to impose a shorter term of imprisonment than a prescribed minimum where that minimum would amount to cruel and unusual punishment for the offender, except where the minimum punishment is life imprisonment.",
+      relatedSections: ["320.23"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16917,6 +17232,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-719.html`,
+      summary:
+        "Sets out when a sentence commences, excludes time unlawfully at large from counting toward a prison term, and governs how credit for pretrial custody is calculated, recorded, and limited.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16927,6 +17244,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-720.html`,
+      summary:
+        "Requires a court to conduct sentencing proceedings as soon as practicable after a finding of guilt, and allows the court, with consent, to delay sentencing so the offender can participate in a supervised treatment program or restorative justice process.",
+      relatedSections: ["715.44"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16937,6 +17257,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-721.html`,
+      summary:
+        "Requires a probation officer, if directed by the court, to prepare and file a report on the accused to assist sentencing or discharge decisions, sets out what the report must generally contain, and requires the clerk to provide copies to the offender and prosecutor.",
+      relatedSections: ["730", "715.44"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16947,6 +17270,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-722.html`,
+      summary:
+        "Requires a court to consider a victim impact statement describing the harm suffered when determining sentence, and sets out the procedures for the court's inquiry, adjournment, form, and manner of presenting the statement.",
+      relatedSections: ["730"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16957,6 +17283,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-722.1.html`,
+      summary:
+        "Requires the clerk of the court to provide a copy of a victim impact statement to the offender or their counsel and to the prosecutor as soon as practicable after a finding of guilt.",
+      relatedSections: ["722"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16967,6 +17296,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-722.2.html`,
+      summary:
+        "Requires a court to consider a community impact statement describing harm to a community when determining sentence, and sets out procedures for the court's inquiry, adjournment, form, and manner of presenting the statement.",
+      relatedSections: ["730"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16977,6 +17309,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-723.html`,
+      summary:
+        "Requires the court to give the prosecutor and offender an opportunity to make submissions and present evidence on facts relevant to sentencing, and allows the court to require production of evidence or compel witnesses.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16987,6 +17321,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-724.html`,
+      summary:
+        "Sets out what a court may accept as proved when determining a sentence, including facts disclosed at trial, jury findings, and agreed facts, and establishes procedures and burdens of proof for resolving disputed facts.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -16997,6 +17333,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-725.html`,
+      summary:
+        "Sets out what a court must or may consider in determining sentence, including other offences the offender was found guilty of, outstanding charges the offender consents to have taken into account, and other facts that could form the basis of a separate charge. Requires the court to note any such charges or facts on the record, after which no further proceedings may be taken on them unless the underlying conviction is set aside or quashed on appeal.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17007,6 +17345,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-726.html`,
+      summary:
+        "Requires the court, before determining sentence, to ask the offender, if present, whether they have anything to say.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17017,6 +17357,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-726.1.html`,
+      summary:
+        "Requires the court to consider any relevant information placed before it, including representations or submissions from the prosecutor or the offender, when determining sentence.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17027,6 +17369,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-726.11.html`,
+      summary:
+        "Requires the court, when an offender is found guilty under subsection 263.1(1), to endorse on the information or indictment which included offence was proved by the evidence, and that endorsement stands as proof of that fact absent contrary evidence.",
+      relatedSections: ["263.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17037,6 +17382,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-726.2.html`,
+      summary:
+        "Requires the court, when imposing a sentence, to state the terms of the sentence and its reasons, and to enter both into the record of proceedings.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17047,6 +17394,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-726.21.html`,
+      summary:
+        "Requires the court, where it finds an offender guilty of an offence involving violence used, threatened or attempted against their intimate partner, to endorse that fact on the information or indictment, which then stands as proof absent contrary evidence.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17057,6 +17406,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-726.22.html`,
+      summary:
+        "Requires the court, when an offender is found guilty under subsection 320.1001(1), to endorse on the information or indictment which included offence was proved by the evidence, and that endorsement stands as proof absent contrary evidence.",
+      relatedSections: ["320.1001"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17067,6 +17419,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-726.3.html`,
+      summary:
+        "Requires the court, when imposing a sentence, to ask the prosecutor whether reasonable steps were taken to determine if the victim wants information about the sentence and its administration, and to record the victim's wishes if known.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17077,6 +17431,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-727.html`,
+      summary:
+        "Sets conditions under which a court may impose a greater punishment based on an offender's previous convictions, including required prior notice to the offender, procedures for admitting evidence of prior convictions, and special rules for ex parte trials under subsection 803(2) and for organizations tried under section 623; also excludes application to a person referred to in paragraph 745(b).",
+      relatedSections: ["803", "623", "745"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17087,6 +17444,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-728.html`,
+      summary:
+        "Provides that where one sentence is passed on a guilty verdict for two or more counts, the sentence stands if any single count would have justified it.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17097,6 +17456,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-729.html`,
+      summary:
+        "Allows a certificate signed by a designated analyst stating the results of analyzing a substance to be admitted as evidence, without proof of the signer's signature or official status, in proceedings about breach of a drug-related probation or conditional sentence condition, subject to notice requirements and the opposing party's right to require the analyst's attendance for cross-examination.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17107,6 +17468,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-729.1.html`,
+      summary:
+        "Allows a certificate signed by a designated analyst stating the results of analyzing a bodily substance sample to be admitted as evidence, without proof of the signer's signature or official status, in proceedings about breach of a probation or conditional sentence condition to abstain from drugs, alcohol or other intoxicating substances, subject to notice requirements and the opposing party's right to require the analyst's attendance for cross-examination.",
+      relatedSections: ["320.11"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17114,9 +17478,12 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     "729.2",
     {
       title: "Order prohibiting contact",
-      severity: "",
-      maxPenalty: "",
+      severity: "Hybrid",
+      maxPenalty: "Up to 2 years imprisonment on indictment; summary conviction also available",
       url: `${JUSTICE_LAWS_BASE}/section-729.2.html`,
+      summary:
+        "Allows a court, on convicting or conditionally discharging an offender under section 730 for a sexual offence, criminal harassment, trafficking in persons, or an offence against an intimate partner, to order that the offender have no contact with a named victim, witness or other person, for up to life, with provision for variation on application; failing to comply without lawful excuse is itself an offence.",
+      relatedSections: ["730"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17127,6 +17494,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "Summary",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-730.html`,
+      summary:
+        "Allows a court, instead of convicting an offender (other than for offences with a minimum punishment or punishable by 14 years or life), to order an absolute or conditional discharge where it is in the offender's best interests and not contrary to the public interest; sets out the legal effect of a discharge, including appeal rights and the ability to revoke the discharge and convict if the offender later breaches the probation order or is convicted of another offence.",
+      relatedSections: ["732.2", "733.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17137,6 +17507,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-731.html`,
+      summary:
+        "Allows a court, having regard to the offender's age and character and the nature of the offence, to suspend passing sentence and impose a probation order, or to combine a fine or imprisonment of up to two years with a probation order; also allows a probation order where an accused is discharged under section 730.",
+      relatedSections: ["730"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17147,6 +17520,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-731.1.html`,
+      summary:
+        "Requires the court, before making a probation order, to consider whether the firearm prohibition provisions in section 109 or 110 apply, and clarifies that a probation condition referred to in paragraph 732.1(3)(d) does not affect those provisions.",
+      relatedSections: ["109", "110", "732.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17157,6 +17533,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-732.html`,
+      summary:
+        "Allows a court imposing a sentence of imprisonment of ninety days or less to order that it be served intermittently, with probation conditions applying when the offender is not in confinement, and sets out rules for varying an intermittent sentence to consecutive days or interrupting it if a further sentence is imposed.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17167,6 +17545,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-732.1.html`,
+      summary:
+        "Defines terms used in this section and section 732.2, sets out mandatory conditions every probation order must include (keeping the peace, appearing when required, notifying of changes of name, address, employment), and lists optional conditions a court may add for individual offenders and for organizations, along with related procedural and administrative requirements for the order and for bodily substance sampling.",
+      relatedSections: ["732.2", "733.1", "738"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17175,8 +17556,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Prohibition on use of bodily substance",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "Summary conviction (no specific penalty amount stated in this section)",
       url: `${JUSTICE_LAWS_BASE}/section-732.11.html`,
+      summary:
+        "Prohibits using a bodily substance provided under a probation order for any purpose other than checking compliance with an abstinence condition, and prohibits using or disclosing analysis results except to the offender or for specified investigative, proceeding or anonymized research purposes; contravening either prohibition is an offence punishable on summary conviction.",
+      relatedSections: ["733.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17187,6 +17571,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-732.2.html`,
+      summary:
+        "Sets out when a probation order comes into force, how long it remains in effect (subject to a three-year limit), and the procedures for a court to change or relieve compliance with optional conditions, including special provisions where the offender is later convicted of another offence.",
+      relatedSections: ["731", "733.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17197,6 +17584,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-733.html`,
+      summary:
+        "Allows a probation order to be transferred, on a probation officer's application, to a court in another territorial division where the offender becomes resident or is convicted or discharged under section 730 (including for an offence under section 733.1), subject to the Attorney General's consent where the divisions are in different provinces or the proceedings were federal, and allows another court of equivalent jurisdiction to exercise the powers of a court that made or received the order if that court is unable to act.",
+      relatedSections: ["730", "733.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17205,8 +17595,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Failure to comply with probation order",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "Up to 4 years imprisonment on indictment; summary conviction also available",
       url: `${JUSTICE_LAWS_BASE}/section-733.1.html`,
+      summary:
+        "Makes it an offence, punishable either by indictment or on summary conviction, for an offender bound by a probation order to fail or refuse, without reasonable excuse, to comply with it, and sets out where such an offence may be tried and punished.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17217,6 +17609,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.html`,
+      summary:
+        "Allows a court convicting a person (other than an organization) to impose a fine in addition to or instead of other sanctions, subject to being satisfied the offender can pay, and sets out how a term of imprisonment in default of payment is calculated and may be deducted from money found on the offender at arrest.",
+      relatedSections: ["734.1", "734.8", "736"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17227,6 +17622,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.1.html`,
+      summary:
+        "Requires a court imposing a fine under section 734 to make an order setting out the amount of the fine, how and when it is to be paid, and any other appropriate payment terms.",
+      relatedSections: ["734"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17237,6 +17635,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.2.html`,
+      summary:
+        "Requires a court that makes a fine order to give the offender a copy of it, explain the relevant fine provisions and the procedure for applying to change payment terms or use a fine option program, and take reasonable steps to ensure the offender understands; failure to do so does not affect the order's validity.",
+      relatedSections: ["734", "734.1", "734.3", "734.8", "736"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17247,6 +17648,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.3.html`,
+      summary:
+        "Allows a court that made a fine order, or a person it designates, to change any term of the order except the fine amount, on application by or for the offender.",
+      relatedSections: ["734", "734.1", "734.2", "734.6", "482", "482.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17257,6 +17661,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.4.html`,
+      summary:
+        "Sets out that proceeds of a fine or forfeiture generally belong to the province where imposed, unless the offence relates to federal revenue law, federal official misconduct, or federally instituted proceedings, in which case the proceeds go to the federal Receiver General; allows for redirection of proceeds to a municipal or local authority that bore the enforcement costs.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17267,6 +17673,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.5.html`,
+      summary:
+        "Allows the authority responsible for issuing, renewing or suspending a licence or permit to refuse or suspend it until an offender pays a fine in default, depending on whether the fine proceeds belong to the province or to Canada under subsection 734.4(1) or (2).",
+      relatedSections: ["734.4"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17277,6 +17686,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.51.html`,
+      summary:
+        "Allows the federal Attorney General to enter into agreements with provincial or local governments to share fine proceeds as compensation for administering and enforcing federal law, including allowing withheld amounts under such agreements, and deems shared amounts appropriated by Parliament.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17287,6 +17698,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.6.html`,
+      summary:
+        "Allows the applicable Attorney General to file an unpaid fine or forfeiture order in a civil court as a judgment, in addition to other recovery methods, where the fine or forfeiture is unpaid; the filed order is then enforceable as an ordinary civil judgment.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17297,6 +17710,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.7.html`,
+      summary:
+        "Restricts a court from issuing a warrant of committal for default of fine payment until the time allowed for payment has passed and the court is satisfied that the mechanisms in sections 734.5 and 734.6 are unsuitable or the offender has refused without reasonable excuse to pay or discharge the fine under section 736, requires reasons where no time was allowed, and provides that imprisonment ends the availability of the licence-suspension and civil-enforcement mechanisms for that fine.",
+      relatedSections: ["734.5", "734.6", "736"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17307,6 +17723,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-734.8.html`,
+      summary:
+        "Defines \"penalty\" as the fine plus costs and charges of committal, sets out how the term of imprisonment in default is reduced proportionally on part payment, sets a minimum amount that can be accepted after a warrant is executed, specifies to whom payment may be made, and sets the order in which a payment is applied to costs, the victim surcharge under section 737, and the fine.",
+      relatedSections: ["734", "737"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17317,6 +17736,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-735.html`,
+      summary:
+        "Sets the fine an organization is liable to on conviction in lieu of imprisonment, at the court's discretion for indictable offences and up to a statutory maximum for summary offences, requires the court's fine order to set out the amount and payment terms, and applies the civil-enforcement mechanism in section 734.6 if the organization fails to pay.",
+      relatedSections: ["734.6"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17327,6 +17749,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-736.html`,
+      summary:
+        "Allows an offender fined under section 734 to discharge the fine, in whole or in part, by earning credits for work performed under a provincial fine option program over up to two years, sets out how credits are determined and deemed as payment, and allows use of another province's program under an interprovincial agreement where the fine's proceeds belong to Canada under subsection 734.4(2).",
+      relatedSections: ["734", "734.4"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17337,6 +17762,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-737.html`,
+      summary:
+        "Requires an offender convicted or discharged under section 730 of certain offences to pay a victim surcharge calculated as a percentage of any fine or a set amount if no fine is imposed, allows the court to waive or reduce the surcharge for undue hardship or disproportionality, allows increasing it in appropriate circumstances, and sets out payment timing, use of proceeds, notice requirements, and which fine-enforcement provisions apply to it.",
+      relatedSections: ["730", "734", "734.3", "734.5", "734.7", "734.8"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17347,6 +17775,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-737.1.html`,
+      summary:
+        "Requires a court sentencing or discharging an offender under section 730 to consider making a restitution order under section 738 or 739, to inquire whether victims have been given an opportunity to seek restitution with an ascertainable amount, to allow an adjournment for that purpose, to specify the form by which victims indicate they are seeking restitution, and to record its reasons if it declines to make a restitution order a victim sought.",
+      relatedSections: ["730", "738", "739"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17357,6 +17788,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-738.html`,
+      summary:
+        "Allows a court sentencing or discharging an offender under section 730 to order restitution to another person for readily ascertainable losses arising from property damage or loss, bodily or psychological harm, certain household relocation expenses from harm by the offender, identity-theft-related re-establishment expenses under section 402.2 or 403, or expenses to remove an intimate image from the internet under subsection 162.1(1); also allows provincial regulations restricting inclusion of restitution enforcement terms as a probation or conditional sentence condition.",
+      relatedSections: ["730", "402.2", "403", "162.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17367,6 +17801,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-739.html`,
+      summary:
+        "Allows a court, where property obtained through an offence was sold or used as loan security to a good-faith purchaser or lender without notice and the property was returned to its lawful owner, to order the offender to pay restitution to that purchaser or lender up to the value of the consideration or loan.",
+      relatedSections: ["730"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17377,6 +17814,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-739.1.html`,
+      summary:
+        "Provides that an offender's financial means or ability to pay does not prevent a court from making a restitution order under section 738 or 739.",
+      relatedSections: ["738", "739"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17387,6 +17827,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-739.2.html`,
+      summary:
+        "Requires a court making a restitution order under section 738 or 739 to require payment in full by a specified date, unless it sets out an instalment payment scheme instead.",
+      relatedSections: ["738", "739"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17397,6 +17840,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-739.3.html`,
+      summary:
+        "Allows a restitution order under section 738 or 739 to be made in favour of more than one person, specifying the amount payable to each and, optionally, the priority in which they are to be paid.",
+      relatedSections: ["738", "739"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17407,6 +17853,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-739.4.html`,
+      summary:
+        "Allows a court, at the request of a person entitled to restitution under section 738 or 739, to direct the restitution order in favour of a designated public authority responsible for enforcing it and remitting amounts collected to that person, and allows a province to designate such public authorities.",
+      relatedSections: ["738", "739"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17417,6 +17866,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-740.html`,
+      summary:
+        "Requires a court that finds a restitution order under section 738 or 739 appropriate to make that order first, before then considering whether and to what extent a forfeiture order or fine is also appropriate, in cases where forfeiture could apply to the same property or a fine might conflict with the offender's ability to pay restitution.",
+      relatedSections: ["738", "739"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17427,6 +17879,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-740.1.html`,
+      summary:
+        "If a restitution-related payment requirement in an order under section 732.1 or 742.3 is still owing when that order ends, the unpaid portion continues as a restitution order under section 738 or 739 until fully paid.",
+      relatedSections: ["732.1", "742.3", "738", "739"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17437,6 +17892,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-741.html`,
+      summary:
+        "Sets out how an unpaid restitution or payment order can be enforced as a civil judgment when the offender defaults, and allows money found on the offender at arrest to be applied to the amount owed under section 738 or 739 if ownership is undisputed.",
+      relatedSections: ["732.1", "738", "739", "742.3"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17447,6 +17905,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-741.1.html`,
+      summary:
+        "Requires a court making a restitution order under section 738 or 739 to give notice or a copy of the order to the person owed payment, and, where payment is to be made to a public authority designated under subsection 739.4(2), to that authority and to the person the authority is to remit the payments to.",
+      relatedSections: ["738", "739", "739.4"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17457,6 +17918,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-741.2.html`,
+      summary:
+        "States that making a restitution order under section 738 or 739 does not affect a person's ability to pursue a civil remedy for the same act or omission.",
+      relatedSections: ["738", "739"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17467,6 +17931,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-742.html`,
+      summary:
+        "Defines terms used in sections 742.1 to 742.7, including \"change,\" \"optional conditions\" (the conditions referred to in subsection 742.3(2)), and \"supervisor.\"",
+      relatedSections: ["742.1", "742.7", "742.3"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17477,6 +17944,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-742.1.html`,
+      summary:
+        "Allows a court to order that a sentence of imprisonment of less than two years be served in the community under conditions imposed under section 742.3, subject to conditions including that the offence is not one carrying a mandatory minimum, is not among specific listed offences, and does not involve certain terrorism or criminal organization offences prosecuted by indictment.",
+      relatedSections: ["742.3", "718", "239", "269.1", "272", "273"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17487,6 +17957,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-742.2.html`,
+      summary:
+        "Requires a court to consider whether firearms prohibitions under section 109 or 110 apply before imposing a conditional sentence under section 742.1, and clarifies that a conditional sentence condition under paragraph 742.3(2)(b) does not affect those prohibitions.",
+      relatedSections: ["742.1", "109", "110", "742.3"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17497,6 +17970,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-742.3.html`,
+      summary:
+        "Sets out the compulsory conditions a court must include in a conditional sentence order (such as keeping the peace and reporting to a supervisor) and the optional conditions it may add, along with rules for bodily substance sampling, notice obligations, and related regulation-making powers.",
+      relatedSections: ["742.4", "742.6", "738"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17505,8 +17981,11 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Prohibition on use of bodily substance",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "summary conviction (s. 787 default penalty applies unless otherwise stated)",
       url: `${JUSTICE_LAWS_BASE}/section-742.31.html`,
+      summary:
+        "Restricts the use of a bodily substance sample and its analysis results taken under a conditional sentence order to specific permitted purposes, and makes unauthorized use or disclosure an offence punishable on summary conviction.",
+      relatedSections: ["742.6"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17517,6 +17996,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-742.4.html`,
+      summary:
+        "Sets out the process for a supervisor, offender, or prosecutor to propose changes to the optional conditions of a conditional sentence order, including notice requirements, the right to request a hearing, and what happens if no hearing is requested.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17527,6 +18008,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-742.5.html`,
+      summary:
+        "Allows a court to transfer a conditional sentence order to another territorial division where the offender has become a resident, subject to Attorney General consent in certain cases, and lets another court exercise the powers of a court unable to act.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17537,6 +18020,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-742.6.html`,
+      summary:
+        "Sets out the procedure for arresting, compelling appearance of, and holding a hearing for an offender alleged to have breached a condition of a conditional sentence order, including timelines, evidentiary requirements, the court's powers on finding a breach, and how the running of the sentence is suspended or credited during the process.",
+      relatedSections: ["495", "487.1", "515", "742.4", "742.7"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17547,6 +18033,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-742.7.html`,
+      summary:
+        "Addresses how a conditional sentence order interacts with imprisonment for another offence, including suspension of the order while imprisoned, consecutive service of any custodial period ordered for breach, treatment of multiple sentences as one, and resumption of the order upon release.",
+      relatedSections: ["742.6", "743.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17555,8 +18044,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Imprisonment when no other provision",
       severity: "Indictable",
-      maxPenalty: "",
+      maxPenalty: "Imprisonment for a term not exceeding five years",
       url: `${JUSTICE_LAWS_BASE}/section-743.html`,
+      summary:
+        "Sets the general liability to imprisonment for an indictable offence for which no punishment is otherwise specified, capping the term at five years.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17567,6 +18058,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-743.1.html`,
+      summary:
+        "Sets out when a sentence of imprisonment must be served in a penitentiary versus another prison, based on the length and combination of the sentence or sentences imposed.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17577,6 +18070,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-743.2.html`,
+      summary:
+        "Requires a court that sentences or commits a person to penitentiary to forward its reasons, recommendation, relevant reports, and other relevant information to the Correctional Service of Canada.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17585,8 +18080,10 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Non-communication order",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "2 years indictable; summary conviction available",
       url: `${JUSTICE_LAWS_BASE}/section-743.21.html`,
+      summary:
+        "Allows a sentencing judge to prohibit an offender from communicating with a victim, witness, or other identified person during the custodial period, and makes failure to comply an indictable or summary offence.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17597,6 +18094,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-743.3.html`,
+      summary:
+        "Requires that a sentence of imprisonment be served according to the enactments and rules governing the institution where the prisoner is held.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17607,6 +18106,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-743.5.html`,
+      summary:
+        "Sets out how a remaining youth disposition or youth sentence is treated as an adult sentence under this Act when a person is or has been sentenced to imprisonment while subject to certain Young Offenders Act or Youth Criminal Justice Act dispositions, and deems related sentences to constitute one sentence.",
+      relatedSections: ["743.1"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17617,6 +18119,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-743.6.html`,
+      summary:
+        "Allows or, in certain terrorism and criminal organization cases, requires a court to delay the point at which an offender becomes eligible for full parole to one half of the sentence or ten years, whichever is less, for offenders receiving sentences of two years or more for specified offences.",
+      relatedSections: ["467.11", "467.111", "467.12", "467.13"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17627,6 +18132,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-744.html`,
+      summary:
+        "Directs a peace officer or other person executing a warrant of committal to arrest, convey, and deliver the named person to the prison specified in the warrant, and requires the prison keeper to issue a receipt.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17637,6 +18144,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.html`,
+      summary:
+        "Sets out the parole ineligibility periods for the sentence of life imprisonment depending on the offence of conviction, ranging from 25 years for high treason or first degree murder to normal eligibility for other offences.",
+      relatedSections: ["745.1", "745.4", "236", "745.52"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17647,6 +18157,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.01.html`,
+      summary:
+        "Requires the trial judge, when sentencing under certain provisions, to state for the record the offence, the life sentence, the parole ineligibility date, and the availability of a later application under section 745.6, except where the offence was committed after a specified date.",
+      relatedSections: ["745", "745.6"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17657,6 +18170,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.1.html`,
+      summary:
+        "Sets out the parole ineligibility periods applicable to a person under 18 at the time of the offence who is sentenced to life imprisonment for first or second degree murder or certain manslaughter, varying by age and offence.",
+      relatedSections: ["236"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17667,6 +18183,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.2.html`,
+      summary:
+        "Requires the trial judge, on a jury's finding of guilt for second degree murder, to ask the jury whether it wishes to make a recommendation on the number of years before parole eligibility.",
+      relatedSections: ["745.3"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17677,6 +18196,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.21.html`,
+      summary:
+        "Requires the trial judge, when a jury finds an accused guilty of murder who has a previous murder conviction, to ask the jury whether it wishes to recommend how the parole ineligibility periods for the murders should be served consecutively, and specifies when this applies.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17687,6 +18208,8 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.3.html`,
+      summary:
+        "Requires the trial judge, on a jury's finding of guilt for first or second degree murder by a person under 16 at the time of the offence, to ask the jury whether it wishes to recommend the length of the parole ineligibility period.",
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17697,6 +18220,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.4.html`,
+      summary:
+        "Allows the trial judge, on sentencing for second degree murder, to substitute a parole ineligibility period of more than ten but not more than twenty-five years, considering the offender's character, the offence, and any jury recommendation.",
+      relatedSections: ["745.5", "745", "745.2"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17707,6 +18233,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.5.html`,
+      summary:
+        "Allows the trial judge, on sentencing a person under 16 at the time of the offence for first or second degree murder, to set the parole ineligibility period between five and seven years, considering the offender, the offence, and any jury recommendation.",
+      relatedSections: ["745.1", "745.3"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17717,6 +18246,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.51.html`,
+      summary:
+        "Allows the trial judge, on sentencing an offender convicted of murder who has prior murder convictions, to order that the parole ineligibility periods for each murder be served consecutively, with reasons required and application limited to murders committed after the section's coming into force.",
+      relatedSections: ["745", "745.21"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17727,6 +18259,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.52.html`,
+      summary:
+        "Allows the trial judge, on sentencing for manslaughter in specified circumstances, to set a parole ineligibility period of up to 25 years or between five and seven years depending on the sentencing provision applied, considering the offender's character, the offence, and in one case the offender's age.",
+      relatedSections: ["745", "745.1", "236"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17737,6 +18272,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.6.html`,
+      summary:
+        "Sets out the eligibility conditions, timelines, and exceptions for a person convicted of murder or high treason to apply for judicial review of their parole ineligibility period, including rules for multiple murderers, repeat applications, time-limit extensions, and victim notification, and defines the applicable Chief Justice by province or territory.",
+      relatedSections: ["745.61", "745.63", "745.64"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17747,6 +18285,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.61.html`,
+      summary:
+        "Sets out the judicial screening process for an application under section 745.6, where the Chief Justice or a designated judge determines on written material whether there is a substantial likelihood the application will succeed, and either sets a time for reapplication, bars reapplication, or designates a judge to empanel a jury to hear the application.",
+      relatedSections: ["745.6", "745.63"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17757,6 +18298,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.62.html`,
+      summary:
+        "Allows the applicant or the Attorney General to appeal a determination or decision made under section 745.61 to the Court of Appeal, and sets out how the appeal is to be determined and which sections apply.",
+      relatedSections: ["745.61", "673", "696"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17767,6 +18311,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.63.html`,
+      summary:
+        "Sets out the criteria a jury must consider and the voting thresholds required to determine whether to reduce, and by how much, an applicant's parole ineligibility period, and what happens if the number of years is not reduced.",
+      relatedSections: ["745.61"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17777,6 +18324,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-745.64.html`,
+      summary:
+        "Allows the appropriate Chief Justice in each province or territory to make rules for the judicial review process, exempts those rules from the Statutory Instruments Act, and sets out how a judge is designated for territorial convictions.",
+      relatedSections: ["745.6", "745.63", "745.61"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
@@ -17787,6 +18337,9 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
       severity: "",
       maxPenalty: "",
       url: `${JUSTICE_LAWS_BASE}/section-746.html`,
+      summary:
+        "Specifies that time spent in custody between arrest and sentencing, or between a commuted death sentence and its commutation, is included when calculating the period of imprisonment served for purposes of the listed parole ineligibility sections.",
+      relatedSections: ["745", "745.1", "745.4", "745.5", "745.52", "745.6"],
       partOf: "Part XXIII — Sentencing",
     },
   ],
