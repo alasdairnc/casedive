@@ -3339,7 +3339,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Immoral theatrical performance",
       severity: "Summary",
-      maxPenalty: "",
+      maxPenalty: "See s. 169.",
       url: `${JUSTICE_LAWS_BASE}/section-167.html`,
       summary:
         "Makes it an offence for a theatre's lessee, manager, agent, or person in charge to present or allow an immoral, indecent, or obscene performance, and separately makes it an offence to take part in such a performance.",
@@ -6673,7 +6673,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Theft of telecommunication service",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 334",
       url: `${JUSTICE_LAWS_BASE}/section-326.html`,
       summary:
         "Makes it theft to fraudulently, maliciously, or without colour of right abstract, consume, waste, or divert electricity or gas, or to use a telecommunication facility or obtain a telecommunication service.",
@@ -6710,7 +6710,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Theft by person required to account",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 334",
       url: `${JUSTICE_LAWS_BASE}/section-330.html`,
       summary:
         "A person who receives something on terms requiring them to account for or pay it (or its proceeds) to another and fraudulently fails to do so commits theft, though a proper accounting entry in a debtor-creditor arrangement can satisfy this requirement.",
@@ -6722,7 +6722,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Theft by person holding power of attorney",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 334",
       url: `${JUSTICE_LAWS_BASE}/section-331.html`,
       summary:
         "A person entrusted with a power of attorney for disposing of property who fraudulently sells, mortgages, or otherwise disposes of the property or its proceeds for an unauthorized purpose commits theft.",
@@ -6734,7 +6734,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Misappropriation of money held under direction",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 334",
       url: `${JUSTICE_LAWS_BASE}/section-332.html`,
       summary:
         "A person who receives money, security, or a power of attorney with directions on how it must be applied or to whom it must be paid, and fraudulently applies or pays it contrary to those directions, commits theft, subject to an exception for ordinary debtor-creditor account dealings absent a written direction.",
@@ -7198,7 +7198,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Trafficking in property obtained by crime",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 355.5.",
       url: `${JUSTICE_LAWS_BASE}/section-355.2.html`,
       summary:
         "Makes it an offence to traffic in property, things, or proceeds knowing they were obtained from the commission of an indictable offence in Canada or an equivalent act committed elsewhere.",
@@ -7222,7 +7222,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Possession of property obtained by crime — trafficking",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 355.5.",
       url: `${JUSTICE_LAWS_BASE}/section-355.4.html`,
       summary:
         "Makes it an offence to possess, for the purpose of trafficking, property or proceeds knowing they were obtained from an indictable offence committed in Canada or an equivalent act elsewhere.",
@@ -7881,7 +7881,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Offence",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 412 (2 years indictable, or summary conviction).",
       url: `${JUSTICE_LAWS_BASE}/section-407.html`,
       summary:
         "Makes it an offence to forge a trademark with intent to deceive or defraud the public or any person.",
@@ -7893,7 +7893,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Passing off",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 412 (2 years indictable, or summary conviction).",
       url: `${JUSTICE_LAWS_BASE}/section-408.html`,
       summary:
         "Makes it an offence, with intent to deceive or defraud, to pass off wares or services as those ordered or required, or to use a materially false description of the kind, quality, quantity, composition, geographical origin, or mode of manufacture, production, or performance of wares or services.",
@@ -7905,7 +7905,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Instruments for forging trademark",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 412 (2 years indictable, or summary conviction).",
       url: `${JUSTICE_LAWS_BASE}/section-409.html`,
       summary:
         "Makes it an offence to make, possess, or dispose of a die, block, machine, or other instrument designed or intended for forging a trademark, unless the person proves they acted in good faith in the ordinary course of business or employment.",
@@ -7917,7 +7917,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Other offences in relation to trademarks",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 412 (2 years indictable, or summary conviction).",
       url: `${JUSTICE_LAWS_BASE}/section-410.html`,
       summary:
         "Makes it an offence, with intent to deceive or defraud, to deface, conceal, or remove a trademark or another person's name from anything without consent, or for a manufacturer, dealer, trader, or bottler to fill a container bearing another's trademark with a liquid commodity for sale without that person's consent.",
@@ -7929,7 +7929,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Used goods sold without disclosure",
       severity: "",
-      maxPenalty: "",
+      maxPenalty: "See s. 412 (2 years indictable, or summary conviction).",
       url: `${JUSTICE_LAWS_BASE}/section-411.html`,
       summary:
         "Makes it an offence to sell, possess for sale, or advertise used, reconditioned, rebuilt, or remade goods bearing another person's trademark or trade name without fully disclosing that they have been reconditioned and are not in their original condition.",
@@ -19348,7 +19348,7 @@ export const CRIMINAL_CODE_SECTIONS = new Map([
     {
       title: "Orders under sections 486 to 486.5 and 486.7",
       severity: "Hybrid",
-      maxPenalty: "",
+      maxPenalty: "See s. 486.6 (for the subsection (2) offence of failing to comply with a publication-restriction order).",
       url: `${JUSTICE_LAWS_BASE}/section-810.5.html`,
       summary:
         "Applies specified publication-ban and related order provisions to proceedings under specified peace-recognizance sections, and makes failing to comply with such an order an offence.",
