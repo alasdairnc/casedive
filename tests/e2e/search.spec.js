@@ -177,11 +177,14 @@ test.describe("Search flow", () => {
     await expect(page.getByText("Legal Analysis")).toBeVisible({
       timeout: 10000,
     });
+    // The analysis text is revealed via useTypewriter (10ms/char). setInterval
+    // timing degrades under CPU contention, so this needs a generous margin
+    // beyond the ~2s ideal-case duration — not an app bug, just animation timing.
     await expect(
       page.getByText(
         "This scenario involves a classic residential break and enter with theft.",
       ),
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 30000 });
   });
 
   test("shows suggested links", async ({ page }) => {

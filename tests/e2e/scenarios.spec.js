@@ -232,9 +232,15 @@ test.describe("Scenario: Assault Causing Bodily Harm", () => {
       page,
       "The accused punched the victim repeatedly causing a broken nose",
     );
-    await expect(page.getByText("Legal Analysis")).toBeVisible();
+    await expect(page.getByText("Legal Analysis")).toBeVisible({
+      timeout: 10000,
+    });
+    // The analysis text is revealed via useTypewriter (10ms/char). setInterval
+    // timing degrades under CPU contention, so this needs a generous margin
+    // beyond the ~2s ideal-case duration — not an app bug, just animation timing.
     await expect(page.locator("body")).toContainText(
       "threshold of bodily harm",
+      { timeout: 30000 },
     );
   });
 
@@ -660,7 +666,13 @@ test.describe("Scenario: Youth Offender (YCJA)", () => {
       page,
       "A 15-year-old first-time offender was caught shoplifting $800 of electronics",
     );
-    await expect(page.getByText("Legal Analysis")).toBeVisible();
-    await expect(page.locator("body")).toContainText("extrajudicial measures");
+    await expect(page.getByText("Legal Analysis")).toBeVisible({
+      timeout: 10000,
+    });
+    // See timing note above — useTypewriter needs a generous margin under load.
+    await expect(page.locator("body")).toContainText(
+      "extrajudicial measures",
+      { timeout: 30000 },
+    );
   });
 });
