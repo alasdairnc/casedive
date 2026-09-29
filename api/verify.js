@@ -167,8 +167,10 @@ export default async function handler(req, res) {
 
     // 2. Civil law statute citations (CDSA, YCJA, CHRA, etc.)
     if (CIVIL_LAW_PATTERN.test(citation)) {
-      // Curated entries first; CDSA/YCJA fall back to the full Act data.
-      const found = lookupCivilLawSection(citation) || lookupStatuteSection(citation);
+      // Curated entries first; CDSA/YCJA fall back to the full Act data, which
+      // also supplies severity/maxPenalty for curated sections.
+      const full = lookupStatuteSection(citation);
+      const found = lookupCivilLawSection(citation) || full;
       if (found) {
         results[citation] = {
           status: "verified",
@@ -177,9 +179,9 @@ export default async function handler(req, res) {
           title: found.entry.title,
           statute: found.entry.statute,
           jurisdiction: found.entry.jurisdiction,
-          ...(found.entry.severity && {
-            severity: found.entry.severity,
-            maxPenalty: found.entry.maxPenalty,
+          ...(full?.entry.severity && {
+            severity: full.entry.severity,
+            maxPenalty: full.entry.maxPenalty,
           }),
         };
       } else {
