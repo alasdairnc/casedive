@@ -947,7 +947,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2019-06-21",
-      relatedSections: ["16","13","17"],
+      relatedSections: ["64","16","13","17"],
     },
   ],
   [
@@ -1734,7 +1734,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Disclosure of Information in a Record",
       subheading: "",
       lastAmendedDate: "2003-01-01",
-      relatedSections: ["114","119"],
+      relatedSections: ["114","91","119"],
     },
   ],
   [

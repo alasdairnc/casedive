@@ -231,7 +231,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Warnings and Referrals",
       subheading: "",
       lastAmendedDate: "2022-11-17",
-      relatedSections: ["10.2"],
+      relatedSections: ["10.2","4"],
     },
   ],
   [
@@ -1154,7 +1154,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Transitional Provisions",
       subheading: "",
       lastAmendedDate: "2002-12-31",
-      relatedSections: ["31","4"],
+      relatedSections: ["4"],
     },
   ],
   [

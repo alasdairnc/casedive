@@ -66,7 +66,7 @@ const wordToNum = (w) => (/^\d+$/.test(w) ? Number(w) : NUM_WORDS[w.toLowerCase(
 // "section 5", "subsection 4(1)", "paragraph 42(2)(c)" written in prose. The XML
 // tags few of these, so read the text; skip any that name another Act.
 const TEXT_REF_RE = /\b(?:sections?|subsections?|paragraphs?)\s+(\d+(?:\.\d+)?)(?:\(\w+\))*(?!\d)([^.;]{0,60})/gi;
-const OTHER_ACT_RE = /^\s*(?:\(\w+\))*(?:\s*(?:,|and|or|to)\s*[\w.()]+)*\s*(?:of|in) (?:the |that )(?!this Act)/i;
+const OTHER_ACT_RE = /^[\s\w.(),]{0,30}?\b(?:of|in) (?:the |that )(?!this Act)[A-Z]/;
 const XREF_RE = /<XRefInternal[^>]*>([^<]*)<\/XRefInternal>/g;
 const TERM_RE = /imprisonment for a term not exceeding ([\w-]+) (years|months)( less a day)?/gi;
 
