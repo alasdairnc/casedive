@@ -113,6 +113,28 @@ test.describe("CriminalCodeExplorer", () => {
     await expect(page.getByText("s. 322", { exact: true })).toBeVisible();
   });
 
+  test("the statute switcher browses the CDSA and YCJA", async ({ page }) => {
+    await openNavMenuIfCollapsed(page);
+    await page.getByRole("button", { name: /criminal code explorer/i }).click();
+
+    await page.getByRole("button", { name: "CDSA", exact: true }).click();
+    await expect(
+      page.locator("span", { hasText: "Controlled Drugs and Substances Act" }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: /Offences: Possession, Trafficking/ }).click();
+    // CDSA s. 5 is trafficking, not the Criminal Code's s. 5
+    await expect(page.getByText("s. 5", { exact: true })).toBeVisible();
+
+    await page.getByRole("button", { name: "YCJA", exact: true }).click();
+    await expect(
+      page.locator("span", { hasText: "Youth Criminal Justice Act" }),
+    ).toBeVisible();
+    await page
+      .locator('input[placeholder*="Search section number"]')
+      .fill("64");
+    await expect(page.getByText("s. 64", { exact: true })).toBeVisible({ timeout: 3000 });
+  });
+
   test("section with enriched data can be expanded to show Definition", async ({
     page,
   }) => {

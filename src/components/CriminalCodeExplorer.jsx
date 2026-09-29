@@ -1,11 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
-import { CRIMINAL_CODE_PARTS } from "../lib/criminalCodeParts.js";
-import {
-  TOPICS,
-  TOPIC_GROUPS,
-  buildTopicBrowse,
-} from "../lib/criminalCodeTopics.js";
+import { buildTopicBrowse } from "../lib/criminalCodeTopics.js";
+import { STATUTE_LIST } from "../lib/statutes.js";
 import { useCriminalCodeSearch } from "../hooks/useCriminalCodeSearch.js";
 import { useMediaQuery } from "../hooks/useMediaQuery.js";
 import Select from "./Select.jsx";
@@ -19,25 +15,17 @@ const SEVERITY_OPTIONS = [
   { value: "Summary", label: "Summary" },
 ];
 
-const PART_OPTIONS = [
-  { value: "all", label: "All Parts" },
-  ...CRIMINAL_CODE_PARTS.map((p) => ({ value: p.label, label: p.label })),
-];
-
-const TOPIC_OPTIONS = [
-  { value: "all", label: "All Topics" },
-  ...TOPICS.map((tp) => ({ value: tp.id, label: tp.label })),
-];
-
 function TopicBrowse({
   sections,
+  topics,
+  topicGroups,
   topicFilter,
   setTopicFilter,
   expandedSection,
   setExpandedSection,
   t,
 }) {
-  const browse = useMemo(() => buildTopicBrowse(sections), [sections]);
+  const browse = useMemo(() => buildTopicBrowse(sections, topics), [sections, topics]);
   const [openTopic, setOpenTopic] = useState(null);
   // Picking a topic in the filter opens just that topic; clicking its header
   // then clears the filter so the full topic list comes back.
@@ -47,7 +35,7 @@ function TopicBrowse({
 
   return (
     <div>
-      {TOPIC_GROUPS.map((group) => {
+      {topicGroups.map((group) => {
         const topics = visible.filter((b) => b.topic.group === group.id && b.count > 0);
         if (topics.length === 0) return null;
         return (
@@ -534,6 +522,9 @@ export default function CriminalCodeExplorer({ onClose }) {
   const isMobile = useMediaQuery("(max-width: 639px)");
 
   const {
+    statute,
+    setStatuteId,
+    parts,
     query,
     setQuery,
     severityFilter,
@@ -548,6 +539,21 @@ export default function CriminalCodeExplorer({ onClose }) {
     totalSections,
     isLoading,
   } = useCriminalCodeSearch();
+
+  const partOptions = useMemo(
+    () => [
+      { value: "all", label: "All Parts" },
+      ...parts.map((p) => ({ value: p.label, label: p.label })),
+    ],
+    [parts],
+  );
+  const topicOptions = useMemo(
+    () => [
+      { value: "all", label: "All Topics" },
+      ...statute.topics.map((tp) => ({ value: tp.id, label: tp.label })),
+    ],
+    [statute],
+  );
 
   // Search and the Part/severity filters show a flat ranked list; with none
   // of them set, the grouped topic browse takes over.
@@ -642,7 +648,7 @@ export default function CriminalCodeExplorer({ onClose }) {
                 color: t.text,
               }}
             >
-              Criminal Code of Canada
+              {statute.title}
             </span>
             <span
               style={{
@@ -684,7 +690,7 @@ export default function CriminalCodeExplorer({ onClose }) {
               aria-label="Search sections"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search section number, title or keyword (e.g. theft, assault)"
+              placeholder={statute.placeholder}
               style={{
                 width: "100%",
                 height: 40,
@@ -718,6 +724,26 @@ export default function CriminalCodeExplorer({ onClose }) {
             )}
           </div>
           <div
+            role="group"
+            aria-label="Statute"
+            style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}
+          >
+            {STATUTE_LIST.map((st) => (
+              <Button
+                key={st.id}
+                variant="toggle"
+                size="sm"
+                pressed={st.id === statute.id}
+                onClick={() => {
+                  setStatuteId(st.id);
+                  setExpandedSection(null);
+                }}
+              >
+                {st.tab}
+              </Button>
+            ))}
+          </div>
+          <div
             style={{
               display: "flex",
               gap: 12,
@@ -725,21 +751,23 @@ export default function CriminalCodeExplorer({ onClose }) {
               flexWrap: "wrap",
             }}
           >
-            <Select
-              label="Severity"
-              options={SEVERITY_OPTIONS}
-              value={severityFilter}
-              onChange={setSeverityFilter}
-            />
+            {statute.hasSeverity && (
+              <Select
+                label="Severity"
+                options={SEVERITY_OPTIONS}
+                value={severityFilter}
+                onChange={setSeverityFilter}
+              />
+            )}
             <Select
               label="Topic"
-              options={TOPIC_OPTIONS}
+              options={topicOptions}
               value={topicFilter}
               onChange={setTopicFilter}
             />
             <Select
               label="Part"
-              options={PART_OPTIONS}
+              options={partOptions}
               value={partFilter}
               onChange={setPartFilter}
             />
@@ -773,6 +801,8 @@ export default function CriminalCodeExplorer({ onClose }) {
           ) : !isFiltered ? (
             <TopicBrowse
               sections={allSections}
+              topics={statute.topics}
+              topicGroups={statute.topicGroups}
               topicFilter={topicFilter}
               setTopicFilter={setTopicFilter}
               expandedSection={expandedSection}
