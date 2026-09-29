@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "fs";
 import { CDSA_SECTIONS, CDSA_PARTS } from "../../src/lib/cdsaData.js";
 import { YCJA_SECTIONS, YCJA_PARTS } from "../../src/lib/ycjaData.js";
 import {
@@ -76,5 +77,25 @@ describe("Act-specific spot checks", () => {
   it("routes YCJA adult sentences and detention to their own topics", () => {
     expect(statuteTopicFor("ycja", YCJA_SECTIONS.get("64"))).toBe("adult-sentence");
     expect(statuteTopicFor("ycja", YCJA_SECTIONS.get("29"))).toBe("detention");
+  });
+});
+
+describe("statute summaries", () => {
+  const summaries = JSON.parse(readFileSync("scripts/statute-summaries.json", "utf8"));
+
+  it.each(Object.entries(ACTS))("%s: side file and generated data agree", (id, act) => {
+    const expected = summaries[id];
+    for (const [num, text] of Object.entries(expected)) {
+      expect(act.sections.get(num)?.summary, `${id} s. ${num}`).toBe(text);
+    }
+    // No summary sneaks in that the side file does not own.
+    for (const [num, e] of act.sections) {
+      if (e.summary) expect(expected[num], `${id} s. ${num}`).toBeTruthy();
+    }
+  });
+
+  it("every summarised section is an offence/penalty or sentencing-relevant section", () => {
+    expect(Object.keys(summaries.cdsa).sort()).toEqual(["10", "4", "4.1", "5", "6", "7", "7.1"]);
+    expect(Object.keys(summaries.ycja).sort()).toEqual(["137", "138", "139"]);
   });
 });
