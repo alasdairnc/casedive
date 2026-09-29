@@ -14,6 +14,7 @@ import { findLandmarkSeeds } from "../src/lib/landmarkCases.js";
 import {
   SIMPLE_STOP_WORDS,
   normalizeForMatch,
+  stripNegatedEvents,
   tokenizeWithExpansion,
 } from "./_textUtils.js";
 import {
@@ -426,6 +427,14 @@ function scoreCandidateForScenario({
   if (candidate?.isLandmark) {
     score += 2;
     reasons.push("landmark");
+  }
+
+  // Carried over from the local fallback, where it was measured against the
+  // case's facts (which the summary scored here doesn't include).
+  const fallbackAnchor = Number(candidate?.fallbackAnchor) || 0;
+  if (fallbackAnchor > 0) {
+    score += fallbackAnchor * 3;
+    reasons.push(`fallback_anchor:${fallbackAnchor}`);
   }
 
   const contextTerms = dedupeStrings(overlapTokens);
@@ -1599,6 +1608,130 @@ function withSemanticMatchedContent(candidate, fallbackText) {
   return chunks.filter(Boolean).join(" | ");
 }
 
+// Words that turn up in most fact patterns, so sharing one says nothing about
+// whether a case fits the user's facts.
+const GENERIC_FACT_WORDS = new Set([
+  "police",
+  "officer",
+  "officers",
+  "accused",
+  "charged",
+  "charge",
+  "person",
+  "people",
+  "court",
+  "crown",
+  "time",
+  "told",
+  "said",
+  "went",
+  "took",
+  "just",
+  "even",
+  "after",
+  "while",
+  "then",
+  "their",
+  "there",
+  "they",
+  "them",
+  "were",
+  "been",
+  "being",
+  "have",
+  "from",
+  "with",
+  "that",
+  "this",
+  "into",
+  "about",
+  "without",
+]);
+
+const STATE_ACTOR_PATTERN =
+  /\b(police|officers?|cops?|rcmp|constable|detectives?|border|cbsa|customs|crown|prosecutor|judge|justice|court|trial|charged|arrest\w*|detain\w*|warrant|government|state|jail|prison|custody|bail|sentenc\w*)\b/;
+
+function factWordsMatch(scenarioWord, factWord) {
+  if (scenarioWord === factWord) return true;
+  // Words of 5+ letters sharing their first 6 (or all, if shorter): "threatened" and "threatening" match.
+  if (scenarioWord.length < 5 || factWord.length < 5) return false;
+  const stem = Math.min(scenarioWord.length, factWord.length, 6);
+  return scenarioWord.slice(0, stem) === factWord.slice(0, stem);
+}
+
+/**
+ * How much the user's facts engage this case specifically, beyond the
+ * issue's generic vocabulary. Issue terms ("theft", "s. 322") say what area
+ * of law a scenario is in; they can't tell R v Stewart (confidential
+ * information is not property) from a stolen chair. The anchor looks for
+ * what's particular to the case: its fact pattern and its distinctive tags.
+ */
+function fallbackAnchorForEntry(entry, scenario, issue, issueTerms) {
+  const scenarioNorm = normalizeForMatch(scenario);
+  const scenarioWords = dedupeStrings(
+    scenarioNorm
+      .split(" ")
+      .filter((w) => w.length >= 4 && !SIMPLE_STOP_WORDS.has(w))
+      .filter((w) => !GENERIC_FACT_WORDS.has(w)),
+  );
+  const factWords = new Set(
+    normalizeForMatch(entry?.facts || "")
+      .split(" ")
+      .filter((w) => w.length >= 4 && !GENERIC_FACT_WORDS.has(w)),
+  );
+  const factMatches = scenarioWords.filter((word) =>
+    [...factWords].some((factWord) => factWordsMatch(word, factWord)),
+  );
+
+  const issueTermSet = new Set(issueTerms.map((t) => normalizeForMatch(t)));
+  const paddedScenario = ` ${scenarioNorm} `;
+  const tagMatches = (entry?.tags || [])
+    .map((tag) => normalizeForMatch(tag))
+    .filter((tag) => tag.length >= 4 && !issueTermSet.has(tag))
+    .filter((tag) =>
+      tag.includes(" ")
+        ? paddedScenario.includes(` ${tag} `)
+        : scenarioWords.some((word) => factWordsMatch(word, tag)),
+    );
+
+  // Shared words alone are weak ("asked", "briefly" put R v Sinclair on a
+  // sidewalk ID check). When the scenario has a specific issue, the issue
+  // classifier already ties it to an area of law; otherwise the scenario and
+  // the case must share a legal concept.
+  const sharedConcepts =
+    issue.primary !== "general_criminal"
+      ? 1
+      : countConceptOverlap(
+          extractLegalConcepts(scenario),
+          extractLegalConcepts(
+            `${entry?.facts || ""} ${entry?.ratio || ""} ${(entry?.tags || []).join(" ")} ${(entry?.topics || []).join(" ")}`,
+          ),
+        );
+  const factAnchored = factMatches.length >= 2 && sharedConcepts > 0;
+
+  return {
+    factMatches,
+    tagMatches,
+    strength: tagMatches.length + (factAnchored ? factMatches.length : 0),
+    anchored: tagMatches.length > 0 || factAnchored,
+  };
+}
+
+function isCharterOnlyEntry(candidateDomains) {
+  if (!(candidateDomains instanceof Set) || candidateDomains.size === 0)
+    return false;
+  const charterDomains = new Set([
+    "charter_search_seizure",
+    "charter_detention",
+    "charter_counsel",
+    "charter_section1",
+  ]);
+  for (const domain of candidateDomains) {
+    if (!charterDomains.has(domain)) return false;
+  }
+  return true;
+}
+
 function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
   if (isClearlyNonCriminalScenario(scenario)) return [];
 
@@ -1608,6 +1741,9 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
     issue.allowed.size > 0
       ? [...issue.allowed]
       : inferFallbackIssueSignals(scenarioTokens);
+  const scenarioHasStateActor = STATE_ACTOR_PATTERN.test(
+    normalizeForMatch(scenario),
+  );
 
   const scored = [];
   for (const entry of MASTER_CASE_LAW_DB || []) {
@@ -1626,7 +1762,11 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
       if (termMatchesText(term, text)) issueHits += 1;
     }
 
-    let score = overlap * 3 + issueHits * 5;
+    // A fallback case has to fit the facts, not just the area of law.
+    const anchor = fallbackAnchorForEntry(entry, scenario, issue, issueTerms);
+    if (!anchor.anchored) continue;
+
+    let score = overlap * 3 + issueHits * 5 + anchor.strength * 3;
 
     const candidateDomains = detectCandidateDomains({
       citation: entry.citation,
@@ -1639,6 +1779,12 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
     // "child abuse charge"), and a family issue must not surface criminal cases.
     const issueIsFamily = String(issue.primary).startsWith("family_");
     if (candidateDomains.has("family_law") !== issueIsFamily) continue;
+
+    // The Charter binds government (s. 32). A pure Charter case can't fit
+    // facts with no police, court or other state actor in them, e.g. a phone
+    // lost at a cafe.
+    if (!scenarioHasStateActor && isCharterOnlyEntry(candidateDomains))
+      continue;
 
     const compatibilityAdjustment = compatibilityAdjustmentForIssue(
       issue.primary,
@@ -1676,12 +1822,14 @@ function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
       year: parsed?.year || entry.year,
       isLandmark: true,
       retrievalScore: score,
+      fallbackAnchor: anchor.strength,
       issueSignals: issueTerms.slice(0, 8),
       overlapTokens: Array.from(scenarioTokens).slice(0, 4),
       retrievalReasons: [
         "local_fallback",
         `overlap:${overlap}`,
         `issue_hits:${issueHits}`,
+        `anchor:${anchor.strength}`,
         `compat:${compatibilityAdjustment}`,
       ],
     });
@@ -2432,7 +2580,7 @@ function toCaseLawItem(candidate, verification) {
 const MAX_VERIFICATION_CALLS = 10;
 
 export async function retrieveVerifiedCaseLaw({
-  scenario = "",
+  scenario: rawScenario = "",
   filters = {},
   aiSuggestions = [],
   aiCaseLaw = [],
@@ -2441,6 +2589,9 @@ export async function retrieveVerifiedCaseLaw({
   apiKey = "",
   maxResults = 3,
 } = {}) {
+  // "There was no search or detention" describes what didn't happen; left
+  // in, it seeds Hunter and Grant on a speeding ticket.
+  const scenario = stripNegatedEvents(rawScenario);
   if (!apiKey) {
     return {
       cases: [],

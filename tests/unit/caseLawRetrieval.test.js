@@ -83,8 +83,10 @@ describe("retrieveVerifiedCaseLaw landmark URL handling", () => {
 
     const { cases, meta } = await retrieveVerifiedCaseLaw({
       apiKey: "test-key",
+      // Was a break-in scenario, which only "passed" on R v Stewart, R v
+      // Marakah and R v Vu: the corpus has no break-and-enter case.
       scenario:
-        "A person broke into a residential home at night through a back window and stole jewelry and electronics.",
+        "Someone repeatedly texted me threats and said they would hurt me.",
       aiCaseLaw: [
         {
           citation: "2024 SCC 999",
@@ -94,7 +96,7 @@ describe("retrieveVerifiedCaseLaw landmark URL handling", () => {
       maxResults: 3,
     });
 
-    expect(cases.length).toBeGreaterThan(0);
+    expect(cases.map((c) => c.citation)).toContain("[1991] 3 SCR 72");
     expect(meta.fallbackPathUsed).toBe(true);
     expect(["local_fallback", "post_verify_local_fallback"]).toContain(
       meta.fallbackReason,
@@ -368,7 +370,7 @@ describe("retrieveVerifiedCaseLaw landmark URL handling", () => {
     expect(detentionResult.meta.issuePrimary).toBe("charter_detention");
   });
 
-  it("retrieves break-and-enter cases for break-in with theft scenario", async () => {
+  it("does not pad a break-in scenario with unrelated theft or privacy cases", async () => {
     const { cases, meta } = await retrieveVerifiedCaseLaw({
       apiKey: "test-key",
       scenario:
@@ -378,16 +380,13 @@ describe("retrieveVerifiedCaseLaw landmark URL handling", () => {
       maxResults: 5,
     });
 
-    expect(cases.length).toBeGreaterThan(0);
-    // Verify semantic filtering isn't overly aggressive (should drop < 3 for initial candidates)
-    expect(meta.semanticFilterDropCount).toBeLessThanOrEqual(2);
-    // At least some cases should mention relevant keywords
-    expect(
-      cases.some((c) =>
-        /break|enter|theft|stolen|home|house|intent|s\.|348|s\s+348/i.test(
-          String((c.summary || "") + (c.title || "")),
-        ),
-      ),
-    ).toBe(true);
+    expect(meta.issuePrimary).toBe("break_and_enter");
+    // The corpus has no break-and-enter case. This used to return R v
+    // Stewart (confidential information), R v Marakah (text messages) and
+    // R v Vu (computer search) because they share theft/search vocabulary.
+    const citations = cases.map((c) => c.citation);
+    expect(citations).not.toContain("[1988] 1 SCR 963");
+    expect(citations).not.toContain("2017 SCC 59");
+    expect(citations).not.toContain("2013 SCC 60");
   });
 });
