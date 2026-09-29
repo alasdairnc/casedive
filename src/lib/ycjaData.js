@@ -36,6 +36,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Interpretation",
       subheading: "",
       lastAmendedDate: "2026-07-15",
+      relatedSections: ["19","42","10","40","87","85","13"],
     },
   ],
   [
@@ -62,6 +63,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Principles and Objectives",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["3"],
     },
   ],
   [
@@ -75,6 +77,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Principles and Objectives",
       subheading: "",
       lastAmendedDate: "2019-12-18",
+      relatedSections: ["137","59"],
     },
   ],
   [
@@ -101,6 +104,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Warnings, Cautions and Referrals",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["4","7"],
     },
   ],
   [
@@ -114,6 +118,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Warnings, Cautions and Referrals",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["4","8"],
     },
   ],
   [
@@ -153,6 +158,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Warnings, Cautions and Referrals",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["6"],
     },
   ],
   [
@@ -166,6 +172,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Extrajudicial Sanctions",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["6","24"],
     },
   ],
   [
@@ -218,6 +225,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Justice Court",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -231,6 +239,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Justice Court",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -244,6 +253,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Justice Court",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["67"],
     },
   ],
   [
@@ -257,6 +267,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Justice Court",
       subheading: "",
       lastAmendedDate: "2026-07-15",
+      relatedSections: ["155"],
     },
   ],
   [
@@ -374,6 +385,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Right to Counsel",
       subheading: "",
       lastAmendedDate: "2019-12-18",
+      relatedSections: ["14","98","87"],
     },
   ],
   [
@@ -439,6 +451,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Detention and Release",
       subheading: "",
       lastAmendedDate: "2026-07-15",
+      relatedSections: ["3"],
     },
   ],
   [
@@ -478,6 +491,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Detention and Release",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["28"],
     },
   ],
   [
@@ -491,6 +505,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Appearance",
       subheading: "",
       lastAmendedDate: "2012-10-23",
+      relatedSections: ["64","67","36"],
     },
   ],
   [
@@ -517,6 +532,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Medical and Psychological Reports",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["33","71","104","105","109","127","119","25"],
     },
   ],
   [
@@ -556,6 +572,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Appeals",
       subheading: "",
       lastAmendedDate: "2019-12-18",
+      relatedSections: ["15","27","72","59"],
     },
   ],
   [
@@ -569,6 +586,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Purpose and Principles",
       subheading: "",
       lastAmendedDate: "2019-12-18",
+      relatedSections: ["42","3"],
     },
   ],
   [
@@ -582,7 +600,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Purpose and Principles",
       subheading: "",
       lastAmendedDate: "2019-12-18",
-      relatedSections: ["137"],
+      relatedSections: ["137","42","38","94"],
     },
   ],
   [
@@ -596,6 +614,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Pre-sentence Report",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["38","41","119","39","25","42","94"],
     },
   ],
   [
@@ -609,6 +628,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["19"],
     },
   ],
   [
@@ -622,7 +642,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2026-07-15",
-      relatedSections: ["38"],
+      relatedSections: ["38","41","54","51","55","97","104","105"],
     },
   ],
   [
@@ -636,6 +656,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -649,6 +670,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","43"],
     },
   ],
   [
@@ -662,6 +684,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","44","102","103","94"],
     },
   ],
   [
@@ -675,6 +698,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["43"],
     },
   ],
   [
@@ -688,6 +712,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","38"],
     },
   ],
   [
@@ -701,6 +726,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -727,6 +753,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["30"],
     },
   ],
   [
@@ -753,6 +780,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["74"],
     },
   ],
   [
@@ -766,6 +794,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","113"],
     },
   ],
   [
@@ -779,6 +808,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["51","59"],
     },
   ],
   [
@@ -792,6 +822,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -805,6 +836,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","53","155"],
     },
   ],
   [
@@ -818,7 +850,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2019-12-18",
-      relatedSections: ["38"],
+      relatedSections: ["38","42"],
     },
   ],
   [
@@ -832,6 +864,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2026-07-15",
+      relatedSections: ["42","55"],
     },
   ],
   [
@@ -845,6 +878,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2026-07-15",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -858,6 +892,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2026-07-15",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -871,7 +906,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2019-12-18",
-      relatedSections: ["38"],
+      relatedSections: ["38","42","94"],
     },
   ],
   [
@@ -885,6 +920,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Youth Sentences",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["59"],
     },
   ],
   [
@@ -911,6 +947,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2019-06-21",
+      relatedSections: ["16","13","17"],
     },
   ],
   [
@@ -924,6 +961,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2012-10-23",
+      relatedSections: ["64"],
     },
   ],
   [
@@ -937,6 +975,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2012-10-23",
+      relatedSections: ["64"],
     },
   ],
   [
@@ -950,6 +989,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2012-10-23",
+      relatedSections: ["38","37"],
     },
   ],
   [
@@ -963,6 +1003,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2012-10-23",
+      relatedSections: ["72"],
     },
   ],
   [
@@ -989,6 +1030,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2019-09-19",
+      relatedSections: ["79","37"],
     },
   ],
   [
@@ -1002,6 +1044,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2013-02-28",
+      relatedSections: ["76","78"],
     },
   ],
   [
@@ -1015,6 +1058,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["76"],
     },
   ],
   [
@@ -1028,6 +1072,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["76"],
     },
   ],
   [
@@ -1054,6 +1099,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Adult Sentence and Election",
       subheading: "",
       lastAmendedDate: "2012-10-23",
+      relatedSections: ["64"],
     },
   ],
   [
@@ -1067,6 +1113,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Effect of Termination of Youth Sentence",
       subheading: "",
       lastAmendedDate: "2013-02-28",
+      relatedSections: ["12","42","51","64"],
     },
   ],
   [
@@ -1080,6 +1127,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["3"],
     },
   ],
   [
@@ -1093,6 +1141,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["30","89"],
     },
   ],
   [
@@ -1106,6 +1155,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","103"],
     },
   ],
   [
@@ -1119,6 +1169,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["85","87"],
     },
   ],
   [
@@ -1132,6 +1183,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["85"],
     },
   ],
   [
@@ -1145,6 +1197,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["2","11","24.1","28"],
     },
   ],
   [
@@ -1158,6 +1211,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -1171,6 +1225,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["97"],
     },
   ],
   [
@@ -1184,6 +1239,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["76","42"],
     },
   ],
   [
@@ -1197,6 +1253,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","76"],
     },
   ],
   [
@@ -1210,6 +1267,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42"],
     },
   ],
   [
@@ -1223,6 +1281,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","40","105"],
     },
   ],
   [
@@ -1236,6 +1295,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["97","104","109","94"],
     },
   ],
   [
@@ -1249,6 +1309,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","105","94"],
     },
   ],
   [
@@ -1262,6 +1323,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","56"],
     },
   ],
   [
@@ -1288,6 +1350,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["98","40"],
     },
   ],
   [
@@ -1301,6 +1364,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["98"],
     },
   ],
   [
@@ -1314,6 +1378,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["98"],
     },
   ],
   [
@@ -1327,6 +1392,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["97","107"],
     },
   ],
   [
@@ -1340,6 +1406,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["108","42","109"],
     },
   ],
   [
@@ -1353,6 +1420,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","99","105"],
     },
   ],
   [
@@ -1366,6 +1434,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","104","99","56","101"],
     },
   ],
   [
@@ -1379,6 +1448,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["105","108"],
     },
   ],
   [
@@ -1392,6 +1462,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["106"],
     },
   ],
   [
@@ -1405,6 +1476,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["106","109"],
     },
   ],
   [
@@ -1418,6 +1490,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2026-07-15",
+      relatedSections: ["108","102","29","107"],
     },
   ],
   [
@@ -1431,6 +1504,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["108","42","99","101"],
     },
   ],
   [
@@ -1483,6 +1557,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Protection of Privacy of Young Persons",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["110"],
     },
   ],
   [
@@ -1548,6 +1623,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Access to Records",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["118"],
     },
   ],
   [
@@ -1561,6 +1637,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Access to Records",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["114"],
     },
   ],
   [
@@ -1574,6 +1651,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Access to Records",
       subheading: "",
       lastAmendedDate: "2019-06-21",
+      relatedSections: ["114","25","10","14","51","115","34","82"],
     },
   ],
   [
@@ -1587,6 +1665,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Access to Records",
       subheading: "",
       lastAmendedDate: "2012-10-23",
+      relatedSections: ["115","119","64","25"],
     },
   ],
   [
@@ -1600,6 +1679,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Access to Records",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["119"],
     },
   ],
   [
@@ -1613,6 +1693,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Access to Records",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["119"],
     },
   ],
   [
@@ -1626,6 +1707,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Access to Records",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["119","114"],
     },
   ],
   [
@@ -1652,6 +1734,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Disclosure of Information in a Record",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["114","119"],
     },
   ],
   [
@@ -1665,6 +1748,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Disclosure of Information in a Record",
       subheading: "",
       lastAmendedDate: "2004-05-21",
+      relatedSections: ["114"],
     },
   ],
   [
@@ -1678,6 +1762,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Disclosure of Information in a Record",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["119"],
     },
   ],
   [
@@ -1691,6 +1776,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Disposition or Destruction of Records and Prohibition on Use and Disclosure",
       subheading: "",
       lastAmendedDate: "2012-03-13",
+      relatedSections: ["123","119","125","115","114"],
     },
   ],
   [
@@ -1743,6 +1829,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Exclusion from Hearing",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["34","25"],
     },
   ],
   [
@@ -1809,6 +1896,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Offences and Punishment",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["42","53"],
     },
   ],
   [
@@ -1823,6 +1911,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Offences and Punishment",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["110","129"],
     },
   ],
   [
@@ -1837,6 +1926,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Offences and Punishment",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["30","31","7","82"],
     },
   ],
   [
@@ -1863,6 +1953,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Application of Criminal Code",
       subheading: "",
       lastAmendedDate: "2005-06-30",
+      relatedSections: ["16"],
     },
   ],
   [
@@ -1941,6 +2032,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Evidence",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["34","71","104","105","109","127"],
     },
   ],
   [
@@ -2032,6 +2124,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "Forms, Regulations and Rules of Court",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["155"],
     },
   ],
   [
@@ -2097,6 +2190,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["161"],
     },
   ],
   [
@@ -2110,6 +2204,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2019-09-19",
+      relatedSections: ["159","42","20","94"],
     },
   ],
   [
@@ -2123,6 +2218,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2012-10-23",
+      relatedSections: ["158"],
     },
   ],
   [
@@ -2136,6 +2232,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["114"],
     },
   ],
   [
@@ -2162,6 +2259,7 @@ export const YCJA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2003-01-01",
+      relatedSections: ["88"],
     },
   ],
 ]);

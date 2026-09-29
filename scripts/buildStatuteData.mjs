@@ -63,6 +63,10 @@ const NUM_WORDS = {
 };
 
 const wordToNum = (w) => (/^\d+$/.test(w) ? Number(w) : NUM_WORDS[w.toLowerCase()] ?? null);
+// "section 5", "subsection 4(1)", "paragraph 42(2)(c)" written in prose. The XML
+// tags few of these, so read the text; skip any that name another Act.
+const TEXT_REF_RE = /\b(?:sections?|subsections?|paragraphs?)\s+(\d+(?:\.\d+)?)(?:\(\w+\))*(?!\d)([^.;]{0,60})/gi;
+const OTHER_ACT_RE = /^\s*(?:\(\w+\))*(?:\s*(?:,|and|or|to)\s*[\w.()]+)*\s*(?:of|in) (?:the |that )(?!this Act)/i;
 const XREF_RE = /<XRefInternal[^>]*>([^<]*)<\/XRefInternal>/g;
 const TERM_RE = /imprisonment for a term not exceeding ([\w-]+) (years|months)( less a day)?/gi;
 
@@ -177,6 +181,12 @@ export function extractSections(xmlRaw) {
     for (const m of textOnly.matchAll(XREF_RE)) {
       const ref = (stripTags(m[1]).match(/(\d+(?:\.\d+)?)/) || [])[1];
       if (ref && ref !== num && !related.includes(ref)) related.push(ref);
+    }
+    // Prose references. The tail after the number is checked for "of the <other Act>".
+    const plainText = stripTags(textOnly.replace(/<[^>]+>/g, " ").replace(/\s+/g, " "));
+    for (const m of plainText.matchAll(TEXT_REF_RE)) {
+      if (OTHER_ACT_RE.test(m[2]) || /^\s*of (?:the )?(?!this Act)[A-Z]/.test(m[2])) continue;
+      if (m[1] !== num && !related.includes(m[1])) related.push(m[1]);
     }
     const penalty = extractPenalty(block);
 

@@ -36,6 +36,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Interpretation",
       subheading: "",
       lastAmendedDate: "2026-03-26",
+      relatedSections: ["44","4","30"],
     },
   ],
   [
@@ -77,6 +78,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Particular Offences",
       subheading: "",
       lastAmendedDate: "2018-10-17",
+      relatedSections: ["4"],
     },
   ],
   [
@@ -160,6 +162,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Sentencing",
       subheading: "",
       lastAmendedDate: "2022-11-17",
+      relatedSections: ["2"],
     },
   ],
   [
@@ -186,6 +189,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Warnings and Referrals",
       subheading: "",
       lastAmendedDate: "2022-11-17",
+      relatedSections: ["4","10.1"],
     },
   ],
   [
@@ -199,6 +203,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Warnings and Referrals",
       subheading: "",
       lastAmendedDate: "2026-07-18",
+      relatedSections: ["4","10.2"],
     },
   ],
   [
@@ -212,6 +217,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Warnings and Referrals",
       subheading: "",
       lastAmendedDate: "2022-11-17",
+      relatedSections: ["10.2"],
     },
   ],
   [
@@ -225,6 +231,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Warnings and Referrals",
       subheading: "",
       lastAmendedDate: "2022-11-17",
+      relatedSections: ["10.2"],
     },
   ],
   [
@@ -238,6 +245,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Warnings and Referrals",
       subheading: "",
       lastAmendedDate: "2022-11-17",
+      relatedSections: ["4"],
     },
   ],
   [
@@ -251,6 +259,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Exception for Service Providers",
       subheading: "",
       lastAmendedDate: "2022-11-17",
+      relatedSections: ["4"],
     },
   ],
   [
@@ -277,6 +286,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["11"],
     },
   ],
   [
@@ -290,6 +300,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["11"],
     },
   ],
   [
@@ -303,6 +314,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["31"],
     },
   ],
   [
@@ -316,6 +328,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Restraint Orders",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["19","16"],
     },
   ],
   [
@@ -329,6 +342,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Restraint Orders",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["14"],
     },
   ],
   [
@@ -342,6 +356,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Management Orders",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["11","14"],
     },
   ],
   [
@@ -355,6 +370,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Forfeiture",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["18"],
     },
   ],
   [
@@ -368,6 +384,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Forfeiture",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["18"],
     },
   ],
   [
@@ -381,6 +398,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Forfeiture",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["16"],
     },
   ],
   [
@@ -394,6 +412,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Forfeiture",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["16"],
     },
   ],
   [
@@ -407,6 +426,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Forfeiture",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["16","19"],
     },
   ],
   [
@@ -420,6 +440,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Forfeiture",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["16","17"],
     },
   ],
   [
@@ -433,6 +454,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Forfeiture",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["17"],
     },
   ],
   [
@@ -446,6 +468,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Non-chemical Offence-related Property",
       subheading: "Forfeiture",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["16"],
     },
   ],
   [
@@ -459,6 +482,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Controlled Substances, Precursors and Chemical Offence-related Property",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["11"],
     },
   ],
   [
@@ -472,6 +496,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Controlled Substances, Precursors and Chemical Offence-related Property",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["26"],
     },
   ],
   [
@@ -485,6 +510,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Controlled Substances, Precursors and Chemical Offence-related Property",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["24"],
     },
   ],
   [
@@ -511,6 +537,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Controlled Substances, Precursors and Chemical Offence-related Property",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["24"],
     },
   ],
   [
@@ -550,6 +577,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Inspectors",
       subheading: "",
       lastAmendedDate: "2017-05-18",
+      relatedSections: ["55","31"],
     },
   ],
   [
@@ -563,6 +591,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Inspectors",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["24"],
     },
   ],
   [
@@ -576,6 +605,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Inspectors",
       subheading: "",
       lastAmendedDate: "2017-05-18",
+      relatedSections: ["31"],
     },
   ],
   [
@@ -628,6 +658,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["34","35"],
     },
   ],
   [
@@ -641,6 +672,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["34","36"],
     },
   ],
   [
@@ -693,6 +725,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["36"],
     },
   ],
   [
@@ -706,6 +739,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["35","41"],
     },
   ],
   [
@@ -732,6 +766,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Analysis",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["55"],
     },
   ],
   [
@@ -784,6 +819,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Ministerial Orders",
       subheading: "",
       lastAmendedDate: "2017-05-18",
+      relatedSections: ["45.4"],
     },
   ],
   [
@@ -797,6 +833,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Ministerial Orders",
       subheading: "",
       lastAmendedDate: "2017-05-18",
+      relatedSections: ["45.1"],
     },
   ],
   [
@@ -810,6 +847,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Ministerial Orders",
       subheading: "",
       lastAmendedDate: "2017-05-18",
+      relatedSections: ["45.1"],
     },
   ],
   [
@@ -823,6 +861,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Offence and Punishment",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["45.1"],
     },
   ],
   [
@@ -875,6 +914,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Evidence and Procedure",
       subheading: "",
       lastAmendedDate: "2017-05-18",
+      relatedSections: ["4","45.1"],
     },
   ],
   [
@@ -901,6 +941,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Evidence and Procedure",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["48"],
     },
   ],
   [
@@ -914,6 +955,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Evidence and Procedure",
       subheading: "",
       lastAmendedDate: "2018-06-21",
+      relatedSections: ["55"],
     },
   ],
   [
@@ -927,6 +969,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Evidence and Procedure",
       subheading: "",
       lastAmendedDate: "2017-05-18",
+      relatedSections: ["45"],
     },
   ],
   [
@@ -992,6 +1035,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Regulations and Exemptions",
       subheading: "",
       lastAmendedDate: "2026-03-26",
+      relatedSections: ["31","45.1","45.2","45.4","56.1"],
     },
   ],
   [
@@ -1096,6 +1140,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Transitional Provisions",
       subheading: "",
       lastAmendedDate: "2005-04-04",
+      relatedSections: ["5"],
     },
   ],
   [
@@ -1109,6 +1154,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Transitional Provisions",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["31","4"],
     },
   ],
   [
@@ -1122,6 +1168,7 @@ export const CDSA_SECTIONS = new Map([
       heading: "Transitional Provisions",
       subheading: "",
       lastAmendedDate: "2002-12-31",
+      relatedSections: ["56"],
     },
   ],
 ]);
