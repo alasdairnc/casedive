@@ -39,7 +39,13 @@ function sanitizePdfText(str) {
 // Strip HTML tags and sanitize a string field for PDF insertion.
 function cleanField(str) {
   if (typeof str !== "string") return "";
-  return sanitizePdfText(str.replace(/<\/?[^>]+>/g, ""));
+  let prev;
+  let out = str;
+  do {
+    prev = out;
+    out = out.replace(/<\/?[^>]+>/g, "");
+  } while (out !== prev);
+  return sanitizePdfText(out);
 }
 
 const MAX_SUMMARY_LEN = 5_000;

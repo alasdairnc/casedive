@@ -10,6 +10,17 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+// Repeat until stable so nested fragments like "<<b>b>" cannot survive one pass.
+function stripTags(str) {
+  let prev;
+  let out = str;
+  do {
+    prev = out;
+    out = out.replace(/<[^>]+>/g, "");
+  } while (out !== prev);
+  return out;
+}
+
 const XML_URL = "https://laws-lois.justice.gc.ca/eng/XML/C-46.xml";
 // Node's fetch can't resolve DNS through the sandbox proxy that curl uses.
 // Pre-download with curl and point this at the local file to work around it:
@@ -151,8 +162,7 @@ function extractSections(xmlRaw) {
     if (block.includes("[Repealed") && !block.match(/<Text>[^<]*[A-Za-z]/)) {
       const textBlocks = block.match(/<Text>([\s\S]*?)<\/Text>/g) || [];
       const hasContent = textBlocks.some((t) => {
-        const stripped = t
-          .replace(/<[^>]+>/g, "")
+        const stripped = stripTags(t)
           .replace(/\[Repealed[^\]]*\]/g, "")
           .trim();
         return stripped.length > 20;
@@ -165,7 +175,7 @@ function extractSections(xmlRaw) {
     );
     let title = "";
     if (mnMatch) {
-      title = mnMatch[1].replace(/<[^>]+>/g, "").trim();
+      title = stripTags(mnMatch[1]).trim();
     }
     if (!title) continue; // sub-provisions without their own marginal note
 
