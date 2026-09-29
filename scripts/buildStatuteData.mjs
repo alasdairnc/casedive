@@ -45,7 +45,17 @@ export function extractLiveBody(xml) {
     .replace(/<AmendedText[^>]*>[\s\S]*?<\/AmendedText>/g, "");
 }
 
-const stripTags = (s) => s.replace(/<[^>]+>/g, "").trim();
+// Repeat until stable so nested fragments like "<<b>script>" can't survive one
+// pass, then drop any stray angle bracket. Titles are only ever rendered as text.
+function stripTags(s) {
+  let prev;
+  let out = s;
+  do {
+    prev = out;
+    out = out.replace(/<[^>]*>/g, "");
+  } while (out !== prev);
+  return out.replace(/[<>]/g, "").trim();
+}
 
 /**
  * Walk headings and sections in document order. Level 1 = Part (or an
