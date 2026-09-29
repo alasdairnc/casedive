@@ -89,7 +89,7 @@ function analyzeSection(rawBlock, ownNum, liveKeys) {
   if (tierCount === 0 && summaryMatches.length === 0) return null; // no offence-creating clause found at all
 
   let severity = null;
-  let maxPenalty = "";
+  let maxPenalty;
 
   if (tierCount >= 1 && summaryMatches.length >= 1) severity = "Hybrid";
   else if (tierCount >= 1) severity = "Indictable";
