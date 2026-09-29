@@ -51,6 +51,9 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - `test:unit` excludes `.test.jsx` (use `test:component` for JSX)
 - `criminalCodeData.js` is ~950KB, all 1568 sections enriched (import `criminalCodeParts.js` for parts list)
 - Redis falls back to in-memory in dev
+- Retrieval labels curated cases `matched_content: "Landmark Case Law Database"`; "Landmark RAG Match" is only the candidate-side `matchedTerm`. Check for the former in anything downstream of `retrieveVerifiedCaseLaw` (analyze.js's bonus checked the latter and never fired until #64).
+- The local case-law fallback requires a fact-pattern anchor (`fallbackAnchorForEntry` in `_caseLawRetrieval.js`), scored against each corpus case's `facts` and tags. A corpus case with thin or generic `facts` will rarely surface from the fallback.
+- Scenario text goes through `stripNegatedEvents` before issue detection: "there was no search or arrest" is not a search. It deliberately keeps "no warrant".
 - CanLII API key optional; Sentry no-ops if unset
 - Hooks are Node scripts in `.claude/hooks/*.mjs` reading the JSON payload from stdin (`tool_input.file_path` / `tool_input.command`); exit 2 blocks the tool call. No python3 or sh dependency.
 - `node --check` cannot parse JSX — scope JS syntax checks to `.js` only, never `.jsx`

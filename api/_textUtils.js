@@ -171,3 +171,25 @@ export function tokenizeWithExpansion(
 
   return returnType === "set" ? expanded : Array.from(expanded);
 }
+
+// Police-event words a user may deny rather than describe: "there was no
+// search, detention, or arrest", "no officer stopped me". Only events, never
+// "warrant": "no warrant" is the complaint in a s. 8 scenario, not a denial.
+const NEGATABLE_EVENT =
+  "(?:search(?:ed|es)?|seiz(?:ed|ure)|detention|detained|arrest(?:ed)?|force|breath\\s+demand|breath\\s+test|questioning|interrogation)";
+const NEGATED_EVENT_LIST = new RegExp(
+  `\\b(?:no|never|not|nor|without\\s+any)\\s+(?:been\\s+|being\\s+|a\\s+|any\\s+)?${NEGATABLE_EVENT}(?:\\s*,?\\s*(?:(?:or|and|nor)\\s+)?(?:any\\s+|a\\s+)?${NEGATABLE_EVENT})*\\b`,
+  "gi",
+);
+const NEGATED_OFFICER_ACTION =
+  /\bno\s+(?:police\s+)?(?:officer|police|cop)s?\s+(?:ever\s+)?\w+(?:\s+me)?\b/gi;
+
+// Drops denied police events so they don't read as signals. Used for issue
+// detection and seeding, not for display.
+export function stripNegatedEvents(text) {
+  return String(text || "")
+    .replace(NEGATED_OFFICER_ACTION, " ")
+    .replace(NEGATED_EVENT_LIST, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}

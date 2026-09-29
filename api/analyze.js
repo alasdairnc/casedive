@@ -25,7 +25,11 @@ import {
 } from "./_constants.js";
 import { normalizeFilters } from "./_filters.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
-import { RANK_STOP_WORDS, tokenizeWithExpansion } from "./_textUtils.js";
+import {
+  RANK_STOP_WORDS,
+  stripNegatedEvents,
+  tokenizeWithExpansion,
+} from "./_textUtils.js";
 import {
   logRequestStart,
   logRateLimitCheck,
@@ -475,14 +479,24 @@ function scoreRetrievedCase(scenarioTokens, scenarioIssue, item) {
   const yearNum = Number(item?.year);
   if (Number.isFinite(yearNum) && yearNum >= 2000) score += 0.4;
 
-  if (String(item?.matched_content || "").includes("Landmark RAG Match")) {
+  // Retrieval labels curated landmark results "Landmark Case Law Database"
+  // in matched_content; "Landmark RAG Match" is the candidate-side label. Only
+  // matching the latter meant this bonus never fired on real retrieval output,
+  // and the overlap filter dropped R v Woods on right-to-counsel scenarios.
+  const matchedContent = String(item?.matched_content || "");
+  if (
+    matchedContent.includes("Landmark RAG Match") ||
+    matchedContent.startsWith("Landmark Case Law Database")
+  ) {
     score += compatible ? 8 : 1;
   }
 
   return score;
 }
 
-function selectTopRetrievedCases(scenario, retrievedCases, limit = 3) {
+function selectTopRetrievedCases(rawScenario, retrievedCases, limit = 3) {
+  // Same as retrieval: a denied search or arrest is not a search or arrest.
+  const scenario = stripNegatedEvents(rawScenario);
   const cases = Array.isArray(retrievedCases) ? [...retrievedCases] : [];
   const scenarioTokens = new Set(tokenizeForRanking(scenario));
   const scenarioIssue = detectScenarioIssueForRanking(scenarioTokens, scenario);
@@ -544,7 +558,8 @@ export const __testables = {
 // ── Deterministic RAG Token Matching ─────────────────────────────────────────
 function matchLandmarkCases(scenario) {
   if (!scenario) return [];
-  const s = scenario.toLowerCase();
+  // "There was no search" must not match the "search" tag.
+  const s = stripNegatedEvents(scenario).toLowerCase();
   const scenarioTokens = new Set(tokenizeForRanking(s));
   const matched = [];
 

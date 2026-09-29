@@ -18,6 +18,9 @@ const CONCEPT_PATTERNS = {
     /\b(assault|bodily\s+harm|weapon|s\.?\s*267|self\s*-?defence|punch\w*|hit|struck|fight|injur\w*|wound\w*)\b/,
   sexualAssault: /\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/,
   drug: /\b(cdsa|drug|traffick\w*|fentanyl|cocaine|possession|s\.?\s*5)\b/,
+  // s. 21 party liability: "I drove the getaway car", "I was the lookout".
+  parties:
+    /\b(getaway|lookout|look\s+out\s+for|accomplice|aid(ed|ing)?\s+and\s+abett?\w*|abett?\w*|party\s+liability|parties\s+to|s\s*21|wilful\s+blindness)\b/,
   trialDelay:
     /\b(jordan|cody|11\(b\)|s\.?\s*11\(b\)|trial\s+delay|reasonable\s+time|adjourn\w*)\b/,
 };
