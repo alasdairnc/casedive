@@ -87,7 +87,13 @@ const rows = sortedSections.map((section) => {
   } else {
     newCount++;
   }
-  return [section.section, { ...existing, title: section.title, partOf: section.partOf }];
+  return [section.section, {
+    ...existing,
+    title: section.title,
+    partOf: section.partOf,
+    heading: section.heading,
+    subheading: section.subheading,
+  }];
 });
 
 const allOrphans = [...new Set([...enrichedOrphans, ...summaryOrphans, ...plainOrphans])];
@@ -103,7 +109,7 @@ await writeCriminalCodeData({
   rows,
   orphanRows,
   parts: orderedParts,
-  allowedFields: ["title", "partOf"],
+  allowedFields: ["title", "partOf", "heading", "subheading"],
   expect: { sections: newCount },
 });
 

@@ -110,6 +110,8 @@ function serializeEntry(num, entry) {
     lines.push(`topicsTagged: ${strArray(entry.topicsTagged)}`);
   }
   if (entry.partOf) lines.push(`partOf: "${escapeStr(entry.partOf)}"`);
+  if (entry.heading) lines.push(`heading: "${escapeStr(entry.heading)}"`);
+  if (entry.subheading) lines.push(`subheading: "${escapeStr(entry.subheading)}"`);
 
   return `[\n    "${num}",\n    {\n      ${lines.join(",\n      ")},\n    },\n  ]`;
 }

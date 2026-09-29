@@ -75,6 +75,12 @@ function extractSections(xmlRaw) {
     /<Heading[^>]*level="(\d)"[^>]*>(?:<Label>([^<]*)<\/Label>)?<TitleText>([^<]*)<\/TitleText>|<Section([^>]*)>([\s\S]*?)<\/Section>/g;
 
   let currentPart = "";
+  // Nearest level-2 / level-3 headings above a section (the Code's own
+  // sub-headings, e.g. Part VIII > "Homicide"). Level-4 headings are ignored:
+  // they only occur inside the sexual-activity-evidence and records regimes
+  // (ss. 276-278.98), where the level-3 parent is the useful label.
+  let currentHeading = "";
+  let currentSubheading = "";
   let pendingPartI = false; // saw the bare "Part I" heading, waiting for "General"
   let match;
 
@@ -88,9 +94,22 @@ function extractSections(xmlRaw) {
         currentPart = PART_I_LABEL;
         partsSeen.push({ id: PART_I_ID, label: currentPart });
         pendingPartI = false;
+        currentHeading = headingTitle.trim();
+        currentSubheading = "";
         continue;
       }
-      if (level !== "1") continue; // other level-2+ sub-headings don't change currentPart
+      if (level === "2") {
+        currentHeading = headingTitle.trim();
+        currentSubheading = "";
+        continue;
+      }
+      if (level === "3") {
+        currentSubheading = headingTitle.trim();
+        continue;
+      }
+      if (level !== "1") continue; // level-4 headings don't change anything
+      currentHeading = "";
+      currentSubheading = "";
       pendingPartI = false;
 
       if (label && /^PART\s/i.test(label)) {
@@ -108,7 +127,10 @@ function extractSections(xmlRaw) {
         partsSeen.push({ id, label: currentPart });
       } else if (headingTitle.trim() === "Part I") {
         pendingPartI = true;
+      } else if (headingTitle.trim() === "Short Title") {
+        currentHeading = "Short Title";
       } else if (headingTitle.trim() === "Interpretation") {
+        currentHeading = "Interpretation";
         // Precedes the literal "Part I"/"General" heading pair in the
         // document, but ss. 2–3.01 are conventionally treated as Part I.
         currentPart = PART_I_LABEL;
@@ -158,6 +180,8 @@ function extractSections(xmlRaw) {
         section: sectionNum,
         title,
         partOf: sectionNum === "1" ? "" : currentPart,
+        heading: currentHeading,
+        subheading: currentSubheading,
         lastAmendedDate,
       });
     }
