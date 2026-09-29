@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { topicForSection, groupLabelFor } from "../lib/criminalCodeTopics.js";
+import { STATUTES, DEFAULT_STATUTE_ID } from "../lib/statutes.js";
 
 const MAX_RESULTS = 100;
 const DEBOUNCE_MS = 100;
@@ -20,6 +20,8 @@ function compareSections(a, b) {
 }
 
 export function useCriminalCodeSearch() {
+  const [statuteId, setStatuteIdState] = useState(DEFAULT_STATUTE_ID);
+  const statute = STATUTES[statuteId];
   const [query, setQuery] = useState("");
   const [severityFilter, setSeverityFilter] = useState("all");
   const [partFilter, setPartFilter] = useState("all");
@@ -27,18 +29,40 @@ export function useCriminalCodeSearch() {
   const [results, setResults] = useState([]);
   const [totalMatches, setTotalMatches] = useState(0);
   const [sections, setSections] = useState(null);
+  const [parts, setParts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const timerRef = useRef(null);
 
-  // Lazy-load the full Criminal Code dataset on first mount.
-  // Since this hook is only used inside CriminalCodeExplorer (a conditional modal),
-  // the dynamic import only fires when the user opens the explorer.
+  // Lazy-load the selected statute's dataset. This hook is only used inside
+  // CriminalCodeExplorer (a conditional modal), so nothing loads until the
+  // explorer opens, and the other Acts load only when their tab is picked.
   useEffect(() => {
-    import("../lib/criminalCodeData.js").then((m) => {
-      setSections(m.CRIMINAL_CODE_SECTIONS);
+    let cancelled = false;
+    STATUTES[statuteId].load().then((m) => {
+      if (cancelled) return;
+      setSections(m.sections);
+      setParts(m.parts);
       setIsLoading(false);
     });
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [statuteId]);
+
+  // Switching Acts clears every filter: Parts, topics and severity differ per Act.
+  const setStatuteId = (id) => {
+    if (id === statuteId || !STATUTES[id]) return;
+    setStatuteIdState(id);
+    setSections(null);
+    setParts([]);
+    setIsLoading(true);
+    setQuery("");
+    setSeverityFilter("all");
+    setPartFilter("all");
+    setTopicFilter("all");
+    setResults([]);
+    setTotalMatches(0);
+  };
 
   // Convert Map to array once sections are loaded
   const allSections = useMemo(() => {
@@ -47,11 +71,11 @@ export function useCriminalCodeSearch() {
       .map(([num, entry]) => ({
         num,
         ...entry,
-        topic: topicForSection(num, entry),
-        groupLabel: groupLabelFor(num, entry),
+        topic: statute.topicFor(num, entry),
+        groupLabel: statute.groupLabel(num, entry),
       }))
       .sort((a, b) => compareSections(a.num, b.num));
-  }, [sections]);
+  }, [sections, statute]);
 
   // Total section count
   const totalSections = allSections.length;
@@ -135,6 +159,9 @@ export function useCriminalCodeSearch() {
   }, [query, severityFilter, partFilter, topicFilter, allSections, sections]);
 
   return {
+    statute,
+    setStatuteId,
+    parts,
     query,
     setQuery,
     severityFilter,

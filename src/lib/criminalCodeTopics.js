@@ -196,8 +196,8 @@ export function isKnownTopic(id) {
  * `groupLabel` (the search hook adds both) and be sorted by section number.
  * Takes the full list, never the capped search results.
  */
-export function buildTopicBrowse(sections) {
-  const byTopic = new Map(TOPICS.map((t) => [t.id, { topic: t, count: 0, groups: new Map() }]));
+export function buildTopicBrowse(sections, topics = TOPICS) {
+  const byTopic = new Map(topics.map((t) => [t.id, { topic: t, count: 0, groups: new Map() }]));
   for (const section of sections) {
     const bucket = byTopic.get(section.topic);
     if (!bucket) continue;
@@ -206,7 +206,7 @@ export function buildTopicBrowse(sections) {
     if (!bucket.groups.has(label)) bucket.groups.set(label, []);
     bucket.groups.get(label).push(section);
   }
-  return TOPICS.map((t) => {
+  return topics.map((t) => {
     const b = byTopic.get(t.id);
     return {
       topic: t,
