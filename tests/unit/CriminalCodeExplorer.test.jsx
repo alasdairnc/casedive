@@ -17,6 +17,8 @@ const ENRICHED = {
   definition: "Every one who breaks and enters a place with intent.",
   relatedSections: ["349", "350"],
   partOf: "Part IX — Offences Against Rights of Property",
+  topic: "theft",
+  groupLabel: "Breaking and Entering",
 };
 
 // Has a url but nothing to expand
@@ -27,17 +29,42 @@ const PLAIN = {
   maxPenalty: "",
   url: `${JUSTICE_LAWS_BASE}/section-348.1.html`,
   partOf: "Part IX — Offences Against Rights of Property",
+  topic: "theft",
+  groupLabel: "Breaking and Entering",
 };
+
+// A second topic, so the browse view has more than one group to render
+const HOMICIDE = {
+  num: "229",
+  title: "Murder",
+  severity: "Indictable",
+  maxPenalty: "Life imprisonment",
+  url: `${JUSTICE_LAWS_BASE}/section-229.html`,
+  partOf: "Part VIII — Offences Against the Person and Reputation",
+  topic: "homicide",
+  groupLabel: "Murder, Manslaughter and Infanticide",
+};
+
+// The hook is mocked; tests flip these to reach the browse view (no query,
+// no filters) or the flat search list (a query).
+const hookState = vi.hoisted(() => ({
+  query: "348",
+  topicFilter: "all",
+  setTopicFilter: () => {},
+}));
 
 // Skip the 390KB lazy import and the search debounce
 vi.mock("../../src/hooks/useCriminalCodeSearch.js", () => ({
   useCriminalCodeSearch: () => ({
-    query: "",
+    query: hookState.query,
     setQuery: () => {},
     severityFilter: "all",
     setSeverityFilter: () => {},
     partFilter: "all",
     setPartFilter: () => {},
+    topicFilter: hookState.topicFilter,
+    setTopicFilter: hookState.setTopicFilter,
+    allSections: [HOMICIDE, ENRICHED, PLAIN],
     results: [ENRICHED, PLAIN],
     totalMatches: 2,
     totalSections: 2,
@@ -69,6 +96,9 @@ function enrichedRow() {
 let openSpy;
 
 beforeEach(() => {
+  hookState.query = "348";
+  hookState.topicFilter = "all";
+  hookState.setTopicFilter = () => {};
   // happy-dom's anchor click calls open() on its own window, not the global
   // copy vitest installs, so stub that one to keep the test off the network
   openSpy = vi
@@ -158,5 +188,60 @@ describe("CriminalCodeExplorer section rows", () => {
     expect(row.style.cursor).toBe("default");
     expect(row.hasAttribute("tabindex")).toBe(false);
     expect(row.hasAttribute("aria-expanded")).toBe(false);
+  });
+});
+
+describe("CriminalCodeExplorer topic browse", () => {
+  beforeEach(() => {
+    hookState.query = "";
+  });
+
+  it("lists topics collapsed, with section counts, when nothing is searched", () => {
+    renderExplorer();
+
+    const theft = screen.getByRole("button", { name: /Theft, Robbery & Break and Enter/ });
+    expect(theft.getAttribute("aria-expanded")).toBe("false");
+    expect(theft.textContent).toContain("2 sections");
+    expect(screen.getByRole("button", { name: /Homicide, Suicide/ }).textContent).toContain(
+      "1 section",
+    );
+    // Topics with no sections in the loaded data are not listed
+    expect(screen.queryByRole("button", { name: /Weapons & Firearms/ })).toBeNull();
+    expect(screen.queryByText("s. 348")).toBeNull();
+  });
+
+  it("expanding a topic shows its Code headings and section rows", () => {
+    renderExplorer();
+    fireEvent.click(screen.getByRole("button", { name: /Theft, Robbery & Break and Enter/ }));
+
+    expect(screen.getByText("Breaking and Entering")).toBeTruthy();
+    expect(screen.getByText("s. 348")).toBeTruthy();
+    expect(screen.getByText("s. 348.1")).toBeTruthy();
+    expect(screen.queryByText("s. 229")).toBeNull();
+  });
+
+  it("choosing a topic filter opens only that topic", () => {
+    hookState.topicFilter = "homicide";
+    renderExplorer();
+
+    expect(screen.getByText("s. 229")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /Theft, Robbery/ })).toBeNull();
+  });
+
+  it("clicking the open topic while a topic filter is set clears the filter", () => {
+    hookState.topicFilter = "homicide";
+    hookState.setTopicFilter = vi.fn();
+    renderExplorer();
+
+    fireEvent.click(screen.getByRole("button", { name: /Homicide, Suicide/ }));
+    expect(hookState.setTopicFilter).toHaveBeenCalledWith("all");
+  });
+
+  it("a search query switches to the flat list", () => {
+    hookState.query = "348";
+    renderExplorer();
+
+    expect(screen.getByText("s. 348")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /Theft, Robbery/ })).toBeNull();
   });
 });

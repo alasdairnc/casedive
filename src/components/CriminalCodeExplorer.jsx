@@ -1,6 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { CRIMINAL_CODE_PARTS } from "../lib/criminalCodeParts.js";
+import {
+  TOPICS,
+  TOPIC_GROUPS,
+  buildTopicBrowse,
+} from "../lib/criminalCodeTopics.js";
 import { useCriminalCodeSearch } from "../hooks/useCriminalCodeSearch.js";
 import { useMediaQuery } from "../hooks/useMediaQuery.js";
 import Select from "./Select.jsx";
@@ -18,6 +23,169 @@ const PART_OPTIONS = [
   { value: "all", label: "All Parts" },
   ...CRIMINAL_CODE_PARTS.map((p) => ({ value: p.label, label: p.label })),
 ];
+
+const TOPIC_OPTIONS = [
+  { value: "all", label: "All Topics" },
+  ...TOPICS.map((tp) => ({ value: tp.id, label: tp.label })),
+];
+
+function TopicBrowse({
+  sections,
+  topicFilter,
+  setTopicFilter,
+  expandedSection,
+  setExpandedSection,
+  t,
+}) {
+  const browse = useMemo(() => buildTopicBrowse(sections), [sections]);
+  const [openTopic, setOpenTopic] = useState(null);
+  // Picking a topic in the filter opens just that topic; clicking its header
+  // then clears the filter so the full topic list comes back.
+  const visible =
+    topicFilter === "all" ? browse : browse.filter((b) => b.topic.id === topicFilter);
+  const activeTopic = topicFilter === "all" ? openTopic : topicFilter;
+
+  return (
+    <div>
+      {TOPIC_GROUPS.map((group) => {
+        const topics = visible.filter((b) => b.topic.group === group.id && b.count > 0);
+        if (topics.length === 0) return null;
+        return (
+          <div key={group.id}>
+            <div
+              style={{
+                padding: "16px 24px 8px",
+                fontFamily: "var(--font-body)",
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: t.textTertiary,
+              }}
+            >
+              {group.label}
+            </div>
+            {topics.map(({ topic, count, groups }) => {
+              const isOpen = activeTopic === topic.id;
+              return (
+                <div key={topic.id} style={{ borderBottom: `1px solid ${t.borderLight}` }}>
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => {
+                      if (topicFilter !== "all") {
+                        setTopicFilter("all");
+                        setOpenTopic(null);
+                      } else {
+                        setOpenTopic(isOpen ? null : topic.id);
+                      }
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 12,
+                      width: "100%",
+                      padding: "14px 24px",
+                      background: isOpen ? t.bgAlt : "transparent",
+                      border: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      color: t.text,
+                    }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        fontSize: 10,
+                        marginTop: 5,
+                        width: 20,
+                        textAlign: "center",
+                        color: t.textTertiary,
+                        transform: isOpen ? "rotate(90deg)" : "rotate(0deg)",
+                        transition: "transform 0.2s ease",
+                        display: "inline-block",
+                      }}
+                    >
+                      ▶
+                    </span>
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span
+                        style={{
+                          display: "block",
+                          fontFamily: "var(--font-body)",
+                          fontSize: 15,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {topic.label}
+                      </span>
+                      <span
+                        style={{
+                          display: "block",
+                          marginTop: 2,
+                          fontFamily: "var(--font-body)",
+                          fontSize: 13,
+                          lineHeight: 1.5,
+                          color: t.textSecondary,
+                        }}
+                      >
+                        {topic.blurb}
+                      </span>
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 12,
+                        color: t.textTertiary,
+                        whiteSpace: "nowrap",
+                        marginTop: 2,
+                      }}
+                    >
+                      {count} {count === 1 ? "section" : "sections"}
+                    </span>
+                  </button>
+                  {isOpen &&
+                    groups.map((g) => (
+                      <div key={g.label}>
+                        {g.label && (
+                          <div
+                            style={{
+                              padding: "10px 24px 6px 56px",
+                              fontFamily: "var(--font-body)",
+                              fontSize: 12,
+                              fontWeight: 600,
+                              color: t.textTertiary,
+                              background: t.bgAlt,
+                              borderTop: `1px solid ${t.borderLight}`,
+                            }}
+                          >
+                            {g.label}
+                          </div>
+                        )}
+                        {g.sections.map((section) => (
+                          <SectionRow
+                            key={section.num}
+                            section={section}
+                            isExpanded={expandedSection === section.num}
+                            onToggle={() =>
+                              setExpandedSection(
+                                expandedSection === section.num ? null : section.num,
+                              )
+                            }
+                            t={t}
+                          />
+                        ))}
+                      </div>
+                    ))}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 function SectionRow({ section, isExpanded, onToggle, t }) {
   const [hovered, setHovered] = useState(false);
@@ -372,11 +540,18 @@ export default function CriminalCodeExplorer({ onClose }) {
     setSeverityFilter,
     partFilter,
     setPartFilter,
+    topicFilter,
+    setTopicFilter,
+    allSections,
     results,
     totalMatches,
     totalSections,
     isLoading,
   } = useCriminalCodeSearch();
+
+  // Search and the Part/severity filters show a flat ranked list; with none
+  // of them set, the grouped topic browse takes over.
+  const isFiltered = !!query || severityFilter !== "all" || partFilter !== "all";
 
   // Close on Escape
   useEffect(() => {
@@ -557,6 +732,12 @@ export default function CriminalCodeExplorer({ onClose }) {
               onChange={setSeverityFilter}
             />
             <Select
+              label="Topic"
+              options={TOPIC_OPTIONS}
+              value={topicFilter}
+              onChange={setTopicFilter}
+            />
+            <Select
               label="Part"
               options={PART_OPTIONS}
               value={partFilter}
@@ -566,7 +747,7 @@ export default function CriminalCodeExplorer({ onClose }) {
         </div>
 
         {/* Results count */}
-        {(query || severityFilter !== "all" || partFilter !== "all") && (
+        {isFiltered && (
           <div
             style={{
               padding: "8px 24px",
@@ -589,12 +770,17 @@ export default function CriminalCodeExplorer({ onClose }) {
         <div style={{ overflowY: "auto", flexGrow: 1, background: t.bg }}>
           {isLoading ? (
             <div style={messageStyle}>Loading sections…</div>
+          ) : !isFiltered ? (
+            <TopicBrowse
+              sections={allSections}
+              topicFilter={topicFilter}
+              setTopicFilter={setTopicFilter}
+              expandedSection={expandedSection}
+              setExpandedSection={setExpandedSection}
+              t={t}
+            />
           ) : results.length === 0 ? (
-            <div style={messageStyle}>
-              {query || severityFilter !== "all" || partFilter !== "all"
-                ? "No sections match your current filters."
-                : "Type to browse or search the Criminal Code database."}
-            </div>
+            <div style={messageStyle}>No sections match your current filters.</div>
           ) : (
             results.map((section) => (
               <SectionRow

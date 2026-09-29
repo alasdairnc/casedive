@@ -95,6 +95,24 @@ test.describe("CriminalCodeExplorer", () => {
     });
   });
 
+  test("with no search, sections are browsable by topic and Code heading", async ({
+    page,
+  }) => {
+    await openNavMenuIfCollapsed(page);
+    await page.getByRole("button", { name: /criminal code explorer/i }).click();
+
+    const theft = page.getByRole("button", {
+      name: /Theft, Robbery & Break and Enter/,
+    });
+    await expect(theft).toHaveAttribute("aria-expanded", "false");
+    await theft.click();
+    await expect(theft).toHaveAttribute("aria-expanded", "true");
+
+    // The Code's own heading groups the sections, and s. 322 sits under it
+    await expect(page.getByText("Theft", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("s. 322", { exact: true })).toBeVisible();
+  });
+
   test("section with enriched data can be expanded to show Definition", async ({
     page,
   }) => {
