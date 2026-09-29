@@ -98,7 +98,7 @@ export function extractPenalty(block) {
   // Summary-conviction terms (months) sit alongside indictable ones; the indictable
   // maximum is always the larger, so the top of the list is the right figure.
   const top = life ? "Life imprisonment" : `${terms[0].text} indictable`;
-  const parts = [tiers > 1 ? `Varies by circumstances; up to ${top.toLowerCase().replace(/^life/, "life")}` : top];
+  const parts = [tiers > 1 ? `Varies by circumstances; up to ${top.toLowerCase()}` : top];
   if (severity === "Hybrid") parts.push("summary conviction available");
   return { severity, maxPenalty: parts.join("; ") };
 }
