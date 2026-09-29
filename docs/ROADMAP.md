@@ -34,16 +34,21 @@ redirect URLs.
 4. **Google sign-in, optional.** The code is in; it stays hidden until the
    OAuth client is set up and `VITE_AUTH_GOOGLE=true` (section 5 of
    `docs/auth-setup.md`). Worth doing once people are signing up.
-5. **Give the case-law fallback a real relevance signal.** Since #62, a weak
-   local-fallback case is dropped rather than shown. That fixed 17 scenarios
-   that showed unrelated case law, but it also drops good matches the fallback
-   scores just as low: "I drove the getaway car…" no longer shows R v Briscoe
-   (2010 SCC 13). Bring Briscoe back without bringing back R v Stewart for a
-   stolen chair (`tests/unit/caselawCorpusFallback.test.js`). The 11 remaining
-   `knownFailure` cases in `tests/unit/retrievalFailureSet.js` are the rest of
-   this work: Hunter/Grant seeded on "no search or detention" tickets, R v Khill
-   on robbery victims, and R v Woods dropped by `analyze.js`'s second issue
-   filter. Validate with the keyed CanLII gate once the secret is in.
+5. **Finish the case-law fallback relevance work.** #64 gave the fallback a
+   fact-pattern anchor: a case must match the user's facts or distinctive tags,
+   not just the area of law. That brought R v Briscoe back for "I drove the
+   getaway car…" and kept R v Stewart off a stolen chair. It also cleared all 11
+   `knownFailure` cases (corpus 58/58, was 47/58). Left to do:
+   - **Run the keyed CanLII gate** once `CANLII_API_KEY` is set. #64 was only
+     validated offline; CI's `keyed-filter-gate` passes by skipping.
+   - **Purge Upstash** for ticket, robbery/theft and counsel scenarios if #64
+     should show before the 7-day TTL runs out.
+   - **Add a real break-and-enter case** to the corpus (verify on CanLII).
+     `residential_break_in_back_window_not_zero` still passes by showing
+     R v Stewart on a home break-in, fed in as a landmark match: the same
+     mistake #64 fixed in the fallback, on a different path.
+   - **Run E2E on Mobile Safari.** #64's E2E ran on Chromium and Mobile Chrome
+     only (no WebKit in the cloud container).
 
 ## Hygiene rules that keep this list short
 
