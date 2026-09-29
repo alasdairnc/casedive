@@ -1,23 +1,55 @@
 ---
 name: verify
-description: The one pre-push check. Build, unit + component tests, guardrails (sanitizer + retrieval corpus + filter report), gitleaks, and optionally the Playwright E2E suite. Run before any commit you intend to push.
+description: The pre-push check, scoped to what changed. Docs-only changes get docs lint and a secret scan; code changes add tests, build and the guardrails/E2E that the touched files call for. Run before any commit you intend to push.
 ---
 
 # /verify
 
-Runs every fast check a contributor should run locally, in order, and stops at
-the first failure. E2E is opt-in because it needs the dev server and takes a
-minute; everything else finishes in under a minute.
+Look at what changed first, then run only the checks that change can break.
+Stops at the first failure. CI repeats the full suite on every PR and the
+pre-push hook already runs `test:unit`, so this is the fast local pass, not a
+second copy of CI.
 
-## Steps
+## Step 0: scope the change
 
-1. **Build** (no pipe: a pipe to `tail` would hide a non-zero exit)
+```bash
+git diff --name-only origin/main...HEAD; git diff --name-only; git ls-files --others --exclude-standard
+```
+
+Classify the union of those files:
+
+- **docs-only**: every file is `*.md`, under `docs/`, `reports/` or `artifacts/`
+- **code**: anything else
+
+Then pick checks from the table.
+
+| Check | Run when |
+| --- | --- |
+| Secret scan | always |
+| Docs lint | any `.md` changed |
+| Unit + component | code |
+| Build | `src/`, `index.html`, `vite.config.*`, `package*.json` changed |
+| Guardrails | `api/_filter*`, `api/_scenarioClassification.js`, `api/_retrievalThresholds.js`, `src/lib/*Data.js`, sanitizer files, or `tests/retrieval*` changed |
+| Legal-data validator | `criminalCodeData.js`, `civilLawData.js` or `charterData.js` changed |
+| E2E | `/verify e2e` asked for, or `src/`, `api/` or `tests/e2e/` changed |
+
+A docs-only change runs just the secret scan and docs lint.
+
+## Checks
+
+1. **Secret scan**
 
    ```bash
-   npm run build
+   npm run security:scan
    ```
 
-2. **Unit + component tests**
+2. **Docs lint**
+
+   ```bash
+   npm run docs:lint
+   ```
+
+3. **Unit + component tests**
 
    ```bash
    npm run test:unit && npm run test:component
@@ -25,7 +57,13 @@ minute; everything else finishes in under a minute.
 
    Stop here if anything fails. Never run E2E on top of red unit tests.
 
-3. **Guardrails** (result-card sanitizer, retrieval failure corpus, filter report)
+4. **Build** (no pipe: a pipe to `tail` would hide a non-zero exit)
+
+   ```bash
+   npm run build
+   ```
+
+5. **Guardrails** (result-card sanitizer, retrieval failure corpus, filter report)
 
    ```bash
    npm run test:guardrails
@@ -33,20 +71,7 @@ minute; everything else finishes in under a minute.
 
    The filter report is a no-op without `CANLII_API_KEY`; that's expected locally.
 
-4. **Secret scan**
-
-   ```bash
-   npm run security:scan
-   ```
-
-5. **Docs lint** (only if `.md` files changed)
-
-   ```bash
-   npm run docs:lint
-   ```
-
-6. **E2E** — only when `/verify e2e` is asked for, or when `src/`, `api/` or
-   `tests/e2e/` changed:
+6. **E2E**
 
    ```bash
    lsof -i :3000 | grep -q LISTEN || (npm run dev:api & npx wait-on http://localhost:3000 --timeout 30000)
@@ -68,13 +93,15 @@ minute; everything else finishes in under a minute.
 
 ## Report
 
+Mark checks that didn't apply as `skipped`.
+
 ```
-VERIFY
-Build        PASS
-Unit/Comp    PASS  (309 / 71)
-Guardrails   PASS
+VERIFY  (docs-only | code)
 Secrets      PASS
 Docs lint    PASS | skipped
+Unit/Comp    PASS  (309 / 71) | skipped
+Build        PASS | skipped
+Guardrails   PASS | skipped
 E2E          PASS  (n/n) | skipped
 Diff         k files
 

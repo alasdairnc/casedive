@@ -40,7 +40,7 @@ casedive/
 |  |  |- constants.js         # Frontend constants
 |  |  |- prompts.js           # System prompt builder
 |  |  |- canlii.js            # CanLII API client
-|  |  |- criminalCodeData.js  # 1568 sections, all enriched (definition or summary) — ~915KB, use criminalCodeParts.js for parts only
+|  |  |- criminalCodeData.js  # 1568 sections, all enriched (definition or summary) — ~950KB, use criminalCodeParts.js for parts only
 |  |  |- civilLawData.js      # 191 entries
 |  |  |- charterData.js       # 55 entries
 |  |  |- landmarkCases.js     # Seeds for retrieval fallback/query enrichment
@@ -48,7 +48,7 @@ casedive/
 |  |  \- caselaw/             # Live case-law DB merged via index.js → MASTER_CASE_LAW_DB
 |  |- App.jsx, main.jsx, index.css
 |- tests/ (e2e/, unit/, live/)
-|- scripts/ (evaluate-retrieval-failures, tune-filters, performance-monitor, security-probe)
+|- scripts/ (evaluate-retrieval-failures, tune-filters, performance-monitor, security-probe, Criminal Code merge scripts + shared _criminalCodeDataWriter)
 ```
 
 ## Response Format
