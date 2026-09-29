@@ -35,6 +35,7 @@ npm run dev:api             # full stack via `vercel dev` (npm run dev = fronten
 
 ## Documentation
 
+- [Wiki](https://github.com/alasdairnc/casedive/wiki): setup, architecture, API reference, testing
 - `CLAUDE.md`: project rules and gotchas for AI-assisted work
 - `docs/README.md`: documentation index (architecture, security, filtering, operations)
 - `docs/ROADMAP.md`: what is next, and the owner-only setup steps still outstanding
