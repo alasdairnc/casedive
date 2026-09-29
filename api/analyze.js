@@ -193,9 +193,18 @@ function tokenizeForRanking(text) {
   });
 }
 
-function detectScenarioIssueForRanking(scenarioTokens) {
+function detectScenarioIssueForRanking(scenarioTokens, scenarioText = "") {
   const has = (token) => scenarioTokens.has(token);
   const hasAny = (tokens) => tokens.some((t) => has(t));
+  // "stopped by police" / "held for X minutes" are common lay phrasings of
+  // psychological detention that never use "detain" or "arrest" — mirrors
+  // the pattern in api/_caseLawRetrieval.js's detectCoreIssue (fixed there
+  // for the R v Grant retrieval regression; this file's token-set check
+  // never got the same fix, see tests/unit/analyzeRanking.test.js).
+  const hasLayDetentionPhrasing =
+    /\bstopped\s+by\s+(the\s+)?police\b|\bheld\s+for\s+\w+\s+(minutes?|hours?)\b/.test(
+      scenarioText.toLowerCase(),
+    );
 
   if (
     (has("km/h") ||
@@ -223,7 +232,10 @@ function detectScenarioIssueForRanking(scenarioTokens) {
     return "charter_counsel";
   if (hasAny(["search", "seizure", "warrant", "privacy", "phone", "device"]))
     return "charter_search_seizure";
-  if (hasAny(["detained", "detention", "arbitrary", "arrested", "arrest"]))
+  if (
+    hasAny(["detained", "detention", "arbitrary", "arrested", "arrest"]) ||
+    hasLayDetentionPhrasing
+  )
     return "charter_detention";
   if (hasAny(["impaired", "drunk", "breath", "breathalyzer", "ride", "over80"]))
     return "impaired_driving";
@@ -473,7 +485,7 @@ function scoreRetrievedCase(scenarioTokens, scenarioIssue, item) {
 function selectTopRetrievedCases(scenario, retrievedCases, limit = 3) {
   const cases = Array.isArray(retrievedCases) ? [...retrievedCases] : [];
   const scenarioTokens = new Set(tokenizeForRanking(scenario));
-  const scenarioIssue = detectScenarioIssueForRanking(scenarioTokens);
+  const scenarioIssue = detectScenarioIssueForRanking(scenarioTokens, scenario);
   const minOverlap =
     scenarioTokens.size >= 8 ? 3 : scenarioTokens.size >= 4 ? 2 : 1;
   const strictNoFallbackIssues = new Set([
