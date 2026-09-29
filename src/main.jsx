@@ -20,7 +20,16 @@ try {
   console.error("Sentry failed to start:", err);
 }
 
-createRoot(document.getElementById("root")).render(
+// React 19 no longer rethrows render errors; it hands them to these hooks.
+// Send them to Sentry with the component stack, and keep them in the
+// console (Sentry is off outside production).
+createRoot(document.getElementById("root"), {
+  onUncaughtError: Sentry.reactErrorHandler((error) => console.error(error)),
+  onCaughtError: Sentry.reactErrorHandler((error) => console.error(error)),
+  onRecoverableError: Sentry.reactErrorHandler((error) =>
+    console.error(error),
+  ),
+}).render(
   <StrictMode>
     <App />
     <Analytics />
