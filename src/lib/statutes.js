@@ -28,7 +28,7 @@ export const STATUTES = {
     tab: "CDSA",
     title: "Controlled Drugs and Substances Act",
     placeholder: "Search section number, title or keyword (e.g. trafficking, possession)",
-    hasSeverity: false,
+    hasSeverity: true,
     topics: STATUTE_TOPIC_CONFIGS.cdsa.topics,
     topicGroups: STATUTE_TOPIC_CONFIGS.cdsa.groups,
     topicFor: (_num, entry) => statuteTopicFor("cdsa", entry),
