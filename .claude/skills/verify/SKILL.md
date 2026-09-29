@@ -6,9 +6,9 @@ description: The pre-push check, scoped to what changed. Docs-only changes get d
 # /verify
 
 Look at what changed first, then run only the checks that change can break.
-Stops at the first failure. CI repeats the full suite on every PR and the
-pre-push hook already runs `test:unit`, so this is the fast local pass, not a
-second copy of CI.
+Stops at the first failure. CI repeats the full suite on every PR, so this is
+the fast local pass, not a second copy of CI. There is no pre-push hook; this
+is the only local check before pushing.
 
 ## Step 0: scope the change
 

@@ -78,7 +78,7 @@ Node on your PATH. Hook scripts:
 ## Windows notes
 
 - **Git hooks:** Git for Windows ships Git Bash, which runs the `.githooks/pre-commit`
-  and `pre-push` shell hooks. Make sure `gitleaks` is on your PATH or the pre-commit
+  shell hook. Make sure `gitleaks` is on your PATH or the pre-commit
   hook will block the commit.
 - **PowerShell execution policy:** if `setup.ps1` is blocked, run it with
   `powershell -ExecutionPolicy Bypass -File scripts\setup.ps1` — this bypasses the
