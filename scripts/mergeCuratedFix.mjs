@@ -19,6 +19,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const DATA_PATH = resolve(ROOT, "src/lib/criminalCodeData.js");
 
+const meta = JSON.parse(
+  readFileSync(resolve(__dirname, "criminal-code-meta.json"), "utf-8"),
+);
+
 const [, , resultsFile] = process.argv;
 const results = JSON.parse(readFileSync(resultsFile, "utf-8"));
 const overrides = new Map(results.map((r) => [r.section, r]));
@@ -115,7 +119,7 @@ const PARTS_EXPORT = `export const CRIMINAL_CODE_PARTS = [\n${partsExportLines.j
 const output = `// src/lib/criminalCodeData.js
 // Complete Criminal Code (RSC 1985, c C-46) section lookup.
 // Auto-generated from Justice Laws XML (laws-lois.justice.gc.ca/eng/XML/C-46.xml)
-// Source current as of: 2026-07-21 (Justice Laws lims:current-date) | Sections: ${sortedNums.length}
+// Source current as of: ${meta.sourceCurrentDate || "unknown"} (Justice Laws lims:current-date) | Sections: ${sortedNums.length}
 // Includes all numbered sections from the Criminal Code.
 // ${enrichedCount} high-priority sections are enriched with hand-curated definitions,
 // defences, and related sections. Other sections may carry a \`summary\` field:

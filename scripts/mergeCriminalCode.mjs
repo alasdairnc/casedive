@@ -109,6 +109,17 @@ if (summaryOrphans.length) {
     `WARNING: ${summaryOrphans.length} summarized section(s) no longer in the XML — kept, needs review: ${summaryOrphans.join(", ")}`,
   );
 }
+// Any other existing entry (not enriched or summarized) whose section number
+// is missing from the fresh XML extract — preserve and warn just the same,
+// rather than silently dropping it.
+const plainOrphans = [...existingMap.keys()].filter(
+  (k) => !xmlSectionNums.has(k) && !enrichedKeys.has(k) && !summaryKeys.has(k),
+);
+if (plainOrphans.length) {
+  console.warn(
+    `WARNING: ${plainOrphans.length} section(s) no longer in the XML — kept, needs review: ${plainOrphans.join(", ")}`,
+  );
+}
 
 let currentPart = "";
 const lines = [];
@@ -136,7 +147,7 @@ for (const section of sortedSections) {
   }
 }
 
-const allOrphans = [...new Set([...enrichedOrphans, ...summaryOrphans])];
+const allOrphans = [...new Set([...enrichedOrphans, ...summaryOrphans, ...plainOrphans])];
 for (const key of allOrphans) {
   const existing = existingMap.get(key);
   lines.push("");
@@ -147,7 +158,7 @@ for (const key of allOrphans) {
 console.log(`\nMerge result: ${sortedSections.length + allOrphans.length} total entries`);
 console.log(`  Preserved from existing: ${preservedCount} (of which enriched: ${enrichedPreserved})`);
 console.log(`  New from XML: ${newCount}`);
-console.log(`  Orphans kept for review: ${allOrphans.length} (${enrichedOrphans.length} enriched, ${summaryOrphans.length} summarized)`);
+console.log(`  Orphans kept for review: ${allOrphans.length} (${enrichedOrphans.length} enriched, ${summaryOrphans.length} summarized, ${plainOrphans.length} plain)`);
 
 const partsExportLines = orderedParts.map(({ id, label }) => {
   return `  { id: "${escapeStr(id)}", label: "${escapeStr(label)}" },`;
