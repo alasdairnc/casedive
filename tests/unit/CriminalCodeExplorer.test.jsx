@@ -1,9 +1,10 @@
 // @vitest-environment happy-dom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { PropertySymbol } from "happy-dom";
 import CriminalCodeExplorer from "../../src/components/CriminalCodeExplorer.jsx";
 import { ThemeProvider } from "../../src/lib/ThemeContext.jsx";
+import { STATUTES } from "../../src/lib/statutes.js";
 
 const JUSTICE_LAWS_BASE = "https://laws-lois.justice.gc.ca/eng/acts/c-46";
 
@@ -48,6 +49,8 @@ const HOMICIDE = {
 // The hook is mocked; tests flip these to reach the browse view (no query,
 // no filters) or the flat search list (a query).
 const hookState = vi.hoisted(() => ({
+  statuteId: "criminal-code",
+  setStatuteId: () => {},
   query: "348",
   topicFilter: "all",
   setTopicFilter: () => {},
@@ -56,6 +59,9 @@ const hookState = vi.hoisted(() => ({
 // Skip the 390KB lazy import and the search debounce
 vi.mock("../../src/hooks/useCriminalCodeSearch.js", () => ({
   useCriminalCodeSearch: () => ({
+    statute: STATUTES[hookState.statuteId],
+    setStatuteId: hookState.setStatuteId,
+    parts: [],
     query: hookState.query,
     setQuery: () => {},
     severityFilter: "all",
@@ -96,6 +102,8 @@ function enrichedRow() {
 let openSpy;
 
 beforeEach(() => {
+  hookState.statuteId = "criminal-code";
+  hookState.setStatuteId = () => {};
   hookState.query = "348";
   hookState.topicFilter = "all";
   hookState.setTopicFilter = () => {};
@@ -243,5 +251,32 @@ describe("CriminalCodeExplorer topic browse", () => {
 
     expect(screen.getByText("s. 348")).toBeTruthy();
     expect(screen.queryByRole("button", { name: /Theft, Robbery/ })).toBeNull();
+  });
+});
+
+describe("CriminalCodeExplorer statute switcher", () => {
+  it("offers all three Acts and marks the active one pressed", () => {
+    renderExplorer();
+    const group = screen.getByRole("group", { name: "Statute" });
+    expect(group.querySelectorAll("button")).toHaveLength(3);
+    expect(screen.getByRole("button", { name: "Criminal Code" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("button", { name: "CDSA" }).getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("picking an Act asks the hook to switch", () => {
+    hookState.setStatuteId = vi.fn();
+    renderExplorer();
+    fireEvent.click(screen.getByRole("button", { name: "YCJA" }));
+    expect(hookState.setStatuteId).toHaveBeenCalledWith("ycja");
+  });
+
+  it("hides the severity filter for Acts without severity data", () => {
+    renderExplorer();
+    expect(screen.getByText("Severity")).toBeTruthy();
+    cleanup();
+    hookState.statuteId = "cdsa";
+    renderExplorer();
+    expect(screen.queryByText("Severity")).toBeNull();
+    expect(screen.getByText("Controlled Drugs and Substances Act")).toBeTruthy();
   });
 });
