@@ -25,7 +25,6 @@
 
 ## Parked
 
-- `monetization-plan.md`, `billing-setup-walkthrough.md` — Billing plan and setup steps. Code parked 2026-09-25; see the status note at the top of each.
 
 ## Archive (frozen, reference only)
 
