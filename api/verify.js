@@ -25,6 +25,7 @@ import {
 } from "../src/lib/criminalCodeData.js";
 import { lookupCharterSection } from "../src/lib/charterData.js";
 import { lookupCivilLawSection } from "../src/lib/civilLawData.js";
+import { lookupStatuteSection } from "../src/lib/statuteLookup.js";
 import { API_REDIS_TIMEOUT_MS } from "./_constants.js";
 import {
   logRequestStart,
@@ -166,7 +167,8 @@ export default async function handler(req, res) {
 
     // 2. Civil law statute citations (CDSA, YCJA, CHRA, etc.)
     if (CIVIL_LAW_PATTERN.test(citation)) {
-      const found = lookupCivilLawSection(citation);
+      // Curated entries first; CDSA/YCJA fall back to the full Act data.
+      const found = lookupCivilLawSection(citation) || lookupStatuteSection(citation);
       if (found) {
         results[citation] = {
           status: "verified",
@@ -175,6 +177,10 @@ export default async function handler(req, res) {
           title: found.entry.title,
           statute: found.entry.statute,
           jurisdiction: found.entry.jurisdiction,
+          ...(found.entry.severity && {
+            severity: found.entry.severity,
+            maxPenalty: found.entry.maxPenalty,
+          }),
         };
       } else {
         results[citation] = {

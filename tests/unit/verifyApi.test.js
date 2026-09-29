@@ -225,4 +225,19 @@ describe("verify handler", () => {
     expect(res.body["2020 ZZZZ 99"]).toMatchObject({ status: "unknown_court" });
     expect(globalThis.fetch).toHaveBeenCalledTimes(1);
   });
+  it("verifies CDSA and YCJA sections beyond the curated set, with penalty data", async () => {
+    globalThis.fetch = vi.fn();
+    const req = createReq({
+      body: { citations: ["CDSA s. 7.1", "CDSA s. 5(2)", "YCJA s. 137", "CDSA s. 9999"] },
+    });
+    const res = createRes();
+
+    await handler(req, res);
+
+    expect(res.body["CDSA s. 7.1"]).toMatchObject({ status: "verified", statute: "Controlled Drugs and Substances Act" });
+    expect(res.body["CDSA s. 5(2)"].maxPenalty).toMatch(/life/i);
+    expect(res.body["YCJA s. 137"]).toMatchObject({ status: "verified", severity: "Summary" });
+    expect(res.body["CDSA s. 9999"]).toMatchObject({ status: "unverified" });
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
 });
