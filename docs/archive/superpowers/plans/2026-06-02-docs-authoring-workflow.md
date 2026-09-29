@@ -514,7 +514,7 @@ git commit -m "feat: /weekly-report skill — generate digests in established fo
 
 - [ ] **Step 1: Add docs commands to `CLAUDE.md`**
 
-In `/Users/alasdairnc/Desktop/Dev/casedive/CLAUDE.md`, under the `## Commands`
+In `CLAUDE.md`, under the `## Commands`
 section, add a new line after the Security commands block:
 
 ```markdown

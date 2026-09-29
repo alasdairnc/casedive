@@ -23,3 +23,8 @@ artifacts/html/
 security_audit/
 coverage/
 .vitest/
+
+# Internal security audits (kept local, not published)
+artifacts/audit/
+artifacts/security-audit-*.md
+docs/breach-response.md
