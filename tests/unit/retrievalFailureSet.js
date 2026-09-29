@@ -1,7 +1,6 @@
 export const RETRIEVAL_FAILURE_SET = [
   {
     id: "stolen_chair_not_socan",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "My chair was stolen from outside my apartment.",
     expectedPrimary: "theft",
     expectedResult: "zero_expected",
@@ -114,7 +113,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "mugging_not_jordan",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "I was mugged for $50 while walking home.",
     expectedPrimary: "robbery",
     expectedResult: "zero_expected",
@@ -166,7 +164,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "robbery_not_hunter",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "Someone robbed me and took my cash while threatening me.",
     expectedPrimary: "robbery",
     expectedResult: "zero_expected",
@@ -235,7 +232,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "traffic_minor_grant",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "Routine speeding stop. I got a ticket but there was no search or arrest.",
     expectedPrimary: "minor_traffic_stop",
@@ -393,7 +389,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "traffic_ticket_only_zero",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I got a simple speeding ticket and there was no detention, search, or arrest.",
     expectedPrimary: "minor_traffic_stop",
@@ -416,7 +411,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "camera_ticket_zero",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "A speed camera mailed me a ticket. No officer stopped me and there was no search.",
     expectedPrimary: "minor_traffic_stop",
@@ -505,7 +499,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "jaywalking_ticket_zero",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I got a jaywalking ticket downtown. There was no search, detention, or force.",
     expectedPrimary: "minor_traffic_stop",
@@ -819,7 +812,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "mixed_delay_plus_counsel_positive",
-    knownFailure: "analyze.js's issue filter drops the expected case, 2026-09-27",
     scenario:
       "My case has taken three years and I was also denied access to counsel right after arrest.",
     expectedPrimary: "charter_counsel",
@@ -894,7 +886,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "impaired_minor_ticket_negative",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario:
       "I got a speeding ticket for 5 km over and there was no detention, search, or breath demand.",
     expectedPrimary: "minor_traffic_stop",
@@ -1071,7 +1062,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "lost_phone_found_property_negative",
-    knownFailure: "Shows case law in production, 2026-09-27",
     scenario: "I lost my phone at a cafe and someone turned it in later.",
     expectedPrimary: "general_criminal",
     expectedResult: "zero_expected",
@@ -1204,7 +1194,6 @@ export const RETRIEVAL_FAILURE_SET = [
   },
   {
     id: "counsel_no_detention_positive",
-    knownFailure: "analyze.js's issue filter drops the expected case, 2026-09-27",
     scenario:
       "After my arrest at the station, officers kept questioning me for two hours and refused to let me speak to a lawyer.",
     expectedPrimary: "charter_counsel",
