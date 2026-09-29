@@ -10,27 +10,20 @@
 
 - `architecture.md` — System architecture and component boundaries.
 - `design-system.md` — UI patterns, tokens, and design conventions.
-- `security.md` — Security posture and safeguards.
 - `adr/` — Architecture decision records: why the function cap, parked billing and the desktop layout are the way they are.
 
 ## Filtering
 
-- `filtering/FILTER_TUNING.md` — Full filter tuning architecture and workflow.
-- `filtering/FILTER_TUNING_QUICKSTART.md` — Fast path for running and improving filter quality.
 
 ## Operations
 
-- `operations/PERFORMANCE_PLAN.md` — Performance optimization and monitoring plan.
-- Audit history lives in `.claude/skills/casedive-audit/AUDIT_LOG.md` (append-only, written by the `casedive-audit` skill).
 
 ## Parked
 
 
 ## Archive (frozen, reference only)
 
-- `archive/operations/` — April 2026 mode snapshots, runbook and canary checklist.
 - `archive/superpowers/` — Agent workflow plans from April–June 2026.
-- `skills/` — Domain notes from the original build (CanLII API patterns, Criminal Code data entry, prompt engineering, prompt-injection testing). Not auto-loaded skills; those live in `.claude/skills/`.
 
 ## Generated
 

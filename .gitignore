@@ -31,3 +31,12 @@ docs/breach-response.md
 docs/monetization-plan.md
 docs/billing-setup-walkthrough.md
 .claude/skills/casedive-audit/AUDIT_LOG.md
+docs/security.md
+docs/filtering/
+docs/operations/
+docs/skills/
+docs/archive/operations/
+.claude/agents/
+.claude/commands/
+.claude/skills/
+.claude/rules/
