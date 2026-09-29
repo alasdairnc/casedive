@@ -28,7 +28,13 @@ import { findLandmarkSummary } from "../src/lib/landmarkCases.js";
 // Strip XML-like tags from user input to prevent delimiter escape
 function sanitizeUserInput(input) {
   if (typeof input !== "string") return input;
-  return input.replace(/<\/?[a-zA-Z_][a-zA-Z0-9_]*(?:\s[^>\s][^>]*)?>/g, "");
+  let prev;
+  let out = input;
+  do {
+    prev = out;
+    out = out.replace(/<\/?[a-zA-Z_][a-zA-Z0-9_]*(?:\s[^>]*)?>/g, "");
+  } while (out !== prev);
+  return out;
 }
 
 function normalizeSummaryResult(raw) {

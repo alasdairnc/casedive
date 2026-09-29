@@ -12,6 +12,9 @@ on:
     # Every 6 hours. Was every 30 minutes (5,300+ runs against near-zero traffic).
     - cron: "17 */6 * * *"
 
+permissions:
+  contents: read
+
 jobs:
   retrieval-health-monitor:
     runs-on: ubuntu-latest
