@@ -270,13 +270,13 @@ describe("CriminalCodeExplorer statute switcher", () => {
     expect(hookState.setStatuteId).toHaveBeenCalledWith("ycja");
   });
 
-  it("hides the severity filter for Acts without severity data", () => {
+  it("hides the severity filter for Acts without severity data (YCJA)", () => {
     renderExplorer();
     expect(screen.getByText("Severity")).toBeTruthy();
     cleanup();
-    hookState.statuteId = "cdsa";
+    hookState.statuteId = "ycja";
     renderExplorer();
     expect(screen.queryByText("Severity")).toBeNull();
-    expect(screen.getByText("Controlled Drugs and Substances Act")).toBeTruthy();
+    expect(screen.getByText("Youth Criminal Justice Act")).toBeTruthy();
   });
 });

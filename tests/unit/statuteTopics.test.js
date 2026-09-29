@@ -17,13 +17,30 @@ describe.each(Object.entries(ACTS))("%s data and topics", (id, act) => {
   const entries = [...act.sections.entries()];
   const topicIds = new Set(cfg.topics.map((t) => t.id));
 
-  it("has sections with a title, a Justice Laws url and no invented penalty data", () => {
+  it("has sections with a title, a Justice Laws url and well-formed extracted penalty data", () => {
     expect(entries.length).toBeGreaterThan(50);
     for (const [num, e] of entries) {
       expect(e.title, num).toBeTruthy();
       expect(e.url, num).toBe(`https://laws-lois.justice.gc.ca/eng/acts/${act.url}/section-${num}.html`);
-      expect(e.severity, num).toBe("");
-      expect(e.maxPenalty, num).toBe("");
+      // Extracted from the Act's text only: both set together, or both empty.
+      expect(["", "Indictable", "Hybrid", "Summary"], num).toContain(e.severity);
+      expect(!!e.severity, num).toBe(!!e.maxPenalty);
+      for (const r of e.relatedSections ?? []) {
+        expect(act.sections.has(r), `s. ${num} -> s. ${r}`).toBe(true);
+        expect(r, num).not.toBe(num);
+      }
+    }
+  });
+
+  it("carries penalty data only on offence sections (spot checks)", () => {
+    const pen = (n) => act.sections.get(n).maxPenalty;
+    if (id === "cdsa") {
+      expect(pen("5")).toMatch(/life imprisonment/i);
+      expect(pen("4")).toMatch(/7 years/);
+      expect(pen("2")).toBe("");
+    } else {
+      expect(pen("137")).toBe("Summary conviction");
+      expect(pen("3")).toBe("");
     }
   });
 
