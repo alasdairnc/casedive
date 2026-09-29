@@ -112,12 +112,16 @@ export default async function handler(req, res) {
   const orderCol = ORDER_COL[type];
 
   if (req.method === "GET") {
+    // Twice the cap: if a save's cleanup failed (see POST below), the old and
+    // new copies of the list are both stored until the next save, and reading
+    // only maxItems rows would return half the list twice. The client merge
+    // drops the duplicates and keeps at most maxItems.
     const { data, error } = await supabase
       .from(table)
       .select("*")
       .eq("user_id", user.id)
       .order(orderCol, { ascending: false })
-      .limit(maxItems);
+      .limit(maxItems * 2);
 
     if (error) {
       return res.status(500).json({ error: "Failed to fetch data" });
@@ -190,21 +194,50 @@ export default async function handler(req, res) {
     };
   });
 
-  // Replace semantics: the client POSTs the full desired array for this type,
-  // so we delete the user's existing rows and insert the new set. This makes
-  // removals and clears (empty array) propagate correctly, and prevents the
-  // table from accumulating duplicate rows on every sync.
-  const { error: deleteError } = await supabase
+  // Replace semantics: the client POSTs the full desired array for this type.
+  // An empty array clears the list.
+  if (rows.length === 0) {
+    const { error: clearError } = await supabase
+      .from(table)
+      .delete()
+      .eq("user_id", user.id);
+    if (clearError) {
+      return res.status(500).json({ error: "Failed to save data" });
+    }
+    return res.status(200).json({ ok: true });
+  }
+
+  // Otherwise the new rows go in before the old ones come out, so a failed
+  // save can't empty the list (it used to delete first). The cutoff is the
+  // newest existing row's created_at, passed back exactly as read: it doesn't
+  // depend on how the column default assigns times within one insert. If the
+  // cleanup delete fails, both copies stay until the next save; GET reads
+  // twice the cap and the client merge drops the duplicates.
+  const { data: newest, error: readError } = await supabase
     .from(table)
-    .delete()
-    .eq("user_id", user.id);
-  if (deleteError) {
+    .select("created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (readError) {
     return res.status(500).json({ error: "Failed to save data" });
   }
 
-  if (rows.length > 0) {
-    const { error: insertError } = await supabase.from(table).insert(rows);
-    if (insertError) {
+  const { error: insertError } = await supabase.from(table).insert(rows);
+  if (insertError) {
+    return res.status(500).json({ error: "Failed to save data" });
+  }
+
+  // `lte`, not `lt`: every row of the previous save came from one insert and
+  // shares this timestamp, so `lt` would leave that whole list behind.
+  const cutoff = newest?.[0]?.created_at;
+  if (cutoff) {
+    const { error: cleanupError } = await supabase
+      .from(table)
+      .delete()
+      .eq("user_id", user.id)
+      .lte("created_at", cutoff);
+    if (cleanupError) {
       return res.status(500).json({ error: "Failed to save data" });
     }
   }

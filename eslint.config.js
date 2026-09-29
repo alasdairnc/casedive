@@ -49,10 +49,4 @@ export default [
     files: ["tests/**"],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
-  {
-    // Dead code that #47 deletes along with the list/string key fix.
-    // Remove this block once #47 is merged.
-    files: ["api/_retrievalHealthStore.js"],
-    rules: { "no-unused-vars": "off", "no-useless-assignment": "off" },
-  },
 ];

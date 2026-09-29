@@ -12,12 +12,35 @@ const {
   recordCaseLawReport,
   getStoredCaseLawReports,
   resetInMemoryCaseLawReports,
+  REPORT_RETENTION_DAYS,
 } = await import("../../api/_caseLawReportStore.js");
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function daysAgo(days) {
+  return new Date(Date.now() - days * DAY_MS).toISOString();
+}
+
+function makeFakeRedis() {
+  const values = new Map();
+  return {
+    values,
+    set: vi.fn(async (key, value) => {
+      values.set(key, value);
+      return "OK";
+    }),
+    scan: vi.fn(async (_cursor, { match }) => {
+      const prefix = match.replace(/\*$/, "");
+      return ["0", [...values.keys()].filter((k) => k.startsWith(prefix))];
+    }),
+    mget: vi.fn(async (...keys) => keys.map((k) => values.get(k) ?? null)),
+  };
+}
 
 function makeReport(index = 1) {
   return {
     reportId: `clr_${index}`,
-    reportedAt: "2026-04-15T12:00:00.000Z",
+    reportedAt: new Date().toISOString(),
     analysisRequestId: "req_123",
     scenarioSnippet:
       "A person broke into a house at night and stole electronics.",
@@ -109,5 +132,46 @@ describe("case-law report store", () => {
     expect(stored).toHaveLength(1000);
     expect(stored[0].reportId).toBe("clr_5");
     expect(stored.at(-1).reportId).toBe("clr_1004");
+  });
+
+  it("drops in-memory reports older than the retention window", async () => {
+    await recordCaseLawReport({
+      ...makeReport(1),
+      reportedAt: daysAgo(REPORT_RETENTION_DAYS + 1),
+    });
+    await recordCaseLawReport({
+      ...makeReport(2),
+      reportedAt: daysAgo(REPORT_RETENTION_DAYS - 1),
+    });
+
+    const stored = await getStoredCaseLawReports();
+    expect(stored.map((r) => r.reportId)).toEqual(["clr_2"]);
+  });
+
+  it("writes each report to its own Redis key with a retention expiry", async () => {
+    mockRedis = makeFakeRedis();
+
+    await recordCaseLawReport(makeReport(7));
+
+    expect(mockRedis.set).toHaveBeenCalledTimes(1);
+    const [key, value, options] = mockRedis.set.mock.calls[0];
+    expect(key).toBe("feedback:case-law-report:v2:clr_7");
+    expect(JSON.parse(value).reportId).toBe("clr_7");
+    expect(options).toEqual({ ex: REPORT_RETENTION_DAYS * 24 * 60 * 60 });
+  });
+
+  it("reads reports back from Redis, oldest first, skipping expired ones", async () => {
+    mockRedis = makeFakeRedis();
+    const store = (report) =>
+      mockRedis.values.set(
+        `feedback:case-law-report:v2:${report.reportId}`,
+        JSON.stringify(report),
+      );
+    store({ ...makeReport(1), reportedAt: daysAgo(2) });
+    store({ ...makeReport(2), reportedAt: daysAgo(REPORT_RETENTION_DAYS + 5) });
+    store({ ...makeReport(3), reportedAt: daysAgo(10) });
+
+    const stored = await getStoredCaseLawReports();
+    expect(stored.map((r) => r.reportId)).toEqual(["clr_3", "clr_1"]);
   });
 });
