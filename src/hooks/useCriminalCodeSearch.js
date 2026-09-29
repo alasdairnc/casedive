@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { topicForSection, groupLabelFor } from "../lib/criminalCodeTopics.js";
 
 const MAX_RESULTS = 100;
 const DEBOUNCE_MS = 100;
@@ -22,6 +23,7 @@ export function useCriminalCodeSearch() {
   const [query, setQuery] = useState("");
   const [severityFilter, setSeverityFilter] = useState("all");
   const [partFilter, setPartFilter] = useState("all");
+  const [topicFilter, setTopicFilter] = useState("all");
   const [results, setResults] = useState([]);
   const [totalMatches, setTotalMatches] = useState(0);
   const [sections, setSections] = useState(null);
@@ -45,6 +47,8 @@ export function useCriminalCodeSearch() {
       .map(([num, entry]) => ({
         num,
         ...entry,
+        topic: topicForSection(num, entry),
+        groupLabel: groupLabelFor(num, entry),
       }))
       .sort((a, b) => compareSections(a.num, b.num));
   }, [sections]);
@@ -66,6 +70,7 @@ export function useCriminalCodeSearch() {
       // Pre-filter by severity and part if they are not "all"
       const needsSeverityFilter = severityFilter !== "all";
       const needsPartFilter = partFilter !== "all";
+      const needsTopicFilter = topicFilter !== "all";
       const sevFilterLower = severityFilter.toLowerCase();
 
       for (const section of allSections) {
@@ -79,6 +84,9 @@ export function useCriminalCodeSearch() {
         if (needsPartFilter) {
           if (!section.partOf || !section.partOf.includes(partFilter)) continue;
         }
+
+        // Topic filter
+        if (needsTopicFilter && section.topic !== topicFilter) continue;
 
         // Text search
         let score = 0;
@@ -124,7 +132,7 @@ export function useCriminalCodeSearch() {
     }, DEBOUNCE_MS);
 
     return () => clearTimeout(timerRef.current);
-  }, [query, severityFilter, partFilter, allSections, sections]);
+  }, [query, severityFilter, partFilter, topicFilter, allSections, sections]);
 
   return {
     query,
@@ -133,6 +141,9 @@ export function useCriminalCodeSearch() {
     setSeverityFilter,
     partFilter,
     setPartFilter,
+    topicFilter,
+    setTopicFilter,
+    allSections,
     results,
     totalMatches,
     totalSections,

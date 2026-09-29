@@ -35,6 +35,8 @@ function fixture() {
         defences: [],
         topicsTagged: ["self-defence"],
         partOf: "Part I — General",
+        heading: "Defence of Person",
+        subheading: 'Sub "heading" \\ test',
       }),
     ],
     ["320.14", section("320.14", { severity: "Hybrid", summary: "Impaired operation.", partOf: "Part I — General" })],
