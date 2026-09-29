@@ -58,7 +58,13 @@ function computeTelemetryReason({
 // Strip XML-like tags from user input to prevent delimiter escape.
 // Uses [^>\s]* instead of [^>]* to avoid catastrophic backtracking (ReDoS).
 function sanitizeUserInput(input) {
-  return input.replace(/<\/?[a-zA-Z_][a-zA-Z0-9_]*(?:\s[^>\s][^>]*)?>/g, "");
+  let prev;
+  let out = input;
+  do {
+    prev = out;
+    out = out.replace(/<\/?[a-zA-Z_][a-zA-Z0-9_]*(?:\s[^>]*)?>/g, "");
+  } while (out !== prev);
+  return out;
 }
 
 // Sanitize a single line of external/reference text (landmark DB + CanLII-retrieved

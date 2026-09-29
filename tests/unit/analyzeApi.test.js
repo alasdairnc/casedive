@@ -2,6 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { buildSystemPrompt } from "../../src/lib/prompts.js";
 import { analyzeResponse } from "../e2e/helpers/analyzeFixture.js";
 
+function isAnthropicUrl(u) {
+  try {
+    return new URL(String(u)).hostname === "api.anthropic.com";
+  } catch {
+    return false;
+  }
+}
+
 // ── Module mocks (must be declared before dynamic import) ─────────────────────
 
 const mockCheckRateLimit = vi.fn();
@@ -194,7 +202,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
     // Inspect what was sent to the Anthropic API
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     expect(anthropicCall).toBeDefined();
 
@@ -246,7 +254,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     expect(anthropicCall).toBeDefined();
 
@@ -288,7 +296,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     expect(anthropicCall).toBeDefined();
 
@@ -324,7 +332,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
@@ -356,7 +364,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
@@ -397,7 +405,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
@@ -437,7 +445,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
@@ -467,7 +475,7 @@ describe("RAG poisoning — user scenario sanitization", () => {
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     expect(anthropicCall).toBeDefined();
 
@@ -493,7 +501,7 @@ describe("RAG poisoning — user scenario sanitization", () => {
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
@@ -523,7 +531,7 @@ describe("RAG poisoning — user scenario sanitization", () => {
 
     const fetchCalls = globalThis.fetch.mock.calls;
     const anthropicCall = fetchCalls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
@@ -557,7 +565,7 @@ describe("RAG poisoning — user scenario sanitization", () => {
     await handler(req, res);
 
     const anthropicCall = globalThis.fetch.mock.calls.find((c) =>
-      String(c[0]).includes("anthropic.com"),
+      isAnthropicUrl(c[0]),
     );
     const body = JSON.parse(anthropicCall[1].body);
     const systemText = Array.isArray(body.system)
