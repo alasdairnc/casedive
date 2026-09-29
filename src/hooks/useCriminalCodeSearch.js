@@ -86,11 +86,12 @@ export function useCriminalCodeSearch() {
           const numMatch = section.num.startsWith(q);
           const titleMatch = (section.title || "").toLowerCase().includes(q);
           const defMatch = (section.definition || "").toLowerCase().includes(q);
+          const summaryMatch = (section.summary || "").toLowerCase().includes(q);
           const tagMatch = (section.topicsTagged || []).some((t) =>
             t.toLowerCase().includes(q),
           );
 
-          if (!numMatch && !titleMatch && !defMatch && !tagMatch) continue;
+          if (!numMatch && !titleMatch && !defMatch && !summaryMatch && !tagMatch) continue;
 
           // Score for sorting: exact number > starts with number > title starts > title includes > definition/tags
           if (section.num === q) score = 1000;

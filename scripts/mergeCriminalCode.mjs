@@ -149,9 +149,7 @@ console.log(`  Preserved from existing: ${preservedCount} (of which enriched: ${
 console.log(`  New from XML: ${newCount}`);
 console.log(`  Orphans kept for review: ${allOrphans.length} (${enrichedOrphans.length} enriched, ${summaryOrphans.length} summarized)`);
 
-const partsExportLines = orderedParts.map((label) => {
-  const m = label.match(/^Part ([^\s—]+) — (.+)$/);
-  const id = m ? m[1] : label;
+const partsExportLines = orderedParts.map(({ id, label }) => {
   return `  { id: "${escapeStr(id)}", label: "${escapeStr(label)}" },`;
 });
 const PARTS_EXPORT = `export const CRIMINAL_CODE_PARTS = [\n${partsExportLines.join("\n")}\n];`;
@@ -185,7 +183,7 @@ export function normalizeSection(citation) {
   // Clean up the string and look for the first number following s., section, or just a standalone number
   // Pattern: (statute prefix)? (s.|section)? (number)
   const match = citation.match(
-    /(?:(?:criminal\\s+code|CC|s\\.|section)\\s*|^)(\\d+(?:\\.\\d+)?)/i,
+    /(?:(?:criminal\\s+code|\\bCC|s\\.|section)\\s*|^)(\\d+(?:\\.\\d+)?)/i,
   );
   return match ? match[1] : null;
 }

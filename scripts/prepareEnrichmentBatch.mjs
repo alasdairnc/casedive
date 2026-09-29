@@ -23,6 +23,9 @@ const MAX_BATCH_CHARS = maxBatchCharsArg ? parseInt(maxBatchCharsArg, 10) : 2500
 function extractLiveBody(xml) {
   const bodyStart = xml.indexOf("<Body");
   const bodyEnd = xml.indexOf("</Body>");
+  if (bodyStart === -1 || bodyEnd === -1) {
+    throw new Error("Could not find <Body>...</Body> in the XML");
+  }
   const body = xml.slice(bodyStart, bodyEnd + "</Body>".length);
   return body.replace(/<AmendedText[^>]*>[\s\S]*?<\/AmendedText>/g, "");
 }

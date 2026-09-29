@@ -28,6 +28,7 @@ const XML_LOCAL_PATH = process.env.XML_LOCAL_PATH;
 // Laws' own table of contents), sections 2 through 45.1 are all "Part I —
 // General"; section 1 (Short title) itself is treated as outside any Part.
 const PART_I_LABEL = "Part I — General";
+const PART_I_ID = "I";
 
 async function fetchXML() {
   if (XML_LOCAL_PATH) {
@@ -85,7 +86,7 @@ function extractSections(xmlRaw) {
       // level="2" — check it before the level-1-only filter below.
       if (pendingPartI && level === "2" && headingTitle.trim() === "General") {
         currentPart = PART_I_LABEL;
-        partsSeen.push(currentPart);
+        partsSeen.push({ id: PART_I_ID, label: currentPart });
         pendingPartI = false;
         continue;
       }
@@ -94,6 +95,7 @@ function extractSections(xmlRaw) {
 
       if (label && /^PART\s/i.test(label)) {
         const romanLabel = label.replace(/^PART/i, "Part");
+        const id = romanLabel.replace(/^Part\s*/i, "").trim();
         const title = headingTitle.trim();
         // A Part heading whose title is "[Repealed, ...]" has no live
         // sections under it — don't add it to the Parts list, but do clear
@@ -103,14 +105,14 @@ function extractSections(xmlRaw) {
           continue;
         }
         currentPart = `${romanLabel} — ${title}`;
-        partsSeen.push(currentPart);
+        partsSeen.push({ id, label: currentPart });
       } else if (headingTitle.trim() === "Part I") {
         pendingPartI = true;
       } else if (headingTitle.trim() === "Interpretation") {
         // Precedes the literal "Part I"/"General" heading pair in the
         // document, but ss. 2–3.01 are conventionally treated as Part I.
         currentPart = PART_I_LABEL;
-        partsSeen.push(currentPart);
+        partsSeen.push({ id: PART_I_ID, label: currentPart });
       }
       // The "Short Title" heading (before "Interpretation") doesn't change
       // currentPart — s. 1 alone is left with no Part, matching convention.
@@ -198,9 +200,12 @@ async function main() {
   // Write the ordered, deduplicated Parts list (only Parts with >=1 live
   // section end up here — a repealed Part like the old XII.1 is dropped).
   const livePartLabels = new Set(sections.map((s) => s.partOf).filter(Boolean));
-  const orderedParts = [...new Set(partsSeen)].filter((p) =>
-    livePartLabels.has(p),
-  );
+  const seenLabels = new Set();
+  const orderedParts = partsSeen.filter((p) => {
+    if (seenLabels.has(p.label) || !livePartLabels.has(p.label)) return false;
+    seenLabels.add(p.label);
+    return true;
+  });
   const partsOutPath = resolve(__dirname, "criminal-code-parts.json");
   writeFileSync(partsOutPath, JSON.stringify(orderedParts, null, 2));
   console.log(`Written ${orderedParts.length} live Parts to ${partsOutPath}`);
@@ -213,7 +218,7 @@ async function main() {
   }
   console.log("\nSections by Part (in document order):");
   for (const part of orderedParts) {
-    console.log(`  ${part}: ${partCounts[part] || 0}`);
+    console.log(`  ${part.label}: ${partCounts[part.label] || 0}`);
   }
   if (partCounts["(no part)"]) {
     console.log(`  (no part): ${partCounts["(no part)"]}`);

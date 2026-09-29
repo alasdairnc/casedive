@@ -145,7 +145,7 @@ export function normalizeSection(citation) {
   // Clean up the string and look for the first number following s., section, or just a standalone number
   // Pattern: (statute prefix)? (s.|section)? (number)
   const match = citation.match(
-    /(?:(?:criminal\\s+code|CC|s\\.|section)\\s*|^)(\\d+(?:\\.\\d+)?)/i,
+    /(?:(?:criminal\\s+code|\\bCC|s\\.|section)\\s*|^)(\\d+(?:\\.\\d+)?)/i,
   );
   return match ? match[1] : null;
 }
