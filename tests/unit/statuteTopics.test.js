@@ -105,7 +105,7 @@ describe("statute summaries", () => {
     for (const [num, e] of act.sections) {
       if (num !== "1") {
         expect(e.summary.length, `${id} s. ${num}`).toBeGreaterThan(40);
-        expect(e.summarySource, `${id} s. ${num}`).toBe("act-text");
+        expect(e.summarySource, `${id} s. ${num}`).toBe("verified");
       }
     }
   });

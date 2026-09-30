@@ -247,8 +247,9 @@ export function renderDataFile(key, { sections, parts, currentDate, summaries = 
         `lastAmendedDate: ${q(s.lastAmendedDate)}`,
       ];
       if (summaries[s.section]) {
-        // Written from the Act's text and number-checked, not run through the independent verifier.
-        fields.splice(3, 0, `summary: ${q(summaries[s.section])}`, `summarySource: "act-text"`);
+        // Each summary was checked claim-by-claim against the section text by an
+        // independent verifier (2026-09-30); corrections are applied in the side file.
+        fields.splice(3, 0, `summary: ${q(summaries[s.section])}`, `summarySource: "verified"`);
       }
       if (s.related.length) fields.push(`relatedSections: ${q(s.related)}`);
       return `  [\n    ${q(s.section)},\n    {\n      ${fields.join(",\n      ")},\n    },\n  ],`;
