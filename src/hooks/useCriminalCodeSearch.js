@@ -7,7 +7,17 @@ const DEBOUNCE_MS = 100;
 /**
  * Natural sort for section numbers (e.g., "2", "2.1", "10", "100")
  */
+const SCHEDULE_ROMAN = { I: 1, II: 2, III: 3, IV: 4, V: 5, VI: 6, VII: 7, VIII: 8, IX: 9, X: 10 };
+
 function compareSections(a, b) {
+  // Schedules ("Schedule IV") follow the numbered sections, in numeral order.
+  const schedA = a.startsWith("Schedule");
+  const schedB = b.startsWith("Schedule");
+  if (schedA || schedB) {
+    if (schedA !== schedB) return schedA ? 1 : -1;
+    const rank = (k) => SCHEDULE_ROMAN[k.replace(/^Schedule\s*/, "")] || 0;
+    return rank(a) - rank(b);
+  }
   const partsA = a.split(".").map(Number);
   const partsB = b.split(".").map(Number);
 
@@ -115,7 +125,7 @@ export function useCriminalCodeSearch() {
         // Text search
         let score = 0;
         if (q) {
-          const numMatch = section.num.startsWith(q);
+          const numMatch = section.num.toLowerCase().startsWith(q);
           const titleMatch = (section.title || "").toLowerCase().includes(q);
           const defMatch = (section.definition || "").toLowerCase().includes(q);
           const summaryMatch = (section.summary || "").toLowerCase().includes(q);
@@ -123,7 +133,10 @@ export function useCriminalCodeSearch() {
             t.toLowerCase().includes(q),
           );
 
-          if (!numMatch && !titleMatch && !defMatch && !summaryMatch && !tagMatch) continue;
+          // Schedule rows are found by the substances and items they list
+          const itemMatch = (section.scheduleItems || []).some((i) => i.t.toLowerCase().includes(q));
+
+          if (!numMatch && !titleMatch && !defMatch && !summaryMatch && !tagMatch && !itemMatch) continue;
 
           // Score for sorting: exact number > starts with number > title starts > title includes > definition/tags
           if (section.num === q) score = 1000;

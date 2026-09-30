@@ -26,8 +26,8 @@ describe("lookupStatuteSection", () => {
   });
 
   it("every explorer section is reachable", () => {
-    for (const [n] of CDSA_SECTIONS) expect(lookupStatuteSection(`CDSA s. ${n}`), n).not.toBeNull();
-    for (const [n] of YCJA_SECTIONS) expect(lookupStatuteSection(`YCJA s. ${n}`), n).not.toBeNull();
+    for (const [n, e] of CDSA_SECTIONS) if (e.kind !== "schedule") expect(lookupStatuteSection(`CDSA s. ${n}`), n).not.toBeNull();
+    for (const [n, e] of YCJA_SECTIONS) if (e.kind !== "schedule") expect(lookupStatuteSection(`YCJA s. ${n}`), n).not.toBeNull();
   });
 
   it("rejects sections that do not exist and other Acts", () => {

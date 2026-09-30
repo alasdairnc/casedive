@@ -16,9 +16,11 @@ const CDSA_TOPICS = [
   { id: "administration", group: "process", label: "Administration & Compliance", blurb: "Inspectors, administrative orders for contraventions of regulations, and compliance." },
   { id: "provisions", group: "general", label: "General Provisions, Regulations & Evidence", blurb: "Analysis, ministerial orders, evidence and procedure, regulations, exemptions and transitional provisions." },
   { id: "general", group: "general", label: "Short Title & Interpretation", blurb: "Short title and definitions." },
+  { id: "schedules", group: "schedules", label: "Schedules: Substances, Precursors & Devices", blurb: "The Schedules that list the controlled substances, precursors and designated devices the Act applies to; the Schedule a substance is in sets its penalty tier in ss. 4 to 7.1." },
 ];
 
 const YCJA_TOPICS = [
+  { id: "schedules", group: "schedules", label: "Schedule: Offences for R.C.M.P. Records", blurb: "The offences listed for access to R.C.M.P. records under s. 120." },
   { id: "principles", group: "foundations", label: "Principles & Interpretation", blurb: "Short title, definitions, and the Declaration of Principle." },
   { id: "extrajudicial", group: "foundations", label: "Extrajudicial Measures", blurb: "Warnings, cautions, referrals and extrajudicial sanctions as alternatives to court." },
   { id: "system", group: "foundations", label: "Youth Justice System Organization", blurb: "Youth justice court, committees, conferences, provincial directors." },
@@ -69,6 +71,7 @@ const CONFIGS = {
       { id: "substance", label: "Offences & Penalties" },
       { id: "process", label: "Enforcement & Procedure" },
       { id: "general", label: "General" },
+      { id: "schedules", label: "Schedules" },
     ],
     partDefaults: CDSA_PART_DEFAULTS,
     headingRules: CDSA_HEADING_RULES,
@@ -81,6 +84,7 @@ const CONFIGS = {
       { id: "sentencing", label: "Sentencing & Custody" },
       { id: "records", label: "Records" },
       { id: "general", label: "General" },
+      { id: "schedules", label: "Schedules" },
     ],
     partDefaults: YCJA_PART_DEFAULTS,
     headingRules: YCJA_HEADING_RULES,
@@ -92,6 +96,7 @@ export const STATUTE_TOPIC_CONFIGS = CONFIGS;
 /** Topic id for a CDSA/YCJA section, or null if its Part isn't mapped. */
 export function statuteTopicFor(statuteId, entry) {
   const cfg = CONFIGS[statuteId];
+  if (entry.kind === "schedule") return "schedules";
   const partId = partIdOf(entry.partOf);
   if (!partId) return NO_PART_TOPIC[statuteId];
   return (

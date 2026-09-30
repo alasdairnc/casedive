@@ -46,6 +46,27 @@ const HOMICIDE = {
   groupLabel: "Murder, Manslaughter and Infanticide",
 };
 
+// A schedule row: an item list instead of prose, numbered "Schedule I" rather than "s. N"
+const SCHEDULE = {
+  num: "Schedule I",
+  kind: "schedule",
+  title: "Schedule I — Opium Poppy; Coca; Phenylpiperidines…",
+  severity: "",
+  maxPenalty: "",
+  url: `${JUSTICE_LAWS_BASE}/FullText.html#h-95315`,
+  partOf: "",
+  heading: "Schedules",
+  relatedSections: ["4", "5"],
+  scheduleColumns: ["Item", "Substance", "Period"],
+  scheduleItems: [
+    { h: true, l: "PART 1", t: "Opiates" },
+    { l: "1", t: "Opium Poppy, its preparations, derivatives, alkaloids and salts, including:", d: 0 },
+    { l: "(1)", t: "Codeine (methylmorphine)", d: 1, n: "June 5, 2026 to June 4, 2027" },
+  ],
+  topic: "schedules",
+  groupLabel: "Schedules",
+};
+
 // The hook is mocked; tests flip these to reach the browse view (no query,
 // no filters) or the flat search list (a query).
 const hookState = vi.hoisted(() => ({
@@ -54,6 +75,7 @@ const hookState = vi.hoisted(() => ({
   query: "348",
   topicFilter: "all",
   setTopicFilter: () => {},
+  withSchedule: false,
 }));
 
 // Skip the 390KB lazy import and the search debounce
@@ -71,8 +93,8 @@ vi.mock("../../src/hooks/useCriminalCodeSearch.js", () => ({
     topicFilter: hookState.topicFilter,
     setTopicFilter: hookState.setTopicFilter,
     allSections: [HOMICIDE, ENRICHED, PLAIN],
-    results: [ENRICHED, PLAIN],
-    totalMatches: 2,
+    results: hookState.withSchedule ? [SCHEDULE] : [ENRICHED, PLAIN],
+    totalMatches: hookState.withSchedule ? 1 : 2,
     totalSections: 2,
     isLoading: false,
   }),
@@ -106,6 +128,7 @@ beforeEach(() => {
   hookState.setStatuteId = () => {};
   hookState.query = "348";
   hookState.topicFilter = "all";
+  hookState.withSchedule = false;
   hookState.setTopicFilter = () => {};
   // happy-dom's anchor click calls open() on its own window, not the global
   // copy vitest installs, so stub that one to keep the test off the network
@@ -280,3 +303,24 @@ describe("CriminalCodeExplorer statute switcher", () => {
     expect(screen.getByText("Youth Criminal Justice Act")).toBeTruthy();
   });
 });
+
+describe("CriminalCodeExplorer schedule rows", () => {
+  it("numbers a schedule by name, expands to its items and sections, and keeps the list nested", () => {
+    hookState.withSchedule = true;
+    hookState.query = "codeine";
+    renderExplorer();
+
+    expect(screen.queryByText("s. Schedule I")).toBeNull();
+    const row = screen.getByText("Schedule I").closest("div[style*='padding: 14px']");
+    // Title drops the repeated "Schedule I —" prefix
+    expect(screen.getByText("Opium Poppy; Coca; Phenylpiperidines…")).toBeTruthy();
+
+    fireEvent.click(row);
+    expect(screen.getByText(/2 items/)).toBeTruthy();
+    expect(screen.getByText("Codeine (methylmorphine)")).toBeTruthy();
+    expect(screen.getByText(/June 5, 2026 to June 4, 2027/)).toBeTruthy();
+    expect(screen.getByText("Used in")).toBeTruthy();
+    expect(screen.getByText("s. 4")).toBeTruthy();
+  });
+});
+
