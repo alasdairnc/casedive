@@ -15,7 +15,8 @@ const ACTS = {
 
 describe.each(Object.entries(ACTS))("%s data and topics", (id, act) => {
   const cfg = STATUTE_TOPIC_CONFIGS[id];
-  const entries = [...act.sections.entries()];
+  const all = [...act.sections.entries()];
+  const entries = all.filter(([, e]) => e.kind !== "schedule");
   const topicIds = new Set(cfg.topics.map((t) => t.id));
 
   it("has sections with a title, a Justice Laws url and well-formed extracted penalty data", () => {
@@ -53,7 +54,7 @@ describe.each(Object.entries(ACTS))("%s data and topics", (id, act) => {
 
   it("puts every section in a topic (no silent 'Other') and leaves none empty", () => {
     const used = new Set();
-    for (const [num, e] of entries) {
+    for (const [num, e] of all) {
       const topic = statuteTopicFor(id, e);
       expect(topicIds.has(topic), `s. ${num} (${e.partOf})`).toBe(true);
       used.add(topic);
@@ -100,13 +101,64 @@ describe("statute summaries", () => {
   });
 
   it.each(Object.entries(ACTS))("%s: every section has a summary except the short title", (id, act) => {
-    const without = [...act.sections].filter(([, e]) => !e.summary).map(([n]) => n);
+    const sections = [...act.sections].filter(([, e]) => e.kind !== "schedule"); // schedules are item lists, not prose
+    const without = sections.filter(([, e]) => !e.summary).map(([n]) => n);
     expect(without).toEqual(["1"]);
-    for (const [num, e] of act.sections) {
+    for (const [num, e] of sections) {
       if (num !== "1") {
         expect(e.summary.length, `${id} s. ${num}`).toBeGreaterThan(40);
         expect(e.summarySource, `${id} s. ${num}`).toBe("verified");
       }
     }
+  });
+});
+
+describe.each(Object.entries(ACTS))("%s schedules", (id, act) => {
+  const schedules = [...act.sections].filter(([, e]) => e.kind === "schedule");
+  const cfg = STATUTE_TOPIC_CONFIGS[id];
+
+  it("has schedules, keyed 'Schedule ...', after the numbered sections' keys", () => {
+    expect(schedules.length).toBeGreaterThan(0);
+    for (const [key] of schedules) expect(key).toMatch(/^Schedule( [IVX]+)?$/);
+  });
+
+  it("links to the Act's own heading anchor and uses only in-data section references", () => {
+    for (const [key, e] of schedules) {
+      expect(e.url, key).toMatch(new RegExp(`^https://laws-lois\\.justice\\.gc\\.ca/eng/acts/${act.url}/FullText\\.html#h-\\d+$`));
+      for (const r of e.relatedSections ?? []) expect(act.sections.has(r), `${key} -> s. ${r}`).toBe(true);
+    }
+  });
+
+  it("carries real item lists, never repealed or amendment text, and is in the schedules topic", () => {
+    for (const [key, e] of schedules) {
+      expect(e.scheduleItems.some((i) => !i.h), key).toBe(true);
+      for (const i of e.scheduleItems) {
+        expect(i.t, key).not.toMatch(/^\[Repealed/);
+        expect(i.t, key).not.toMatch(/not in force/i);
+      }
+      expect(statuteTopicFor(id, e), key).toBe("schedules");
+      expect(e.summary, key).toBeUndefined(); // the list is the content; no unverified prose
+    }
+    expect(cfg.topics.some((t) => t.id === "schedules")).toBe(true);
+  });
+});
+
+describe("CDSA schedule content", () => {
+  it("lists repealed-free Schedules I-VI and IX (VII and VIII are repealed)", () => {
+    const keys = [...CDSA_SECTIONS.keys()].filter((k) => k.startsWith("Schedule"));
+    expect(keys).toEqual(["Schedule I", "Schedule II", "Schedule III", "Schedule IV", "Schedule V", "Schedule VI", "Schedule IX"]);
+  });
+
+  it("keeps full item text and the time-limited periods in Schedule V", () => {
+    const s1 = CDSA_SECTIONS.get("Schedule I").scheduleItems.map((i) => i.t).join("\n");
+    expect(s1).toMatch(/Fentanyl/i);
+    expect(s1).toMatch(/and the salts, derivatives and salts of derivatives/);
+    const v = CDSA_SECTIONS.get("Schedule V");
+    expect(v.scheduleColumns).toEqual(["Item", "Substance", "Period"]);
+    expect(v.scheduleItems.filter((i) => i.n).every((i) => /\d{4}/.test(i.n))).toBe(true);
+  });
+
+  it("points Schedule I at the offence sections that use it", () => {
+    expect(CDSA_SECTIONS.get("Schedule I").relatedSections).toEqual(expect.arrayContaining(["4", "5", "6", "7"]));
   });
 });

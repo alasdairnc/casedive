@@ -189,8 +189,15 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
     section.definition ||
     section.summary ||
     section.maxPenalty ||
-    section.relatedSections?.length
+    section.relatedSections?.length ||
+    section.scheduleItems?.length
   );
+  const isSchedule = section.kind === "schedule";
+  // Schedule titles read "Schedule IV — Barbiturates; ..."; the number badge already
+  // says which schedule, so show only what follows.
+  const displayTitle = isSchedule
+    ? section.title.replace(/^Schedule(?: [IVX]+)?(?: — )?/, "") || "Substances and items listed in the Act"
+    : section.title;
 
   // Small section heading inside the expanded details
   const labelStyle = {
@@ -299,7 +306,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 whiteSpace: "nowrap",
               }}
             >
-              s. {section.num}
+              {isSchedule ? section.num : `s. ${section.num}`}
             </span>
             <span
               style={{
@@ -312,7 +319,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                 minWidth: 0,
               }}
             >
-              {section.title}
+              {displayTitle}
             </span>
             <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
               {isCurated && !isExpanded && (
@@ -449,9 +456,51 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
             )}
           </div>
 
+          {isSchedule && section.scheduleItems?.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={labelStyle}>
+                {section.scheduleItems.filter((i) => !i.h).length} items
+                {section.scheduleColumns?.length > 0 && ` (${section.scheduleColumns.join(" · ")})`}
+              </div>
+              <div
+                role="list"
+                aria-label={`${section.num} items`}
+                style={{
+                  ...bodyStyle,
+                  maxHeight: 360,
+                  overflowY: "auto",
+                  border: `1px solid ${t.borderLight}`,
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                }}
+              >
+                {section.scheduleItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    role="listitem"
+                    style={{
+                      paddingLeft: (item.d || 0) * 16,
+                      marginTop: item.h ? 10 : 4,
+                      fontWeight: item.h ? 700 : 400,
+                      color: item.h ? t.textPrimary : t.textSecondary,
+                    }}
+                  >
+                    {item.l && (
+                      <span style={{ fontFamily: "var(--font-mono)", marginRight: 8, color: t.textTertiary }}>
+                        {item.l}
+                      </span>
+                    )}
+                    {item.t}
+                    {item.n && <span style={{ color: t.textTertiary }}> — {item.n}</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {section.relatedSections?.length > 0 && (
             <div style={{ marginBottom: 16, marginTop: 8 }}>
-              <div style={labelStyle}>Related sections</div>
+              <div style={labelStyle}>{isSchedule ? "Used in" : "Related sections"}</div>
               <div
                 style={{
                   display: "flex",
