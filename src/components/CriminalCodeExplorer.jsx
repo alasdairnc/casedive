@@ -180,7 +180,10 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
   // "Enriched" (the pill) means hand-curated: definition + defences +
   // relatedSections written and reviewed by a person. `summary` is a
   // separately-generated, independently-verified plain-language summary —
-  // it gets its own "Summary" pill so the two are never conflated.
+  // it gets its own "Summary" pill so the two are never conflated. CDSA/YCJA
+  // summaries (summarySource "act-text") were written from the Act's text
+  // without the independent verifier, and are labelled as such.
+  const summaryLabel = section.summarySource ? "Summary (from the Act's text)" : "Summary";
   const isCurated = !!section.definition;
   const hasDetails = !!(
     section.definition ||
@@ -332,7 +335,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
                     border: `1px solid ${t.borderLight}`,
                   }}
                 >
-                  Summary
+                  {summaryLabel}
                 </span>
               )}
               {section.severity && (
@@ -419,7 +422,7 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
 
           {!section.definition && section.summary && (
             <div style={{ marginBottom: 16 }}>
-              <div style={labelStyle}>Summary</div>
+              <div style={labelStyle}>{summaryLabel}</div>
               <div style={bodyStyle}>{section.summary}</div>
             </div>
           )}
