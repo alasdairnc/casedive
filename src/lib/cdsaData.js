@@ -406,7 +406,7 @@ export const CDSA_SECTIONS = new Map([
       title: "Forfeiture of property",
       severity: "",
       maxPenalty: "",
-      summary: "If a person is convicted of (or discharged under s. 730 of the Criminal Code for) a designated substance offence, and the court is satisfied on a balance of probabilities that non-chemical offence-related property is related to the offence, it must order forfeiture on the Attorney General's application, to the province or to Canada depending on who prosecuted. Where the link to the offence is not shown, the court may still order forfeiture if satisfied beyond a reasonable doubt that the property is non-chemical offence-related property. Orders may cover property outside Canada. The convicted person or the Attorney General may appeal the order, or a failure to make one, to the court of appeal as if it were a sentence appeal.",
+      summary: "If a person is convicted of (or discharged under s. 730 of the Criminal Code for) a designated substance offence, and the court is satisfied on a balance of probabilities that non-chemical offence-related property is related to the offence, it must order forfeiture on the Attorney General's application, to the province or to Canada depending on who prosecuted. Where the link to the offence is not established on that standard, the court may still order forfeiture if satisfied beyond a reasonable doubt that the property is non-chemical offence-related property. Orders may cover property outside Canada. The convicted person or the Attorney General may appeal the order, or a failure to make one, to the court of appeal as if it were a sentence appeal.",
       summarySource: "act-text",
       url: `${JUSTICE_LAWS_BASE}/section-16.html`,
       partOf: "Part III — Disposition",
