@@ -94,11 +94,19 @@ describe("statute summaries", () => {
     }
   });
 
+  it("summaries do not describe the drafting process to readers", () => {
+    const text = Object.values(summaries).flatMap((m) => Object.values(m)).join("\n");
+    expect(text).not.toMatch(/not shown|text reviewed|as the section provides|rest of the section/i);
+  });
+
   it.each(Object.entries(ACTS))("%s: every section has a summary except the short title", (id, act) => {
     const without = [...act.sections].filter(([, e]) => !e.summary).map(([n]) => n);
     expect(without).toEqual(["1"]);
     for (const [num, e] of act.sections) {
-      if (num !== "1") expect(e.summary.length, `${id} s. ${num}`).toBeGreaterThan(40);
+      if (num !== "1") {
+        expect(e.summary.length, `${id} s. ${num}`).toBeGreaterThan(40);
+        expect(e.summarySource, `${id} s. ${num}`).toBe("act-text");
+      }
     }
   });
 });

@@ -246,7 +246,10 @@ export function renderDataFile(key, { sections, parts, currentDate, summaries = 
         `subheading: ${q(s.subheading)}`,
         `lastAmendedDate: ${q(s.lastAmendedDate)}`,
       ];
-      if (summaries[s.section]) fields.splice(3, 0, `summary: ${q(summaries[s.section])}`);
+      if (summaries[s.section]) {
+        // Written from the Act's text and number-checked, not run through the independent verifier.
+        fields.splice(3, 0, `summary: ${q(summaries[s.section])}`, `summarySource: "act-text"`);
+      }
       if (s.related.length) fields.push(`relatedSections: ${q(s.related)}`);
       return `  [\n    ${q(s.section)},\n    {\n      ${fields.join(",\n      ")},\n    },\n  ],`;
     })
