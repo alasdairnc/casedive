@@ -180,10 +180,10 @@ function SectionRow({ section, isExpanded, onToggle, t }) {
   // "Enriched" (the pill) means hand-curated: definition + defences +
   // relatedSections written and reviewed by a person. `summary` is a
   // separately-generated, independently-verified plain-language summary —
-  // it gets its own "Summary" pill so the two are never conflated. CDSA/YCJA
-  // summaries (summarySource "act-text") were written from the Act's text
-  // without the independent verifier, and are labelled as such.
-  const summaryLabel = section.summarySource ? "Summary (from the Act's text)" : "Summary";
+  // it gets its own "Summary" pill so the two are never conflated. A summary
+  // marked summarySource "act-text" was not independently verified and is
+  // labelled as such; CDSA/YCJA summaries are "verified" and show plain "Summary".
+  const summaryLabel = section.summarySource === "act-text" ? "Summary (from the Act's text)" : "Summary";
   const isCurated = !!section.definition;
   const hasDetails = !!(
     section.definition ||
