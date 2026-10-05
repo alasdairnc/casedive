@@ -24,6 +24,11 @@ import {
   ANTHROPIC_TIMEOUT_MS,
 } from "./_constants.js";
 import { normalizeFilters } from "./_filters.js";
+import {
+  buildStatuteGrounding,
+  checkStatuteCitations,
+  isStatuteGroundingEnabled,
+} from "./_statuteGrounding.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
 import {
   RANK_STOP_WORDS,
@@ -82,10 +87,26 @@ function safePromptLine(input) {
     .slice(0, 300);
 }
 
-function buildUserPromptContent(scenario, matchedLandmarks, retrievedCases) {
+function buildUserPromptContent(
+  scenario,
+  matchedLandmarks,
+  retrievedCases,
+  statuteCandidates = [],
+) {
   const blocks = [
     `<user_input>\n${sanitizeUserInput(scenario)}\n</user_input>`,
   ];
+
+  if (statuteCandidates.length > 0) {
+    blocks.push(
+      `<reference_context source="statute_db">\n${statuteCandidates
+        .map(
+          (c) =>
+            `- ${safePromptLine(c.citation)} (${safePromptLine(c.title)}): ${safePromptLine(c.summary)}`,
+        )
+        .join("\n")}\n</reference_context>`,
+    );
+  }
 
   if (Array.isArray(matchedLandmarks) && matchedLandmarks.length > 0) {
     blocks.push(
@@ -119,8 +140,9 @@ function buildUserPromptContent(scenario, matchedLandmarks, retrievedCases) {
 const CACHE_TTL_S = ANALYZE_CACHE_TTL_SECONDS;
 
 function cacheKey(scenario, filters) {
+  // Flag-on results carry statute grounding; keep them out of flag-off users' cache.
   return (
-    "cache:analyze:v4:" +
+    (isStatuteGroundingEnabled() ? "cache:analyze:v4g:" : "cache:analyze:v4:") +
     createHash("sha256")
       .update(scenario + JSON.stringify(filters))
       .digest("hex")
@@ -626,7 +648,10 @@ async function analyzeWithRetry(
   apiKey,
   retrievedCases = [],
 ) {
-  const system = buildSystemPrompt(filters || {});
+  const grounding = buildStatuteGrounding(scenario, filters);
+  const system = buildSystemPrompt(filters || {}, {
+    statuteHints: grounding?.hints,
+  });
   const matchedLandmarks =
     filters?.lawTypes?.case_law !== false ? matchLandmarkCases(scenario) : [];
   const messages = [
@@ -636,6 +661,7 @@ async function analyzeWithRetry(
         scenario,
         matchedLandmarks,
         retrievedCases,
+        grounding?.candidates,
       ),
     },
   ];
@@ -643,7 +669,7 @@ async function analyzeWithRetry(
   // First attempt
   const raw = await callAnthropic(messages, system, apiKey);
   try {
-    return { result: JSON.parse(raw), raw, matchedLandmarks };
+    return { result: JSON.parse(raw), raw, matchedLandmarks, grounding };
   } catch {
     // Retry: feed Claude its bad output back and ask for valid JSON only
     const retryMessages = [
@@ -658,9 +684,15 @@ async function analyzeWithRetry(
 
     const retryRaw = await callAnthropic(retryMessages, system, apiKey);
     try {
-      return { result: JSON.parse(retryRaw), raw, retryRaw, matchedLandmarks };
+      return {
+        result: JSON.parse(retryRaw),
+        raw,
+        retryRaw,
+        matchedLandmarks,
+        grounding,
+      };
     } catch {
-      return { result: null, raw, retryRaw, matchedLandmarks };
+      return { result: null, raw, retryRaw, matchedLandmarks, grounding };
     }
   }
 }
@@ -813,12 +845,8 @@ export default async function handler(req, res) {
     }
 
     const anthropicStartMs = Date.now();
-    const { result, retryRaw, matchedLandmarks } = await analyzeWithRetry(
-      scenario,
-      filters,
-      apiKey,
-      preRetrievedCases,
-    );
+    const { result, retryRaw, matchedLandmarks, grounding } =
+      await analyzeWithRetry(scenario, filters, apiKey, preRetrievedCases);
     const anthropicDurationMs = Date.now() - anthropicStartMs;
     logExternalApiCall(
       requestId,
@@ -844,6 +872,15 @@ export default async function handler(req, res) {
 
     // Phase B retrieval-first path: use retrieved verified case-law as final source.
     const meta = ensureMetaContainer(result);
+
+    // Statute grounding (flag-gated): drop CDSA/YCJA citations whose section
+    // does not exist in the Act, and record what the grounding offered.
+    if (isStatuteGroundingEnabled() && filters.lawTypes.civil_law !== false) {
+      meta.statutes = {
+        ...(grounding?.meta || {}),
+        check: checkStatuteCitations(result),
+      };
+    }
 
     if (filters.lawTypes.case_law !== false) {
       const canliiKey = process.env.CANLII_API_KEY || "";

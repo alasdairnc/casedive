@@ -21,7 +21,12 @@ const JURISDICTION_COURTS = {
 
 const yearMap = { 5: 5, 10: 10, 20: 20 };
 
-export function buildSystemPrompt(filters = {}) {
+// `options.statuteHints` (api/_statuteGrounding.js) adds civil_law rules for
+// CDSA/YCJA scenarios. With no hints the prompt is unchanged, byte for byte.
+export function buildSystemPrompt(filters = {}, options = {}) {
+  const statuteRules = (options.statuteHints || [])
+    .map((hint) => `\n  - ${hint}`)
+    .join("");
   let filterInstructions = "";
 
   if (filters.jurisdiction && filters.jurisdiction !== "all") {
@@ -125,7 +130,7 @@ RULES:
   - Minor traffic stop: "traffic stop" AND "highway traffic" AND speeding AND ticket
 - For low-detail routine traffic-stop facts with no detention/search/counsel issue, prefer narrow traffic-stop queries and avoid broad Charter landmark templates.
 - Criminal Code sections are verified against a full local Criminal Code database. Use real section numbers only (e.g., "s. 348(1)(b)").
-- For civil_law: cite specific statutes with section numbers.
+- For civil_law: cite specific statutes with section numbers.${statuteRules}
 - For charter: use section number format like "s. 7", "s. 8", "s. 11(b)", "s. 24(2)".
 - For case_law: provide 1-3 real Canadian case citations only when they are directly on point. Prefer landmark SCC cases only if the facts truly fit; do NOT use broad landmark cases as substitutes for weak factual matches. If no case is clearly on point, return an empty array.
 - Issue-fit guardrails for case_law:

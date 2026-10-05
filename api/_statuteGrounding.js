@@ -1,0 +1,348 @@
+// api/_statuteGrounding.js
+// Grounds /api/analyze in the full CDSA and YCJA data (src/lib/cdsaData.js,
+// ycjaData.js). Everything here is deterministic. Gated by STATUTE_GROUNDING=on
+// (default off) until the eval in tests/unit/statuteGroundingScenarios.js has
+// been run against the live model; see docs/statute-grounding.md.
+//
+// - Youth is an OVERLAY, not an issue class. "A 15-year-old shoplifted" is a
+//   theft scenario that also engages the YCJA. Making youth a primary issue in
+//   the retrieval or ranking code would take the primary away from theft and
+//   drop its case law, so this module never touches issue detection.
+// - Cannabis is governed by the Cannabis Act, not the CDSA (CDSA Schedule II
+//   lists only synthetic cannabinoids), so a cannabis-only scenario gets no
+//   CDSA candidates.
+import { CDSA_SECTIONS } from "../src/lib/cdsaData.js";
+import { YCJA_SECTIONS } from "../src/lib/ycjaData.js";
+import { lookupStatuteSection } from "../src/lib/statuteLookup.js";
+
+export function isStatuteGroundingEnabled() {
+  return process.env.STATUTE_GROUNDING === "on";
+}
+
+const MAX_CANDIDATES = 8;
+const SUMMARY_CHARS = 300;
+
+// ── Youth overlay ────────────────────────────────────────────────────────────
+
+const YOUTH_WORDS =
+  /\b(?:youths?|young\s+(?:person|persons|people|offenders?)|teen(?:ager|agers|aged)?s?|adolescents?|juveniles?|high[-\s]school\s+students?|grade\s+(?:[7-9]|1[0-2]))\b/i;
+
+// Objects that take an age without being a person ("my 15-year-old car").
+const NOT_A_PERSON =
+  "car|truck|vehicle|suv|van|house|home|building|bike|motorcycle|phone|laptop|computer|dog|cat|furnace|tree|roof|boat|trailer";
+// Units/words that follow a number that is not an age ("he was 15 minutes late").
+const NOT_AN_AGE =
+  "[:.,]?\\d|%|°|degrees?|km|kilometres?|miles?|years?\\s+ago|months?|weeks?|days?|hours?|minutes?|mins?|seconds?|dollars?|\\$|st\\b|nd\\b|rd\\b|th\\b|people|persons?|times|kids|items?|grams?|g\\b|mg\\b|pills?|bags?|ounces?|oz\\b";
+
+function ageMatchers() {
+  return [
+    new RegExp(
+      `\\b(\\d{1,2})[-\\s]?(?:years?|yrs?)[-\\s]?old\\b(?!\\s+(?:${NOT_A_PERSON})\\b)`,
+      "gi",
+    ),
+    /\bage[ds]?\s+(?:of\s+)?(\d{1,2})\b/gi,
+    /\b(\d{1,2})\s+years?\s+of\s+age\b/gi,
+    new RegExp(
+      `\\b(?:i'?m|i\\s+am|he'?s|she'?s|he\\s+is|she\\s+is|they'?re|was|were)\\s+(\\d{1,2})\\b(?!\\s*(?:${NOT_AN_AGE}))`,
+      "gi",
+    ),
+  ];
+}
+
+function extractAges(text) {
+  const ages = [];
+  for (const re of ageMatchers()) {
+    for (const m of text.matchAll(re)) ages.push(Number(m[1]));
+  }
+  return ages;
+}
+
+// YCJA applies to a person who was 12-17 at the time of the offence. A scenario
+// that also names an adult age (a 35-year-old charged for an offence against a
+// 15-year-old, or "now 19, offence at 16") is ambiguous; the prompt hint is
+// worded conditionally, so we return the signal with `ambiguous: true`.
+export function detectYouth(scenario) {
+  const text = String(scenario || "");
+  const ages = extractAges(text);
+  const youthAges = ages.filter((a) => a >= 12 && a <= 17);
+  const adultAges = ages.filter((a) => a >= 18 && a < 100);
+  const childAges = ages.filter((a) => a >= 1 && a < 12);
+  const hasWord =
+    YOUTH_WORDS.test(text) ||
+    /\bunder\s+(?:the\s+age\s+of\s+)?18\b/i.test(text);
+  const detected = youthAges.length > 0 || hasWord;
+  return {
+    detected,
+    ambiguous: detected && adultAges.length > 0,
+    // Under 12 cannot be convicted (Criminal Code s. 13); YCJA does not apply.
+    underTwelve: !detected && adultAges.length === 0 && childAges.length > 0,
+    text: text.toLowerCase(),
+  };
+}
+
+// ── Drug context ─────────────────────────────────────────────────────────────
+
+const CANNABIS =
+  /\b(?:cannabis|marijuana|marihuana|weed|pot|hash(?:ish)?|edibles?|vape\s+cartridges?)\b/i;
+const OTHER_DRUGS =
+  /\b(?:cocaine|crack|fentanyl|heroin|opioids?|oxy(?:codone|contin)?|methamphetamine|meth|crystal\s+meth|mdma|ecstasy|lsd|psilocybin|magic\s+mushrooms?|ketamine|ghb|amphetamines?|benzos?|xanax|narcotics?|controlled\s+substances?|hard\s+drugs?|cdsa)\b/i;
+const GENERIC_DRUG = /\bdrugs?\b|\bpills?\b/i;
+
+const POSSESSION =
+  /\b(?:possess(?:ion|ed|ing)?|had\s+\w+\s+on\s+(?:me|him|her|them)|found\s+with|in\s+(?:my|his|her|their)\s+(?:pocket|backpack|bag|car))\b/i;
+const TRAFFICKING =
+  /\b(?:traffick\w*|sell(?:ing)?|sold|deal(?:er|ing|s)?|distribut\w*|supplie[sd]|supplying|for\s+the\s+purpose\s+of|intent\s+to\s+sell|(?:digital|drug)\s+scale|baggies|customers?|gave\s+(?:it|them|some)\s+to)\b/i;
+const PRODUCTION =
+  /\b(?:grow(?:ing)?\s+(?:op|operation)|(?:meth|drug|clandestine)\s+lab|manufactur\w*|synthesi[sz]\w*|cook(?:ing|ed)?\s+(?:meth|drugs)|produc\w*\s+(?:of\s+)?(?:\w+\s+){0,2}(?:drugs?|meth\w*|fentanyl|cocaine|heroin|substances?))\b/i;
+const IMPORT_EXPORT =
+  /\b(?:import(?:ed|ing)?|export(?:ed|ing)?|smuggl\w*|(?:across|at)\s+the\s+border|customs|border\s+(?:officer|agent|crossing)|courier)\b/i;
+const PRECURSOR_EQUIPMENT =
+  /\b(?:precursors?|pill\s+press(?:es)?|encapsulat\w*|chemicals?\s+to\s+(?:make|produce))\b/i;
+
+export function detectDrugContext(scenario) {
+  const text = String(scenario || "");
+  const cannabis = CANNABIS.test(text);
+  const hardDrug = OTHER_DRUGS.test(text);
+  const generic = GENERIC_DRUG.test(text);
+  const detected = hardDrug || (generic && !cannabis);
+  return {
+    detected,
+    // Cannabis with no other drug named: Cannabis Act, not the CDSA.
+    cannabisOnly: cannabis && !hardDrug,
+    possession: POSSESSION.test(text),
+    trafficking: TRAFFICKING.test(text),
+    production: PRODUCTION.test(text),
+    importExport: IMPORT_EXPORT.test(text),
+    precursor: PRECURSOR_EQUIPMENT.test(text),
+  };
+}
+
+// ── Candidate rules ──────────────────────────────────────────────────────────
+// Each rule lists sections that a legal reviewer checked against the Act's text
+// (via the verified summaries). A unit test requires every listed section to
+// exist, be `summarySource: "verified"`, and not be repealed. Order is priority.
+
+const SERIOUS_VIOLENT =
+  /\b(?:murder|manslaughter|attempted\s+murder|aggravated\s+sexual\s+assault|aggravated\s+assault|serious\s+violent|adult\s+sentence)\b/i;
+
+export const CDSA_RULES = [
+  {
+    id: "cdsa_trafficking",
+    when: (d) => d.trafficking,
+    sections: ["5", "4", "10"],
+  },
+  {
+    id: "cdsa_possession",
+    when: (d) => d.possession && !d.trafficking,
+    sections: ["4", "10.2", "10.3", "10.1"],
+  },
+  { id: "cdsa_production", when: (d) => d.production, sections: ["7", "7.1"] },
+  { id: "cdsa_import_export", when: (d) => d.importExport, sections: ["6"] },
+  { id: "cdsa_precursor", when: (d) => d.precursor, sections: ["7.1"] },
+  // Drug named, no offence type clear from the facts.
+  {
+    id: "cdsa_generic",
+    when: (d) =>
+      !d.trafficking &&
+      !d.possession &&
+      !d.production &&
+      !d.importExport &&
+      !d.precursor,
+    sections: ["4", "5"],
+  },
+];
+
+export const YCJA_RULES = [
+  { id: "ycja_policy", when: () => true, sections: ["3"] },
+  {
+    id: "ycja_extrajudicial",
+    when: (y) => !SERIOUS_VIOLENT.test(y.text),
+    sections: ["4", "6", "10"],
+  },
+  {
+    id: "ycja_police",
+    when: (y) =>
+      /\b(?:arrest\w*|detain\w*|police|officer|interrogat\w*|interview\w*|questioned|statement|confess\w*|custody)\b/.test(
+        y.text,
+      ),
+    sections: ["25", "26", "146"],
+  },
+  {
+    id: "ycja_release",
+    when: (y) =>
+      /\b(?:bail|release|remand|pre-?trial|detention\s+(?:hearing|centre)|held\s+in\s+custody)\b/.test(
+        y.text,
+      ),
+    sections: ["29", "28"],
+  },
+  {
+    id: "ycja_sentencing",
+    when: (y) =>
+      /\b(?:sentenc\w*|convicted|found\s+guilty|pleaded\s+guilty|pled\s+guilty|probation|custody\s+order|open\s+custody|secure\s+custody)\b/.test(
+        y.text,
+      ),
+    sections: ["38", "39", "42"],
+  },
+  {
+    id: "ycja_adult_sentence",
+    when: (y) => SERIOUS_VIOLENT.test(y.text),
+    sections: ["64", "72"],
+  },
+  {
+    id: "ycja_publication",
+    when: (y) =>
+      /\b(?:publish\w*|media|news|social\s+media|posted|named|identif\w*|name\s+released)\b/.test(
+        y.text,
+      ),
+    sections: ["110"],
+  },
+  {
+    id: "ycja_records",
+    when: (y) =>
+      /\b(?:criminal\s+record|record\s+check|background\s+check|employer|pardon|records?\s+(?:sealed|access))\b/.test(
+        y.text,
+      ),
+    sections: ["119"],
+  },
+  {
+    id: "ycja_breach",
+    when: (y) =>
+      /\b(?:breach\w*|fail\w*\s+to\s+comply|violat\w*\s+(?:his|her|their)\s+(?:probation|conditions|sentence))\b/.test(
+        y.text,
+      ),
+    sections: ["137"],
+  },
+];
+
+const ACTS = {
+  CDSA: { map: CDSA_SECTIONS, name: "Controlled Drugs and Substances Act" },
+  YCJA: { map: YCJA_SECTIONS, name: "Youth Criminal Justice Act" },
+};
+
+function leadSentences(text, max) {
+  const clean = String(text || "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max);
+  const end = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("; "));
+  return end > 80 ? cut.slice(0, end + 1) : `${cut.trimEnd()}…`;
+}
+
+function toCandidate(act, num) {
+  const entry = ACTS[act].map.get(num);
+  if (!entry || entry.kind === "schedule") return null;
+  return {
+    citation: `${act} s. ${num}`,
+    title: entry.title,
+    summary: leadSentences(entry.summary, SUMMARY_CHARS),
+    url: entry.url,
+  };
+}
+
+function collect(act, rules, signal) {
+  const nums = [];
+  const matched = [];
+  for (const rule of rules) {
+    if (!rule.when(signal)) continue;
+    matched.push(rule.id);
+    for (const n of rule.sections) if (!nums.includes(n)) nums.push(n);
+  }
+  return {
+    cands: nums.map((n) => toCandidate(act, n)).filter(Boolean),
+    matched,
+  };
+}
+
+// ── Public entry points ──────────────────────────────────────────────────────
+
+/**
+ * Deterministic grounding for a scenario. Returns null when grounding is off,
+ * civil_law is filtered out, or nothing in the scenario engages CDSA/YCJA.
+ */
+export function buildStatuteGrounding(scenario, filters = {}) {
+  if (!isStatuteGroundingEnabled()) return null;
+  if (filters?.lawTypes?.civil_law === false) return null;
+
+  const youth = detectYouth(scenario);
+  const drug = detectDrugContext(scenario);
+  const useCdsa = drug.detected && !drug.cannabisOnly;
+
+  const hints = [];
+  const candidates = [];
+  const rulesMatched = [];
+
+  if (youth.detected) {
+    const { cands, matched } = collect("YCJA", YCJA_RULES, youth);
+    candidates.push(...cands);
+    rulesMatched.push(...matched);
+    hints.push(
+      youth.ambiguous
+        ? "The scenario mentions both a young person and an adult. The YCJA applies only if the ACCUSED was 12-17 at the time of the offence; if the young person is only a victim or witness, do not cite the YCJA."
+        : "The scenario suggests the accused may have been 12-17 at the time of the offence. The YCJA applies only in that case; if the young person is only a victim or witness, do not cite the YCJA. Where it applies, cite the YCJA alongside the Criminal Code offence.",
+    );
+  } else if (youth.underTwelve) {
+    hints.push(
+      "The only age mentioned is under 12. A child under 12 cannot be convicted of an offence (Criminal Code s. 13) and the YCJA does not apply; do not cite YCJA sections.",
+    );
+  }
+
+  if (useCdsa) {
+    const { cands, matched } = collect("CDSA", CDSA_RULES, drug);
+    candidates.push(...cands);
+    rulesMatched.push(...matched);
+  } else if (drug.cannabisOnly) {
+    hints.push(
+      "Cannabis (marijuana, hash, edibles) is governed by the Cannabis Act, not the Controlled Drugs and Substances Act. Do not cite CDSA sections for cannabis alone.",
+    );
+  }
+
+  if (candidates.length === 0 && hints.length === 0) return null;
+
+  if (candidates.length > 0) {
+    hints.unshift(
+      'Cite CDSA and YCJA provisions in civil_law (they are federal statutes), written as "CDSA s. 5" or "YCJA s. 38". Prefer the sections listed in the statute_db reference block; never guess a section number.',
+    );
+  }
+
+  return {
+    candidates: candidates.slice(0, MAX_CANDIDATES),
+    hints,
+    meta: {
+      youth: youth.detected,
+      youthAmbiguous: youth.ambiguous,
+      cdsa: useCdsa,
+      cannabisOnly: drug.cannabisOnly,
+      rules: rulesMatched,
+      candidates: candidates.slice(0, MAX_CANDIDATES).map((c) => c.citation),
+    },
+  };
+}
+
+const STATUTE_CITATION =
+  /\b(?:CDSA|YCJA)\b|controlled drugs and substances act|youth criminal justice act/i;
+const HAS_SECTION = /\bs{1,2}\.\s*\d|\bsections?\s+\d|\bschedule\b/i;
+
+/**
+ * Server-side citation check. Removes CDSA/YCJA civil_law items whose section
+ * number does not exist in the Act (hallucinated), and returns what was
+ * dropped. Items we cannot parse a section from are kept, not guessed at.
+ */
+export function checkStatuteCitations(result) {
+  const out = { checked: 0, verified: 0, dropped: [] };
+  if (!result || !Array.isArray(result.civil_law)) return out;
+  result.civil_law = result.civil_law.filter((item) => {
+    const citation = typeof item?.citation === "string" ? item.citation : "";
+    if (!STATUTE_CITATION.test(citation) || !HAS_SECTION.test(citation)) {
+      return true;
+    }
+    out.checked += 1;
+    if (lookupStatuteSection(citation)) {
+      out.verified += 1;
+      return true;
+    }
+    out.dropped.push(citation.slice(0, 120));
+    return false;
+  });
+  return out;
+}
