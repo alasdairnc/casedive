@@ -240,4 +240,19 @@ describe("verify handler", () => {
     expect(res.body["CDSA s. 9999"]).toMatchObject({ status: "unverified" });
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
+  it("verifies CDSA and YCJA schedules and rejects repealed ones", async () => {
+    globalThis.fetch = vi.fn();
+    const req = createReq({
+      body: { citations: ["CDSA Schedule I", "YCJA Schedule", "CDSA Schedule VII"] },
+    });
+    const res = createRes();
+
+    await handler(req, res);
+
+    expect(res.body["CDSA Schedule I"]).toMatchObject({ status: "verified", statute: "Controlled Drugs and Substances Act" });
+    expect(res.body["CDSA Schedule I"].url).toContain("FullText.html#h-");
+    expect(res.body["YCJA Schedule"]).toMatchObject({ status: "verified", statute: "Youth Criminal Justice Act" });
+    expect(res.body["CDSA Schedule VII"]).toMatchObject({ status: "unverified" });
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
 });

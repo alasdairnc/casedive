@@ -15,6 +15,7 @@ function shaped(map, statute, shortName) {
         jurisdiction: "Federal",
         statute,
         shortName,
+        kind: e.kind,
         title: e.title,
         url: e.url,
         severity: e.severity,
@@ -27,13 +28,30 @@ function shaped(map, statute, shortName) {
 const CDSA = shaped(CDSA_SECTIONS, "Controlled Drugs and Substances Act", "CDSA");
 const YCJA = shaped(YCJA_SECTIONS, "Youth Criminal Justice Act", "YCJA");
 
-const registry = createCivilLawRegistry({
-  aliases: [
-    { pattern: /controlled drugs and substances act|\bCDSA\b/i, prefix: "CDSA", map: CDSA },
-    { pattern: /youth criminal justice act|\bYCJA\b/i, prefix: "YCJA", map: YCJA },
-  ],
-});
+const ACTS = [
+  { pattern: /controlled drugs and substances act|\bCDSA\b/i, prefix: "CDSA", map: CDSA },
+  { pattern: /youth criminal justice act|\bYCJA\b/i, prefix: "YCJA", map: YCJA },
+];
+
+const registry = createCivilLawRegistry({ aliases: ACTS });
+
+const ROMAN = /^[IVX]+$/i;
+
+// "CDSA Schedule I", "Schedule II, CDSA", "YCJA Schedule". A citation that also
+// names a section ("CDSA s. 5, Schedule I") is resolved as that section.
+function lookupSchedule(citation) {
+  const m = citation.match(/\bschedule(?:\s+([IVX]+)\b)?/i);
+  if (!m || /\bs\.\s*\d|\bsection\s+\d/i.test(citation)) return null;
+  for (const { pattern, map, prefix } of ACTS) {
+    if (!pattern.test(citation)) continue;
+    const key = m[1] && ROMAN.test(m[1]) ? `Schedule ${m[1].toUpperCase()}` : "Schedule";
+    const entry = map.get(key);
+    if (entry?.kind === "schedule") return { entry, prefix };
+  }
+  return null;
+}
 
 export function lookupStatuteSection(citation) {
-  return registry.lookup(citation);
+  if (!citation || typeof citation !== "string") return null;
+  return lookupSchedule(citation) || registry.lookup(citation);
 }
