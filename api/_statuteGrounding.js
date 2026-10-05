@@ -19,7 +19,9 @@ export function isStatuteGroundingEnabled() {
   return process.env.STATUTE_GROUNDING === "on";
 }
 
-const MAX_CANDIDATES = 8;
+const MAX_PER_ACT = 8; // when only one Act is engaged
+const MAX_CANDIDATES = 10; // when both are
+const CDSA_RESERVE = 4;
 const SUMMARY_CHARS = 300;
 
 // ── Youth overlay ────────────────────────────────────────────────────────────
@@ -32,7 +34,11 @@ const NOT_A_PERSON =
   "car|truck|vehicle|suv|van|house|home|building|bike|motorcycle|phone|laptop|computer|dog|cat|furnace|tree|roof|boat|trailer";
 // Units/words that follow a number that is not an age ("he was 15 minutes late").
 const NOT_AN_AGE =
-  "[:.,]?\\d|%|°|degrees?|km|kilometres?|miles?|years?\\s+ago|months?|weeks?|days?|hours?|minutes?|mins?|seconds?|dollars?|\\$|st\\b|nd\\b|rd\\b|th\\b|people|persons?|times|kids|items?|grams?|g\\b|mg\\b|pills?|bags?|ounces?|oz\\b";
+  "[:.,]?\\d|%|°|degrees?|km|kilometres?|miles?|years?\\s+ago|months?|weeks?|days?|hours?|minutes?|mins?|seconds?|dollars?|\\$|st\\b|nd\\b|rd\\b|th\\b|people|persons?|times|kids|items?|grams?|g\\b|mg\\b|pills?|bags?|ounces?|oz\\b|over\\b|under\\b|of\\b|mph\\b|kph\\b|km/h|feet\\b|ft\\b|metres?\\b|lbs?\\b|pounds?\\b|kg\\b";
+// Who can be "was 16": a pronoun or a person noun. "There were 15 of us" and
+// "the speed limit was 50" name no person.
+const AGE_SUBJECT =
+  "(?:i|he|she|they|we|who|but|and|then|though)\\s+(?:was|were|am|is|are)|i'?m|he'?s|she'?s|they'?re|(?:boy|girl|kid|child|teen\\w*|student|accused|suspect|defendant|son|daughter|youth)\\s+(?:was|is)";
 
 function ageMatchers() {
   return [
@@ -43,7 +49,7 @@ function ageMatchers() {
     /\bage[ds]?\s+(?:of\s+)?(\d{1,2})\b/gi,
     /\b(\d{1,2})\s+years?\s+of\s+age\b/gi,
     new RegExp(
-      `\\b(?:i'?m|i\\s+am|he'?s|she'?s|he\\s+is|she\\s+is|they'?re|was|were)\\s+(\\d{1,2})\\b(?!\\s*(?:${NOT_AN_AGE}))`,
+      `\\b(?:${AGE_SUBJECT})\\s+(\\d{1,2})\\b(?!\\s*(?:${NOT_AN_AGE}))`,
       "gi",
     ),
   ];
@@ -85,8 +91,18 @@ export function detectYouth(scenario) {
 const CANNABIS =
   /\b(?:cannabis|marijuana|marihuana|weed|pot|hash(?:ish)?|edibles?|vape\s+cartridges?)\b/i;
 const OTHER_DRUGS =
-  /\b(?:cocaine|crack|fentanyl|heroin|opioids?|oxy(?:codone|contin)?|methamphetamine|meth|crystal\s+meth|mdma|ecstasy|lsd|psilocybin|magic\s+mushrooms?|ketamine|ghb|amphetamines?|benzos?|xanax|narcotics?|controlled\s+substances?|hard\s+drugs?|cdsa)\b/i;
+  /\b(?:cocaine|crack\s+(?:cocaine|pipe|rock)|fentanyl|heroin|opioids?|oxy(?:codone|contin)?|methamphetamine|meth|crystal\s+meth|mdma|ecstasy|lsd|psilocybin|magic\s+mushrooms?|ketamine|ghb|amphetamines?|benzos?|xanax|narcotics?|controlled\s+substances?|hard\s+drugs?|cdsa)\b/i;
 const GENERIC_DRUG = /\bdrugs?\b|\bpills?\b/i;
+
+// "found no drugs", "never sold drugs", "no cocaine": the drug is denied, so
+// it must not read as a drug scenario.
+const DRUG_WORDS = [CANNABIS, OTHER_DRUGS, GENERIC_DRUG]
+  .map((re) => re.source.replace(/^\\b(?:\(\?:)?/, "").replace(/\)?\\b$/, ""))
+  .join("|");
+const NEGATED_DRUGS = new RegExp(
+  `\\b(?:no|never|nothing|without|not|didn'?t|did\\s+not|wasn'?t|weren'?t)\\s+(?:(?:any|a|the|illegal|illicit|hard|more|found|find|have|had|has|sold|sell|selling|carry\\w*|possess\\w*)\\s+)*(?:${DRUG_WORDS})\\b`,
+  "gi",
+);
 
 const POSSESSION =
   /\b(?:possess(?:ion|ed|ing)?|had\s+\w+\s+on\s+(?:me|him|her|them)|found\s+with|in\s+(?:my|his|her|their)\s+(?:pocket|backpack|bag|car))\b/i;
@@ -100,7 +116,7 @@ const PRECURSOR_EQUIPMENT =
   /\b(?:precursors?|pill\s+press(?:es)?|encapsulat\w*|chemicals?\s+to\s+(?:make|produce))\b/i;
 
 export function detectDrugContext(scenario) {
-  const text = String(scenario || "");
+  const text = String(scenario || "").replace(NEGATED_DRUGS, " ");
   const cannabis = CANNABIS.test(text);
   const hardDrug = OTHER_DRUGS.test(text);
   const generic = GENERIC_DRUG.test(text);
@@ -240,18 +256,33 @@ function toCandidate(act, num) {
   };
 }
 
+// Round-robin across the matched rules (every rule's lead section, then every
+// rule's second, ...) so a cap never cuts a whole issue out of the list.
 function collect(act, rules, signal) {
+  const hits = rules.filter((rule) => rule.when(signal));
   const nums = [];
-  const matched = [];
-  for (const rule of rules) {
-    if (!rule.when(signal)) continue;
-    matched.push(rule.id);
-    for (const n of rule.sections) if (!nums.includes(n)) nums.push(n);
+  const depth = Math.max(0, ...hits.map((r) => r.sections.length));
+  for (let i = 0; i < depth; i++) {
+    for (const rule of hits) {
+      const n = rule.sections[i];
+      if (n && !nums.includes(n)) nums.push(n);
+    }
   }
   return {
     cands: nums.map((n) => toCandidate(act, n)).filter(Boolean),
-    matched,
+    matched: hits.map((r) => r.id),
   };
+}
+
+// The charge comes first. With both Acts engaged the CDSA keeps CDSA_RESERVE
+// slots, so a long youth-procedure list can never push s. 5 off a trafficking
+// charge.
+function allocate(cdsa, ycja) {
+  if (cdsa.length === 0 || ycja.length === 0) {
+    return [...cdsa, ...ycja].slice(0, MAX_PER_ACT);
+  }
+  const head = cdsa.slice(0, CDSA_RESERVE);
+  return [...head, ...ycja.slice(0, MAX_CANDIDATES - head.length)];
 }
 
 // ── Public entry points ──────────────────────────────────────────────────────
@@ -269,12 +300,13 @@ export function buildStatuteGrounding(scenario, filters = {}) {
   const useCdsa = drug.detected && !drug.cannabisOnly;
 
   const hints = [];
-  const candidates = [];
+  let cdsaCands = [];
+  let ycjaCands = [];
   const rulesMatched = [];
 
   if (youth.detected) {
     const { cands, matched } = collect("YCJA", YCJA_RULES, youth);
-    candidates.push(...cands);
+    ycjaCands = cands;
     rulesMatched.push(...matched);
     hints.push(
       youth.ambiguous
@@ -289,7 +321,7 @@ export function buildStatuteGrounding(scenario, filters = {}) {
 
   if (useCdsa) {
     const { cands, matched } = collect("CDSA", CDSA_RULES, drug);
-    candidates.push(...cands);
+    cdsaCands = cands;
     rulesMatched.push(...matched);
   } else if (drug.cannabisOnly) {
     hints.push(
@@ -297,6 +329,7 @@ export function buildStatuteGrounding(scenario, filters = {}) {
     );
   }
 
+  const candidates = allocate(cdsaCands, ycjaCands);
   if (candidates.length === 0 && hints.length === 0) return null;
 
   if (candidates.length > 0) {
@@ -306,7 +339,7 @@ export function buildStatuteGrounding(scenario, filters = {}) {
   }
 
   return {
-    candidates: candidates.slice(0, MAX_CANDIDATES),
+    candidates,
     hints,
     meta: {
       youth: youth.detected,
@@ -314,7 +347,7 @@ export function buildStatuteGrounding(scenario, filters = {}) {
       cdsa: useCdsa,
       cannabisOnly: drug.cannabisOnly,
       rules: rulesMatched,
-      candidates: candidates.slice(0, MAX_CANDIDATES).map((c) => c.citation),
+      candidates: candidates.map((c) => c.citation),
     },
   };
 }
@@ -337,7 +370,9 @@ export function checkStatuteCitations(result) {
       return true;
     }
     out.checked += 1;
-    if (lookupStatuteSection(citation)) {
+    // "CDSA s. 5." is a real section; civilLawRegistry reads the number as "5.".
+    // Trimmed here, not there, because verify.js shares the registry.
+    if (lookupStatuteSection(citation.trim().replace(/[.,;\s]+$/, ""))) {
       out.verified += 1;
       return true;
     }

@@ -13,7 +13,8 @@
 //
 // Hard failures (exit 1): a cited section that does not exist in the Act and
 // survived to the output, an `exclude` citation, or any CDSA/YCJA citation for
-// a scenario that should engage neither Act. Coverage (how many of a
+// a scenario that should engage neither Act (in --mode both only the grounding-on
+// run gates the exit code; off is a baseline). Coverage (how many of a
 // scenario's expected sections the model actually cited) is reported, not
 // gated. Flipping STATUTE_GROUNDING on in production is the owner's call once
 // this has been read.
@@ -99,7 +100,8 @@ async function analyze(scenario, groundingOn) {
     {
       method: "POST",
       socket: { remoteAddress: ip },
-      body: { scenario, filters: { lawTypes: { case_law: false } } },
+      // Default filters: the prompt the model sees here is the production prompt.
+      body: { scenario },
       headers: {
         "content-type": "application/json",
         "content-length": "100",
@@ -165,6 +167,8 @@ const report = [];
 let hardFailures = 0;
 for (const sc of scenarios) {
   for (const groundingOn of modes) {
+    // In --mode both the off run is a baseline; only the run being judged gates the exit code.
+    const gated = groundingOn || modes.length === 1;
     const res = await analyze(sc.scenario, groundingOn);
     const row = {
       id: sc.id,
@@ -173,7 +177,7 @@ for (const sc of scenarios) {
     };
     if (res.statusCode !== 200) {
       row.error = res.body?.error || "non-200";
-      hardFailures += 1;
+      if (gated) hardFailures += 1;
     } else {
       const s = score(sc, res);
       Object.assign(row, {
@@ -182,7 +186,7 @@ for (const sc of scenarios) {
         covered: `${s.covered.length}/${s.include.length}`,
         failures: s.failures,
       });
-      hardFailures += s.failures.length;
+      if (gated) hardFailures += s.failures.length;
     }
     report.push(row);
     const mark = row.error || row.failures?.length ? "FAIL" : "ok  ";

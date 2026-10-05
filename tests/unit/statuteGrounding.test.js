@@ -67,6 +67,11 @@ describe("detectYouth", () => {
     ["It was 15 degrees out", false],
     ["I punched someone and they had minor injuries", false],
     ["a minor traffic stop", false],
+    ["I was 15 over the limit", false],
+    ["There were 15 of us at the party", false],
+    ["The speed limit was 16", false],
+    ["She was 16 when it happened", true],
+    ["The accused was 15 at the time", true],
   ])("%s -> %s", (text, expected) => {
     expect(detectYouth(text).detected).toBe(expected);
   });
@@ -104,6 +109,9 @@ describe("detectDrugContext", () => {
 
   it("does not read speed or ordinary words as drugs", () => {
     for (const t of [
+      "a rock put a crack in my windshield",
+      "police found no drugs in the car",
+      "I have never sold drugs",
       "the speed limit was 50",
       "I was in a lab at school",
       "he came on a scale of one to ten",
@@ -181,7 +189,10 @@ describe("eval scenarios (offline)", () => {
     const g = buildStatuteGrounding(
       "A 16-year-old was arrested and held in custody before trial, then pleaded guilty to selling fentanyl. His name was posted on social media.",
     );
-    expect(g.candidates.length).toBeLessThanOrEqual(8);
+    expect(g.candidates.length).toBeLessThanOrEqual(10);
+    // The charge survives the cap: YCJA procedure alone has 13 sections here.
+    const cites = g.candidates.map((c) => c.citation);
+    expect(cites.slice(0, 3)).toEqual(["CDSA s. 5", "CDSA s. 4", "CDSA s. 10"]);
     for (const c of g.candidates) {
       expect(c.title).toBeTruthy();
       expect(c.summary.length).toBeGreaterThan(20);
@@ -226,6 +237,8 @@ describe("checkStatuteCitations", () => {
     const real = [
       "CDSA s. 5",
       "CDSA s. 5(1)",
+      "CDSA s. 5.",
+      "YCJA s. 38.",
       "CDSA, s. 4",
       "Controlled Drugs and Substances Act, s. 5",
       "CDSA s. 10.2",

@@ -22,7 +22,7 @@ eval below has been run and read.
      equipment. Cannabis alone goes to the Cannabis Act, not the CDSA (CDSA
      Schedule II lists only synthetic cannabinoids), so it gets no CDSA
      candidates.
-2. **Offer candidates.** Up to 8 sections picked by hand-written rules
+2. **Offer candidates.** Up to 8 sections (10 when both Acts apply, 4 of them reserved for the CDSA so a long youth-procedure list cannot push s. 5 off a trafficking charge) picked by hand-written rules
    (`CDSA_RULES`, `YCJA_RULES`), put in the user message as
    `<reference_context source="statute_db">` with each section's verified
    summary. A unit test requires every section a rule can offer to exist and be
@@ -44,7 +44,7 @@ flag-off users (and vice versa).
 | --- | --- | --- |
 | The Acts' text and summaries | independent claim-by-claim pass, 232/248 passed, 16 corrected | PR #77 |
 | Rule sections are real, in force, verified | unit test over every rule | `tests/unit/statuteGrounding.test.js` |
-| Detection and candidates | 25 scenarios incl. traps (adult, "15-year-old car", speed limit, cannabis, under 12, youth victim) | `tests/unit/statuteGroundingScenarios.js` |
+| Detection and candidates | 32 scenarios incl. traps (adult, "15-year-old car", "15 over the limit", "crack in my windshield", "found no drugs", cannabis, under 12, youth victim) | `tests/unit/statuteGroundingScenarios.js` |
 | Prompt unchanged when off | byte-identical vs. before, several filter combos | same test file |
 | Handler wiring (flag, post-check, cache key) | stubbed model | `tests/unit/analyzeStatuteGrounding.test.js` |
 | **The live model actually behaves** | **opt-in script, not yet run** | `scripts/evaluate-statute-grounding.mjs` |
@@ -56,7 +56,7 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
   --out artifacts/statute-grounding-eval.json
 ```
 
-~50 model calls, so it is manual and never runs in CI. Read it for:
+64 model calls in `--mode both`, so it is manual and never runs in CI. Read it for:
 
 - **Hard failures (exit 1):** a cited section that does not exist, a CDSA/YCJA
   citation on a scenario that should engage neither Act, an excluded section,

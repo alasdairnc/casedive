@@ -187,4 +187,58 @@ export const STATUTE_SCENARIOS = [
     scenario: "He was 34 when he hit his neighbour with a bat.",
     expectNull: true,
   },
+  // Traps found by tracing the detectors: an age-shaped number that is not an
+  // age, a drug word that is not a drug, a denied drug.
+  {
+    id: "was_n_over_the_limit",
+    scenario:
+      "I was 15 over the limit when the officer pulled me over on the highway.",
+    expectNull: true,
+  },
+  {
+    id: "were_n_of_us",
+    scenario:
+      "There were 15 of us at the party when the neighbour called the police about noise.",
+    expectNull: true,
+  },
+  {
+    id: "crack_in_windshield",
+    scenario:
+      "A rock put a crack in my windshield and the other driver refuses to pay.",
+    expectNull: true,
+  },
+  {
+    id: "found_no_drugs",
+    scenario:
+      "Police searched my car without a warrant and found no drugs, only an unopened receipt.",
+    expectNull: true,
+  },
+  {
+    id: "never_sold_drugs",
+    scenario: "I have never sold drugs but the officer says I did.",
+    expectNull: true,
+  },
+  {
+    id: "no_lawyer_cocaine_seized",
+    scenario:
+      "No lawyer was present when police seized the cocaine from his apartment.",
+    cdsa: true,
+    include: ["CDSA s. 4"],
+  },
+
+  // ── Both Acts at once: the cap must keep the charge ──
+  {
+    id: "youth_long_procedure_trafficking",
+    scenario:
+      "A 16-year-old was arrested, held in custody before trial, then pleaded guilty to selling fentanyl. His name was posted on social media.",
+    youth: true,
+    cdsa: true,
+    include: [
+      "CDSA s. 5",
+      "CDSA s. 4",
+      "YCJA s. 3",
+      "YCJA s. 38",
+      "YCJA s. 110",
+    ],
+  },
 ];
