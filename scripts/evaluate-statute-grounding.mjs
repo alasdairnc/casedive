@@ -135,6 +135,8 @@ function score(sc, res) {
     .map((i) => (typeof i?.citation === "string" ? i.citation : ""))
     .filter((c) => STATUTE_CITATION.test(c));
   const canonical = new Set(cited.map(canon).filter(Boolean));
+  const analysis =
+    typeof res.body?.analysis === "string" ? res.body.analysis : null;
   const items = civil
     .filter((i) => STATUTE_CITATION.test(i?.citation || ""))
     .map((i) => ({
@@ -172,6 +174,7 @@ function score(sc, res) {
   return {
     cited,
     items,
+    analysis,
     hallucinated,
     failures,
     include,
@@ -213,6 +216,9 @@ for (const sc of scenarios) {
         cited: s.cited,
         // The model's own wording for each CDSA/YCJA item, for a human read.
         items: s.items,
+        // Free text the model wrote beyond the anchored items: the only place
+        // an invented consequence can still appear, and it is shown to users.
+        analysis: s.analysis,
         hallucinated: s.hallucinated,
         covered: `${s.covered.length}/${s.include.length}`,
         failures: s.failures,

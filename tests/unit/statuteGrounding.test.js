@@ -359,3 +359,37 @@ describe("anchorStatuteItems", () => {
     );
   });
 });
+
+describe("anchored text keeps what matters", () => {
+  const all = [
+    ["CDSA", CDSA_SECTIONS, CDSA_RULES],
+    ["YCJA", YCJA_SECTIONS, YCJA_RULES],
+  ];
+  for (const [act, map, rules] of all) {
+    for (const num of new Set(rules.flatMap((r) => r.sections))) {
+      it(`${act} s. ${num}: a long section keeps at least half the lead`, () => {
+        const full = map.get(num).summary;
+        const result = { civil_law: [{ citation: `${act} s. ${num}` }] };
+        anchorStatuteItems(result);
+        const text = result.civil_law[0].summary;
+        if (full.length <= 500) {
+          expect(text).toBe(full);
+        } else {
+          expect(text.length).toBeGreaterThanOrEqual(250);
+          expect(text.length).toBeLessThanOrEqual(501);
+        }
+        // Whatever is shown is the start of the verified text, never a rewrite.
+        expect(full.replace(/\s+/g, " ")).toContain(text.replace(/…$/, ""));
+      });
+    }
+  }
+
+  it("YCJA s. 146 keeps its mandatory conditions, not just the opening generality", () => {
+    const result = { civil_law: [{ citation: "YCJA s. 146" }] };
+    anchorStatuteItems(result);
+    expect(result.civil_law[0].summary).toMatch(
+      /admissible against the young person only if it was voluntary/,
+    );
+    expect(result.civil_law[0].summary).toMatch(/explained/);
+  });
+});

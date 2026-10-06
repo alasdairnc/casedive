@@ -126,8 +126,13 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
   run; watch it). So CDSA/YCJA items are now **anchored**: `summary` is replaced with the lead (500 chars) of the
   independently verified section text and the model's `matched_section` is dropped for them
   (`anchorStatuteItems`, flag-gated like the rest). The application to the facts is left to `analysis`. Items with
-  no verified text (schedules, unknown sections) are left as written. **Not re-run live yet.**
-- It now saves the model's own wording for each CDSA/YCJA item (`items` in the `--out` file) so a person can read it.
+  no verified text (schedules, unknown sections) are left as written. The anchored lead had a flaw found in
+  review: it cut at the last sentence end, so YCJA s. 146 collapsed to its vague opening sentence and lost the
+  mandatory conditions (also CDSA s. 10, YCJA s. 38). It now cuts at a word boundary when the sentence end is
+  early, and a test checks every rule section. The prompt rule about not predicting consequences was moved to
+  `analysis` (the free text still shown to users and not yet read), and the eval saves `analysis`. **Not
+  re-run live yet; `analysis` and the s. 4(1) omission are the open checks.**
+- It saves each CDSA/YCJA item (`items`; with anchoring on these are the verified text, not the model's) and the model's `analysis` in the `--out` file. `analysis` is the free text still unchecked.
 - The script checks section numbers only. The legal explanation in each `civil_law` item still needs a human read.
 
 ## Not done (deliberately)

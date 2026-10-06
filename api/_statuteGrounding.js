@@ -235,6 +235,10 @@ const ACTS = {
   YCJA: { map: YCJA_SECTIONS, name: "Youth Criminal Justice Act" },
 };
 
+// Cuts at a sentence end when that keeps at least half of `max`; otherwise at a
+// word boundary with an ellipsis. A section whose first sentence is a short
+// generality and whose conditions follow in one long sentence (YCJA s. 146) must
+// keep the conditions, not collapse to the generality.
 function leadSentences(text, max) {
   const clean = String(text || "")
     .replace(/\s+/g, " ")
@@ -242,7 +246,8 @@ function leadSentences(text, max) {
   if (clean.length <= max) return clean;
   const cut = clean.slice(0, max);
   const end = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("; "));
-  return end > 80 ? cut.slice(0, end + 1) : `${cut.trimEnd()}…`;
+  if (end >= max / 2) return cut.slice(0, end + 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).trimEnd()}…`;
 }
 
 function toCandidate(act, num) {
@@ -334,7 +339,7 @@ export function buildStatuteGrounding(scenario, filters = {}) {
 
   if (candidates.length > 0) {
     hints.unshift(
-      'Cite CDSA and YCJA provisions in civil_law (they are federal statutes), written as "CDSA s. 5" or "YCJA s. 38". The statute_db reference block is a menu, not a checklist: cite only the sections that apply to these facts, at most 4 in civil_law, and write only the citation (no section title in brackets). In summary and matched_section say only what the text of the section says and how it applies to these facts. Do not predict remedies, admissibility or any consequence of non-compliance unless the section itself says so (for example CDSA s. 10.2 and YCJA s. 6 state that failing to consider the options does not invalidate a charge). Never guess a section number.',
+      'Cite CDSA and YCJA provisions in civil_law (they are federal statutes), written as "CDSA s. 5" or "YCJA s. 38". The statute_db reference block is a menu, not a checklist: cite only the sections that apply to these facts, at most 4 in civil_law, and write only the citation (no section title in brackets). In analysis, say only what the text of these sections says and how it applies to these facts. Do not predict remedies, admissibility or any consequence of non-compliance unless the section itself says so (for example CDSA s. 10.2 and YCJA s. 6 state that failing to consider the options does not invalidate a charge). Never guess a section number.',
     );
   }
 
