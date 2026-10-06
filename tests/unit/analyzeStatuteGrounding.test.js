@@ -187,6 +187,8 @@ describe("STATUTE_GROUNDING on", () => {
     expect(user).toContain("YCJA s. 3 (");
     expect(system).toContain('written as "CDSA s. 5"');
     expect(system).toContain("at most 4 in civil_law");
+    expect(system).toContain("In analysis, say only what the text");
+    expect(system).toContain("Do not predict remedies");
     expect(system).toContain("12-17");
   });
 
