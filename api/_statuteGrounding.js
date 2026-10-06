@@ -381,3 +381,42 @@ export function checkStatuteCitations(result) {
   });
   return out;
 }
+
+const SECTION_REF = /\b(?:s{1,2}\.|sections?)\s*(\d+(?:\.\d+)?)/i;
+const ANCHOR_CHARS = 500;
+
+/**
+ * Replaces the model's wording for CDSA/YCJA items with the independently
+ * verified section text. A live read of the model's `summary` and
+ * `matched_section` found invented consequences ("failure may affect the
+ * confession's admissibility", "the right applies before arrest") that no
+ * citation check can catch, and a prompt rule only reduced them. So for a
+ * section we hold verified text for, `summary` becomes the lead of that text and
+ * the model's `matched_section` is dropped. The application to the facts is
+ * left to `analysis`. Items we cannot anchor are left as the model wrote them.
+ * Returns how many items were anchored.
+ */
+export function anchorStatuteItems(result) {
+  if (!result || !Array.isArray(result.civil_law)) return 0;
+  let anchored = 0;
+  for (const item of result.civil_law) {
+    const citation = typeof item?.citation === "string" ? item.citation : "";
+    if (!STATUTE_CITATION.test(citation)) continue;
+    const num = citation.match(SECTION_REF)?.[1];
+    if (!num) continue;
+    const act = /ycja|youth criminal/i.test(citation) ? "YCJA" : "CDSA";
+    const entry = ACTS[act].map.get(num);
+    if (
+      !entry ||
+      entry.kind === "schedule" ||
+      entry.summarySource !== "verified" ||
+      !entry.summary
+    ) {
+      continue;
+    }
+    item.summary = leadSentences(entry.summary, ANCHOR_CHARS);
+    delete item.matched_section;
+    anchored += 1;
+  }
+  return anchored;
+}

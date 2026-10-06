@@ -28,6 +28,7 @@ import {
 } from "./_constants.js";
 import { normalizeFilters } from "./_filters.js";
 import {
+  anchorStatuteItems,
   buildStatuteGrounding,
   checkStatuteCitations,
   isStatuteGroundingEnabled,
@@ -947,11 +948,13 @@ export default async function handler(req, res) {
     const meta = ensureMetaContainer(result);
 
     // Statute grounding (flag-gated): drop CDSA/YCJA citations whose section
-    // does not exist in the Act, and record what the grounding offered.
+    // does not exist in the Act, put the verified section text on the rest, and
+    // record what the grounding offered.
     if (isStatuteGroundingEnabled() && filters.lawTypes.civil_law !== false) {
       meta.statutes = {
         ...(grounding?.meta || {}),
         check: checkStatuteCitations(result),
+        anchored: anchorStatuteItems(result),
       };
     }
 

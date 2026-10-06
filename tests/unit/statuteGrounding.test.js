@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   CDSA_RULES,
+  anchorStatuteItems,
   YCJA_RULES,
   buildStatuteGrounding,
   checkStatuteCitations,
@@ -288,5 +289,73 @@ describe("checkStatuteCitations", () => {
     const r = { civil_law: [null, { citation: 5 }, {}] };
     checkStatuteCitations(r);
     expect(r.civil_law).toHaveLength(3);
+  });
+});
+
+describe("anchorStatuteItems", () => {
+  const item = (citation) => ({
+    citation,
+    summary: "model words",
+    matched_section: "the model application, with an invented consequence",
+  });
+
+  it("puts the verified section text on CDSA and YCJA items and drops the application line", () => {
+    const result = { civil_law: [item("YCJA s. 26"), item("CDSA s. 10.2")] };
+    expect(anchorStatuteItems(result)).toBe(2);
+    const [ycja, cdsa] = result.civil_law;
+    expect(ycja.summary).toMatch(
+      /^If a young person is arrested and detained pending court/,
+    );
+    expect(CDSA_SECTIONS.get("10.2").summary).toContain(
+      cdsa.summary.slice(0, 60),
+    );
+    expect(ycja).not.toHaveProperty("matched_section");
+    expect(cdsa).not.toHaveProperty("matched_section");
+    expect(ycja.citation).toBe("YCJA s. 26");
+  });
+
+  it("anchors subsection, trailing-period and full-Act-name citations", () => {
+    const result = {
+      civil_law: [
+        item("CDSA s. 4(1)"),
+        item("Youth Criminal Justice Act, s. 146"),
+        item("YCJA s. 38."),
+      ],
+    };
+    expect(anchorStatuteItems(result)).toBe(3);
+    for (const i of result.civil_law) {
+      expect(i.summary).not.toBe("model words");
+      expect(i).not.toHaveProperty("matched_section");
+    }
+  });
+
+  it("keeps the lead short and starting at the start of the section", () => {
+    const result = { civil_law: [item("YCJA s. 146")] };
+    anchorStatuteItems(result);
+    expect(result.civil_law[0].summary.length).toBeLessThanOrEqual(501);
+    expect(result.civil_law[0].summary).toMatch(
+      /^The general law on admissibility of statements applies/,
+    );
+  });
+
+  it("leaves other statutes, schedules, unknown sections and unparseable items as written", () => {
+    const original = [
+      item("Criminal Code s. 5"),
+      item("Highway Traffic Act s. 128"),
+      item("CDSA Schedule I"),
+      item("CDSA s. 999"),
+      item("CDSA"),
+    ];
+    const result = { civil_law: original.map((i) => ({ ...i })) };
+    expect(anchorStatuteItems(result)).toBe(0);
+    expect(result.civil_law).toEqual(original);
+  });
+
+  it("tolerates a missing or malformed civil_law", () => {
+    expect(anchorStatuteItems({})).toBe(0);
+    expect(anchorStatuteItems(null)).toBe(0);
+    expect(anchorStatuteItems({ civil_law: [null, {}, { citation: 5 }] })).toBe(
+      0,
+    );
   });
 });

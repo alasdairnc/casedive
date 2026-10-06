@@ -30,10 +30,11 @@ eval below has been run and read.
 3. **Steer the model** with a few `civil_law` rules in the system prompt only
    when something fired (CDSA/YCJA go in `civil_law`, written `CDSA s. 5`, never
    guess a number). With nothing fired the prompt is byte-identical to before.
-4. **Check the answer.** Any `civil_law` item that names the CDSA or YCJA with a
-   section that is not in the Act is removed. What was offered, checked and
-   dropped is recorded in `meta.statutes`. Items we cannot parse a section from
-   are kept, not guessed at.
+4. **Check and anchor the answer.** Any `civil_law` item that names the CDSA or YCJA with a
+   section that is not in the Act is removed. The rest get the verified text of their
+   section as `summary` and lose the model's `matched_section` (a live read found invented
+   consequences there; see below). What was offered, checked, dropped and anchored is
+   recorded in `meta.statutes`. Items we cannot parse a section from are kept, not guessed at.
 
 The cache key is `cache:analyze:v4g:` when on, so grounded results never reach
 flag-off users (and vice versa).
@@ -116,7 +117,16 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
   s. 10.1 "requiring" what is a declaration of principles. All three came from the model's application to the
   facts, not from section numbers, so the number check cannot catch them. The prompt hint now limits
   `summary`/`matched_section` to what the section's text says and bars predicting remedies or consequences of
-  non-compliance. **Not re-run live yet**; re-run the same six scenarios and read them again.
+  non-compliance.
+- **Second read (same six scenarios, after the prompt rule):** CDSA s. 10.2/10.3 were now accurate, but the prompt
+  alone did not hold: YCJA s. 26 still said a missed parent notice "may undermine the voluntariness of any
+  confession"; s. 25 said "the absence of counsel is a breach" and (in another item) that the right applies
+  "before arrest"; s. 146 was described as common-law voluntariness when the section sets mandatory statutory
+  conditions. Separately `possession_simple` omitted CDSA s. 4(1), the offence itself (it cited it in every earlier
+  run; watch it). So CDSA/YCJA items are now **anchored**: `summary` is replaced with the lead (500 chars) of the
+  independently verified section text and the model's `matched_section` is dropped for them
+  (`anchorStatuteItems`, flag-gated like the rest). The application to the facts is left to `analysis`. Items with
+  no verified text (schedules, unknown sections) are left as written. **Not re-run live yet.**
 - It now saves the model's own wording for each CDSA/YCJA item (`items` in the `--out` file) so a person can read it.
 - The script checks section numbers only. The legal explanation in each `civil_law` item still needs a human read.
 

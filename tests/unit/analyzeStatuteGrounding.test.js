@@ -210,6 +210,41 @@ describe("STATUTE_GROUNDING on", () => {
     expect(res.body.meta.statutes.candidates).toContain("YCJA s. 3");
   });
 
+  it("puts the verified section text on cited statute items and drops the model's application line", async () => {
+    stubAnthropic([
+      {
+        citation: "YCJA s. 26",
+        summary: "model words",
+        matched_section: "failure may undermine the confession",
+      },
+      {
+        citation: "Highway Traffic Act s. 128",
+        summary: "other act",
+        matched_section: "kept",
+      },
+    ]);
+    const { res } = await run(YOUTH_DRUG);
+    const [ycja, other] = res.body.civil_law;
+    expect(ycja.summary).toMatch(
+      /^If a young person is arrested and detained pending court/,
+    );
+    expect(ycja).not.toHaveProperty("matched_section");
+    expect(other.matched_section).toBe("kept");
+    expect(res.body.meta.statutes.anchored).toBe(1);
+  });
+
+  it("leaves the model's wording alone when the flag is off", async () => {
+    delete process.env.STATUTE_GROUNDING;
+    const written = {
+      citation: "YCJA s. 26",
+      summary: "model words",
+      matched_section: "model application",
+    };
+    stubAnthropic([{ ...written }]);
+    const { res } = await run(YOUTH_DRUG);
+    expect(res.body.civil_law[0]).toEqual(written);
+  });
+
   it("checks citations even when the scenario itself raised no grounding", async () => {
     stubAnthropic([{ citation: "YCJA s. 999", summary: "made up" }]);
     const { res, user } = await run("A man stole a bike from a store.");
