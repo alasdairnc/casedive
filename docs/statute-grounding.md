@@ -84,6 +84,10 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
   by grounding (`youth_drug` failed with it off too), but grounding adds prompt and output tokens, so re-run
   those scenarios and compare the new `medianMs` / `p95Ms` / `timeouts` figures before turning the flag on:
   `node --env-file=.env scripts/evaluate-statute-grounding.mjs --live --mode both --only youth_drug,youth_breach`.
+- **Re-run of those two scenarios:** no errors in either mode, so the 500s look like transient timeouts. But on
+  was slower (median 15.7 s vs 11.6 s, n=2; the cap is 25 s), and `youth_drug` returned 9 `civil_law` items against a
+  1-3 instruction: the model treated the candidate list as a checklist. The hint now says it is a menu, at most 4
+  sections, citation only. That change has not been re-run live yet.
 - The script checks section numbers only. The legal explanation in each `civil_law` item still needs a human read.
 
 ## Not done (deliberately)

@@ -334,7 +334,7 @@ export function buildStatuteGrounding(scenario, filters = {}) {
 
   if (candidates.length > 0) {
     hints.unshift(
-      'Cite CDSA and YCJA provisions in civil_law (they are federal statutes), written as "CDSA s. 5" or "YCJA s. 38". Prefer the sections listed in the statute_db reference block; never guess a section number.',
+      'Cite CDSA and YCJA provisions in civil_law (they are federal statutes), written as "CDSA s. 5" or "YCJA s. 38". The statute_db reference block is a menu, not a checklist: cite only the sections that apply to these facts, at most 4 in civil_law, and write only the citation (no section title in brackets). Never guess a section number.',
     );
   }
 
