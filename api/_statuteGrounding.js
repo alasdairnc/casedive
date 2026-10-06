@@ -334,7 +334,7 @@ export function buildStatuteGrounding(scenario, filters = {}) {
 
   if (candidates.length > 0) {
     hints.unshift(
-      'Cite CDSA and YCJA provisions in civil_law (they are federal statutes), written as "CDSA s. 5" or "YCJA s. 38". The statute_db reference block is a menu, not a checklist: cite only the sections that apply to these facts, at most 4 in civil_law, and write only the citation (no section title in brackets). Never guess a section number.',
+      'Cite CDSA and YCJA provisions in civil_law (they are federal statutes), written as "CDSA s. 5" or "YCJA s. 38". The statute_db reference block is a menu, not a checklist: cite only the sections that apply to these facts, at most 4 in civil_law, and write only the citation (no section title in brackets). In summary and matched_section say only what the text of the section says and how it applies to these facts. Do not predict remedies, admissibility or any consequence of non-compliance unless the section itself says so (for example CDSA s. 10.2 and YCJA s. 6 state that failing to consider the options does not invalidate a charge). Never guess a section number.',
     );
   }
 

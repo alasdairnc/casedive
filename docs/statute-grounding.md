@@ -107,6 +107,16 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
   Output tokens: median 1030 off / 930 on, max 1589 of the 1800 `max_tokens`, so it is not binding (headroom is
   about 12%; revisit if production logs show `stopReason: "max_tokens"`). One on-run needed the bad-JSON retry
   (`end_turn`, not truncation). One on-run cited 6 sections against the "at most 4" hint.
+- **Wording read (2026-10-06, 6 scenarios, 21 items, checked against the verified section text):** the section
+  `summary` lines were accurate. Three `matched_section` lines were not: CDSA s. 10.2 "failure to comply may provide
+  Charter s. 7 or administrative law grounds" (the Act says failing to consider does not invalidate a charge);
+  CDSA s. 10.3 "failure to consider s. 10.1 principles may undermine legality" (overstated); YCJA s. 26 "failure to
+  notify a parent may affect the confession's admissibility" (s. 26 says failure generally does not affect
+  validity; admissibility turns on s. 146). Minor: s. 10 called "extrajudicial measures" (it is "sanctions"),
+  s. 10.1 "requiring" what is a declaration of principles. All three came from the model's application to the
+  facts, not from section numbers, so the number check cannot catch them. The prompt hint now limits
+  `summary`/`matched_section` to what the section's text says and bars predicting remedies or consequences of
+  non-compliance. **Not re-run live yet**; re-run the same six scenarios and read them again.
 - It now saves the model's own wording for each CDSA/YCJA item (`items` in the `--out` file) so a person can read it.
 - The script checks section numbers only. The legal explanation in each `civil_law` item still needs a human read.
 
