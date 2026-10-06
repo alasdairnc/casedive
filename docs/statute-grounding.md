@@ -87,7 +87,12 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
 - **Re-run of those two scenarios:** no errors in either mode, so the 500s look like transient timeouts. But on
   was slower (median 15.7 s vs 11.6 s, n=2; the cap is 25 s), and `youth_drug` returned 9 `civil_law` items against a
   1-3 instruction: the model treated the candidate list as a checklist. The hint now says it is a menu, at most 4
-  sections, citation only. That change has not been re-run live yet.
+  sections, citation only.
+- **Re-run after the hint change:** `youth_drug` on cited 4 sections (was 9), `youth_breach` on cited 3; 0 errors,
+  0 invented sections in either mode. Latency this time ran the other way (on median 9.2 s, off 21.5 s, n=2), so
+  the earlier gap was API variance, not grounding. Latency is noisy (off alone ranged 11.6-21.5 s), and an
+  off-mode call at 21.5 s sits close to the handler's 25 s cap: that timeout risk exists with the flag off and is
+  a separate issue.
 - The script checks section numbers only. The legal explanation in each `civil_law` item still needs a human read.
 
 ## Not done (deliberately)
