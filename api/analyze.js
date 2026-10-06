@@ -21,9 +21,18 @@ import {
   ANALYZE_CACHE_TTL_SECONDS,
   ANTHROPIC_MESSAGES_URL,
   ANTHROPIC_MODEL_ID,
-  ANTHROPIC_TIMEOUT_MS,
+  ANALYZE_MIN_RETRY_MS,
+  ANALYZE_MODEL_TIMEOUT_MS,
+  ANALYZE_POST_MODEL_RESERVE_MS,
+  ANALYZE_TOTAL_BUDGET_MS,
 } from "./_constants.js";
 import { normalizeFilters } from "./_filters.js";
+import {
+  anchorStatuteItems,
+  buildStatuteGrounding,
+  checkStatuteCitations,
+  isStatuteGroundingEnabled,
+} from "./_statuteGrounding.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
 import {
   RANK_STOP_WORDS,
@@ -82,10 +91,26 @@ function safePromptLine(input) {
     .slice(0, 300);
 }
 
-function buildUserPromptContent(scenario, matchedLandmarks, retrievedCases) {
+function buildUserPromptContent(
+  scenario,
+  matchedLandmarks,
+  retrievedCases,
+  statuteCandidates = [],
+) {
   const blocks = [
     `<user_input>\n${sanitizeUserInput(scenario)}\n</user_input>`,
   ];
+
+  if (statuteCandidates.length > 0) {
+    blocks.push(
+      `<reference_context source="statute_db">\n${statuteCandidates
+        .map(
+          (c) =>
+            `- ${safePromptLine(c.citation)} (${safePromptLine(c.title)}): ${safePromptLine(c.summary)}`,
+        )
+        .join("\n")}\n</reference_context>`,
+    );
+  }
 
   if (Array.isArray(matchedLandmarks) && matchedLandmarks.length > 0) {
     blocks.push(
@@ -119,8 +144,9 @@ function buildUserPromptContent(scenario, matchedLandmarks, retrievedCases) {
 const CACHE_TTL_S = ANALYZE_CACHE_TTL_SECONDS;
 
 function cacheKey(scenario, filters) {
+  // Flag-on results carry statute grounding; keep them out of flag-off users' cache.
   return (
-    "cache:analyze:v4:" +
+    (isStatuteGroundingEnabled() ? "cache:analyze:v4g:" : "cache:analyze:v4:") +
     createHash("sha256")
       .update(scenario + JSON.stringify(filters))
       .digest("hex")
@@ -159,9 +185,23 @@ function withRequestId(result, requestId) {
 
 // ── Anthropic call ───────────────────────────────────────────────────────────
 
-async function callAnthropic(messages, system, apiKey) {
+// Time left for one model call: the per-call cap, or what the request budget
+// allows after reserving for the case-law retrieval that follows.
+function modelTimeoutMs(deadline, now = Date.now()) {
+  // Never negative: AbortSignal.timeout() throws a RangeError on a negative delay.
+  // At 0 the call aborts at once and the handler answers 504.
+  return Math.max(
+    0,
+    Math.min(
+      ANALYZE_MODEL_TIMEOUT_MS,
+      deadline - now - ANALYZE_POST_MODEL_RESERVE_MS,
+    ),
+  );
+}
+
+async function callAnthropic(messages, system, apiKey, timeoutMs) {
   const response = await fetch(ANTHROPIC_MESSAGES_URL, {
-    signal: AbortSignal.timeout(ANTHROPIC_TIMEOUT_MS), // 25s — Vercel serverless limit is 30s
+    signal: AbortSignal.timeout(timeoutMs),
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -190,7 +230,12 @@ async function callAnthropic(messages, system, apiKey) {
 
   const data = await response.json();
   const text = data.content?.map((b) => b.text || "").join("") || "";
-  return text.replace(/```json|```/g, "").trim();
+  return {
+    text: text.replace(/```json|```/g, "").trim(),
+    // "max_tokens" means the JSON was cut off, so a retry is likely to fail too.
+    stopReason: data.stop_reason ?? null,
+    outputTokens: data.usage?.output_tokens ?? null,
+  };
 }
 
 // ── Deterministic retrieval ranking ──────────────────────────────────────────
@@ -559,6 +604,7 @@ function selectTopRetrievedCases(rawScenario, retrievedCases, limit = 3) {
 
 export const __testables = {
   selectTopRetrievedCases,
+  modelTimeoutMs,
 };
 
 // ── Deterministic RAG Token Matching ─────────────────────────────────────────
@@ -625,8 +671,12 @@ async function analyzeWithRetry(
   filters,
   apiKey,
   retrievedCases = [],
+  deadline = Date.now() + ANALYZE_TOTAL_BUDGET_MS,
 ) {
-  const system = buildSystemPrompt(filters || {});
+  const grounding = buildStatuteGrounding(scenario, filters);
+  const system = buildSystemPrompt(filters || {}, {
+    statuteHints: grounding?.hints,
+  });
   const matchedLandmarks =
     filters?.lawTypes?.case_law !== false ? matchLandmarkCases(scenario) : [];
   const messages = [
@@ -636,15 +686,37 @@ async function analyzeWithRetry(
         scenario,
         matchedLandmarks,
         retrievedCases,
+        grounding?.candidates,
       ),
     },
   ];
 
   // First attempt
-  const raw = await callAnthropic(messages, system, apiKey);
+  const first = await callAnthropic(
+    messages,
+    system,
+    apiKey,
+    modelTimeoutMs(deadline),
+  );
+  const raw = first.text;
+  const usage = {
+    stopReason: first.stopReason,
+    outputTokens: first.outputTokens,
+  };
   try {
-    return { result: JSON.parse(raw), raw, matchedLandmarks };
+    return { result: JSON.parse(raw), raw, matchedLandmarks, grounding, usage };
   } catch {
+    // No time left for a second call: give up now rather than run past the
+    // function limit and lose the whole request.
+    if (modelTimeoutMs(deadline) < ANALYZE_MIN_RETRY_MS) {
+      return {
+        result: null,
+        raw,
+        matchedLandmarks,
+        grounding,
+        usage: { ...usage, retrySkipped: true },
+      };
+    }
     // Retry: feed Claude its bad output back and ask for valid JSON only
     const retryMessages = [
       ...messages,
@@ -656,11 +728,39 @@ async function analyzeWithRetry(
       },
     ];
 
-    const retryRaw = await callAnthropic(retryMessages, system, apiKey);
+    const retry = await callAnthropic(
+      retryMessages,
+      system,
+      apiKey,
+      modelTimeoutMs(deadline),
+    );
+    const retryRaw = retry.text;
+    // Keep the first call's numbers: a truncated first reply that the retry then
+    // fixes is the case that shows max_tokens is binding.
+    const retryUsage = {
+      stopReason: retry.stopReason,
+      outputTokens: retry.outputTokens,
+      firstStopReason: usage.stopReason,
+      firstOutputTokens: usage.outputTokens,
+    };
     try {
-      return { result: JSON.parse(retryRaw), raw, retryRaw, matchedLandmarks };
+      return {
+        result: JSON.parse(retryRaw),
+        raw,
+        retryRaw,
+        matchedLandmarks,
+        grounding,
+        usage: retryUsage,
+      };
     } catch {
-      return { result: null, raw, retryRaw, matchedLandmarks };
+      return {
+        result: null,
+        raw,
+        retryRaw,
+        matchedLandmarks,
+        grounding,
+        usage: retryUsage,
+      };
     }
   }
 }
@@ -813,12 +913,14 @@ export default async function handler(req, res) {
     }
 
     const anthropicStartMs = Date.now();
-    const { result, retryRaw, matchedLandmarks } = await analyzeWithRetry(
-      scenario,
-      filters,
-      apiKey,
-      preRetrievedCases,
-    );
+    const { result, retryRaw, matchedLandmarks, grounding, usage } =
+      await analyzeWithRetry(
+        scenario,
+        filters,
+        apiKey,
+        preRetrievedCases,
+        startMs + ANALYZE_TOTAL_BUDGET_MS,
+      );
     const anthropicDurationMs = Date.now() - anthropicStartMs;
     logExternalApiCall(
       requestId,
@@ -826,7 +928,7 @@ export default async function handler(req, res) {
       "anthropic",
       200,
       anthropicDurationMs,
-      { retried: !!retryRaw },
+      { retried: !!retryRaw, ...usage },
     );
 
     if (!result) {
@@ -844,6 +946,17 @@ export default async function handler(req, res) {
 
     // Phase B retrieval-first path: use retrieved verified case-law as final source.
     const meta = ensureMetaContainer(result);
+
+    // Statute grounding (flag-gated): drop CDSA/YCJA citations whose section
+    // does not exist in the Act, put the verified section text on the rest, and
+    // record what the grounding offered.
+    if (isStatuteGroundingEnabled() && filters.lawTypes.civil_law !== false) {
+      meta.statutes = {
+        ...(grounding?.meta || {}),
+        check: checkStatuteCitations(result),
+        anchored: anchorStatuteItems(result),
+      };
+    }
 
     if (filters.lawTypes.case_law !== false) {
       const canliiKey = process.env.CANLII_API_KEY || "";
@@ -1022,6 +1135,15 @@ export default async function handler(req, res) {
     });
     return res.status(200).json(withRequestId(result, requestId));
   } catch (err) {
+    // The model call hit its time cap. Say so instead of a generic 500, and keep
+    // it out of Sentry as an exception (logError still records it).
+    if (err?.name === "TimeoutError" || err?.name === "AbortError") {
+      logError(requestId, "analyze", err, 504, Date.now() - startMs);
+      return res.status(504).json({
+        error:
+          "The analysis took too long. Please try again, or shorten the scenario.",
+      });
+    }
     Sentry.captureException(err);
     const statusCode = err.status
       ? err.status >= 500

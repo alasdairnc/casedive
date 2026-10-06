@@ -10,16 +10,14 @@
 
 - `architecture.md` — System architecture and component boundaries.
 - `design-system.md` — UI patterns, tokens, and design conventions.
+- `statute-grounding.md` — CDSA/YCJA in the analysis pipeline: how it works, what is verified, and the live eval to run before turning `STATUTE_GROUNDING` on.
 - `adr/` — Architecture decision records: why the function cap, parked billing and the desktop layout are the way they are.
 
 ## Filtering
 
-
 ## Operations
 
-
 ## Parked
-
 
 ## Archive (frozen, reference only)
 
