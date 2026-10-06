@@ -187,9 +187,14 @@ function withRequestId(result, requestId) {
 // Time left for one model call: the per-call cap, or what the request budget
 // allows after reserving for the case-law retrieval that follows.
 function modelTimeoutMs(deadline, now = Date.now()) {
-  return Math.min(
-    ANALYZE_MODEL_TIMEOUT_MS,
-    deadline - now - ANALYZE_POST_MODEL_RESERVE_MS,
+  // Never negative: AbortSignal.timeout() throws a RangeError on a negative delay.
+  // At 0 the call aborts at once and the handler answers 504.
+  return Math.max(
+    0,
+    Math.min(
+      ANALYZE_MODEL_TIMEOUT_MS,
+      deadline - now - ANALYZE_POST_MODEL_RESERVE_MS,
+    ),
   );
 }
 
@@ -729,9 +734,13 @@ async function analyzeWithRetry(
       modelTimeoutMs(deadline),
     );
     const retryRaw = retry.text;
+    // Keep the first call's numbers: a truncated first reply that the retry then
+    // fixes is the case that shows max_tokens is binding.
     const retryUsage = {
       stopReason: retry.stopReason,
       outputTokens: retry.outputTokens,
+      firstStopReason: usage.stopReason,
+      firstOutputTokens: usage.outputTokens,
     };
     try {
       return {

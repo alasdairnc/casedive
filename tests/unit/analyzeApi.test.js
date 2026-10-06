@@ -965,12 +965,16 @@ describe("analyze model time budget", () => {
     expect(__testables.modelTimeoutMs(now + 55_000, now)).toBe(40_000);
     expect(__testables.modelTimeoutMs(now + 30_000, now)).toBe(22_000);
     expect(__testables.modelTimeoutMs(now + 8_000, now)).toBe(0);
+    // Past the budget it stays 0: AbortSignal.timeout() throws on a negative delay.
+    expect(__testables.modelTimeoutMs(now - 10_000, now)).toBe(0);
   });
 
   it("answers 504 with a plain message when the model call times out", async () => {
-    const timeout = new Error("The operation was aborted due to timeout");
-    timeout.name = "TimeoutError";
-    globalThis.fetch = vi.fn().mockRejectedValue(timeout);
+    // The rejection fetch really gives: the reason of an expired AbortSignal.timeout().
+    const expired = AbortSignal.timeout(1);
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(expired.reason.name).toBe("TimeoutError");
+    globalThis.fetch = vi.fn().mockRejectedValue(expired.reason);
 
     const res = createRes();
     await handler(createReq({ body: { scenario: SCENARIO } }), res);
@@ -1037,6 +1041,43 @@ describe("analyze model time budget", () => {
       200,
       expect.any(Number),
       { retried: false, stopReason: "end_turn", outputTokens: 912 },
+    );
+  });
+
+  it("keeps the first call's stop reason when a truncated reply is retried", async () => {
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          content: [{ text: '{"summary": "cut off' }],
+          stop_reason: "max_tokens",
+          usage: { output_tokens: 1800 },
+        }),
+      })
+      .mockResolvedValueOnce(
+        okReply({ stop_reason: "end_turn", usage: { output_tokens: 1500 } }),
+      );
+
+    const { logExternalApiCall } = await import("../../api/_logging.js");
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.statusCode).toBe(200);
+    expect(logExternalApiCall).toHaveBeenCalledWith(
+      expect.anything(),
+      "analyze",
+      "anthropic",
+      200,
+      expect.any(Number),
+      {
+        retried: true,
+        stopReason: "end_turn",
+        outputTokens: 1500,
+        firstStopReason: "max_tokens",
+        firstOutputTokens: 1800,
+      },
     );
   });
 });

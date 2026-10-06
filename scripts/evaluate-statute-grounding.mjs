@@ -193,6 +193,7 @@ for (const sc of scenarios) {
       modelMs: res.model?.durationMs ?? null,
       retried: res.model?.retried ?? null,
       stopReason: res.model?.stopReason ?? null,
+      firstStopReason: res.model?.firstStopReason ?? null,
       outputTokens: res.model?.outputTokens ?? null,
     };
     if (res.statusCode !== 200) {
@@ -243,7 +244,10 @@ function latency(rows) {
     errors: rows.filter((r) => r.status !== 200).length,
     // Truncated JSON (stop_reason max_tokens) and second model calls: the two
     // ways a call gets slow or fails besides the API being slow.
-    truncated: rows.filter((r) => r.stopReason === "max_tokens").length,
+    truncated: rows.filter(
+      (r) =>
+        r.stopReason === "max_tokens" || r.firstStopReason === "max_tokens",
+    ).length,
     retried: rows.filter((r) => r.retried).length,
     medianOutputTokens: median(rows.map((r) => r.outputTokens)),
     maxOutputTokens: Math.max(0, ...rows.map((r) => r.outputTokens || 0)),
