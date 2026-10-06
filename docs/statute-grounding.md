@@ -93,6 +93,14 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
   the earlier gap was API variance, not grounding. Latency is noisy (off alone ranged 11.6-21.5 s), and an
   off-mode call at 21.5 s sits close to the handler's 25 s cap: that timeout risk exists with the flag off and is
   a separate issue.
+- **Timeout handling (applies with the flag off too):** the model call was capped at 25 s while `analyze` may run
+  60 s, a timeout came back as a generic 500 (and a Sentry exception), and a bad-JSON retry ran another full call
+  with no check on time left. Now one call gets up to 40 s, a timeout answers **504** "took too long" (not a Sentry
+  exception), and the retry only runs if 12 s remain after reserving 8 s for case-law retrieval
+  (`ANALYZE_*` in `api/_constants.js`). `max_tokens` (1800) is **unchanged**: nothing yet shows it is binding. The
+  handler now logs `stopReason`, `outputTokens` and `retried` per model call and the eval reports `truncated`,
+  `retried` and output-token medians per mode. If `truncated` is non-zero in a full run, raise `max_tokens`; if
+  `retried` is, the first reply was not valid JSON.
 - The script checks section numbers only. The legal explanation in each `civil_law` item still needs a human read.
 
 ## Not done (deliberately)

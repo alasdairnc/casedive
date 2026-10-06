@@ -21,7 +21,10 @@ import {
   ANALYZE_CACHE_TTL_SECONDS,
   ANTHROPIC_MESSAGES_URL,
   ANTHROPIC_MODEL_ID,
-  ANTHROPIC_TIMEOUT_MS,
+  ANALYZE_MIN_RETRY_MS,
+  ANALYZE_MODEL_TIMEOUT_MS,
+  ANALYZE_POST_MODEL_RESERVE_MS,
+  ANALYZE_TOTAL_BUDGET_MS,
 } from "./_constants.js";
 import { normalizeFilters } from "./_filters.js";
 import {
@@ -181,9 +184,18 @@ function withRequestId(result, requestId) {
 
 // ── Anthropic call ───────────────────────────────────────────────────────────
 
-async function callAnthropic(messages, system, apiKey) {
+// Time left for one model call: the per-call cap, or what the request budget
+// allows after reserving for the case-law retrieval that follows.
+function modelTimeoutMs(deadline, now = Date.now()) {
+  return Math.min(
+    ANALYZE_MODEL_TIMEOUT_MS,
+    deadline - now - ANALYZE_POST_MODEL_RESERVE_MS,
+  );
+}
+
+async function callAnthropic(messages, system, apiKey, timeoutMs) {
   const response = await fetch(ANTHROPIC_MESSAGES_URL, {
-    signal: AbortSignal.timeout(ANTHROPIC_TIMEOUT_MS), // 25s — Vercel serverless limit is 30s
+    signal: AbortSignal.timeout(timeoutMs),
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -212,7 +224,12 @@ async function callAnthropic(messages, system, apiKey) {
 
   const data = await response.json();
   const text = data.content?.map((b) => b.text || "").join("") || "";
-  return text.replace(/```json|```/g, "").trim();
+  return {
+    text: text.replace(/```json|```/g, "").trim(),
+    // "max_tokens" means the JSON was cut off, so a retry is likely to fail too.
+    stopReason: data.stop_reason ?? null,
+    outputTokens: data.usage?.output_tokens ?? null,
+  };
 }
 
 // ── Deterministic retrieval ranking ──────────────────────────────────────────
@@ -581,6 +598,7 @@ function selectTopRetrievedCases(rawScenario, retrievedCases, limit = 3) {
 
 export const __testables = {
   selectTopRetrievedCases,
+  modelTimeoutMs,
 };
 
 // ── Deterministic RAG Token Matching ─────────────────────────────────────────
@@ -647,6 +665,7 @@ async function analyzeWithRetry(
   filters,
   apiKey,
   retrievedCases = [],
+  deadline = Date.now() + ANALYZE_TOTAL_BUDGET_MS,
 ) {
   const grounding = buildStatuteGrounding(scenario, filters);
   const system = buildSystemPrompt(filters || {}, {
@@ -667,10 +686,31 @@ async function analyzeWithRetry(
   ];
 
   // First attempt
-  const raw = await callAnthropic(messages, system, apiKey);
+  const first = await callAnthropic(
+    messages,
+    system,
+    apiKey,
+    modelTimeoutMs(deadline),
+  );
+  const raw = first.text;
+  const usage = {
+    stopReason: first.stopReason,
+    outputTokens: first.outputTokens,
+  };
   try {
-    return { result: JSON.parse(raw), raw, matchedLandmarks, grounding };
+    return { result: JSON.parse(raw), raw, matchedLandmarks, grounding, usage };
   } catch {
+    // No time left for a second call: give up now rather than run past the
+    // function limit and lose the whole request.
+    if (modelTimeoutMs(deadline) < ANALYZE_MIN_RETRY_MS) {
+      return {
+        result: null,
+        raw,
+        matchedLandmarks,
+        grounding,
+        usage: { ...usage, retrySkipped: true },
+      };
+    }
     // Retry: feed Claude its bad output back and ask for valid JSON only
     const retryMessages = [
       ...messages,
@@ -682,7 +722,17 @@ async function analyzeWithRetry(
       },
     ];
 
-    const retryRaw = await callAnthropic(retryMessages, system, apiKey);
+    const retry = await callAnthropic(
+      retryMessages,
+      system,
+      apiKey,
+      modelTimeoutMs(deadline),
+    );
+    const retryRaw = retry.text;
+    const retryUsage = {
+      stopReason: retry.stopReason,
+      outputTokens: retry.outputTokens,
+    };
     try {
       return {
         result: JSON.parse(retryRaw),
@@ -690,9 +740,17 @@ async function analyzeWithRetry(
         retryRaw,
         matchedLandmarks,
         grounding,
+        usage: retryUsage,
       };
     } catch {
-      return { result: null, raw, retryRaw, matchedLandmarks, grounding };
+      return {
+        result: null,
+        raw,
+        retryRaw,
+        matchedLandmarks,
+        grounding,
+        usage: retryUsage,
+      };
     }
   }
 }
@@ -845,8 +903,14 @@ export default async function handler(req, res) {
     }
 
     const anthropicStartMs = Date.now();
-    const { result, retryRaw, matchedLandmarks, grounding } =
-      await analyzeWithRetry(scenario, filters, apiKey, preRetrievedCases);
+    const { result, retryRaw, matchedLandmarks, grounding, usage } =
+      await analyzeWithRetry(
+        scenario,
+        filters,
+        apiKey,
+        preRetrievedCases,
+        startMs + ANALYZE_TOTAL_BUDGET_MS,
+      );
     const anthropicDurationMs = Date.now() - anthropicStartMs;
     logExternalApiCall(
       requestId,
@@ -854,7 +918,7 @@ export default async function handler(req, res) {
       "anthropic",
       200,
       anthropicDurationMs,
-      { retried: !!retryRaw },
+      { retried: !!retryRaw, ...usage },
     );
 
     if (!result) {
@@ -1059,6 +1123,15 @@ export default async function handler(req, res) {
     });
     return res.status(200).json(withRequestId(result, requestId));
   } catch (err) {
+    // The model call hit its time cap. Say so instead of a generic 500, and keep
+    // it out of Sentry as an exception (logError still records it).
+    if (err?.name === "TimeoutError" || err?.name === "AbortError") {
+      logError(requestId, "analyze", err, 504, Date.now() - startMs);
+      return res.status(504).json({
+        error:
+          "The analysis took too long. Please try again, or shorten the scenario.",
+      });
+    }
     Sentry.captureException(err);
     const statusCode = err.status
       ? err.status >= 500

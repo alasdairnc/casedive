@@ -53,9 +53,20 @@ const { default: handler } = await import("../api/analyze.js");
 
 // The handler logs one JSON line per request; keep the report readable.
 const log = console.log.bind(console);
+// The model call's own log line (duration, stop reason, tokens, retry) is kept.
+let lastModelCall = null;
 console.log = (...parts) => {
-  if (typeof parts[0] === "string" && parts[0].startsWith('{"timestamp"'))
+  if (typeof parts[0] === "string" && parts[0].startsWith('{"timestamp"')) {
+    try {
+      const line = JSON.parse(parts[0]);
+      if (line.event === "external_api_call" && line.apiName === "anthropic") {
+        lastModelCall = line;
+      }
+    } catch {
+      /* not JSON; drop it */
+    }
     return;
+  }
   log(...parts);
 };
 
@@ -96,6 +107,7 @@ async function analyze(scenario, groundingOn) {
   const res = fakeRes();
   // A distinct client IP per call keeps the hourly AI rate limit out of the way.
   const ip = `10.77.${Math.floor(ipCounter / 250)}.${(ipCounter++ % 250) + 1}`;
+  lastModelCall = null;
   const t0 = Date.now();
   await handler(
     {
@@ -112,6 +124,7 @@ async function analyze(scenario, groundingOn) {
     res,
   );
   res.ms = Date.now() - t0;
+  res.model = lastModelCall;
   return res;
 }
 
@@ -177,6 +190,10 @@ for (const sc of scenarios) {
       grounding: groundingOn ? "on" : "off",
       status: res.statusCode,
       ms: res.ms,
+      modelMs: res.model?.durationMs ?? null,
+      retried: res.model?.retried ?? null,
+      stopReason: res.model?.stopReason ?? null,
+      outputTokens: res.model?.outputTokens ?? null,
     };
     if (res.statusCode !== 200) {
       row.error = res.body?.error || "non-200";
@@ -204,9 +221,13 @@ for (const sc of scenarios) {
   }
 }
 
-// The handler aborts the model call at 25s (ANTHROPIC_TIMEOUT_MS) and answers 500,
-// so a 500 near that mark is a timeout. Grounding adds prompt and output tokens;
+// The handler aborts a model call at ANALYZE_MODEL_TIMEOUT_MS and answers 504. Grounding adds prompt and output tokens;
 // watch these numbers when comparing off and on.
+function median(values) {
+  const v = values.filter(Number.isFinite).sort((x, y) => x - y);
+  return v.length ? v[Math.floor(v.length / 2)] : null;
+}
+
 function latency(rows) {
   const ms = rows
     .map((r) => r.ms)
@@ -217,8 +238,15 @@ function latency(rows) {
   return {
     medianMs: at(0.5),
     p95Ms: at(0.95),
-    timeouts: rows.filter((r) => r.status === 500 && r.ms >= 24000).length,
+    // The handler answers 504 when the model call hits its time cap.
+    timeouts: rows.filter((r) => r.status === 504).length,
     errors: rows.filter((r) => r.status !== 200).length,
+    // Truncated JSON (stop_reason max_tokens) and second model calls: the two
+    // ways a call gets slow or fails besides the API being slow.
+    truncated: rows.filter((r) => r.stopReason === "max_tokens").length,
+    retried: rows.filter((r) => r.retried).length,
+    medianOutputTokens: median(rows.map((r) => r.outputTokens)),
+    maxOutputTokens: Math.max(0, ...rows.map((r) => r.outputTokens || 0)),
   };
 }
 

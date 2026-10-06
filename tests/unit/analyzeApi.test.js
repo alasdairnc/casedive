@@ -75,7 +75,8 @@ vi.mock("../../src/lib/caselaw/index.js", () => ({
   ],
 }));
 
-const { default: handler } = await import("../../api/analyze.js");
+const analyzeModule = await import("../../api/analyze.js");
+const { default: handler } = analyzeModule;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -201,9 +202,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
 
     // Inspect what was sent to the Anthropic API
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     expect(anthropicCall).toBeDefined();
 
     const body = JSON.parse(anthropicCall[1].body);
@@ -253,9 +252,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     expect(anthropicCall).toBeDefined();
 
     const body = JSON.parse(anthropicCall[1].body);
@@ -295,9 +292,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     expect(anthropicCall).toBeDefined();
 
     const body = JSON.parse(anthropicCall[1].body);
@@ -331,9 +326,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
 
@@ -363,9 +356,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
 
@@ -404,9 +395,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
 
@@ -444,9 +433,7 @@ describe("safeLine — landmark data sanitization in untrusted reference blocks"
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
 
@@ -474,9 +461,7 @@ describe("RAG poisoning — user scenario sanitization", () => {
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     expect(anthropicCall).toBeDefined();
 
     const body = JSON.parse(anthropicCall[1].body);
@@ -500,9 +485,7 @@ describe("RAG poisoning — user scenario sanitization", () => {
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
 
@@ -530,9 +513,7 @@ describe("RAG poisoning — user scenario sanitization", () => {
     await handler(req, res);
 
     const fetchCalls = globalThis.fetch.mock.calls;
-    const anthropicCall = fetchCalls.find((c) =>
-      isAnthropicUrl(c[0]),
-    );
+    const anthropicCall = fetchCalls.find((c) => isAnthropicUrl(c[0]));
     const body = JSON.parse(anthropicCall[1].body);
     const userText = getUserTextBlock(body.messages[0].content);
 
@@ -951,5 +932,111 @@ describe("analyze response contract with the E2E fixture", () => {
       verifiedCount: fixture.meta.case_law.verifiedCount,
       reason: fixture.meta.case_law.reason,
     });
+  });
+});
+
+// ── Model time budget ─────────────────────────────────────────────────────────
+// The model call is capped, not the whole request: a timeout answers 504 with a
+// message, and a bad-JSON retry only runs if enough of the 60 s budget is left.
+
+describe("analyze model time budget", () => {
+  const { __testables } = analyzeModule;
+  const SCENARIO = "A man stole a bike from outside a store.";
+
+  function okReply(extra = {}) {
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ content: [{ text: VALID_AI_RESPONSE }], ...extra }),
+    };
+  }
+  const badReply = {
+    ok: true,
+    status: 200,
+    json: async () => ({ content: [{ text: "not json" }] }),
+  };
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("caps one call at the per-call limit and shrinks it as the budget runs down", () => {
+    const now = 1_000_000;
+    expect(__testables.modelTimeoutMs(now + 55_000, now)).toBe(40_000);
+    expect(__testables.modelTimeoutMs(now + 30_000, now)).toBe(22_000);
+    expect(__testables.modelTimeoutMs(now + 8_000, now)).toBe(0);
+  });
+
+  it("answers 504 with a plain message when the model call times out", async () => {
+    const timeout = new Error("The operation was aborted due to timeout");
+    timeout.name = "TimeoutError";
+    globalThis.fetch = vi.fn().mockRejectedValue(timeout);
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.statusCode).toBe(504);
+    expect(res.body.error).toMatch(/took too long/i);
+    expect(mockCaptureException).not.toHaveBeenCalled();
+  });
+
+  it("still answers 500 and reports to Sentry for a non-timeout failure", async () => {
+    const boom = new Error("socket hang up");
+    globalThis.fetch = vi.fn().mockRejectedValue(boom);
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.statusCode).toBe(500);
+    expect(mockCaptureException).toHaveBeenCalledWith(boom);
+  });
+
+  it("retries a bad-JSON reply when time remains", async () => {
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValueOnce(badReply)
+      .mockResolvedValueOnce(okReply());
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(globalThis.fetch).toHaveBeenCalledTimes(2);
+    expect(res.statusCode).toBe(200);
+  });
+
+  it("skips the retry when the first call used up the budget", async () => {
+    let now = 5_000_000;
+    vi.spyOn(Date, "now").mockImplementation(() => now);
+    globalThis.fetch = vi.fn().mockImplementation(async () => {
+      now += 45_000; // the model took 45 s
+      return badReply;
+    });
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+    expect(res.statusCode).toBe(422);
+  });
+
+  it("logs the stop reason and output tokens of the model call", async () => {
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(
+        okReply({ stop_reason: "end_turn", usage: { output_tokens: 912 } }),
+      );
+
+    const { logExternalApiCall } = await import("../../api/_logging.js");
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(logExternalApiCall).toHaveBeenCalledWith(
+      expect.anything(),
+      "analyze",
+      "anthropic",
+      200,
+      expect.any(Number),
+      { retried: false, stopReason: "end_turn", outputTokens: 912 },
+    );
   });
 });
