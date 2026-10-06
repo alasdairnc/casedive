@@ -65,6 +65,27 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
 - Read the `civil_law` text for a few youth scenarios yourself. The script
   checks section numbers, not whether the legal explanation is right.
 
+## First live run (2026-10-05, 32 scenarios, grounding off vs on)
+
+| | off | on |
+| --- | --- | --- |
+| Scenarios answered | 31/32 | 30/32 |
+| Expected sections cited | 10/37 | 32/36 |
+| Cited sections that do not exist | 1 (`CDSA s. 8`) | 0 |
+| CDSA cited for cannabis alone | yes | no |
+| CDSA/YCJA cited on the 10 "neither Act" scenarios | not scored | 0 |
+
+- Off cites the right Act but often the wrong section (`YCJA s. 24(1)`, `s. 50-65`,
+  `s. 19(1)` for a breach) or a string that is not one section ("S.C. 2002, c. 1, s. 50(1)").
+- On skipped a lower-priority section in 3 runs (CDSA s. 10, YCJA s. 3, CDSA s. 4 as the lesser offence).
+  Coverage is reported, not gated.
+- **Open: 3 of 64 runs returned 500** (`youth_drug` off and on, `youth_breach` on). The handler aborts the model
+  call at 25 s and answers 500 when it times out; a stubbed model never reproduces them. Not shown to be caused
+  by grounding (`youth_drug` failed with it off too), but grounding adds prompt and output tokens, so re-run
+  those scenarios and compare the new `medianMs` / `p95Ms` / `timeouts` figures before turning the flag on:
+  `node --env-file=.env scripts/evaluate-statute-grounding.mjs --live --mode both --only youth_drug,youth_breach`.
+- The script checks section numbers only. The legal explanation in each `civil_law` item still needs a human read.
+
 ## Not done (deliberately)
 
 - **Youth case law.** The corpus has none. Adding any means verifying every

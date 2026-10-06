@@ -96,6 +96,7 @@ async function analyze(scenario, groundingOn) {
   const res = fakeRes();
   // A distinct client IP per call keeps the hourly AI rate limit out of the way.
   const ip = `10.77.${Math.floor(ipCounter / 250)}.${(ipCounter++ % 250) + 1}`;
+  const t0 = Date.now();
   await handler(
     {
       method: "POST",
@@ -110,6 +111,7 @@ async function analyze(scenario, groundingOn) {
     },
     res,
   );
+  res.ms = Date.now() - t0;
   return res;
 }
 
@@ -174,6 +176,7 @@ for (const sc of scenarios) {
       id: sc.id,
       grounding: groundingOn ? "on" : "off",
       status: res.statusCode,
+      ms: res.ms,
     };
     if (res.statusCode !== 200) {
       row.error = res.body?.error || "non-200";
@@ -201,6 +204,24 @@ for (const sc of scenarios) {
   }
 }
 
+// The handler aborts the model call at 25s (ANTHROPIC_TIMEOUT_MS) and answers 500,
+// so a 500 near that mark is a timeout. Grounding adds prompt and output tokens;
+// watch these numbers when comparing off and on.
+function latency(rows) {
+  const ms = rows
+    .map((r) => r.ms)
+    .filter(Number.isFinite)
+    .sort((x, y) => x - y);
+  const at = (q) =>
+    ms.length ? ms[Math.min(ms.length - 1, Math.floor(q * ms.length))] : null;
+  return {
+    medianMs: at(0.5),
+    p95Ms: at(0.95),
+    timeouts: rows.filter((r) => r.status === 500 && r.ms >= 24000).length,
+    errors: rows.filter((r) => r.status !== 200).length,
+  };
+}
+
 const summary = {
   scenarios: scenarios.length,
   hardFailures,
@@ -223,6 +244,7 @@ const summary = {
             0,
           ),
           coverage: t ? `${c}/${t}` : "-",
+          ...latency(report.filter((r) => r.grounding === m)),
         },
       ];
     }),
