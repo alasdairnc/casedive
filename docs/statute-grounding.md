@@ -101,6 +101,13 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
   handler now logs `stopReason`, `outputTokens` and `retried` per model call and the eval reports `truncated`,
   `retried` and output-token medians per mode. If `truncated` is non-zero in a full run, raise `max_tokens`; if
   `retried` is, the first reply was not valid JSON.
+- **Full instrumented run (2026-10-06, after the hint and timeout changes):** 64/64 calls answered, 0 errors, 0
+  timeouts, 0 truncated. Expected sections cited: off 12/39, on 35/39. Invented sections: off 2 (`CDSA s. 8(1)` and
+  `YCJA s. 209`), on 0. Latency: median 9.8 s off vs 8.8 s on, p95 14.4 vs 13.6 s, so grounding costs no time.
+  Output tokens: median 1030 off / 930 on, max 1589 of the 1800 `max_tokens`, so it is not binding (headroom is
+  about 12%; revisit if production logs show `stopReason: "max_tokens"`). One on-run needed the bad-JSON retry
+  (`end_turn`, not truncation). One on-run cited 6 sections against the "at most 4" hint.
+- It now saves the model's own wording for each CDSA/YCJA item (`items` in the `--out` file) so a person can read it.
 - The script checks section numbers only. The legal explanation in each `civil_law` item still needs a human read.
 
 ## Not done (deliberately)

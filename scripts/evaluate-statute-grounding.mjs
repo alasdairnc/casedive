@@ -135,6 +135,13 @@ function score(sc, res) {
     .map((i) => (typeof i?.citation === "string" ? i.citation : ""))
     .filter((c) => STATUTE_CITATION.test(c));
   const canonical = new Set(cited.map(canon).filter(Boolean));
+  const items = civil
+    .filter((i) => STATUTE_CITATION.test(i?.citation || ""))
+    .map((i) => ({
+      citation: i.citation,
+      summary: i.summary ?? null,
+      matched_section: i.matched_section ?? null,
+    }));
 
   // Citations the model produced that are not real sections. With grounding on
   // the server already removed them and recorded them in meta.
@@ -164,6 +171,7 @@ function score(sc, res) {
   const include = sc.include || [];
   return {
     cited,
+    items,
     hallucinated,
     failures,
     include,
@@ -203,6 +211,8 @@ for (const sc of scenarios) {
       const s = score(sc, res);
       Object.assign(row, {
         cited: s.cited,
+        // The model's own wording for each CDSA/YCJA item, for a human read.
+        items: s.items,
         hallucinated: s.hallucinated,
         covered: `${s.covered.length}/${s.include.length}`,
         failures: s.failures,
