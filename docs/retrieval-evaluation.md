@@ -28,11 +28,36 @@ npm run eval:retrieval-gold -- --verbose         # every scenario
 npm run eval:retrieval-gold -- --ids a,b         # some scenarios
 npm run eval:retrieval-gold -- --json out.json   # machine-readable
 npm run eval:retrieval-gold -- --strict          # exit 1 if a wrong case is shown
+npm run eval:retrieval-gold -- --compare         # RETRIEVAL_FULLTEXT off vs on, side by side
 ```
 
 The first import of `api/analyze.js` can take about 20 seconds on a cold machine (`_subscription.js`).
 
 `tests/unit/retrievalGold.test.js` checks label integrity (every labelled citation exists in the corpus) and ratchets the numbers: a retrieval change that lowers hit rate, recall, precision or empty-when-right, or raises wrong or duplicate cases, fails. Raise the floors in that file when retrieval improves.
+
+## Held-out set and negative replay
+
+- `tests/unit/retrievalHeldOutSet.js` holds 13 frozen scenarios written in everyday wording before the full-text ranker existed, without reading any corpus entry's facts. Do not tune against them or edit them to flatter a change; add new ones instead. They are the generalisation check: on 2026-10-08 the development set scored 73.8% strong hit and the held-out set 38.5%.
+- The negative replay runs the failure set's 26 "expect no case law" scenarios through the production candidate scorer and the real corpus. `scripts/evaluate-retrieval-failures.js` injects its own landmark matches, so it never exercised `matchLandmarkCases`; this does. Two leak today (a robbery question shows R v McCraw, a simple-possession question shows R v Marakah).
+- The gold runner also applies `selectTopRetrievedCases`, the last stage before a user sees results, which keeps the top 3.
+
+## Findings: why retrieval misses cases the corpus already holds (2026-10-08)
+
+`matchLandmarkCases` (`api/analyze.js`) scores only a case's tags, topics and title; `facts` and `ratio` are never searched. `api/_corpusRanker.js` ranks the full text with BM25 and fuses it with the literal ranking by reciprocal rank fusion. It is behind `RETRIEVAL_FULLTEXT=on` (default off, with its own cache-key suffix) and **should stay off**:
+
+| Offline | off | on |
+| --- | --- | --- |
+| Dev strong hit | 73.8% | 73.8% |
+| Held-out hit | 61.5% | 53.8% |
+| Negative leaks (of 26) | 2 | 3 |
+
+The ranker does find the right case. In the traced misses, Jordan, Martineau, Roy, Creighton and Briscoe all reach the candidate list. Hand-written rules after it then throw them away:
+
+1. **Semantic filter** (`filterBySemanticRelevance`) drops Jordan-type cases unless the scenario matches a regex ("delay", "waited"); "waiting eighteen months" does not. It also drops Roy, Creighton and Briscoe on domain-compatibility rules.
+2. **Scoring** (`scoreCandidateForScenario`) is token overlap on a candidate's ratio, tags and topics, plus a match against hand-coded issue terms. Martineau scores 0 or -2 and loses to unrelated cases.
+3. **Two issue detectors** (`detectCoreIssue`, `detectScenarioIssueForRanking`) disagree; "trial delay on a theft charge" is read as theft.
+
+BM25 scores cannot replace those gates: the 26 negatives score 3.7 to 16.3, overlapping the positives (5 to 40), and many match two or three words. Telling "a parking ticket" from a real criminal question takes issue knowledge. The next step is not more lexical tuning. It is either (a) a model rerank of the corpus candidates, whose effect needs recorded `aiCaseLaw` fixtures (a live run spends Claude tokens and needs an explicit opt-in), or (b) replacing the brittle filter and scoring rules with one calibrated score, validated against the dev set, the held-out set and the negative replay together.
 
 ## Adding corpus cases
 

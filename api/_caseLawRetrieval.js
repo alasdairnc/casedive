@@ -3013,3 +3013,15 @@ export async function retrieveVerifiedCaseLaw({
     },
   };
 }
+
+// Exposed for offline diagnostics (scripts and tests); not part of the API.
+export const __testables = {
+  detectCoreIssue,
+  isClearlyNonCriminalScenario,
+  isCandidateCompatibleWithIssue,
+  detectCandidateDomains,
+  filterBySemanticRelevance,
+  scoreCandidateForScenario,
+  selectFinalCandidates,
+  tokenizeScenario,
+};

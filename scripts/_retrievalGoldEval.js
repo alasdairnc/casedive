@@ -8,9 +8,12 @@
  * production; model-suggested citations are not covered yet.
  */
 import { RETRIEVAL_GOLD_SET } from "../tests/unit/retrievalGoldSet.js";
+import { RETRIEVAL_FAILURE_SET } from "../tests/unit/retrievalFailureSet.js";
 
 // What analyze.js passes (api/analyze.js, runCaseLawRetrieval call).
 const PRODUCTION_MAX_RESULTS = 10;
+// analyze.js then keeps the top 3 through selectTopRetrievedCases.
+const PRODUCTION_SHOWN_MAX = 3;
 const RECALL_K = 3;
 
 // Retrieval returns "R v Grant, 2009 SCC 32" for some cases and the bare
@@ -174,9 +177,14 @@ export async function runGoldEval({ scenarios = RETRIEVAL_GOLD_SET, ids } = {}) 
         criminalCode: [],
         maxResults: PRODUCTION_MAX_RESULTS,
       });
+      const shown = __testables.selectTopRetrievedCases(
+        scenario.scenario,
+        cases,
+        PRODUCTION_SHOWN_MAX,
+      );
       const result = classifyScenario(
         scenario,
-        cases.map((c) => ({
+        shown.map((c) => ({
           citation: c.citation,
           title: c.title || c.citation,
         })),
@@ -190,4 +198,63 @@ export async function runGoldEval({ scenarios = RETRIEVAL_GOLD_SET, ids } = {}) 
   }
 
   return { results, summary: summarizeGold(results), fetchCalls };
+}
+
+/**
+ * The failure set's "expect no case law" scenarios, replayed through the
+ * production candidate scorer (matchLandmarkCases) against the real corpus.
+ * scripts/evaluate-retrieval-failures.js injects its own landmark matches, so
+ * it never exercises the scorer; this does. A leak is any case shown.
+ */
+export async function runFailureNegatives({ scenarios = RETRIEVAL_FAILURE_SET } = {}) {
+  const { retrieveVerifiedCaseLaw } = await import(
+    "../api/_caseLawRetrieval.js"
+  );
+  const { __testables } = await import("../api/analyze.js");
+
+  const negatives = scenarios.filter((s) => (s.maxResults ?? 0) === 0);
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = () => Promise.reject(new Error("gold eval is offline"));
+
+  const leaks = [];
+  try {
+    for (const scenario of negatives) {
+      const landmarkMatches = __testables.matchLandmarkCases(scenario.scenario);
+      const { cases } = await retrieveVerifiedCaseLaw({
+        scenario: scenario.scenario,
+        apiKey: "gold-eval-offline",
+        aiSuggestions: [],
+        aiCaseLaw: [],
+        landmarkMatches,
+        criminalCode: [],
+        maxResults: PRODUCTION_MAX_RESULTS,
+      });
+      const shown = __testables.selectTopRetrievedCases(
+        scenario.scenario,
+        cases,
+        PRODUCTION_SHOWN_MAX,
+      );
+      if (shown.length > 0) {
+        leaks.push({
+          id: scenario.id,
+          shown: shown.map((c) => c.title || c.citation),
+        });
+      }
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+  return { total: negatives.length, leaks, leakCount: leaks.length };
+}
+
+/** Run fn with RETRIEVAL_FULLTEXT forced on or off, restoring it afterwards. */
+export async function withFullText(on, fn) {
+  const previous = process.env.RETRIEVAL_FULLTEXT;
+  process.env.RETRIEVAL_FULLTEXT = on ? "on" : "off";
+  try {
+    return await fn();
+  } finally {
+    if (previous === undefined) delete process.env.RETRIEVAL_FULLTEXT;
+    else process.env.RETRIEVAL_FULLTEXT = previous;
+  }
 }

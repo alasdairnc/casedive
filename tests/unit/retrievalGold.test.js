@@ -5,10 +5,12 @@ import { MASTER_CASE_LAW_DB } from "../../src/lib/caselaw/index.js";
 import {
   citationKey,
   classifyScenario,
+  runFailureNegatives,
   runGoldEval,
   summarizeGold,
 } from "../../scripts/_retrievalGoldEval.js";
 import { RETRIEVAL_GOLD_SET } from "./retrievalGoldSet.js";
+import { RETRIEVAL_HELD_OUT_SET } from "./retrievalHeldOutSet.js";
 
 describe("corpus integrity", () => {
   it("has one row per case", () => {
@@ -20,6 +22,23 @@ describe("corpus integrity", () => {
         `${c.title} (${c.citation}) duplicates ${seen.get(key)}`,
       ).toBe(false);
       seen.set(key, c.title);
+    }
+  });
+});
+
+describe("held-out set integrity", () => {
+  it("has unique ids that do not collide with the gold set, and real labels", () => {
+    const ids = [...RETRIEVAL_GOLD_SET, ...RETRIEVAL_HELD_OUT_SET].map((s) => s.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    const corpusKeys = new Set(
+      MASTER_CASE_LAW_DB.map((c) => citationKey(c.citation)),
+    );
+    for (const s of RETRIEVAL_HELD_OUT_SET) {
+      for (const tier of ["relevant", "acceptable", "wrong"]) {
+        for (const citation of s[tier] || []) {
+          expect(corpusKeys.has(citationKey(citation)), `${s.id}.${tier}`).toBe(true);
+        }
+      }
     }
   });
 });
@@ -140,5 +159,26 @@ describe("retrieval against the gold set (offline)", () => {
     expect(summary.emptyOkRate).toBe(1);
     expect(summary.wrongCount).toBeLessThanOrEqual(7);
     expect(summary.duplicateCount).toBe(0);
+  });
+});
+
+// Frozen scenarios the ranking was never developed against, and the "expect no
+// case law" scenarios replayed through the production candidate scorer.
+// Measured 2026-10-08 with RETRIEVAL_FULLTEXT off (production behaviour): held-out
+// hit 61.5%, strong 38.5%, recall@3 34.6%, precision 50%, wrong 0; 2 of 26
+// negatives leak (robbery_not_hunter, simple_possession_not_trafficking).
+describe("held-out and negative replay (offline)", () => {
+  it("does not regress", { timeout: 180_000 }, async () => {
+    const held = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET });
+    expect(held.fetchCalls).toBe(0);
+    expect(held.summary.hitRate).toBeGreaterThanOrEqual(0.6);
+    expect(held.summary.strongHitRate).toBeGreaterThanOrEqual(0.38);
+    expect(held.summary.recallAtK).toBeGreaterThanOrEqual(0.34);
+    expect(held.summary.precision).toBeGreaterThanOrEqual(0.49);
+    expect(held.summary.wrongCount).toBe(0);
+
+    const negatives = await runFailureNegatives();
+    expect(negatives.total).toBeGreaterThanOrEqual(26);
+    expect(negatives.leakCount).toBeLessThanOrEqual(2);
   });
 });

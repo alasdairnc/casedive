@@ -10,7 +10,12 @@
  * any case labelled "wrong" is shown. See scripts/_retrievalGoldEval.js.
  */
 import fs from "node:fs";
-import { runGoldEval } from "./_retrievalGoldEval.js";
+import { RETRIEVAL_HELD_OUT_SET } from "../tests/unit/retrievalHeldOutSet.js";
+import {
+  runFailureNegatives,
+  runGoldEval,
+  withFullText,
+} from "./_retrievalGoldEval.js";
 
 const args = process.argv.slice(2);
 const verbose = args.includes("--verbose");
@@ -25,6 +30,34 @@ const pct = (n) => (n === null ? "n/a" : `${(n * 100).toFixed(1)}%`);
 const names = (items) =>
   items.map((i) => `${i.title}${i.label === "unlabelled" ? " ?" : ""}`).join("; ") ||
   "(nothing)";
+
+if (args.includes("--compare")) {
+  const measure = (on) =>
+    withFullText(on, async () => ({
+      dev: (await runGoldEval()).summary,
+      held: (await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET })).summary,
+      neg: await runFailureNegatives(),
+    }));
+  const off = await measure(false);
+  const on = await measure(true);
+  const row = (label, a, b, fmt = pct) =>
+    console.log(`${label.padEnd(34)} ${String(fmt(a)).padStart(8)} ${String(fmt(b)).padStart(8)}`);
+  console.log("RETRIEVAL_FULLTEXT comparison (offline)\n");
+  console.log(`${"".padEnd(34)} ${"off".padStart(8)} ${"on".padStart(8)}`);
+  for (const [name, key] of [["dev", "dev"], ["held-out", "held"]]) {
+    row(`${name} hit rate`, off[key].hitRate, on[key].hitRate);
+    row(`${name} strong hit rate`, off[key].strongHitRate, on[key].strongHitRate);
+    row(`${name} recall@3`, off[key].recallAtK, on[key].recallAtK);
+    row(`${name} precision`, off[key].precision, on[key].precision);
+    row(`${name} wrong shown`, off[key].wrongCount, on[key].wrongCount, (n) => n);
+    row(`${name} empty when right`, off[key].emptyOkRate, on[key].emptyOkRate);
+  }
+  row("negative replay leaks (of " + off.neg.total + ")", off.neg.leakCount, on.neg.leakCount, (n) => n);
+  for (const leak of on.neg.leaks) console.log(`   leak (on): ${leak.id} => ${leak.shown.join("; ")}`);
+  process.exit(0);
+}
+
+if (args.includes("--fulltext")) process.env.RETRIEVAL_FULLTEXT = "on";
 
 const { results, summary, fetchCalls } = await runGoldEval({ ids });
 
@@ -54,8 +87,25 @@ for (const r of rows) {
   if (r.gap) console.log(`   corpus gap: ${r.gap}`);
 }
 
+const heldOut = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET });
+const h = heldOut.summary;
+console.log(
+  `\nHeld-out (${h.scenarios} frozen scenarios): hit ${pct(h.hitRate)}, strong ${pct(h.strongHitRate)}, recall@3 ${pct(h.recallAtK)}, precision ${pct(h.precision)}, wrong ${h.wrongCount}`,
+);
+for (const r of heldOut.results.filter((x) => x.verdict !== "HIT")) {
+  console.log(`   [${r.verdict}] ${r.id}: ${names(r.returned)}`);
+}
+
+const negatives = await runFailureNegatives();
+console.log(
+  `\nNegative replay: ${negatives.leakCount} of ${negatives.total} "expect no case law" scenarios showed a case (production scorer, real corpus).`,
+);
+for (const leak of negatives.leaks) {
+  console.log(`   leak: ${leak.id} => ${leak.shown.join("; ")}`);
+}
+
 if (jsonOut) {
-  fs.writeFileSync(jsonOut, JSON.stringify({ summary, results }, null, 2));
+  fs.writeFileSync(jsonOut, JSON.stringify({ summary, results, heldOut: heldOut.summary, heldOutResults: heldOut.results, negatives }, null, 2));
   console.log(`\nWrote ${jsonOut}`);
 }
 
