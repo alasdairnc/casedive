@@ -48,6 +48,7 @@ if (!process.env.ANTHROPIC_API_KEY || !process.env.CANLII_API_KEY) {
 const { RETRIEVAL_GOLD_SET } = await import("../tests/unit/retrievalGoldSet.js");
 const { RETRIEVAL_HELD_OUT_SET } = await import("../tests/unit/retrievalHeldOutSet.js");
 const { RETRIEVAL_HELD_OUT_SET_2 } = await import("../tests/unit/retrievalHeldOutSet2.js");
+const { RETRIEVAL_NEAR_MISS_NEGATIVES } = await import("../tests/unit/retrievalNearMissNegatives.js");
 const { RETRIEVAL_FAILURE_SET } = await import("../tests/unit/retrievalFailureSet.js");
 const { normalizeFilters } = await import("../api/_filters.js");
 const { __testables } = await import("../api/analyze.js");
@@ -64,6 +65,7 @@ const add = (set, items) => {
 add("gold", RETRIEVAL_GOLD_SET);
 add("heldout", RETRIEVAL_HELD_OUT_SET);
 add("heldout2", RETRIEVAL_HELD_OUT_SET_2);
+add("nearmiss", RETRIEVAL_NEAR_MISS_NEGATIVES);
 add(
   "negative",
   RETRIEVAL_FAILURE_SET.filter((s) => (s.maxResults ?? 0) === 0),

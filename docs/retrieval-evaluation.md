@@ -52,6 +52,18 @@ Replay is valid only for changes made **after** the model call (citation resolut
 
 On 2026-10-08, of 58 scenarios with a known answer: the model suggested a good case and it was shown for 31; the model suggested it and the pipeline lost it for 5; the corpus supplied it when the model did not for 10; neither for 11. Many of the 11 are a correct case name with a wrong or non-neutral citation number (`R v Martineau, 1990 CanLII 631 (SCC)`), which CanLII verification rejects.
 
+## What changed in retrieval (2026-10-08)
+
+Measured by model replay; each step was judged against unseen scenarios, not the ones it was developed on.
+
+1. **SCR identity key** (`src/lib/canlii.js`): bare SCR citations keyed on year alone merged different cases and split one case written two ways.
+2. **Model citations resolved to the corpus** (`resolveCorpusCase`): parties, year and court on exactly one corpus row, before CanLII verification. A correct name with a wrong or pre-2000 number used to be dropped. The case must also share two distinct words with the scenario; without that the model's irrelevant citations (a disclosure case for an online-defamation question) leaked.
+3. **Vouched lane** (`_caseLawRetrieval.js`): a corpus case the model suggested and the scenario corroborates skips the lexical heuristics that dropped it (the trial-delay regex, compatibility demotion, score thresholds). It still passes the non-criminal and family-lane gates, ranks by shared words (base score 12 plus one per word, below the 16 a minor traffic stop needs), and wins a merge against a lower-scored seed copy of the same case.
+
+Dev strong hit 76.2% to 81.0%; held-out batch 1 38.5% to 61.5%; batch 2 (unseen) 60.0% to 73.3% with no wrong case; leaking negative scenarios 9 to 8 of 40. Dev precision slipped 0.9 points while every hit measure rose.
+
+**Still open.** The 14 near-miss negatives (`retrievalNearMissNegatives.js`) leak 6 of 14 outside criminal law (a security-guard search shows Grant, Hunter and Mann; an employer-locker question shows R v Auger; an insurance dispute shows a civil case). They leaked 7 before any of this work: it is the pipeline's existing precision problem, not something the lane added. `heldout_speeding_hit_someone` is flagged "clearly non-criminal" by a false positive, which blocks Roy and Creighton. Corpus gaps (assault with a weapon, shoplifting, robbery) remain. Production needs the 7-day response cache to expire (or its key bumped) before users see any of this.
+
 ## Held-out set and negative replay
 
 - `tests/unit/retrievalHeldOutSet.js` holds 13 frozen scenarios written in everyday wording before the full-text ranker existed, without reading any corpus entry's facts. Do not tune against them or edit them to flatter a change; add new ones instead. They are the generalisation check: on 2026-10-08 the development set scored 73.8% strong hit and the held-out set 38.5%.

@@ -12,6 +12,8 @@
 import fs from "node:fs";
 import { RETRIEVAL_HELD_OUT_SET } from "../tests/unit/retrievalHeldOutSet.js";
 import { RETRIEVAL_HELD_OUT_SET_2 } from "../tests/unit/retrievalHeldOutSet2.js";
+import { RETRIEVAL_NEAR_MISS_NEGATIVES } from "../tests/unit/retrievalNearMissNegatives.js";
+import { RETRIEVAL_FAILURE_SET } from "../tests/unit/retrievalFailureSet.js";
 import {
   checkReplayFidelity,
   loadFixtures,
@@ -118,7 +120,10 @@ console.log(
   `Held-out batch 2 (${h2.scenarios} frozen, aggregate only): hit ${pct(h2.hitRate)}, strong ${pct(h2.strongHitRate)}, recall@3 ${pct(h2.recallAtK)}, precision ${pct(h2.precision)}, wrong ${h2.wrongCount}`,
 );
 
-const negatives = await runFailureNegatives({ fixtures });
+const negatives = await runFailureNegatives({
+  scenarios: [...RETRIEVAL_FAILURE_SET, ...RETRIEVAL_NEAR_MISS_NEGATIVES],
+  fixtures,
+});
 console.log(
   `\nNegative replay: ${negatives.leakCount} of ${negatives.total} "expect no case law" scenarios showed a case (production scorer, real corpus).`,
 );

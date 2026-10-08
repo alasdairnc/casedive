@@ -13,6 +13,8 @@ import {
 import { RETRIEVAL_GOLD_SET } from "./retrievalGoldSet.js";
 import { RETRIEVAL_HELD_OUT_SET } from "./retrievalHeldOutSet.js";
 import { RETRIEVAL_HELD_OUT_SET_2 } from "./retrievalHeldOutSet2.js";
+import { RETRIEVAL_FAILURE_SET } from "./retrievalFailureSet.js";
+import { RETRIEVAL_NEAR_MISS_NEGATIVES } from "./retrievalNearMissNegatives.js";
 
 describe("corpus integrity", () => {
   it("has one row per case", () => {
@@ -192,11 +194,12 @@ describe("held-out and negative replay (offline)", () => {
 // The primary ratchet: the model's recorded suggestions and CanLII's recorded
 // answers replayed through the full production path (scripts/record-retrieval-
 // fixtures.js; re-record with --ids when a scenario is added). Measured
-// 2026-10-08, after resolving model citations to the corpus: dev hit 75.6%,
-// strong 78.6%, recall@3 75.0%, precision 74.3%, wrong 7; held-out hit 61.5%,
-// strong 38.5%, recall@3 34.6%, precision 55.6%, wrong 0; held-out batch 2
-// (aggregate only) hit 66.7%, strong 60.0%, recall@3 56.7%, precision 61.1%,
-// wrong 0; 2 of 26 negatives leak.
+// 2026-10-08, after the vouched lane: dev hit 77.8%, strong 81.0%, recall@3
+// 77.4%, precision 73.4%, wrong 7; held-out hit 84.6%, strong 61.5%, recall@3
+// 61.5%, precision 83.3%, wrong 0; held-out batch 2 (aggregate only) hit 80.0%,
+// strong 73.3%, recall@3 73.3%, precision 66.7%, wrong 0; 8 of 40 negatives
+// leak (2 original, 6 near-miss; the near-miss set leaked 7 before any lane
+// work, so those are the pipeline's existing false positives outside criminal law).
 describe("model replay (recorded fixtures)", () => {
   const fixtures = loadFixtures();
 
@@ -206,6 +209,7 @@ describe("model replay (recorded fixtures)", () => {
       ...RETRIEVAL_GOLD_SET,
       ...RETRIEVAL_HELD_OUT_SET,
       ...RETRIEVAL_HELD_OUT_SET_2,
+      ...RETRIEVAL_NEAR_MISS_NEGATIVES,
     ].map((s) => s.scenario);
     const missing = texts.filter((t) => !fixtures.scenarios[t]);
     expect(missing, "record these with scripts/record-retrieval-fixtures.js").toEqual([]);
@@ -214,30 +218,34 @@ describe("model replay (recorded fixtures)", () => {
   it("does not regress", { timeout: 180_000 }, async () => {
     const dev = await runGoldEval({ fixtures });
     expect(dev.fetchCalls).toBe(0);
-    expect(dev.summary.hitRate).toBeGreaterThanOrEqual(0.75);
-    expect(dev.summary.strongHitRate).toBeGreaterThanOrEqual(0.78);
-    expect(dev.summary.recallAtK).toBeGreaterThanOrEqual(0.74);
-    expect(dev.summary.precision).toBeGreaterThanOrEqual(0.74);
+    expect(dev.summary.hitRate).toBeGreaterThanOrEqual(0.77);
+    expect(dev.summary.strongHitRate).toBeGreaterThanOrEqual(0.8);
+    expect(dev.summary.recallAtK).toBeGreaterThanOrEqual(0.77);
+    expect(dev.summary.precision).toBeGreaterThanOrEqual(0.73);
     expect(dev.summary.wrongCount).toBeLessThanOrEqual(7);
     expect(dev.summary.duplicateCount).toBe(0);
 
     const held = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET, fixtures });
     expect(held.fetchCalls).toBe(0);
-    expect(held.summary.hitRate).toBeGreaterThanOrEqual(0.6);
-    expect(held.summary.strongHitRate).toBeGreaterThanOrEqual(0.38);
-    expect(held.summary.recallAtK).toBeGreaterThanOrEqual(0.34);
-    expect(held.summary.precision).toBeGreaterThanOrEqual(0.55);
+    expect(held.summary.hitRate).toBeGreaterThanOrEqual(0.84);
+    expect(held.summary.strongHitRate).toBeGreaterThanOrEqual(0.61);
+    expect(held.summary.recallAtK).toBeGreaterThanOrEqual(0.61);
+    expect(held.summary.precision).toBeGreaterThanOrEqual(0.83);
     expect(held.summary.wrongCount).toBe(0);
 
     const held2 = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET_2, fixtures });
     expect(held2.fetchCalls).toBe(0);
-    expect(held2.summary.hitRate).toBeGreaterThanOrEqual(0.66);
-    expect(held2.summary.strongHitRate).toBeGreaterThanOrEqual(0.59);
-    expect(held2.summary.recallAtK).toBeGreaterThanOrEqual(0.56);
-    expect(held2.summary.precision).toBeGreaterThanOrEqual(0.6);
+    expect(held2.summary.hitRate).toBeGreaterThanOrEqual(0.8);
+    expect(held2.summary.strongHitRate).toBeGreaterThanOrEqual(0.73);
+    expect(held2.summary.recallAtK).toBeGreaterThanOrEqual(0.73);
+    expect(held2.summary.precision).toBeGreaterThanOrEqual(0.66);
     expect(held2.summary.wrongCount).toBe(0);
 
-    const negatives = await runFailureNegatives({ fixtures });
-    expect(negatives.leakCount).toBeLessThanOrEqual(2);
+    const negatives = await runFailureNegatives({
+      scenarios: [...RETRIEVAL_FAILURE_SET, ...RETRIEVAL_NEAR_MISS_NEGATIVES],
+      fixtures,
+    });
+    expect(negatives.total).toBeGreaterThanOrEqual(40);
+    expect(negatives.leakCount).toBeLessThanOrEqual(8);
   });
 });

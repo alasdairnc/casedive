@@ -100,6 +100,31 @@ describe("model citations in retrieval", () => {
     expect(cases.map((c) => c.title)).toContain("R. v. Oakes");
   });
 
+  it("keeps Jordan for a trial-delay question that never says 'delay'", async () => {
+    // The semantic filter's delay regex ("delay", "waited") used to drop it.
+    const { cases } = await retrieve(
+      "I have been waiting eighteen months for my trial on an assault charge. Can I get the charge thrown out because it is taking too long?",
+      [{ citation: "R v Jordan, 2016 SCC 27", summary: "Delay ceilings." }],
+    );
+    expect(cases.map((c) => c.title)).toContain("R. v. Jordan");
+  });
+
+  it("keeps Martineau when the model gave the wrong number", async () => {
+    const { cases } = await retrieve(
+      "I am charged with murder but I was very drunk and never meant to kill him. Can a murder charge stand without intent?",
+      [{ citation: "R v Martineau, 1990 CanLII 90 (SCC)", summary: "Murder mens rea." }],
+    );
+    expect(cases.map((c) => c.title)).toContain("R. v. Martineau");
+  });
+
+  it("gives a clearly non-criminal scenario nothing, even when the model names a case", async () => {
+    const { cases } = await retrieve(
+      "My landlord is raising my rent by 20 percent and I want to know whether that is allowed under the tenancy rules.",
+      [{ citation: "R v Martineau, 1990 CanLII 90 (SCC)", summary: "Murder mens rea." }],
+    );
+    expect(cases).toEqual([]);
+  });
+
   it("does not let an unrelated corpus case through just because the model named it", async () => {
     const { cases } = await retrieve(
       "Someone posted false claims about my business online and I want to sue them for defamation.",

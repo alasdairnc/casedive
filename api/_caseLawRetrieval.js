@@ -1734,6 +1734,28 @@ function isCharterOnlyEntry(candidateDomains) {
   return true;
 }
 
+// A vouched case's base score: above the thresholds a general or broad issue
+// needs, below the 16 a minor traffic stop needs, plus one per shared word so
+// better-corroborated cases rank first.
+const VOUCHED_BASE_SCORE = 12;
+
+// The gates a model suggestion must still pass: legal facts, not wording.
+//  - clearly non-criminal scenarios get no case law
+//  - family and criminal law stay in separate lanes
+// (The state-actor rule for pure Charter cases is not applied: it exists for
+// the local fallback, which guesses, and it would drop R v Oakes for "does
+// this law violate the Charter", which has no officer in it.)
+function passesLegalHardGates(scenario, issue, candidate) {
+  if (isClearlyNonCriminalScenario(scenario)) return false;
+  const domains = detectCandidateDomains({
+    citation: candidate.citation,
+    title: candidate.title,
+    summary: candidate.summary,
+  });
+  const issueIsFamily = String(issue?.primary || "").startsWith("family_");
+  return domains.has("family_law") === issueIsFamily;
+}
+
 function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
   if (isClearlyNonCriminalScenario(scenario)) return [];
 
@@ -2537,6 +2559,17 @@ function dedupeCandidates(candidates) {
         if (!existingHasName && candidateHasName) {
           byCitation.set(key, candidate);
         }
+      } else if (
+        existing.isLandmark &&
+        candidate.isLandmark &&
+        (existing.resolvedFromCorpus || candidate.resolvedFromCorpus) &&
+        (Number(candidate.retrievalScore) || 0) >
+          (Number(existing.retrievalScore) || 0)
+      ) {
+        // A model-suggested corpus case and a seed or landmark copy of the
+        // same case: keep the better-scored one, so a vouched copy is not
+        // thrown away for whichever copy came first.
+        byCitation.set(key, candidate);
       } else if (existing.isLandmark && !candidate.isLandmark) {
         // Keep landmark verification bypass but enrich metadata from AI-suggested duplicate.
         byCitation.set(key, {
@@ -2649,10 +2682,10 @@ export async function retrieveVerifiedCaseLaw({
   // with the scenario; otherwise it is treated as before (verified through
   // CanLII, and dropped when that cannot confirm it).
   let corpusRanking = null;
-  const corroboratedByScenario = (row) => {
+  const sharedWordsWithScenario = (row) => {
     corpusRanking ||= rankCorpus(scenario, MASTER_CASE_LAW_DB);
     const entry = corpusRanking.find((r) => r.caseLaw.citation === row.citation);
-    return Boolean(entry) && entry.matchedWords >= MIN_DISTINCT_TERMS;
+    return entry ? entry.matchedWords : 0;
   };
   if (Array.isArray(aiCaseLaw)) {
     for (const item of aiCaseLaw) {
@@ -2668,7 +2701,8 @@ export async function retrieveVerifiedCaseLaw({
         { citation, title: item.title },
         MASTER_CASE_LAW_DB,
       );
-      if (resolved && corroboratedByScenario(resolved)) {
+      const sharedWords = resolved ? sharedWordsWithScenario(resolved) : 0;
+      if (resolved && sharedWords >= MIN_DISTINCT_TERMS) {
         aiCitationCandidates.push({
           citation: resolved.citation,
           title: resolved.title,
@@ -2686,6 +2720,7 @@ export async function retrieveVerifiedCaseLaw({
           isLandmark: true, // curated: no CanLII call needed
           modelSuggested: true,
           resolvedFromCorpus: true,
+          fullTextWords: sharedWords,
         });
         prefilterDiagnostics.totalAiCandidatesParsed += 1;
         continue;
@@ -2845,21 +2880,43 @@ export async function retrieveVerifiedCaseLaw({
   }
 
   // Apply semantic filtering by core legal issue and score candidates by scenario fit.
-  const semanticFilter = filterBySemanticRelevance(
-    scenario,
-    aiCitationCandidates,
+  //
+  // Corpus cases the model suggested and the scenario text corroborates (two
+  // or more shared words) are "vouched". They skip the lexical heuristics that
+  // were dropping them (the trial-delay regex, compatibility demotion, score
+  // thresholds) but still pass the gates that encode legal facts, and they
+  // rank by how much text they share with the scenario.
+  const vouchedCandidates = aiCitationCandidates.filter(
+    (c) => c.resolvedFromCorpus,
   );
+  const regularCandidates = aiCitationCandidates.filter(
+    (c) => !c.resolvedFromCorpus,
+  );
+  const semanticFilter = filterBySemanticRelevance(scenario, regularCandidates);
   const issue = semanticFilter.issue;
   const semanticFiltered = semanticFilter.candidates;
   const scenarioTokens = tokenizeScenario(scenario);
-  const scoredCandidates = semanticFiltered.map((candidate) =>
-    scoreCandidateForScenario({
-      candidate,
-      scenarioTokens,
-      issue,
-      filters,
-    }),
-  );
+  const scoredCandidates = semanticFiltered
+    .map((candidate) =>
+      scoreCandidateForScenario({
+        candidate,
+        scenarioTokens,
+        issue,
+        filters,
+      }),
+    )
+    .concat(
+      vouchedCandidates
+        .filter((c) => passesLegalHardGates(scenario, issue, c))
+        .map((c) => ({
+          ...c,
+          retrievalScore: VOUCHED_BASE_SCORE + (c.fullTextWords || 0),
+          retrievalReasons: [
+            "model_suggested_corpus_case",
+            `fulltext_words:${c.fullTextWords || 0}`,
+          ],
+        })),
+    );
 
   // Verify AI citations via the working lookupCase() endpoint
   const sorted = sortCandidatesForStableVerification(
@@ -3071,6 +3128,7 @@ export async function retrieveVerifiedCaseLaw({
 // Exposed for offline diagnostics (scripts and tests); not part of the API.
 export const __testables = {
   detectCoreIssue,
+  passesLegalHardGates,
   isClearlyNonCriminalScenario,
   isCandidateCompatibleWithIssue,
   detectCandidateDomains,
