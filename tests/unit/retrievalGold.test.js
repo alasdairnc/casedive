@@ -5,6 +5,7 @@ import { MASTER_CASE_LAW_DB } from "../../src/lib/caselaw/index.js";
 import {
   citationKey,
   classifyScenario,
+  loadFixtures,
   runFailureNegatives,
   runGoldEval,
   summarizeGold,
@@ -179,6 +180,48 @@ describe("held-out and negative replay (offline)", () => {
 
     const negatives = await runFailureNegatives();
     expect(negatives.total).toBeGreaterThanOrEqual(26);
+    expect(negatives.leakCount).toBeLessThanOrEqual(2);
+  });
+});
+
+// The primary ratchet: the model's recorded suggestions and CanLII's recorded
+// answers replayed through the full production path (scripts/record-retrieval-
+// fixtures.js; re-record with --ids when a scenario is added). Measured
+// 2026-10-08: dev hit 73.3%, strong 76.2%, recall@3 72.6%, precision 74.0%,
+// wrong 7; held-out hit 61.5%, strong 38.5%, recall@3 34.6%, precision 50%,
+// wrong 0; 2 of 26 negatives leak.
+describe("model replay (recorded fixtures)", () => {
+  const fixtures = loadFixtures();
+
+  it("has a recording for every scenario", () => {
+    expect(fixtures).not.toBeNull();
+    const texts = [
+      ...RETRIEVAL_GOLD_SET,
+      ...RETRIEVAL_HELD_OUT_SET,
+    ].map((s) => s.scenario);
+    const missing = texts.filter((t) => !fixtures.scenarios[t]);
+    expect(missing, "record these with scripts/record-retrieval-fixtures.js").toEqual([]);
+  });
+
+  it("does not regress", { timeout: 180_000 }, async () => {
+    const dev = await runGoldEval({ fixtures });
+    expect(dev.fetchCalls).toBe(0);
+    expect(dev.summary.hitRate).toBeGreaterThanOrEqual(0.73);
+    expect(dev.summary.strongHitRate).toBeGreaterThanOrEqual(0.76);
+    expect(dev.summary.recallAtK).toBeGreaterThanOrEqual(0.72);
+    expect(dev.summary.precision).toBeGreaterThanOrEqual(0.73);
+    expect(dev.summary.wrongCount).toBeLessThanOrEqual(7);
+    expect(dev.summary.duplicateCount).toBe(0);
+
+    const held = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET, fixtures });
+    expect(held.fetchCalls).toBe(0);
+    expect(held.summary.hitRate).toBeGreaterThanOrEqual(0.6);
+    expect(held.summary.strongHitRate).toBeGreaterThanOrEqual(0.38);
+    expect(held.summary.recallAtK).toBeGreaterThanOrEqual(0.34);
+    expect(held.summary.precision).toBeGreaterThanOrEqual(0.49);
+    expect(held.summary.wrongCount).toBe(0);
+
+    const negatives = await runFailureNegatives({ fixtures });
     expect(negatives.leakCount).toBeLessThanOrEqual(2);
   });
 });

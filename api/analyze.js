@@ -616,6 +616,7 @@ export const __testables = {
   selectTopRetrievedCases,
   matchLandmarkCases,
   modelTimeoutMs,
+  analyzeWithRetry,
 };
 
 // ── Deterministic RAG Token Matching ─────────────────────────────────────────

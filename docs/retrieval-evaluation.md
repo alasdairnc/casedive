@@ -35,6 +35,23 @@ The first import of `api/analyze.js` can take about 20 seconds on a cold machine
 
 `tests/unit/retrievalGold.test.js` checks label integrity (every labelled citation exists in the corpus) and ratchets the numbers: a retrieval change that lowers hit rate, recall, precision or empty-when-right, or raises wrong or duplicate cases, fails. Raise the floors in that file when retrieval improves.
 
+## Model replay (the production path)
+
+Most of production's case law comes from citations the model suggests and CanLII verifies, which the offline run cannot see. `scripts/record-retrieval-fixtures.js` records, for each scenario, what the live model suggests (`analyzeWithRetry`, the real prompt and model) and what CanLII answers (status and title only), into `tests/fixtures/retrieval-ai-fixtures.json`. `--with-model` then replays that through retrieval offline, with no tokens:
+
+```bash
+# SPENDS CLAUDE TOKENS (about 90 model calls for the full set; ~75k output tokens on 2026-10-08). Opt-in only.
+node --env-file=.env scripts/record-retrieval-fixtures.js            # new scenarios only
+node --env-file=.env scripts/record-retrieval-fixtures.js --ids a,b  # just these
+npm run eval:retrieval-gold -- --with-model                          # free replay
+```
+
+The replay prints how many scenarios differ from what the live run showed at recording time. Zero means the replay is faithful (it was 0 of 88 on 2026-10-08). After a deliberate retrieval change the differences are that change's effect.
+
+Replay is valid only for changes made **after** the model call (citation resolution, the semantic filter, scoring, selection). A corpus addition, a `matchLandmarkCases` change or the full-text flag changes the prompt, so judging it needs a fresh recording. The unit test requires a recording for every dev and held-out scenario; record new ones with `--ids`. The recorder disables Redis so a cached lookup cannot hide a CanLII response, and needs `dangerouslyDisableSandbox` for network access.
+
+On 2026-10-08, of 58 scenarios with a known answer: the model suggested a good case and it was shown for 31; the model suggested it and the pipeline lost it for 5; the corpus supplied it when the model did not for 10; neither for 11. Many of the 11 are a correct case name with a wrong or non-neutral citation number (`R v Martineau, 1990 CanLII 631 (SCC)`), which CanLII verification rejects.
+
 ## Held-out set and negative replay
 
 - `tests/unit/retrievalHeldOutSet.js` holds 13 frozen scenarios written in everyday wording before the full-text ranker existed, without reading any corpus entry's facts. Do not tune against them or edit them to flatter a change; add new ones instead. They are the generalisation check: on 2026-10-08 the development set scored 73.8% strong hit and the held-out set 38.5%.

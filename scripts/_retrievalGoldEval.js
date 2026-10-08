@@ -7,6 +7,8 @@
  * guard counts any fetch). It measures the corpus and heuristics half of
  * production; model-suggested citations are not covered yet.
  */
+import fs from "node:fs";
+import { normalizeFilters } from "../api/_filters.js";
 import { RETRIEVAL_GOLD_SET } from "../tests/unit/retrievalGoldSet.js";
 import { RETRIEVAL_FAILURE_SET } from "../tests/unit/retrievalFailureSet.js";
 
@@ -145,42 +147,101 @@ export function summarizeGold(results) {
   };
 }
 
-export async function runGoldEval({ scenarios = RETRIEVAL_GOLD_SET, ids } = {}) {
-  const { retrieveVerifiedCaseLaw } = await import(
-    "../api/_caseLawRetrieval.js"
-  );
-  const { __testables } = await import("../api/analyze.js");
+export const FIXTURES_PATH = new URL(
+  "../tests/fixtures/retrieval-ai-fixtures.json",
+  import.meta.url,
+);
 
+/**
+ * Recorded model suggestions and CanLII responses (scripts/record-retrieval-
+ * fixtures.js), or null when none have been recorded.
+ */
+export function loadFixtures() {
+  try {
+    return JSON.parse(fs.readFileSync(FIXTURES_PATH, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+// Offline guard. Recorded CanLII responses are served from the fixtures; any
+// other fetch is refused and counted in state.unserved.
+function installFetchStub(fixtures, state) {
+  const original = globalThis.fetch;
+  globalThis.fetch = async (input) => {
+    const url = String(input?.url || input);
+    let pathname = "";
+    try {
+      pathname = new URL(url).pathname;
+    } catch {
+      /* not a URL */
+    }
+    const recorded = fixtures?.canlii?.[pathname];
+    if (recorded) {
+      return new Response(
+        JSON.stringify(
+          recorded.status === 200 ? { title: recorded.title } : {},
+        ),
+        {
+          status: recorded.status,
+          headers: { "content-type": "application/json" },
+        },
+      );
+    }
+    state.unserved += 1;
+    throw new Error("gold eval is offline");
+  };
+  return () => {
+    globalThis.fetch = original;
+  };
+}
+
+// One scenario through the production steps: candidate scorer, retrieval with
+// the (recorded) model suggestions, then analyze.js's top-3 filter.
+async function retrieveShown(text, fixtures) {
+  const { retrieveVerifiedCaseLaw } = await import("../api/_caseLawRetrieval.js");
+  const { __testables } = await import("../api/analyze.js");
+  const recorded = fixtures?.scenarios?.[text] || null;
+  const { cases, meta } = await retrieveVerifiedCaseLaw({
+    scenario: text.trim(),
+    filters: normalizeFilters({}),
+    aiSuggestions: recorded?.ai.suggestions || [],
+    aiCaseLaw: recorded?.ai.case_law || [],
+    landmarkMatches: __testables.matchLandmarkCases(text),
+    criminalCode: recorded?.ai.criminal_code || [],
+    apiKey: "gold-eval-offline",
+    maxResults: PRODUCTION_MAX_RESULTS,
+  });
+  const shown = __testables.selectTopRetrievedCases(
+    text,
+    cases,
+    PRODUCTION_SHOWN_MAX,
+  );
+  return { shown, meta, recorded };
+}
+
+/**
+ * Score scenarios against their labels. With `fixtures`, the model's recorded
+ * citations and CanLII's recorded answers are replayed through retrieval (the
+ * full production path); without, only the corpus half runs.
+ */
+export async function runGoldEval({
+  scenarios = RETRIEVAL_GOLD_SET,
+  ids,
+  fixtures = null,
+} = {}) {
   const selected = ids?.length
     ? scenarios.filter((s) => ids.includes(s.id))
     : scenarios;
 
-  const originalFetch = globalThis.fetch;
-  let fetchCalls = 0;
-  globalThis.fetch = () => {
-    fetchCalls += 1;
-    return Promise.reject(new Error("gold eval is offline"));
-  };
-
+  const state = { unserved: 0 };
+  const restore = installFetchStub(fixtures, state);
   const results = [];
   try {
     for (const scenario of selected) {
-      const landmarkMatches = __testables.matchLandmarkCases(
+      const { shown, meta, recorded } = await retrieveShown(
         scenario.scenario,
-      );
-      const { cases, meta } = await retrieveVerifiedCaseLaw({
-        scenario: scenario.scenario,
-        apiKey: "gold-eval-offline",
-        aiSuggestions: [],
-        aiCaseLaw: [],
-        landmarkMatches,
-        criminalCode: [],
-        maxResults: PRODUCTION_MAX_RESULTS,
-      });
-      const shown = __testables.selectTopRetrievedCases(
-        scenario.scenario,
-        cases,
-        PRODUCTION_SHOWN_MAX,
+        fixtures,
       );
       const result = classifyScenario(
         scenario,
@@ -191,49 +252,36 @@ export async function runGoldEval({ scenarios = RETRIEVAL_GOLD_SET, ids } = {}) 
       );
       result.issuePrimary = meta.issuePrimary;
       result.retrievalPass = meta.retrievalPass;
+      result.hadRecording = Boolean(recorded);
+      result.modelCitations = (recorded?.ai.case_law || []).map(
+        (c) => c.citation,
+      );
       results.push(result);
     }
   } finally {
-    globalThis.fetch = originalFetch;
+    restore();
   }
 
-  return { results, summary: summarizeGold(results), fetchCalls };
+  return { results, summary: summarizeGold(results), fetchCalls: state.unserved };
 }
 
 /**
  * The failure set's "expect no case law" scenarios, replayed through the
- * production candidate scorer (matchLandmarkCases) against the real corpus.
+ * production candidate scorer (and, with fixtures, the recorded model output).
  * scripts/evaluate-retrieval-failures.js injects its own landmark matches, so
  * it never exercises the scorer; this does. A leak is any case shown.
  */
-export async function runFailureNegatives({ scenarios = RETRIEVAL_FAILURE_SET } = {}) {
-  const { retrieveVerifiedCaseLaw } = await import(
-    "../api/_caseLawRetrieval.js"
-  );
-  const { __testables } = await import("../api/analyze.js");
-
+export async function runFailureNegatives({
+  scenarios = RETRIEVAL_FAILURE_SET,
+  fixtures = null,
+} = {}) {
   const negatives = scenarios.filter((s) => (s.maxResults ?? 0) === 0);
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = () => Promise.reject(new Error("gold eval is offline"));
-
+  const state = { unserved: 0 };
+  const restore = installFetchStub(fixtures, state);
   const leaks = [];
   try {
     for (const scenario of negatives) {
-      const landmarkMatches = __testables.matchLandmarkCases(scenario.scenario);
-      const { cases } = await retrieveVerifiedCaseLaw({
-        scenario: scenario.scenario,
-        apiKey: "gold-eval-offline",
-        aiSuggestions: [],
-        aiCaseLaw: [],
-        landmarkMatches,
-        criminalCode: [],
-        maxResults: PRODUCTION_MAX_RESULTS,
-      });
-      const shown = __testables.selectTopRetrievedCases(
-        scenario.scenario,
-        cases,
-        PRODUCTION_SHOWN_MAX,
-      );
+      const { shown } = await retrieveShown(scenario.scenario, fixtures);
       if (shown.length > 0) {
         leaks.push({
           id: scenario.id,
@@ -242,9 +290,35 @@ export async function runFailureNegatives({ scenarios = RETRIEVAL_FAILURE_SET } 
       }
     }
   } finally {
-    globalThis.fetch = originalFetch;
+    restore();
   }
   return { total: negatives.length, leaks, leakCount: leaks.length };
+}
+
+/**
+ * Replay every recorded scenario and compare with what the live run showed at
+ * recording time. Zero differences means the replay is faithful; after a
+ * deliberate retrieval change the differences are the change's effect.
+ */
+export async function checkReplayFidelity(fixtures) {
+  const state = { unserved: 0 };
+  const restore = installFetchStub(fixtures, state);
+  const differences = [];
+  let total = 0;
+  try {
+    for (const [text, recorded] of Object.entries(fixtures?.scenarios || {})) {
+      total += 1;
+      const { shown } = await retrieveShown(text, fixtures);
+      const replay = shown.map((c) => citationKey(c.citation));
+      const live = (recorded.live || []).map((c) => citationKey(c.citation));
+      if (JSON.stringify(replay) !== JSON.stringify(live)) {
+        differences.push({ id: recorded.id, live: recorded.live, replay: shown.map((c) => c.title || c.citation) });
+      }
+    }
+  } finally {
+    restore();
+  }
+  return { total, differences, unserved: state.unserved };
 }
 
 /** Run fn with RETRIEVAL_FULLTEXT forced on or off, restoring it afterwards. */

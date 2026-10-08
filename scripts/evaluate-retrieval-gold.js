@@ -12,6 +12,8 @@
 import fs from "node:fs";
 import { RETRIEVAL_HELD_OUT_SET } from "../tests/unit/retrievalHeldOutSet.js";
 import {
+  checkReplayFidelity,
+  loadFixtures,
   runFailureNegatives,
   runGoldEval,
   withFullText,
@@ -59,7 +61,18 @@ if (args.includes("--compare")) {
 
 if (args.includes("--fulltext")) process.env.RETRIEVAL_FULLTEXT = "on";
 
-const { results, summary, fetchCalls } = await runGoldEval({ ids });
+const fixtures = args.includes("--with-model") ? loadFixtures() : null;
+if (args.includes("--with-model") && !fixtures) {
+  console.error("No fixtures: run scripts/record-retrieval-fixtures.js first (spends Claude tokens).");
+  process.exit(1);
+}
+if (fixtures) {
+  console.log(`Mode: model replay (recorded ${fixtures.recordedAt}, ${fixtures.model}); CanLII answers replayed`);
+  const fidelity = await checkReplayFidelity(fixtures);
+  console.log(`Replay vs live at recording: ${fidelity.differences.length} of ${fidelity.total} differ${fidelity.unserved ? `, ${fidelity.unserved} unrecorded fetches` : ""}\n`);
+}
+
+const { results, summary, fetchCalls } = await runGoldEval({ ids, fixtures });
 
 console.log("CaseDive retrieval gold eval (offline)\n");
 console.log(`Scenarios:        ${summary.scenarios} (${summary.positives} with an answer in the corpus, ${summary.expectEmpty} expecting nothing)`);
@@ -87,7 +100,7 @@ for (const r of rows) {
   if (r.gap) console.log(`   corpus gap: ${r.gap}`);
 }
 
-const heldOut = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET });
+const heldOut = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET, fixtures });
 const h = heldOut.summary;
 console.log(
   `\nHeld-out (${h.scenarios} frozen scenarios): hit ${pct(h.hitRate)}, strong ${pct(h.strongHitRate)}, recall@3 ${pct(h.recallAtK)}, precision ${pct(h.precision)}, wrong ${h.wrongCount}`,
@@ -96,7 +109,7 @@ for (const r of heldOut.results.filter((x) => x.verdict !== "HIT")) {
   console.log(`   [${r.verdict}] ${r.id}: ${names(r.returned)}`);
 }
 
-const negatives = await runFailureNegatives();
+const negatives = await runFailureNegatives({ fixtures });
 console.log(
   `\nNegative replay: ${negatives.leakCount} of ${negatives.total} "expect no case law" scenarios showed a case (production scorer, real corpus).`,
 );
