@@ -1314,20 +1314,23 @@ export const RETRIEVAL_FAILURE_SET = [
       "A person broke into a residential home at night through a back window and stole jewelry and electronics.",
     expectedPrimary: "break_and_enter",
     expectedResult: "nonzero_required",
-    shouldInclude: ["s. 348", "theft"],
-    shouldExclude: ["Jordan", "11(b)", "trial delay"],
+    // Passed for a long time by showing R v Stewart (confidential
+    // information, not a break-in). R v Auger is the real answer now, so
+    // Stewart and McLaughlin are excluded and the landmark match is Auger.
+    shouldInclude: ["Auger"],
+    shouldExclude: ["Jordan", "11(b)", "trial delay", "Stewart", "McLaughlin"],
     expectedKeywords: ["break and enter", "s. 348", "dwelling"],
     minResults: 1,
     maxResults: 3,
     landmarkMatches: [
       {
-        citation: "R v Stewart, [1988] 1 SCR 963",
-        title: "R v Stewart",
+        citation: "R. v. Auger, 2009 ABCA 310",
+        title: "R. v. Auger",
         ratio:
-          "Theft requires dishonest taking or conversion of property under s. 322. Stolen property analysis.",
-        tags: ["theft", "s. 322", "property", "stolen", "taking"],
-        topics: ["theft", "property", "stolen"],
-        year: 1988,
+          "Eighteen months was demonstrably unfit for a repeat offender's break and enter into a home with no damage, quick apprehension, a confession and a guilty plea.",
+        tags: ["break and enter", "dwelling house", "theft under", "laptop"],
+        topics: ["Break and Enter", "Sentencing", "Theft"],
+        year: 2009,
       },
     ],
   },

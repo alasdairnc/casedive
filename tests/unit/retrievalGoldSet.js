@@ -67,6 +67,10 @@ export const C = {
   hart: "2014 SCC 52",
   socan: "2022 SCC 30",
   calder: "[1973] SCR 313",
+  moquin: "2010 MBCA 22",
+  auger: "2009 ABCA 310",
+  sekhon: "2014 SCC 15",
+  sheppard: "2022 ABCA 89",
   baker: "[1999] 2 SCR 817",
   vavilov: "2019 SCC 65",
   dunsmuir: "2008 SCC 9",
@@ -106,8 +110,8 @@ export const RETRIEVAL_GOLD_SET = [
     id: "assault_punch_minor_injuries",
     scenario:
       "I punched someone in the face during an argument. They had minor injuries. Am I facing criminal charges?",
+    relevant: [C.moquin],
     acceptable: [C.jobidon],
-    gap: "No simple/bodily-harm assault authority in the corpus.",
   },
   {
     id: "assault_bar_fight_arm",
@@ -129,6 +133,7 @@ export const RETRIEVAL_GOLD_SET = [
       "A man broke into my home at night and I hit him with a bat. Am I guilty of assault?",
     relevant: [C.khill],
     acceptable: [C.lavallee],
+    wrong: [C.auger],
   },
   {
     id: "selfdefence_abused_partner",
@@ -141,7 +146,7 @@ export const RETRIEVAL_GOLD_SET = [
     id: "domestic_argument_harassment",
     scenario:
       "I got into a heated argument with my spouse, there was physical contact, and they're saying I'm harassing them. What charges could I face?",
-    gap: "No domestic assault / criminal harassment authority for the accused.",
+    acceptable: [C.moquin, C.sheppard],
   },
 
   // ── Sexual assault ────────────────────────────────────────────────────────
@@ -158,15 +163,15 @@ export const RETRIEVAL_GOLD_SET = [
     id: "drug_cocaine_trafficking",
     scenario:
       "Police found 50 grams of cocaine in my car. They're charging me with trafficking. What happens next?",
-    relevant: [C.smith],
-    gap: "Smith is a marijuana/s. 7 case; no cocaine trafficking or possession-for-purpose authority.",
+    relevant: [C.smith, C.sekhon],
+    gap: "Smith is a marijuana/s. 7 case and Sekhon is a border-importation case; no street-level possession-for-the-purpose authority.",
   },
   {
     id: "drug_fentanyl_trafficking",
     scenario:
       "Found with fentanyl pills. Police say it's for trafficking. What's the legal status?",
     relevant: [C.smith],
-    acceptable: [C.nur],
+    acceptable: [C.nur, C.sekhon],
   },
   {
     id: "drug_street_search_exclusion",
@@ -320,20 +325,20 @@ export const RETRIEVAL_GOLD_SET = [
     id: "theft_shoplifting_150",
     scenario:
       "I took merchandise from a store without paying. The value was $150. Am I facing jail time?",
-    wrong: [C.mclaughlin, C.stewart],
+    wrong: [C.mclaughlin, C.stewart, C.auger],
     gap: "No shoplifting / theft-under-$5000 authority. McLaughlin (computer theft) is the wrong answer.",
   },
   {
     id: "theft_victim_stolen_chair",
     scenario: "My chair was stolen from outside my apartment.",
-    wrong: [C.socan, C.stewart, C.mclaughlin],
+    wrong: [C.socan, C.stewart, C.mclaughlin, C.auger],
   },
   {
     id: "break_and_enter_victim",
     scenario:
       "Someone broke into my apartment through the back window and stole my laptop.",
+    acceptable: [C.auger],
     wrong: [C.stewart, C.mclaughlin],
-    gap: "No break-and-enter authority (ROADMAP item 5).",
   },
   {
     id: "threats_text_message",
@@ -379,6 +384,33 @@ export const RETRIEVAL_GOLD_SET = [
     scenario:
       "My company was charged under an environmental regulation. Do I have a due diligence defence?",
     relevant: [C.saultSte],
+  },
+
+  // ── Added with the corpus lane fills (written before the entries) ──────
+  {
+    id: "assault_girlfriend_bruises_bodily_harm",
+    scenario:
+      "I was charged with assault causing bodily harm after an argument with my girlfriend left her with bruises that lasted a couple of weeks. Do bruises count as bodily harm?",
+    relevant: [C.moquin],
+  },
+  {
+    id: "break_enter_laptop_guilty_plea",
+    scenario:
+      "I pleaded guilty to breaking into a house and taking a laptop and I confessed right away. What sentence should I expect for a break and enter like this?",
+    relevant: [C.auger],
+    wrong: [C.stewart, C.mclaughlin],
+  },
+  {
+    id: "drug_hidden_compartment_border",
+    scenario:
+      "Border officers found cocaine in a hidden compartment of the truck I was driving. I say I never knew it was there. How does the court decide whether I knew?",
+    relevant: [C.sekhon],
+  },
+  {
+    id: "harassment_ex_repeated_messages",
+    scenario:
+      "My ex says the repeated messages and letters I sent about her are criminal harassment. What does the Crown have to prove?",
+    relevant: [C.sheppard],
   },
 
   // ── Nothing to show ───────────────────────────────────────────────────────

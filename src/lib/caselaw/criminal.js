@@ -812,4 +812,98 @@ export const criminalCases = [
     ratio:
       "Confessions obtained through 'Mr. Big' operations are presumptively inadmissible. The Crown must establish that the confession's probative value (a function of its reliability) outweighs its prejudicial effect; separately, abuse of process (such as coercion) can also require exclusion. The rule targets unreliable confessions and state abuse.",
   },
+
+  // ── EVERYDAY OFFENCES (provincial courts of appeal + Sekhon) ───────────
+  // Written from the judgments (read on CanLII 2026-10-08), not from headnotes.
+  {
+    citation: "2010 MBCA 22",
+    title: "R. v. Moquin",
+    year: 2010,
+    court: "MBCA",
+    topics: ["Assault", "Bodily Harm", "Domestic Assault", "s. 267(b)"],
+    tags: [
+      "assault causing bodily harm",
+      "bodily harm",
+      "common assault",
+      "bruising",
+      "sore throat",
+      "choking",
+      "domestic assault",
+      "interferes with health or comfort",
+      "transient and trifling",
+      "psychological harm",
+    ],
+    facts:
+      "The accused had moved in with the complainant weeks after meeting her and assaulted her in five incidents: he pulled her hair, grabbed her by the throat hard enough that it was difficult to breathe, squeezed her hand and bruised her arms. She had bruising that lasted from several days to over two weeks, a sore throat and a sore hand that meant her daughter had to open doors for her for a few days. The trial judge convicted him of common assault but acquitted him of assault causing bodily harm, finding the injuries were not bodily harm.",
+    ratio:
+      "Bodily harm under s. 2 of the Criminal Code is any hurt or injury that interferes with the health or comfort of the person and is more than merely transient and trifling. Interference with comfort is enough: pain or discomfort that is more than trifling and transient can be bodily harm even if it does not impair function, and the injuries may be considered together. Whether the facts as found amount to bodily harm is a question of law, so the Crown could appeal the acquittal. The Court of Appeal set the acquittal aside and entered a conviction for assault causing bodily harm.",
+  },
+  {
+    citation: "2009 ABCA 310",
+    title: "R. v. Auger",
+    year: 2009,
+    court: "ABCA",
+    topics: ["Break and Enter", "Sentencing", "Theft"],
+    tags: [
+      "break and enter",
+      "breaking and entering",
+      "dwelling house",
+      "theft under",
+      "laptop",
+      "guilty plea",
+      "confession",
+      "sentence appeal",
+      "least restrictive sentence",
+      "pre-sentence custody",
+    ],
+    facts:
+      "The accused and another man went to the complainant's home and tried to sell her a computer and a keyboard. She declined and told them to leave, and they left the items near her front door. After she locked up and went out, the door was unlocked, and when she returned a borrowed laptop was missing. The accused pleaded guilty to breaking and entering a dwelling house and to two breaches of recognizance. He had earlier convictions for break and enter, theft, possession of stolen property and mischief. The sentencing judge imposed 18 months, more than either the Crown or the defence had asked for.",
+    ratio:
+      "Eighteen months was demonstrably unfit for a repeat offender's break and enter into a home where there was no damage, quick apprehension, a confession and a guilty plea; the last two are substantial mitigating factors. Courts should impose the least restrictive sentence that achieves the goals of sentencing, and the offender was not shown to be incorrigible. The Court of Appeal substituted 12 months less 3 months' credit for pre-sentence custody.",
+  },
+  {
+    citation: "2014 SCC 15",
+    title: "R. v. Sekhon",
+    year: 2014,
+    court: "SCC",
+    topics: ["Drug Trafficking", "CDSA", "Knowledge", "Expert Evidence"],
+    tags: [
+      "possession for the purpose of trafficking",
+      "importing cocaine",
+      "cocaine",
+      "hidden compartment",
+      "knowledge",
+      "drug courier",
+      "expert evidence",
+      "curative proviso",
+      "border",
+    ],
+    facts:
+      "The accused drove a pickup truck from Washington State toward British Columbia and was stopped at the border, where customs officers found 50 one-kilogram bricks of cocaine in a concealed compartment worked by a hydraulic mechanism. The key fob in his pocket had been engineered to open the compartment when its buttons were pressed in sequence. He was charged with importing cocaine and possessing it for the purpose of trafficking; the only issue at trial was whether he knew the cocaine was there. The trial judge found that he did and rejected his evidence, relying in part on a police expert's testimony about the drug trade.",
+    ratio:
+      "Where knowledge of the drug is the issue it can be proved by circumstantial evidence. A police expert may explain the customs and practices of the drug trade but may not give opinion evidence about the guilt of other people he has investigated; that testimony was inadmissible and the trial judge should not have relied on it. The Supreme Court nonetheless applied the curative proviso in s. 686(1)(b)(iii) and upheld the convictions because the remaining evidence that the accused knew about the cocaine was overwhelming.",
+  },
+  {
+    citation: "2022 ABCA 89",
+    title: "R. v. Sheppard",
+    year: 2022,
+    court: "ABCA",
+    topics: ["Criminal Harassment", "s. 264", "Domestic"],
+    tags: [
+      "criminal harassment",
+      "section 264",
+      "harassed",
+      "repeatedly communicating",
+      "reasonable fear",
+      "fear for their safety",
+      "psychological safety",
+      "lawful authority",
+      "former partner",
+      "letters",
+    ],
+    facts:
+      "While in custody on charges of attempted murder and reckless discharge of a firearm against his former intimate partner, a former teacher, the accused wrote letters to the Alberta Teachers' Association, a university and Alberta's Minister of Education falsely alleging that she used illegal drugs with, and had a sexual relationship with, a former student. She was devastated when she received the first letter, took it to police, and feared he would keep harassing her and try to kill her. He was convicted of criminal harassment under s. 264(1).",
+    ratio:
+      "The Crown must prove that the accused repeatedly communicated, directly or indirectly, with the complainant or someone known to her; that she was harassed (tormented, troubled, worried, plagued, bedevilled or badgered); that he knew, or was reckless or wilfully blind that she was harassed; that his conduct caused her to fear for her safety; and that the fear was reasonable in all the circumstances. Safety includes emotional and psychological safety, reasonableness is judged objectively but takes in the history of the relationship, and communications to third parties can qualify. 'Lawful authority' does not cover false accusations of serious misconduct made to professional bodies. The appeal was dismissed.",
+  },
 ];

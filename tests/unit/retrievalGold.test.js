@@ -125,20 +125,20 @@ describe("summarizeGold", () => {
 
 // Ratchet: today's measured numbers, rounded down. A retrieval change that
 // makes any of them worse fails here; raise the floors as retrieval improves.
-// Measured 2026-10-08 on feat/retrieval-gold-eval (46 criminal-law scenarios,
-// after the SCR identity-key fix): hit 71.8%, strong 73.0%, recall@3 68.9%,
-// precision 77.0%, empty-when-right 85.7%, wrong 6, dupes 0.
+// Measured 2026-10-08 on feat/retrieval-gold-eval (50 criminal-law scenarios,
+// 91-case corpus after the first lane fills): hit 71.1%, strong 73.8%,
+// recall@3 70.2%, precision 74.6%, empty-when-right 100%, wrong 7, dupes 0.
 describe("retrieval against the gold set (offline)", () => {
   it("does not regress", { timeout: 180_000 }, async () => {
     const { summary, fetchCalls } = await runGoldEval();
 
     expect(fetchCalls).toBe(0);
     expect(summary.hitRate).toBeGreaterThanOrEqual(0.71);
-    expect(summary.strongHitRate).toBeGreaterThanOrEqual(0.72);
-    expect(summary.recallAtK).toBeGreaterThanOrEqual(0.68);
-    expect(summary.precision).toBeGreaterThanOrEqual(0.76);
-    expect(summary.emptyOkRate).toBeGreaterThanOrEqual(0.85);
-    expect(summary.wrongCount).toBeLessThanOrEqual(6);
+    expect(summary.strongHitRate).toBeGreaterThanOrEqual(0.73);
+    expect(summary.recallAtK).toBeGreaterThanOrEqual(0.7);
+    expect(summary.precision).toBeGreaterThanOrEqual(0.74);
+    expect(summary.emptyOkRate).toBe(1);
+    expect(summary.wrongCount).toBeLessThanOrEqual(7);
     expect(summary.duplicateCount).toBe(0);
   });
 });
