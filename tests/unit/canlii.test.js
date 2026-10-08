@@ -186,6 +186,30 @@ describe("buildCitationIdentityKey", () => {
     const b = buildCitationIdentityKey("R. v. Oakes [1986] 1 SCR 103");
     expect(a).toBe(b);
   });
+
+  it("gives the bare and the named form of an SCR cite the same key", () => {
+    const named = buildCitationIdentityKey("R v Ewanchuk, [1999] 1 SCR 330");
+    const bare = buildCitationIdentityKey("[1999] 1 SCR 330");
+    expect(named).toBe(bare);
+  });
+
+  it("keeps different SCR cases from the same year apart", () => {
+    // Keyed on year alone, these four collapsed into one candidate.
+    const keys = [
+      "[1999] 1 SCR 330", // Ewanchuk
+      "[1999] 1 SCR 688", // Gladue
+      "[1999] 3 SCR 456", // Marshall
+      "[1999] 2 SCR 817", // Baker
+    ].map(buildCitationIdentityKey);
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  it("reads the volume and page from an SCR cite", () => {
+    expect(parseCitation("[1999] 1 SCR 330")).toMatchObject({
+      scrVolume: "1",
+      scrPage: "330",
+    });
+  });
 });
 
 // ---------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { buildCitationIdentityKey } from "../../src/lib/canlii.js";
 import { MASTER_CASE_LAW_DB } from "../../src/lib/caselaw/index.js";
 import {
   citationKey,
@@ -8,6 +9,20 @@ import {
   summarizeGold,
 } from "../../scripts/_retrievalGoldEval.js";
 import { RETRIEVAL_GOLD_SET } from "./retrievalGoldSet.js";
+
+describe("corpus integrity", () => {
+  it("has one row per case", () => {
+    const seen = new Map();
+    for (const c of MASTER_CASE_LAW_DB) {
+      const key = buildCitationIdentityKey(c.citation);
+      expect(
+        seen.has(key),
+        `${c.title} (${c.citation}) duplicates ${seen.get(key)}`,
+      ).toBe(false);
+      seen.set(key, c.title);
+    }
+  });
+});
 
 describe("gold set integrity", () => {
   const corpusKeys = new Set(MASTER_CASE_LAW_DB.map((c) => citationKey(c.citation)));
@@ -110,19 +125,20 @@ describe("summarizeGold", () => {
 
 // Ratchet: today's measured numbers, rounded down. A retrieval change that
 // makes any of them worse fails here; raise the floors as retrieval improves.
-// Measured 2026-10-08 on feat/retrieval-gold-eval: hit 73.2%, strong 74.4%,
-// recall@3 69.2%, precision 78.8%, empty-when-right 85.7%, wrong 6, dupes 2.
+// Measured 2026-10-08 on feat/retrieval-gold-eval (46 criminal-law scenarios,
+// after the SCR identity-key fix): hit 71.8%, strong 73.0%, recall@3 68.9%,
+// precision 77.0%, empty-when-right 85.7%, wrong 6, dupes 0.
 describe("retrieval against the gold set (offline)", () => {
   it("does not regress", { timeout: 180_000 }, async () => {
     const { summary, fetchCalls } = await runGoldEval();
 
     expect(fetchCalls).toBe(0);
-    expect(summary.hitRate).toBeGreaterThanOrEqual(0.73);
-    expect(summary.strongHitRate).toBeGreaterThanOrEqual(0.74);
-    expect(summary.recallAtK).toBeGreaterThanOrEqual(0.69);
-    expect(summary.precision).toBeGreaterThanOrEqual(0.78);
+    expect(summary.hitRate).toBeGreaterThanOrEqual(0.71);
+    expect(summary.strongHitRate).toBeGreaterThanOrEqual(0.72);
+    expect(summary.recallAtK).toBeGreaterThanOrEqual(0.68);
+    expect(summary.precision).toBeGreaterThanOrEqual(0.76);
     expect(summary.emptyOkRate).toBeGreaterThanOrEqual(0.85);
     expect(summary.wrongCount).toBeLessThanOrEqual(6);
-    expect(summary.duplicateCount).toBeLessThanOrEqual(2);
+    expect(summary.duplicateCount).toBe(0);
   });
 });

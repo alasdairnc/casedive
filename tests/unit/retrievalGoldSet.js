@@ -14,6 +14,10 @@
  * counted as wrong, but the CLI lists it so someone can label it. Label from
  * the law, never from what retrieval happens to return today.
  *
+ * Scope: criminal law (including the Charter as it applies to criminal
+ * proceedings). Family, administrative and IP scenarios are not scored as
+ * hits; the non-criminal ones below must come back empty.
+ *
  * A scenario with no relevant and no acceptable case is "expect empty": the
  * corpus has no fitting authority, so showing nothing is the right answer.
  * `gap` notes what is missing from the corpus (the to-do list for step 2).
@@ -63,6 +67,9 @@ export const C = {
   hart: "2014 SCC 52",
   socan: "2022 SCC 30",
   calder: "[1973] SCR 313",
+  baker: "[1999] 2 SCR 817",
+  vavilov: "2019 SCC 65",
+  dunsmuir: "2008 SCC 9",
   gordon: "[1996] 2 SCR 27",
   moge: "[1992] 3 SCR 813",
   bracklow: "[1999] 1 SCR 420",
@@ -374,39 +381,23 @@ export const RETRIEVAL_GOLD_SET = [
     relevant: [C.saultSte],
   },
 
-  // ── Family law ────────────────────────────────────────────────────────────
-  {
-    id: "family_relocation_child",
-    scenario:
-      "My ex wants to move to another province with our child. Can she?",
-    relevant: [C.gordon, C.barendregt],
-  },
-  {
-    id: "family_spousal_support",
-    scenario:
-      "After a long marriage I'm asking for spousal support. How is it decided?",
-    relevant: [C.moge, C.bracklow],
-  },
-
   // ── Nothing to show ───────────────────────────────────────────────────────
   {
     id: "minimal_detail",
     scenario: "Very brief scenario with minimal detail.",
   },
-  // Scope question for the owner: the corpus holds SOCAN (copyright) and
-  // Baker/Vavilov (administrative law), which fit these two scenarios. The
-  // older tests expect nothing because CaseDive is positioned as a criminal
-  // tool. Left unlabelled (any result is listed for review) until that is
-  // decided; if non-criminal law is in scope, label SOCAN and Baker/Vavilov
-  // relevant here.
+  // Out of scope (criminal law only): the corpus holds SOCAN and the
+  // administrative-law cases, but showing them here would be wrong.
   {
     id: "noncriminal_copyright",
     scenario:
       "I need advice on copyright royalties and digital music licensing terms.",
+    wrong: [C.socan],
   },
   {
     id: "noncriminal_admin_tribunal",
     scenario:
       "I am appealing an administrative tribunal decision on professional licensing fairness.",
+    wrong: [C.baker, C.vavilov, C.dunsmuir],
   },
 ];

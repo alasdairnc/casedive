@@ -1,17 +1,5 @@
 export const charterCases = [
   {
-    citation: "[1986] 1 SCR 103",
-    title: "R. v. Oakes",
-    year: 1986,
-    court: "SCC",
-    topics: ["Charter", "s. 1", "Reasonable Limits"],
-    tags: ["oakes test", "proportionality", "justification", "section 1"],
-    facts:
-      "The accused was found with drugs and cash, triggering a statutory presumption of trafficking under the NCA. He challenged the reverse onus as violating the presumption of innocence (s. 11(d)).",
-    ratio:
-      "Establishes the 'Oakes Test' for Section 1 limitations: the government must prove a pressing and substantial objective, rational connection, minimal impairment, and proportionality between effects and objective.",
-  },
-  {
     citation: "[1988] 1 SCR 30",
     title: "R. v. Morgentaler",
     year: 1988,

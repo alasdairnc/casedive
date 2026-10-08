@@ -16,6 +16,8 @@ How we measure whether CaseDive shows the right case law. Three harnesses exist;
 - `acceptable`: on point enough to show.
 - `wrong`: must never be shown.
 
+The scope is criminal law, including the Charter as it applies to criminal proceedings.
+
 Anything returned and not labelled is **unlabelled**: not counted as wrong, but listed so someone can label it. Label from the law, never from what retrieval returns today. A scenario with no relevant or acceptable case expects an empty answer; its `gap` field notes what the corpus is missing.
 
 The runner (`scripts/_retrievalGoldEval.js`) uses the same candidate scorer (`matchLandmarkCases` in `api/analyze.js`) and the same `maxResults: 10` as production, with no model call and no CanLII call. Citations are compared on the reporter form (`2009 SCC 32`), because retrieval returns both `R v Grant, 2009 SCC 32` and the bare form.
@@ -35,4 +37,4 @@ The first import of `api/analyze.js` can take about 20 seconds on a cold machine
 ## Not covered yet
 
 - Model-suggested citations verified through CanLII, which is most of production. Needs recorded `aiCaseLaw` fixtures so replay is deterministic.
-- Whether non-criminal law (copyright, administrative) is in scope. `noncriminal_*` scenarios are unlabelled until that is decided.
+- Non-criminal law. The gold set is criminal law only (owner decision, 2026-10-08): the `noncriminal_*` scenarios must come back empty, and family scenarios are not scored. Retrieval itself still serves family-law cases.

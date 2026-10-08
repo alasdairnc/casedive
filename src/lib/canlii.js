@@ -157,6 +157,13 @@ export function buildCitationIdentityKey(citation) {
     return normalizeCitationInput(citation).toLowerCase();
   }
 
+  // An SCR cite (year, volume, page) identifies one case whatever the party
+  // spelling or whether the parties are present at all. Keying on year alone
+  // merged different cases from the same year and split one case written two ways.
+  if (parsed.scrVolume && parsed.scrPage) {
+    return `${parsed.year}|SCR|${parsed.scrVolume}|${parsed.scrPage}`;
+  }
+
   const base = `${parsed.year}|${parsed.courtCode}|${parsed.number || "na"}|${parsed.isLegacy ? "legacy" : "neutral"}`;
   // For neutral/CanLII-neutral, dedupe on the neutral identity regardless of party formatting.
   if (parsed.number) return base;
@@ -216,15 +223,17 @@ export function parseCitation(citation) {
 
   // 3. SCR citation: "Parties, [YYYY] N SCR NNN" or "YYYY N SCR NNN"
   const scr = trimmed.match(
-    /^(?:(.+?)(?:,\s*|\s+))?\[?(\d{4})\]?\s+\d+\s+SCR\s+\d+$/i,
+    /^(?:(.+?)(?:,\s*|\s+))?\[?(\d{4})\]?\s+(\d+)\s+SCR\s+(\d+)$/i,
   );
   if (scr) {
-    const [, parties, year] = scr;
+    const [, parties, year, scrVolume, scrPage] = scr;
     return {
       parties: parties ? parties.trim() : null,
       year,
       courtCode: "SCC",
       number: null, // SCR doesn't map directly to CanLII number without lookup
+      scrVolume,
+      scrPage,
       apiDbId: "csc-scc",
       webDbId: "ca/scc",
       isLegacy: true,
