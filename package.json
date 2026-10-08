@@ -31,6 +31,7 @@
     "expand:caselaw": "node scripts/expand-caselaw.js",
     "caselaw:curate": "npm run improve:caselaw; npm run expand:caselaw",
     "test:retrieval-failures": "node scripts/evaluate-retrieval-failures.js",
+    "eval:retrieval-gold": "node scripts/evaluate-retrieval-gold.js",
     "test:retrieval-failures:baseline": "node scripts/evaluate-retrieval-failures.js --baseline",
     "test:retrieval-failures:compare": "node scripts/evaluate-retrieval-failures.js --compare",
     "test:guardrails": "vitest run tests/unit/resultCardSanitizer.test.js && npm run test:retrieval-failures && npm run test:filter",

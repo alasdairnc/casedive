@@ -11,6 +11,7 @@
 - `architecture.md` — System architecture and component boundaries.
 - `design-system.md` — UI patterns, tokens, and design conventions.
 - `statute-grounding.md` — CDSA/YCJA in the analysis pipeline: how it works, what is verified, and the live eval to run before turning `STATUTE_GROUNDING` on.
+- `retrieval-evaluation.md` — How case-law retrieval is measured: the gold-labelled eval (`npm run eval:retrieval-gold`), the failure set and the filter gate, and what each can and cannot tell you.
 - `adr/` — Architecture decision records: why the function cap, parked billing and the desktop layout are the way they are.
 
 ## Filtering

@@ -604,6 +604,7 @@ function selectTopRetrievedCases(rawScenario, retrievedCases, limit = 3) {
 
 export const __testables = {
   selectTopRetrievedCases,
+  matchLandmarkCases,
   modelTimeoutMs,
 };
 
