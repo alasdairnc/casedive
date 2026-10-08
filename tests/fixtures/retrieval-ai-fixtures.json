@@ -1,6 +1,6 @@
 {
   "model": "claude-haiku-4-5-20251001",
-  "recordedAt": "2026-10-08T22:16:54.355Z",
+  "recordedAt": "2026-10-08T22:24:04.377Z",
   "canlii": {
     "/v1/caseBrowse/en/csc-scc/1995canlii3669/": {
       "status": 200,
@@ -93,6 +93,14 @@
     "/v1/caseBrowse/en/csc-scc/1991canlii76/": {
       "status": 200,
       "title": "R. v. Seaboyer;  R. v. Gayme"
+    },
+    "/v1/caseBrowse/en/csc-scc/1990canlii7441/": {
+      "status": 200,
+      "title": "Babyak v. Antosh"
+    },
+    "/v1/caseBrowse/en/csc-scc/1991canlii41/": {
+      "status": 200,
+      "title": "Bhatnager v. Canada (Minister of Employment and Immigration)"
     }
   },
   "scenarios": {
@@ -5080,6 +5088,931 @@
         "outputTokens": 483
       },
       "ms": 5125
+    },
+    "Police arrested me and kept me for a whole day before I could speak to a lawyer, and they questioned me in the meantime.": {
+      "id": "heldout2_held_a_day_before_lawyer",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Woods, 2005 SCC 42",
+            "summary": "Clarifies the s. 10(b) right to counsel when a person is detained or arrested, including the police's informational duty and the requirement to facilitate access to counsel without unreasonable delay. Establishes that delay in speaking to a lawyer for hours may breach Charter protections.",
+            "court": "Supreme Court of Canada",
+            "year": "2005",
+            "matched_content": "Police must inform detainees of their right to counsel and provide a reasonable opportunity to exercise that right; delay of a full day without access to counsel constitutes a breach of s. 10(b)"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "s. 10(b) counsel access - detention delay",
+            "term": "detention AND \"s. 10(b)\" AND counsel AND \"without delay\" AND \"informational duty\""
+          },
+          {
+            "type": "canlii",
+            "label": "s. 24(2) exclusion - statements in breach",
+            "term": "\"s. 24(2)\" AND confession AND \"Charter breach\" AND \"bring administration of justice into disrepute\""
+          },
+          {
+            "type": "canlii",
+            "label": "s. 10(b) interrogation - pre-counsel statements",
+            "term": "interrogation AND \"s. 10(b)\" AND detained AND statements AND counsel AND denied"
+          },
+          {
+            "type": "canlii",
+            "label": "Charter remedy - unlawful detention breach",
+            "term": "\"s. 9\" AND arbitrary detention AND \"s. 10(b)\" AND violation AND remedy"
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 10(b)",
+            "summary": "Right to Retain and Instruct Counsel - Arrested/detained person has the right to retain and instruct counsel without delay",
+            "matched_section": "Upon arrest or detention, the person must be informed of their right to counsel and given a reasonable opportunity to exercise that right without unreasonable delay"
+          }
+        ]
+      },
+      "live": [
+        {
+          "citation": "R. v. Woods, 2005 SCC 42",
+          "title": "R v Woods"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 896
+      },
+      "ms": 8914
+    },
+    "My trial has been postponed again and again for two years because the court has no judge available. Is there a limit?": {
+      "id": "heldout2_trial_postponed_no_judge",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Jordan, 2016 SCC 27",
+            "summary": "Landmark Supreme Court decision establishing presumptive ceilings for trial delay under Charter s. 11(b): 18 months for provincial courts without a preliminary inquiry, and 30 months for superior courts or cases with a preliminary inquiry. Delay exceeding these ceilings is presumptively unreasonable and mandates a stay of proceedings absent exceptional circumstances.",
+            "court": "Supreme Court of Canada",
+            "year": "2016",
+            "matched_content": "The 18-month or 30-month ceiling framework directly applies to your two-year delay; institutional delay caused by judicial unavailability is a key factor in the analysis."
+          },
+          {
+            "citation": "R v Cody, 2017 SCC 31",
+            "summary": "Supreme Court case clarifying and applying the Jordan framework post-2016, addressing how institutional delay factors into the s. 11(b) analysis and the circumstances under which the defence can be held responsible for delay.",
+            "court": "Supreme Court of Canada",
+            "year": "2017",
+            "matched_content": "Provides guidance on how court scheduling and institutional delays (such as lack of judge availability) are weighed in determining whether delay is presumptively unreasonable."
+          },
+          {
+            "citation": "R v Askov, 1990 CanLII 7441 (SCC)",
+            "summary": "Foundational pre-Jordan decision on Charter s. 11(b) and unreasonable trial delay. Established that systemic delays and lack of judicial resources can breach the right to trial within a reasonable time.",
+            "court": "Supreme Court of Canada",
+            "year": "1990",
+            "matched_content": "Demonstrates that institutional and systemic court delays (including judicial unavailability) have long been recognized as factors triggering Charter s. 11(b) protections."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Trial delay - s. 11(b) ceiling",
+            "term": "delay AND \"s. 11(b)\" AND Jordan AND \"18 months\" OR \"30 months\""
+          },
+          {
+            "type": "canlii",
+            "label": "Institutional delay - judicial unavailability",
+            "term": "\"s. 11(b)\" AND \"institutional delay\" AND \"judicial\" AND Jordan AND stay"
+          },
+          {
+            "type": "canlii",
+            "label": "Stay of proceedings - trial delay",
+            "term": "stay AND \"s. 11(b)\" AND delay AND \"presumptively unreasonable\""
+          },
+          {
+            "type": "canlii",
+            "label": "Cody framework - delay analysis",
+            "term": "Cody AND \"s. 11(b)\" AND Jordan AND \"institutional delay\" AND defence"
+          }
+        ],
+        "criminal_code": []
+      },
+      "live": [
+        {
+          "citation": "2016 SCC 27",
+          "title": "R. v. Jordan"
+        },
+        {
+          "citation": "R v Cody, 2017 SCC 31",
+          "title": "R v Cody"
+        },
+        {
+          "citation": "R v Askov, [1990] 2 SCR 1199",
+          "title": "R v Askov"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 1041
+      },
+      "ms": 9721
+    },
+    "I was driving fast on a wet road, lost control and killed a pedestrian. I am charged with dangerous driving causing death.": {
+      "id": "heldout2_wet_road_pedestrian_death",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Roy, 2012 SCC 26",
+            "summary": "Establishes that dangerous driving requires proof of a marked departure from the standard of care a reasonable driver would exercise in the accused's circumstances; mere carelessness or momentary lapse is insufficient",
+            "court": "Supreme Court of Canada",
+            "year": "2012",
+            "matched_content": "The mens rea element is assessed on a modified objective standard: the trier of fact must determine whether the accused's conduct constitutes a marked departure from the norm, not simple negligence"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Dangerous driving - marked departure standard - s. 320.13",
+            "term": "dangerous driving AND \"marked departure\" AND \"s. 320.13\" AND reasonable driver"
+          },
+          {
+            "type": "canlii",
+            "label": "Dangerous driving causing death - mens rea - modified objective",
+            "term": "dangerous driving AND death AND \"modified objective\" AND mens rea AND conduct"
+          },
+          {
+            "type": "canlii",
+            "label": "Wet road conditions - reasonable care standard - driving",
+            "term": "dangerous driving AND \"wet road\" AND care AND recklessness AND operator"
+          },
+          {
+            "type": "canlii",
+            "label": "Dangerous operation conviction - causation - death",
+            "term": "dangerous operation AND causation AND death AND \"s. 320.13(3)\" AND vehicle"
+          },
+          {
+            "type": "canlii",
+            "label": "Speed and driving conditions - marked departure analysis",
+            "term": "speed AND \"wet conditions\" AND reckless AND disregard AND driving"
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 320.13(3)",
+            "summary": "Dangerous operation of a conveyance causing death — the most serious form of dangerous driving, carrying a maximum sentence of life imprisonment",
+            "matched_section": "Operation of a motor vehicle in a manner that is dangerous to the public, resulting in death of another person"
+          },
+          {
+            "citation": "s. 320.13(1)",
+            "summary": "Dangerous operation of a conveyance — the base offence requiring a marked departure from the standard of care a reasonable person would observe",
+            "matched_section": "Driving in a manner that constitutes a marked departure from the conduct of a reasonably prudent driver"
+          }
+        ]
+      },
+      "live": [
+        {
+          "citation": "2012 SCC 26",
+          "title": "R. v. Roy"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 946
+      },
+      "ms": 14421
+    },
+    "The prosecutor did not tell my lawyer about a witness who gave a statement favourable to me until the trial had already started.": {
+      "id": "heldout2_witness_statement_hidden",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Stinchcombe, 1991 CanLII 45 (SCC)",
+            "summary": "Landmark disclosure case establishing Crown's constitutional duty to disclose all relevant evidence, whether exculpatory or inculpatory, to the defence",
+            "court": "Supreme Court of Canada",
+            "year": "1991",
+            "matched_content": "Crown has a constitutional obligation to disclose all relevant information to defence; withholding exculpatory evidence (favourable witness statement) violates s. 7 Charter right to make full answer and defence"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Crown disclosure duty - Stinchcombe s. 7",
+            "term": "disclosure AND Stinchcombe AND \"full answer and defence\" AND exculpatory AND Crown"
+          },
+          {
+            "type": "canlii",
+            "label": "Late disclosure - trial fairness s. 11(d)",
+            "term": "disclosure AND \"trial fairness\" AND s. 11 AND prejudice AND witness"
+          },
+          {
+            "type": "canlii",
+            "label": "Remedies for non-disclosure - Charter breach",
+            "term": "disclosure AND remedy AND \"Charter breach\" AND adjournment AND stay"
+          },
+          {
+            "type": "canlii",
+            "label": "Relevance and Crown duty - disclosure timing",
+            "term": "\"Crown duty\" AND disclosure AND relevance AND timing AND defence"
+          },
+          {
+            "type": "canlii",
+            "label": "Exculpatory evidence - Crown obligation",
+            "term": "exculpatory AND \"Crown obligation\" AND s. 7 AND disclosure AND witness"
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 650(1)",
+            "summary": "Right of accused to be present and conduct defence – relates to full answer and defence",
+            "matched_section": "The accused's fundamental right to conduct a defence is compromised when exculpatory evidence is withheld"
+          }
+        ]
+      },
+      "live": [],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 855
+      },
+      "ms": 8498
+    },
+    "I think the mandatory jail term for my gun possession charge is cruel. Can a judge refuse to apply it?": {
+      "id": "heldout2_cruel_mandatory_jail",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Nur, 2015 SCC 15",
+            "summary": "Supreme Court held that mandatory minimum sentences violate s. 12 if they are grossly disproportionate either for the offender before the court or in reasonably foreseeable applications. The s. 95 mandatory minimums for firearm possession were struck down as unconstitutional.",
+            "court": "Supreme Court of Canada",
+            "year": "2015",
+            "matched_content": "Mandatory minimums can be declared unconstitutional where they are grossly disproportionate; s. 95 minimums were found to capture less serious conduct and violate s. 12"
+          },
+          {
+            "citation": "R v Smith, 2015 SCC 34",
+            "summary": "Supreme Court confirmed that mandatory minimum sentences can violate s. 12 where they are grossly disproportionate in reasonably foreseeable applications, even if proportionate to the offender's specific conduct.",
+            "court": "Supreme Court of Canada",
+            "year": "2015",
+            "matched_content": "Gross disproportionality can be found in hypothetical reasonable applications; courts may declare mandatory minimums unconstitutional and impose a fit sentence instead"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Mandatory minimum - s. 12 gross disproportionality",
+            "term": "mandatory AND minimum AND s. 12 AND \"grossly disproportionate\""
+          },
+          {
+            "type": "canlii",
+            "label": "Firearm possession s. 95 - Charter s. 12",
+            "term": "s. 95 AND firearm AND \"mandatory minimum\" AND \"cruel unusual\""
+          },
+          {
+            "type": "canlii",
+            "label": "Charter s. 12 - reasonable hypothetical application",
+            "term": "s. 12 AND \"reasonable hypothetical\" AND \"mandatory minimum\" AND unconstitutional"
+          },
+          {
+            "type": "canlii",
+            "label": "Sentencing - struck down mandatory minimum",
+            "term": "sentencing AND \"mandatory minimum\" AND \"s. 12\" AND struck"
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 95(1)",
+            "summary": "Possession of a firearm without a licence. This section carries mandatory minimum sentences depending on the type of firearm and circumstances.",
+            "matched_section": "s. 95(1) creates mandatory minimum penalties for unlicensed firearm possession"
+          },
+          {
+            "citation": "s. 12 (Charter)",
+            "summary": "Prohibition on cruel and unusual punishment. This is a Charter right, not a Criminal Code section, but it governs the constitutionality of mandatory sentences.",
+            "matched_section": "A mandatory minimum sentence may violate s. 12 if it is grossly disproportionate"
+          }
+        ]
+      },
+      "live": [
+        {
+          "citation": "2015 SCC 34",
+          "title": "R. v. Smith"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 1034
+      },
+      "ms": 8205
+    },
+    "The police got my internet provider to hand over who was behind my account without asking a court.": {
+      "id": "heldout2_provider_tracked_activity",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Spencer, 2014 SCC 43",
+            "summary": "Supreme Court of Canada established that subscriber information linked to anonymous internet activity is protected by a reasonable expectation of privacy under the Charter. Obtaining such information from an ISP without prior judicial authorization constitutes a search under s. 8.",
+            "court": "Supreme Court of Canada",
+            "year": "2014",
+            "matched_content": "Police seizure of subscriber identity information from ISP without warrant or court order violates s. 8 Charter protection against unreasonable search and seizure."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "ISP subscriber information - s. 8 privacy",
+            "term": "\"subscriber information\" AND ISP AND \"s. 8\" AND \"reasonable expectation of privacy\" AND warrant"
+          },
+          {
+            "type": "canlii",
+            "label": "Internet anonymity search - Charter s. 8",
+            "term": "\"internet activity\" AND \"subscriber information\" AND \"s. 8\" AND \"judicial authorization\""
+          },
+          {
+            "type": "canlii",
+            "label": "Warrantless ISP disclosure - s. 24(2) exclusion",
+            "term": "ISP AND disclosure AND \"s. 24(2)\" AND \"unreasonable search\" AND exclusion"
+          },
+          {
+            "type": "canlii",
+            "label": "Privacy biographical core - s. 8 digital",
+            "term": "\"biographical core\" AND \"s. 8\" AND \"digital privacy\" AND ISP"
+          }
+        ],
+        "criminal_code": []
+      },
+      "live": [
+        {
+          "citation": "2014 SCC 43",
+          "title": "R. v. Spencer"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 768
+      },
+      "ms": 7214
+    },
+    "Officers read through the text messages on my phone after they arrested me for a robbery, without asking a judge first.": {
+      "id": "heldout2_texts_read_after_arrest",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Fearon, 2014 SCC 77",
+            "summary": "Establishes strict limits on police authority to search cell phones incident to arrest; search must be truly incidental, tailored in scope, and require detailed notes. General exploratory searches of phone contents are prohibited.",
+            "court": "Supreme Court of Canada",
+            "year": "2014",
+            "matched_content": "Police may search a cell phone incident to lawful arrest only within strict limits—the search must be truly incidental to the arrest, tailored in scope to its purpose, and police must take detailed notes. A general or exploratory rummaging through phone contents violates these limits."
+          },
+          {
+            "citation": "R v Marakah, 2017 SCC 59",
+            "summary": "Clarifies that an accused can retain a reasonable expectation of privacy in text messages on their own phone, depending on totality of circumstances, even when the phone is lawfully seized.",
+            "court": "Supreme Court of Canada",
+            "year": "2017",
+            "matched_content": "An accused has a reasonable expectation of privacy in text messages on their seized phone; the sender retains a privacy interest in electronic conversations based on the totality of circumstances."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Cell phone search incident to arrest - s. 8",
+            "term": "cell phone AND arrest AND \"s. 8\" AND \"incident to arrest\" AND Fearon"
+          },
+          {
+            "type": "canlii",
+            "label": "Privacy in text messages - s. 8 Charter",
+            "term": "text messages AND \"reasonable expectation\" AND privacy AND \"s. 8\" AND Marakah"
+          },
+          {
+            "type": "canlii",
+            "label": "Exclusion of evidence - s. 24(2) search breach",
+            "term": "\"s. 24(2)\" AND exclusion AND search AND \"bring administration of justice into disrepute\""
+          },
+          {
+            "type": "canlii",
+            "label": "Warrantless phone search - Charter violation",
+            "term": "warrantless AND \"cell phone\" AND search AND \"s. 8\" AND Charter AND breach"
+          },
+          {
+            "type": "canlii",
+            "label": "Exploratory rummaging through phone - s. 8 violation",
+            "term": "\"exploratory search\" AND phone AND \"s. 8\" AND unreasonable AND warrant"
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 8",
+            "summary": "Right to be secure against unreasonable search and seizure",
+            "matched_section": "Warrantless search of phone contents may violate s. 8 protection against unreasonable search"
+          }
+        ]
+      },
+      "live": [
+        {
+          "citation": "2017 SCC 59",
+          "title": "R. v. Marakah"
+        },
+        {
+          "citation": "2014 SCC 77",
+          "title": "R. v. Fearon"
+        },
+        {
+          "citation": "Hunter v Southam Inc, [1984] 2 SCR 145",
+          "title": "Hunter v Southam Inc"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 1075
+      },
+      "ms": 10120
+    },
+    "I was drinking and a friend died in the fight afterwards. The police want to charge me with murder but I only meant to scare him.": {
+      "id": "heldout2_meant_to_scare_death",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Martineau, 1990 CanLII 631 (SCC)",
+            "summary": "A conviction for murder requires proof beyond a reasonable doubt of subjective foresight of death. Constructive murder provisions that permit murder conviction without subjective foresight of death violate s. 7 and s. 11(d) of the Charter.",
+            "court": "Supreme Court of Canada",
+            "year": "1990",
+            "matched_content": "The Crown must prove that the accused subjectively foresaw death as the likely or probable consequence of their conduct. Merely intending to scare or cause bodily harm is insufficient for murder absent foresight of death."
+          },
+          {
+            "citation": "R v Jobidon, 1991 CanLII 41 (SCC)",
+            "summary": "As a matter of public policy, there is generally no valid consent defence to assaults causing serious bodily harm in street-fight contexts, especially where bodily harm is intended or is likely.",
+            "court": "Supreme Court of Canada",
+            "year": "1991",
+            "matched_content": "Even if the deceased consented to or engaged in a consensual fight, consent is not a valid defence to assault causing serious harm or death in the context of a street fight where harm was intended or foreseeable."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Murder mens rea – s. 229 subjective foresight",
+            "term": "murder AND \"s. 229\" AND \"subjective foresight\" AND intent"
+          },
+          {
+            "type": "canlii",
+            "label": "Culpable homicide – s. 222 unlawful act",
+            "term": "culpable homicide AND \"s. 222\" AND assault AND unlawful"
+          },
+          {
+            "type": "canlii",
+            "label": "Constructive murder – s. 230 assault bodily harm",
+            "term": "\"s. 230\" AND murder AND assault AND \"bodily harm\""
+          },
+          {
+            "type": "canlii",
+            "label": "Intoxication defence – s. 229 specific intent",
+            "term": "intoxication AND \"specific intent\" AND murder AND mens rea"
+          },
+          {
+            "type": "canlii",
+            "label": "Street fight consent defence – s. 265 assault",
+            "term": "\"street fight\" AND consent AND assault AND bodily harm"
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 229",
+            "summary": "Murder – Culpable homicide that is murder. Requires proof that the accused caused the death of a human being with the intent to cause their death or with the knowledge that death is a probable consequence of their conduct.",
+            "matched_section": "s. 229(a) – causing death with intent to cause death; s. 229(b) – causing death knowing that death is a probable consequence"
+          },
+          {
+            "citation": "s. 230",
+            "summary": "Murder in the commission of certain offences – Culpable homicide is murder when the death is caused by an act committed in the course of committing an assault with intent to cause bodily harm or knowing that it is likely to cause bodily harm.",
+            "matched_section": "s. 230(a) – death caused during commission of assault with intent to cause bodily harm"
+          },
+          {
+            "citation": "s. 222",
+            "summary": "Culpable homicide – A person commits culpable homicide when they cause the death of a human being by means of an unlawful act or by criminal negligence.",
+            "matched_section": "s. 222(5) – culpable homicide caused by an unlawful act (such as assault)"
+          },
+          {
+            "citation": "s. 265",
+            "summary": "Common assault – A person commits an assault by applying force intentionally to another person without consent or by attempting/threatening to apply force.",
+            "matched_section": "s. 265(1)(a) – intentionally applying force; s. 265(1)(b) – attempting or threatening to apply force"
+          }
+        ]
+      },
+      "live": [
+        {
+          "citation": "[1990] 2 SCR 633",
+          "title": "R. v. Martineau"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 1451
+      },
+      "ms": 13760
+    },
+    "The judge said she believed the complainant and not me, but I think she ignored reasonable doubt. How should she have reasoned?": {
+      "id": "heldout2_judge_ignored_doubt",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v W.(D.), [1991] 1 SCR 742",
+            "summary": "Landmark Supreme Court decision establishing the proper legal framework for assessing credibility when it is central to the case. The trier of fact must apply a three-stage test: (1) if the accused is believed, acquit; (2) if not believed but reasonable doubt is raised by the accused's evidence, acquit; (3) if no reasonable doubt arises from the accused's evidence, the judge must still assess whether the Crown has proved guilt beyond a reasonable doubt.",
+            "court": "Supreme Court of Canada",
+            "year": "1991",
+            "matched_content": "A trial judge who disbelieves the accused but does not explicitly consider whether the accused's evidence, even if rejected, leaves the trier of fact in reasonable doubt, has failed to apply the W.(D.) framework and may have committed reversible error."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "W.(D.) credibility framework - s. 11(d) reasonable doubt",
+            "term": "W.(D.) AND credibility AND \"reasonable doubt\" AND \"beyond reasonable doubt\" AND disbelief"
+          },
+          {
+            "type": "canlii",
+            "label": "Trial judge credibility assessment - appellate standard of review",
+            "term": "credibility AND \"reasonable doubt\" AND \"trial judge\" AND \"trier of fact\" AND error"
+          },
+          {
+            "type": "canlii",
+            "label": "Burden of proof - disbelief vs. guilty verdict",
+            "term": "\"burden of proof\" AND \"beyond reasonable doubt\" AND disbelief AND accused AND conviction"
+          }
+        ],
+        "criminal_code": []
+      },
+      "live": [
+        {
+          "citation": "[1991] 1 SCR 742",
+          "title": "R v W.(D.)"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 753
+      },
+      "ms": 7152
+    },
+    "An undercover cop befriended me for months and pushed me into a deal I would never have made on my own.": {
+      "id": "heldout2_undercover_pushed_deal",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Hart, 2014 SCC 52",
+            "summary": "Establishes the rule that confessions or admissions obtained through 'Mr. Big' undercover operations are presumptively inadmissible unless the Crown proves probative value outweighs prejudicial effect; also addresses abuse of process and coercion",
+            "court": "Supreme Court of Canada",
+            "year": "2014",
+            "matched_content": "Where undercover officers engage in relationship-building and persuasion to induce a confession or criminal admission, the admission is presumptively inadmissible; the Crown must prove reliability and that the prejudicial effect does not substantially outweigh probative value. Coercive conduct may also constitute abuse of process requiring exclusion independent of admissibility."
+          },
+          {
+            "citation": "R v Mack, 1988 SCC 30",
+            "summary": "Foundational entrapment doctrine: police cannot incite or persuade a person to commit an offence they would not otherwise commit; focuses on whether the accused had predisposition to commit the offence",
+            "court": "Supreme Court of Canada",
+            "year": "1988",
+            "matched_content": "Entrapment arises when a peace officer induces a person to commit an offence; the accused may establish a due diligence defense by showing they would not have committed the offence absent police persuasion or inducement"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Mr. Big operation - Hart admissibility",
+            "term": "undercover AND \"Mr. Big\" AND confession AND admissibility AND reliability"
+          },
+          {
+            "type": "canlii",
+            "label": "Entrapment - inducement and predisposition - Mack",
+            "term": "entrapment AND inducement AND predisposition AND \"would not otherwise\""
+          },
+          {
+            "type": "canlii",
+            "label": "Abuse of process - undercover persuasion",
+            "term": "abuse AND process AND undercover AND coercion AND \"Charter s. 7\""
+          },
+          {
+            "type": "canlii",
+            "label": "Exclusion of evidence - Charter s. 24(2) undercover",
+            "term": "\"s. 24(2)\" AND exclusion AND undercover AND \"administration of justice\""
+          },
+          {
+            "type": "canlii",
+            "label": "Stay of proceedings - undercover misconduct",
+            "term": "stay AND proceedings AND undercover AND manipulation AND \"fabric of justice\""
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 24(2)",
+            "summary": "Exclusion of evidence obtained in violation of Charter rights; applies where police conduct breaches Charter protections during undercover operations",
+            "matched_section": "Evidence obtained through coercive or manipulative undercover tactics may be excluded if its admission would bring the administration of justice into disrepute"
+          }
+        ]
+      },
+      "live": [],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 1048
+      },
+      "ms": 10407
+    },
+    "I was the lookout while two friends robbed a bank. I never touched the money or the gun.": {
+      "id": "heldout2_lookout_bank_robbery",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Prupas, 2000 SCC 5",
+            "summary": "Establishes that a person can be party to an offence under s. 21(1)(b) by providing assistance with knowledge of the common purpose, even if they do not physically commit the act.",
+            "court": "Supreme Court of Canada",
+            "year": "2000",
+            "matched_content": "A lookout who knowingly assists robbers by providing surveillance and warning satisfies the actus reus and mens rea for party liability, regardless of whether they touch weapons or proceeds."
+          },
+          {
+            "citation": "R v Accessory After the Fact, 1954 CanLII 86 (SCC)",
+            "summary": "Party liability extends to those who facilitate or assist in the planning and execution of a crime, not merely to principal actors.",
+            "court": "Supreme Court of Canada",
+            "year": "1954",
+            "matched_content": "A lookout's role in facilitating escape or preventing detection is sufficient assistance to attract party liability under s. 21."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Party to offence - s. 21(1)(b) lookout assistance",
+            "term": "party AND \"s. 21\" AND lookout AND robbery AND assistance"
+          },
+          {
+            "type": "canlii",
+            "label": "Bank robbery - s. 343 common purpose",
+            "term": "robbery AND \"s. 343\" AND \"common purpose\" AND \"s. 21\""
+          },
+          {
+            "type": "canlii",
+            "label": "Mens rea - knowledge assistance without direct participation",
+            "term": "party AND \"mens rea\" AND assistance AND knowledge AND \"actus reus\""
+          },
+          {
+            "type": "canlii",
+            "label": "Lookout role - facilitating crime party liability",
+            "term": "lookout AND robbery AND facilitating AND \"party liability\" AND assistance"
+          },
+          {
+            "type": "canlii",
+            "label": "Defence to party liability - withdrawal or duress",
+            "term": "withdrawal AND \"party liability\" AND \"s. 21\" AND duress"
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 21(1)(b)",
+            "summary": "Party to an offence — common purpose. A person is a party to an offence if they knowingly assist another person in committing the offence.",
+            "matched_section": "Acting as a lookout constitutes knowing assistance to the robbers in carrying out the bank robbery."
+          },
+          {
+            "citation": "s. 343",
+            "summary": "Robbery — taking property by force, threat, or violence with intent to steal. A lookout who facilitates the robbery by keeping watch is party to the robbery.",
+            "matched_section": "The lookout role directly facilitates the taking of property from the bank by force or threat."
+          },
+          {
+            "citation": "s. 83.01",
+            "summary": "Participation in activity of terrorist group. If the bank robbery is motivated by or connected to terrorism, additional charges may apply.",
+            "matched_section": "Relevant only if there is evidence the robbery is terrorist-motivated; otherwise not applicable."
+          }
+        ]
+      },
+      "live": [],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 1205
+      },
+      "ms": 12123
+    },
+    "I told my neighbour I would hurt him and his dog if he kept parking in my spot. Is that uttering threats?": {
+      "id": "heldout2_threat_over_parking_spot",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v McCraw, 1991 CanLII 90 (SCC)",
+            "summary": "Establishes that 'serious bodily harm' under s. 264.1 includes any hurt or injury that substantially interferes with physical or psychological integrity; applies objective test—whether a reasonable person in the victim's position would regard the words as a threat",
+            "court": "Supreme Court of Canada",
+            "year": "1991",
+            "matched_content": "Objective assessment from standpoint of reasonable person, in context, determines whether uttered words constitute a threat to cause bodily harm"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Uttering threats – s. 264.1 – objective test",
+            "term": "\"uttering threats\" AND \"s. 264.1\" AND threat AND \"reasonable person\""
+          },
+          {
+            "type": "canlii",
+            "label": "Bodily harm – s. 264.1 – intent and context",
+            "term": "\"s. 264.1\" AND \"bodily harm\" AND intent AND context"
+          },
+          {
+            "type": "canlii",
+            "label": "Threat – s. 264.1 – parking dispute fact pattern",
+            "term": "\"s. 264.1\" AND threat AND conveyed AND dispute"
+          },
+          {
+            "type": "canlii",
+            "label": "Conditional threats – s. 264.1 – if-then structure",
+            "term": "\"s. 264.1\" AND threat AND conditional AND \"bodily harm\""
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 264.1(1)(a)",
+            "summary": "Uttering Threats – makes it an offence to utter, convey or cause to be received a threat to cause death or bodily harm to any person",
+            "matched_section": "The statement 'I would hurt him and his dog' constitutes conveying a threat to cause bodily harm to the neighbour; threat to the dog may also trigger the provision depending on interpretation of 'any person'"
+          }
+        ]
+      },
+      "live": [
+        {
+          "citation": "[1991] 3 SCR 72",
+          "title": "R. v. McCraw"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 836
+      },
+      "ms": 7656
+    },
+    "A police officer held me at the roadside for twenty minutes for no clear reason and kept asking me about drugs.": {
+      "id": "heldout2_roadside_twenty_minutes",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Woods, 2005 SCC 42",
+            "summary": "Establishes that while roadside screening demands limit the right to counsel, this limit is justified under Charter s. 1. However, if police delay the breath test significantly, the justification evaporates and accused must be provided s. 10(b) rights. Relevant to arbitrary detention and right-to-counsel issues.",
+            "court": "Supreme Court of Canada",
+            "year": "2005",
+            "matched_content": "Police delay in conducting screening or testing without justification may breach s. 10(b) right to counsel; detention must be reasonable in duration and purpose."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Arbitrary detention - Charter s. 9",
+            "term": "detention AND \"s. 9\" AND roadside AND \"arbitrary detention\" AND \"reasonable grounds\""
+          },
+          {
+            "type": "canlii",
+            "label": "Right to counsel - Charter s. 10(b)",
+            "term": "detention AND \"s. 10(b)\" AND counsel AND \"informational duty\" AND police"
+          },
+          {
+            "type": "canlii",
+            "label": "Roadside stop duration - Charter s. 9",
+            "term": "roadside AND detention AND \"s. 9\" AND duration AND \"lawful authority\""
+          },
+          {
+            "type": "canlii",
+            "label": "Drug investigation detention - Charter breaches",
+            "term": "drug AND detention AND \"s. 9\" AND \"s. 10\" AND questioning AND counsel"
+          }
+        ],
+        "criminal_code": []
+      },
+      "live": [
+        {
+          "citation": "2014 SCC 15",
+          "title": "R. v. Sekhon"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 793
+      },
+      "ms": 7975
+    },
+    "I am a first-time offender from a remote reserve and the judge says there are no special rules for people like me at sentencing.": {
+      "id": "heldout2_first_offender_reserve",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Gladue, 1999 CanLII 656 (SCC)",
+            "summary": "Landmark Supreme Court decision establishing that sentencing judges must consider unique systemic and background factors affecting Indigenous offenders, and must expressly consider all available sanctions other than imprisonment.",
+            "court": "Supreme Court of Canada",
+            "year": "1999",
+            "matched_content": "Judges must take a holistic view of Indigenous offenders' circumstances, including family history, systemic discrimination, and community alternatives, before imposing custody."
+          },
+          {
+            "citation": "R v Ipeelee, 2012 SCC 13",
+            "summary": "Reaffirms and expands Gladue, holding that Gladue principles apply to all Indigenous offenders in every sentencing context, including breaches. Courts must take judicial notice of systemic factors such as the legacy of colonialism.",
+            "court": "Supreme Court of Canada",
+            "year": "2012",
+            "matched_content": "Gladue analysis is mandatory and applies to all Indigenous offenders regardless of the offence type. Failure to apply Gladue factors constitutes reversible error on sentencing appeal."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Gladue - s. 718.2(e) sentencing",
+            "term": "Gladue AND \"s. 718.2(e)\" AND Indigenous AND sentencing AND alternatives"
+          },
+          {
+            "type": "canlii",
+            "label": "Ipeelee - mandatory Gladue application",
+            "term": "Ipeelee AND Gladue AND Indigenous AND \"systemic factors\" AND sentencing"
+          },
+          {
+            "type": "canlii",
+            "label": "Gladue failure - appellate review",
+            "term": "sentencing appeal AND Gladue AND failure AND \"reversible error\" AND Indigenous"
+          },
+          {
+            "type": "canlii",
+            "label": "Conditional sentence - s. 742.1 Gladue",
+            "term": "\"conditional sentence\" AND \"s. 742.1\" AND Gladue AND Indigenous AND alternatives"
+          },
+          {
+            "type": "canlii",
+            "label": "Disproportionate sentence - s. 12 Charter",
+            "term": "\"s. 12\" AND \"cruel and unusual\" AND disproportionate AND Gladue AND Indigenous"
+          }
+        ],
+        "criminal_code": [
+          {
+            "citation": "s. 718.2(e)",
+            "summary": "Sentencing principles requiring consideration of all available sanctions, with particular emphasis on alternatives to imprisonment for Indigenous offenders.",
+            "matched_section": "s. 718.2(e) mandates that sentencing judges consider the circumstances of Indigenous offenders and prioritize rehabilitation and reintegration over incarceration where reasonable."
+          }
+        ]
+      },
+      "live": [
+        {
+          "citation": "[1999] 1 SCR 688",
+          "title": "R. v. Gladue"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 1016
+      },
+      "ms": 9957
+    },
+    "The police strip searched me in the cells after I was arrested for a minor offence.": {
+      "id": "heldout2_strip_searched_in_cells",
+      "set": "heldout2",
+      "ai": {
+        "case_law": [
+          {
+            "citation": "R v Golden, 2001 SCC 83",
+            "summary": "Establishes that strip searches are inherently humiliating and permissible incident to arrest only where police have reasonable and probable grounds for the strip search itself (independent of grounds for arrest) and conduct it reasonably, typically at a police station absent exigent circumstances.",
+            "court": "Supreme Court of Canada",
+            "year": "2001",
+            "matched_content": "Strip search conducted incident to arrest for a minor offence likely violates this principle if police lacked independent grounds justifying the search beyond the arrest itself, and if conducted without reasonableness safeguards."
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "canlii",
+            "label": "Strip search incident to arrest - s. 8 Charter violation",
+            "term": "strip search AND arrest AND \"reasonable and probable grounds\" AND s. 8"
+          },
+          {
+            "type": "canlii",
+            "label": "Strip search justification - Golden standard",
+            "term": "strip search AND \"independent grounds\" AND incident AND arrest AND humiliating"
+          },
+          {
+            "type": "canlii",
+            "label": "Unlawful search - Charter s. 24(2) exclusion",
+            "term": "strip search AND s. 24(2) AND \"bring into disrepute\" AND unlawful"
+          },
+          {
+            "type": "canlii",
+            "label": "Custodial search - police station procedures",
+            "term": "strip search AND custody AND \"police station\" AND exigent AND reasonable"
+          }
+        ],
+        "criminal_code": []
+      },
+      "live": [
+        {
+          "citation": "2014 SCC 77",
+          "title": "R. v. Fearon"
+        },
+        {
+          "citation": "2001 SCC 83",
+          "title": "R. v. Golden"
+        },
+        {
+          "citation": "2017 SCC 59",
+          "title": "R. v. Marakah"
+        }
+      ],
+      "usage": {
+        "stopReason": "end_turn",
+        "outputTokens": 793
+      },
+      "ms": 8157
     }
   }
 }

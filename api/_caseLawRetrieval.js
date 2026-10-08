@@ -8,8 +8,10 @@ import {
   buildCaseUrl,
   buildCaseId,
   buildCitationIdentityKey,
+  resolveCorpusCase,
 } from "../src/lib/canlii.js";
 import { MASTER_CASE_LAW_DB } from "../src/lib/caselaw/index.js";
+import { MIN_DISTINCT_TERMS, rankCorpus } from "./_corpusRanker.js";
 import { findLandmarkSeeds } from "../src/lib/landmarkCases.js";
 import {
   SIMPLE_STOP_WORDS,
@@ -2501,6 +2503,13 @@ function sortCandidatesForStableVerification(candidates) {
 
 function dedupeCandidates(candidates) {
   const byCitation = new Map();
+  // Remember which cases the model itself suggested; whichever copy wins a
+  // merge (dedupe prefers the landmark copy) must keep that trust.
+  const modelSuggested = new Set(
+    candidates
+      .filter((c) => c?.modelSuggested)
+      .map((c) => buildCitationIdentityKey(c.citation)),
+  );
   for (const candidate of candidates) {
     const key = buildCitationIdentityKey(candidate.citation);
     if (!byCitation.has(key)) {
@@ -2542,7 +2551,9 @@ function dedupeCandidates(candidates) {
       }
     }
   }
-  return Array.from(byCitation.values());
+  return Array.from(byCitation.entries()).map(([key, candidate]) =>
+    modelSuggested.has(key) ? { ...candidate, modelSuggested: true } : candidate,
+  );
 }
 
 function toCaseLawItem(candidate, verification) {
@@ -2632,12 +2643,54 @@ export async function retrieveVerifiedCaseLaw({
 
   // Build candidates from AI-generated case citations
   const aiCitationCandidates = [];
+  // The model also cites cases for scenarios that should show nothing (a
+  // disclosure case for an online defamation question). A case resolved to the
+  // corpus must therefore share at least MIN_DISTINCT_TERMS different words
+  // with the scenario; otherwise it is treated as before (verified through
+  // CanLII, and dropped when that cannot confirm it).
+  let corpusRanking = null;
+  const corroboratedByScenario = (row) => {
+    corpusRanking ||= rankCorpus(scenario, MASTER_CASE_LAW_DB);
+    const entry = corpusRanking.find((r) => r.caseLaw.citation === row.citation);
+    return Boolean(entry) && entry.matchedWords >= MIN_DISTINCT_TERMS;
+  };
   if (Array.isArray(aiCaseLaw)) {
     for (const item of aiCaseLaw) {
       if (!item || !item.citation) continue;
       const citation = sanitizeTerm(item.citation);
       const parsed = parseCitation(citation);
       if (!parsed) continue;
+
+      // A case we already hold, written with a wrong or unverifiable number:
+      // use our row. It stays a model suggestion (not a landmark match), so
+      // selection treats it like a verified model citation.
+      const resolved = resolveCorpusCase(
+        { citation, title: item.title },
+        MASTER_CASE_LAW_DB,
+      );
+      if (resolved && corroboratedByScenario(resolved)) {
+        aiCitationCandidates.push({
+          citation: resolved.citation,
+          title: resolved.title,
+          summary: [
+            resolved.ratio,
+            ...(resolved.tags || []),
+            ...(resolved.topics || []),
+          ]
+            .filter(Boolean)
+            .join(" "),
+          url: "",
+          matchedTerm: "AI suggestion",
+          court: resolved.court,
+          year: resolved.year,
+          isLandmark: true, // curated: no CanLII call needed
+          modelSuggested: true,
+          resolvedFromCorpus: true,
+        });
+        prefilterDiagnostics.totalAiCandidatesParsed += 1;
+        continue;
+      }
+
       aiCitationCandidates.push({
         citation,
         title: parsed.parties || sanitizeTerm(item.title || "") || null,
@@ -2857,6 +2910,7 @@ export async function retrieveVerifiedCaseLaw({
         ),
         verificationStatus: "verified",
         retrievalScore: Number(candidate?.retrievalScore) || 0,
+        ...(candidate.modelSuggested ? { [VERIFIED_BY_LOOKUP]: true } : {}),
       });
     } else {
       if (toVerify.length >= MAX_VERIFICATION_CALLS) continue;

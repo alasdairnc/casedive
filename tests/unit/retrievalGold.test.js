@@ -12,6 +12,7 @@ import {
 } from "../../scripts/_retrievalGoldEval.js";
 import { RETRIEVAL_GOLD_SET } from "./retrievalGoldSet.js";
 import { RETRIEVAL_HELD_OUT_SET } from "./retrievalHeldOutSet.js";
+import { RETRIEVAL_HELD_OUT_SET_2 } from "./retrievalHeldOutSet2.js";
 
 describe("corpus integrity", () => {
   it("has one row per case", () => {
@@ -29,12 +30,16 @@ describe("corpus integrity", () => {
 
 describe("held-out set integrity", () => {
   it("has unique ids that do not collide with the gold set, and real labels", () => {
-    const ids = [...RETRIEVAL_GOLD_SET, ...RETRIEVAL_HELD_OUT_SET].map((s) => s.id);
+    const ids = [
+      ...RETRIEVAL_GOLD_SET,
+      ...RETRIEVAL_HELD_OUT_SET,
+      ...RETRIEVAL_HELD_OUT_SET_2,
+    ].map((s) => s.id);
     expect(new Set(ids).size).toBe(ids.length);
     const corpusKeys = new Set(
       MASTER_CASE_LAW_DB.map((c) => citationKey(c.citation)),
     );
-    for (const s of RETRIEVAL_HELD_OUT_SET) {
+    for (const s of [...RETRIEVAL_HELD_OUT_SET, ...RETRIEVAL_HELD_OUT_SET_2]) {
       for (const tier of ["relevant", "acceptable", "wrong"]) {
         for (const citation of s[tier] || []) {
           expect(corpusKeys.has(citationKey(citation)), `${s.id}.${tier}`).toBe(true);
@@ -187,8 +192,10 @@ describe("held-out and negative replay (offline)", () => {
 // The primary ratchet: the model's recorded suggestions and CanLII's recorded
 // answers replayed through the full production path (scripts/record-retrieval-
 // fixtures.js; re-record with --ids when a scenario is added). Measured
-// 2026-10-08: dev hit 73.3%, strong 76.2%, recall@3 72.6%, precision 74.0%,
-// wrong 7; held-out hit 61.5%, strong 38.5%, recall@3 34.6%, precision 50%,
+// 2026-10-08, after resolving model citations to the corpus: dev hit 75.6%,
+// strong 78.6%, recall@3 75.0%, precision 74.3%, wrong 7; held-out hit 61.5%,
+// strong 38.5%, recall@3 34.6%, precision 55.6%, wrong 0; held-out batch 2
+// (aggregate only) hit 66.7%, strong 60.0%, recall@3 56.7%, precision 61.1%,
 // wrong 0; 2 of 26 negatives leak.
 describe("model replay (recorded fixtures)", () => {
   const fixtures = loadFixtures();
@@ -198,6 +205,7 @@ describe("model replay (recorded fixtures)", () => {
     const texts = [
       ...RETRIEVAL_GOLD_SET,
       ...RETRIEVAL_HELD_OUT_SET,
+      ...RETRIEVAL_HELD_OUT_SET_2,
     ].map((s) => s.scenario);
     const missing = texts.filter((t) => !fixtures.scenarios[t]);
     expect(missing, "record these with scripts/record-retrieval-fixtures.js").toEqual([]);
@@ -206,10 +214,10 @@ describe("model replay (recorded fixtures)", () => {
   it("does not regress", { timeout: 180_000 }, async () => {
     const dev = await runGoldEval({ fixtures });
     expect(dev.fetchCalls).toBe(0);
-    expect(dev.summary.hitRate).toBeGreaterThanOrEqual(0.73);
-    expect(dev.summary.strongHitRate).toBeGreaterThanOrEqual(0.76);
-    expect(dev.summary.recallAtK).toBeGreaterThanOrEqual(0.72);
-    expect(dev.summary.precision).toBeGreaterThanOrEqual(0.73);
+    expect(dev.summary.hitRate).toBeGreaterThanOrEqual(0.75);
+    expect(dev.summary.strongHitRate).toBeGreaterThanOrEqual(0.78);
+    expect(dev.summary.recallAtK).toBeGreaterThanOrEqual(0.74);
+    expect(dev.summary.precision).toBeGreaterThanOrEqual(0.74);
     expect(dev.summary.wrongCount).toBeLessThanOrEqual(7);
     expect(dev.summary.duplicateCount).toBe(0);
 
@@ -218,8 +226,16 @@ describe("model replay (recorded fixtures)", () => {
     expect(held.summary.hitRate).toBeGreaterThanOrEqual(0.6);
     expect(held.summary.strongHitRate).toBeGreaterThanOrEqual(0.38);
     expect(held.summary.recallAtK).toBeGreaterThanOrEqual(0.34);
-    expect(held.summary.precision).toBeGreaterThanOrEqual(0.49);
+    expect(held.summary.precision).toBeGreaterThanOrEqual(0.55);
     expect(held.summary.wrongCount).toBe(0);
+
+    const held2 = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET_2, fixtures });
+    expect(held2.fetchCalls).toBe(0);
+    expect(held2.summary.hitRate).toBeGreaterThanOrEqual(0.66);
+    expect(held2.summary.strongHitRate).toBeGreaterThanOrEqual(0.59);
+    expect(held2.summary.recallAtK).toBeGreaterThanOrEqual(0.56);
+    expect(held2.summary.precision).toBeGreaterThanOrEqual(0.6);
+    expect(held2.summary.wrongCount).toBe(0);
 
     const negatives = await runFailureNegatives({ fixtures });
     expect(negatives.leakCount).toBeLessThanOrEqual(2);

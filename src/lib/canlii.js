@@ -111,7 +111,7 @@ function normalizeCitationInput(citation) {
     .trim();
 }
 
-function normalizePartiesKey(parties) {
+export function normalizePartiesKey(parties) {
   const STOP_WORDS = new Set([
     "r",
     "v",
@@ -149,6 +149,36 @@ function normalizePartiesKey(parties) {
     .split(/\s+/)
     .filter((w) => w.length > 2 && !STOP_WORDS.has(w))
     .join(" ");
+}
+
+/**
+ * Resolve a model-suggested citation to a case already in the curated corpus,
+ * by parties, year and court. Returns the corpus row only on exactly one match.
+ *
+ * The model often has the case right and the number wrong ("R v Martineau,
+ * 1990 CanLII 631 (SCC)" for [1990] 2 SCR 633), and a pre-2000 SCR cite cannot
+ * be verified through the CanLII API at all, so both used to be dropped. Year
+ * and court keep "R v Grant" [1993] apart from Grant 2009, and an ONCA Smith
+ * from the SCC Smith; two neutral numbers that differ rule a match out.
+ */
+export function resolveCorpusCase({ citation, title } = {}, corpus = []) {
+  const parsed = parseCitation(citation);
+  if (!parsed) return null;
+  const partiesKey = normalizePartiesKey(parsed.parties || title);
+  if (!partiesKey) return null;
+
+  const matches = corpus.filter((row) => {
+    if (!row?.citation || String(row.year) !== String(parsed.year)) return false;
+    if (row.court && String(row.court).toUpperCase() !== parsed.courtCode)
+      return false;
+    if (normalizePartiesKey(row.title) !== partiesKey) return false;
+    const rowParsed = parseCitation(row.citation);
+    const bothNeutral =
+      rowParsed?.number && parsed.number && !rowParsed.isLegacy && !parsed.isLegacy;
+    if (bothNeutral && rowParsed.number !== parsed.number) return false;
+    return true;
+  });
+  return matches.length === 1 ? matches[0] : null;
 }
 
 export function buildCitationIdentityKey(citation) {

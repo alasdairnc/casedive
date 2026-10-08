@@ -11,6 +11,7 @@
  */
 import fs from "node:fs";
 import { RETRIEVAL_HELD_OUT_SET } from "../tests/unit/retrievalHeldOutSet.js";
+import { RETRIEVAL_HELD_OUT_SET_2 } from "../tests/unit/retrievalHeldOutSet2.js";
 import {
   checkReplayFidelity,
   loadFixtures,
@@ -109,6 +110,14 @@ for (const r of heldOut.results.filter((x) => x.verdict !== "HIT")) {
   console.log(`   [${r.verdict}] ${r.id}: ${names(r.returned)}`);
 }
 
+// Second batch: aggregate only on purpose. Tracing individual scenarios while
+// developing uses the batch up; write a third one instead.
+const heldOut2 = await runGoldEval({ scenarios: RETRIEVAL_HELD_OUT_SET_2, fixtures });
+const h2 = heldOut2.summary;
+console.log(
+  `Held-out batch 2 (${h2.scenarios} frozen, aggregate only): hit ${pct(h2.hitRate)}, strong ${pct(h2.strongHitRate)}, recall@3 ${pct(h2.recallAtK)}, precision ${pct(h2.precision)}, wrong ${h2.wrongCount}`,
+);
+
 const negatives = await runFailureNegatives({ fixtures });
 console.log(
   `\nNegative replay: ${negatives.leakCount} of ${negatives.total} "expect no case law" scenarios showed a case (production scorer, real corpus).`,
@@ -118,7 +127,8 @@ for (const leak of negatives.leaks) {
 }
 
 if (jsonOut) {
-  fs.writeFileSync(jsonOut, JSON.stringify({ summary, results, heldOut: heldOut.summary, heldOutResults: heldOut.results, negatives }, null, 2));
+  fs.writeFileSync(jsonOut, JSON.stringify({ summary, results, heldOut: heldOut.summary,
+      heldOut2: heldOut2.summary, heldOutResults: heldOut.results, negatives }, null, 2));
   console.log(`\nWrote ${jsonOut}`);
 }
 
