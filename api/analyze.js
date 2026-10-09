@@ -1021,6 +1021,7 @@ export default async function handler(req, res) {
               criminalCode: Array.isArray(result.criminal_code)
                 ? result.criminal_code
                 : [],
+              civilLaw: Array.isArray(result.civil_law) ? result.civil_law : [],
               apiKey: canliiKey,
               maxResults: 10,
               timeoutMs: 7_000,

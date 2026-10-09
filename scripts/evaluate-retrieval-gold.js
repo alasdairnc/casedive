@@ -14,6 +14,7 @@ import { RETRIEVAL_HELD_OUT_SET } from "../tests/unit/retrievalHeldOutSet.js";
 import { RETRIEVAL_HELD_OUT_SET_2 } from "../tests/unit/retrievalHeldOutSet2.js";
 import { RETRIEVAL_NEAR_MISS_NEGATIVES } from "../tests/unit/retrievalNearMissNegatives.js";
 import { RETRIEVAL_FAILURE_SET } from "../tests/unit/retrievalFailureSet.js";
+import { RETRIEVAL_NEAR_MISS_NEGATIVES_2 } from "../tests/unit/retrievalNearMissNegatives2.js";
 import {
   checkReplayFidelity,
   loadFixtures,
@@ -124,6 +125,14 @@ const negatives = await runFailureNegatives({
   scenarios: [...RETRIEVAL_FAILURE_SET, ...RETRIEVAL_NEAR_MISS_NEGATIVES],
   fixtures,
 });
+// Second near-miss batch: count only, on purpose (see its header).
+const negatives2 = await runFailureNegatives({
+  scenarios: RETRIEVAL_NEAR_MISS_NEGATIVES_2,
+  fixtures,
+});
+console.log(
+  `Near-miss batch 2 (${negatives2.total} blind negatives, count only): ${negatives2.leakCount} leak`,
+);
 console.log(
   `\nNegative replay: ${negatives.leakCount} of ${negatives.total} "expect no case law" scenarios showed a case (production scorer, real corpus).`,
 );

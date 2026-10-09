@@ -49,6 +49,7 @@ const { RETRIEVAL_GOLD_SET } = await import("../tests/unit/retrievalGoldSet.js")
 const { RETRIEVAL_HELD_OUT_SET } = await import("../tests/unit/retrievalHeldOutSet.js");
 const { RETRIEVAL_HELD_OUT_SET_2 } = await import("../tests/unit/retrievalHeldOutSet2.js");
 const { RETRIEVAL_NEAR_MISS_NEGATIVES } = await import("../tests/unit/retrievalNearMissNegatives.js");
+const { RETRIEVAL_NEAR_MISS_NEGATIVES_2 } = await import("../tests/unit/retrievalNearMissNegatives2.js");
 const { RETRIEVAL_FAILURE_SET } = await import("../tests/unit/retrievalFailureSet.js");
 const { normalizeFilters } = await import("../api/_filters.js");
 const { __testables } = await import("../api/analyze.js");
@@ -66,6 +67,7 @@ add("gold", RETRIEVAL_GOLD_SET);
 add("heldout", RETRIEVAL_HELD_OUT_SET);
 add("heldout2", RETRIEVAL_HELD_OUT_SET_2);
 add("nearmiss", RETRIEVAL_NEAR_MISS_NEGATIVES);
+add("nearmiss2", RETRIEVAL_NEAR_MISS_NEGATIVES_2);
 add(
   "negative",
   RETRIEVAL_FAILURE_SET.filter((s) => (s.maxResults ?? 0) === 0),
@@ -130,6 +132,10 @@ async function recordOne(item) {
     case_law: Array.isArray(result.case_law) ? result.case_law : [],
     suggestions: Array.isArray(result.suggestions) ? result.suggestions : [],
     criminal_code: Array.isArray(result.criminal_code) ? result.criminal_code : [],
+    // Kept for scope analysis (does the model think this is criminal law?);
+    // retrieval does not read them.
+    charter: Array.isArray(result.charter) ? result.charter : [],
+    civil_law: Array.isArray(result.civil_law) ? result.civil_law : [],
   };
 
   const final = await retrieveVerifiedCaseLaw({
@@ -139,6 +145,7 @@ async function recordOne(item) {
     aiCaseLaw: ai.case_law,
     landmarkMatches: matchedLandmarks,
     criminalCode: ai.criminal_code,
+    civilLaw: ai.civil_law,
     apiKey: canliiKey,
     maxResults: 10,
   });

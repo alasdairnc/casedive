@@ -209,6 +209,7 @@ async function retrieveShown(text, fixtures) {
     aiCaseLaw: recorded?.ai.case_law || [],
     landmarkMatches: __testables.matchLandmarkCases(text),
     criminalCode: recorded?.ai.criminal_code || [],
+    civilLaw: recorded?.ai.civil_law || [],
     apiKey: "gold-eval-offline",
     maxResults: PRODUCTION_MAX_RESULTS,
   });

@@ -4,7 +4,8 @@
  * so no case law should be shown. They stress rules that trust the model's
  * suggestions, because the model may cite a criminal case for them.
  *
- * Written 2026-10-08, deliberately with that rule in mind. Same shape as the
+ * Written 2026-10-08, deliberately with that rule in mind. (Family law is not
+ * here: the product serves it on purpose, so a family question is not a negative.) Same shape as the
  * failure set's "expect no case law" cases (maxResults 0), so the negative
  * replay (scripts/_retrievalGoldEval.js runFailureNegatives) takes them.
  */
@@ -38,11 +39,6 @@ export const RETRIEVAL_NEAR_MISS_NEGATIVES = [
     id: "nearmiss_employer_locker_search_fired",
     scenario:
       "My employer searched my locker at work for stolen items and then fired me. Is that allowed?",
-  },
-  {
-    id: "nearmiss_child_support_late",
-    scenario:
-      "My ex-husband is months late with child support payments. What can I do to collect?",
   },
   {
     id: "nearmiss_evicted_without_notice",

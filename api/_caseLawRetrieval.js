@@ -2623,6 +2623,28 @@ function toCaseLawItem(candidate, verification) {
 
 const MAX_VERIFICATION_CALLS = 10;
 
+// Statutes the product files under civil_law that are enforced as crimes. A
+// scenario whose only statutes are these is still a criminal-law question.
+const PENAL_STATUTE_PATTERN =
+  /controlled drugs and substances act|youth criminal justice act|cannabis act|firearms act|fisheries act|environmental protection act|customs act/i;
+
+/**
+ * The model's own view of scope. When it cites no Criminal Code section and the
+ * only statutes it cites are civil or provincial (a Residential Tenancies Act,
+ * a Highway Traffic Act, a Human Rights Code), the question is not criminal
+ * law and case law from a criminal corpus would only mislead. A Charter
+ * citation does not rescue it: the model attaches one to almost any question
+ * about a search. Family law is exempt; the product serves it deliberately.
+ */
+export function modelSaysNonCriminal({ criminalCode, civilLaw, issuePrimary }) {
+  if (String(issuePrimary || "").startsWith("family_")) return false;
+  if (!Array.isArray(criminalCode) || criminalCode.length > 0) return false;
+  if (!Array.isArray(civilLaw) || civilLaw.length === 0) return false;
+  return !civilLaw.some((item) =>
+    PENAL_STATUTE_PATTERN.test(String(item?.citation || "")),
+  );
+}
+
 export async function retrieveVerifiedCaseLaw({
   scenario: rawScenario = "",
   filters = {},
@@ -2630,6 +2652,7 @@ export async function retrieveVerifiedCaseLaw({
   aiCaseLaw = [],
   landmarkMatches = [],
   criminalCode = [],
+  civilLaw = [],
   apiKey = "",
   maxResults = 3,
 } = {}) {
@@ -2642,6 +2665,29 @@ export async function retrieveVerifiedCaseLaw({
       meta: {
         reason: "missing_api_key",
         issuePrimary: detectCoreIssue(scenario).primary,
+        termsTried: 0,
+        databasesTried: 0,
+        searchCalls: 0,
+        candidateCount: 0,
+        verificationCalls: 0,
+        verifiedCount: 0,
+      },
+    };
+  }
+
+  const scopeIssue = detectCoreIssue(scenario);
+  if (
+    modelSaysNonCriminal({
+      criminalCode,
+      civilLaw,
+      issuePrimary: scopeIssue.primary,
+    })
+  ) {
+    return {
+      cases: [],
+      meta: {
+        reason: "non_criminal_scope",
+        issuePrimary: scopeIssue.primary,
         termsTried: 0,
         databasesTried: 0,
         searchCalls: 0,
