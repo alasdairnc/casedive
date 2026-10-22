@@ -110,27 +110,11 @@ Call `advisor()` (no parameters — forwards full context to a stronger reviewer
 
 Consolidated 2026-09-25 from 27 pieces to 13. Everything here is referenced by a hook, a rule, a workflow or the roadmap; if you add one, add its reference too.
 
-**Skills** (`.claude/skills/`, invoke as `/name`)
+Skills (`.claude/skills/`, `/name`): `verify` (pre-push check; `/verify e2e`), `casedive-audit`, `new-api-endpoint` (mind the 12-function cap), `filter-tune`, `ops-checklist`, `weekly-report`.
 
-- `verify` — the one pre-push check: build, unit + component, guardrails, gitleaks, optional E2E (`/verify e2e`)
-- `casedive-audit` — full project audit (security, caching, tests, data, config); appends to `AUDIT_LOG.md`
-- `new-api-endpoint` — scaffold an endpoint with rate limit, validation, headers, logging pre-wired (remember the 12-function cap)
-- `filter-tune` — filter calibration pipeline with baseline safety check
-- `ops-checklist` — pre-deploy production checklist (Sentry, env vars, Redis quota)
-- `weekly-report` — Sunday digest in the established format
+Commands (`.claude/commands/`): `/improve-caselaw`, `/retrieval-health` (needs `RETRIEVAL_HEALTH_TOKEN`).
 
-**Commands** (`.claude/commands/`)
-
-- `/improve-caselaw` — propose-only caselaw relevance loop, interprets the digest
-- `/retrieval-health` — fetch and diagnose the live retrieval health snapshot (needs `RETRIEVAL_HEALTH_TOKEN`)
-
-**Subagents** (`.claude/agents/`)
-
-- `api-invariant-reviewer` — rate limiting, validation, headers, and caching invariants on `api/*.js` (the post-edit hook reminds you)
-- `legal-data-validator` — schema check on `criminalCodeData.js`, `civilLawData.js`, `charterData.js`
-- `retrieval-quality-reviewer` — scoring/threshold consistency after `_filter*`, `_scenarioClassification`, `_retrievalThresholds` changes
-- `retrieval-regression-detector` — runs the retrieval failure corpus after the same files change
-- `caselaw-curator` — propose-only relevance + expansion loop; never edits corpus, filter or threshold files
+Subagents (`.claude/agents/`): `api-invariant-reviewer` (`api/*.js` invariants), `legal-data-validator` (legal data schemas), `retrieval-quality-reviewer` + `retrieval-regression-detector` (after `_filter*`, `_scenarioClassification`, `_retrievalThresholds` changes), `caselaw-curator` (propose-only; never edits corpus/filter/threshold files). Descriptions live in each file.
 
 ## Workflow Rules (from claude-doctor)
 
@@ -145,7 +129,5 @@ Consolidated 2026-09-25 from 27 pieces to 13. Everything here is referenced by a
 
 ## Testing & Verification
 
-- Always start dev server (`npm run dev:api`) before E2E/Playwright tests — hung tests = missing server
-- After any refactor that changes data shapes or API contracts, run full unit suite before declaring done
-- For E2E failures, run with `--workers=1` first to rule out parallelism before diagnosing state issues
-- If 10+ tests fail simultaneously, suspect parallelism or missing server — not individual test bugs
+- After a refactor that changes data shapes or API contracts, run the full unit suite before declaring done
+- For E2E failures, run with `--workers=1` first; 10+ simultaneous failures = parallelism or missing server, not individual test bugs

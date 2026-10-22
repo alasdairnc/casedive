@@ -8,8 +8,10 @@ import {
   buildCaseUrl,
   buildCaseId,
   buildCitationIdentityKey,
+  resolveCorpusCase,
 } from "../src/lib/canlii.js";
 import { MASTER_CASE_LAW_DB } from "../src/lib/caselaw/index.js";
+import { MIN_DISTINCT_TERMS, rankCorpus } from "./_corpusRanker.js";
 import { findLandmarkSeeds } from "../src/lib/landmarkCases.js";
 import {
   SIMPLE_STOP_WORDS,
@@ -1732,6 +1734,28 @@ function isCharterOnlyEntry(candidateDomains) {
   return true;
 }
 
+// A vouched case's base score: above the thresholds a general or broad issue
+// needs, below the 16 a minor traffic stop needs, plus one per shared word so
+// better-corroborated cases rank first.
+const VOUCHED_BASE_SCORE = 12;
+
+// The gates a model suggestion must still pass: legal facts, not wording.
+//  - clearly non-criminal scenarios get no case law
+//  - family and criminal law stay in separate lanes
+// (The state-actor rule for pure Charter cases is not applied: it exists for
+// the local fallback, which guesses, and it would drop R v Oakes for "does
+// this law violate the Charter", which has no officer in it.)
+function passesLegalHardGates(scenario, issue, candidate) {
+  if (isClearlyNonCriminalScenario(scenario)) return false;
+  const domains = detectCandidateDomains({
+    citation: candidate.citation,
+    title: candidate.title,
+    summary: candidate.summary,
+  });
+  const issueIsFamily = String(issue?.primary || "").startsWith("family_");
+  return domains.has("family_law") === issueIsFamily;
+}
+
 function buildLocalFallbackCandidates({ scenario = "", maxResults = 3 }) {
   if (isClearlyNonCriminalScenario(scenario)) return [];
 
@@ -2501,6 +2525,13 @@ function sortCandidatesForStableVerification(candidates) {
 
 function dedupeCandidates(candidates) {
   const byCitation = new Map();
+  // Remember which cases the model itself suggested; whichever copy wins a
+  // merge (dedupe prefers the landmark copy) must keep that trust.
+  const modelSuggested = new Set(
+    candidates
+      .filter((c) => c?.modelSuggested)
+      .map((c) => buildCitationIdentityKey(c.citation)),
+  );
   for (const candidate of candidates) {
     const key = buildCitationIdentityKey(candidate.citation);
     if (!byCitation.has(key)) {
@@ -2528,6 +2559,17 @@ function dedupeCandidates(candidates) {
         if (!existingHasName && candidateHasName) {
           byCitation.set(key, candidate);
         }
+      } else if (
+        existing.isLandmark &&
+        candidate.isLandmark &&
+        (existing.resolvedFromCorpus || candidate.resolvedFromCorpus) &&
+        (Number(candidate.retrievalScore) || 0) >
+          (Number(existing.retrievalScore) || 0)
+      ) {
+        // A model-suggested corpus case and a seed or landmark copy of the
+        // same case: keep the better-scored one, so a vouched copy is not
+        // thrown away for whichever copy came first.
+        byCitation.set(key, candidate);
       } else if (existing.isLandmark && !candidate.isLandmark) {
         // Keep landmark verification bypass but enrich metadata from AI-suggested duplicate.
         byCitation.set(key, {
@@ -2542,7 +2584,9 @@ function dedupeCandidates(candidates) {
       }
     }
   }
-  return Array.from(byCitation.values());
+  return Array.from(byCitation.entries()).map(([key, candidate]) =>
+    modelSuggested.has(key) ? { ...candidate, modelSuggested: true } : candidate,
+  );
 }
 
 function toCaseLawItem(candidate, verification) {
@@ -2579,6 +2623,28 @@ function toCaseLawItem(candidate, verification) {
 
 const MAX_VERIFICATION_CALLS = 10;
 
+// Statutes the product files under civil_law that are enforced as crimes. A
+// scenario whose only statutes are these is still a criminal-law question.
+const PENAL_STATUTE_PATTERN =
+  /controlled drugs and substances act|youth criminal justice act|cannabis act|firearms act|fisheries act|environmental protection act|customs act/i;
+
+/**
+ * The model's own view of scope. When it cites no Criminal Code section and the
+ * only statutes it cites are civil or provincial (a Residential Tenancies Act,
+ * a Highway Traffic Act, a Human Rights Code), the question is not criminal
+ * law and case law from a criminal corpus would only mislead. A Charter
+ * citation does not rescue it: the model attaches one to almost any question
+ * about a search. Family law is exempt; the product serves it deliberately.
+ */
+export function modelSaysNonCriminal({ criminalCode, civilLaw, issuePrimary }) {
+  if (String(issuePrimary || "").startsWith("family_")) return false;
+  if (!Array.isArray(criminalCode) || criminalCode.length > 0) return false;
+  if (!Array.isArray(civilLaw) || civilLaw.length === 0) return false;
+  return !civilLaw.some((item) =>
+    PENAL_STATUTE_PATTERN.test(String(item?.citation || "")),
+  );
+}
+
 export async function retrieveVerifiedCaseLaw({
   scenario: rawScenario = "",
   filters = {},
@@ -2586,6 +2652,7 @@ export async function retrieveVerifiedCaseLaw({
   aiCaseLaw = [],
   landmarkMatches = [],
   criminalCode = [],
+  civilLaw = [],
   apiKey = "",
   maxResults = 3,
 } = {}) {
@@ -2598,6 +2665,29 @@ export async function retrieveVerifiedCaseLaw({
       meta: {
         reason: "missing_api_key",
         issuePrimary: detectCoreIssue(scenario).primary,
+        termsTried: 0,
+        databasesTried: 0,
+        searchCalls: 0,
+        candidateCount: 0,
+        verificationCalls: 0,
+        verifiedCount: 0,
+      },
+    };
+  }
+
+  const scopeIssue = detectCoreIssue(scenario);
+  if (
+    modelSaysNonCriminal({
+      criminalCode,
+      civilLaw,
+      issuePrimary: scopeIssue.primary,
+    })
+  ) {
+    return {
+      cases: [],
+      meta: {
+        reason: "non_criminal_scope",
+        issuePrimary: scopeIssue.primary,
         termsTried: 0,
         databasesTried: 0,
         searchCalls: 0,
@@ -2632,12 +2722,56 @@ export async function retrieveVerifiedCaseLaw({
 
   // Build candidates from AI-generated case citations
   const aiCitationCandidates = [];
+  // The model also cites cases for scenarios that should show nothing (a
+  // disclosure case for an online defamation question). A case resolved to the
+  // corpus must therefore share at least MIN_DISTINCT_TERMS different words
+  // with the scenario; otherwise it is treated as before (verified through
+  // CanLII, and dropped when that cannot confirm it).
+  let corpusRanking = null;
+  const sharedWordsWithScenario = (row) => {
+    corpusRanking ||= rankCorpus(scenario, MASTER_CASE_LAW_DB);
+    const entry = corpusRanking.find((r) => r.caseLaw.citation === row.citation);
+    return entry ? entry.matchedWords : 0;
+  };
   if (Array.isArray(aiCaseLaw)) {
     for (const item of aiCaseLaw) {
       if (!item || !item.citation) continue;
       const citation = sanitizeTerm(item.citation);
       const parsed = parseCitation(citation);
       if (!parsed) continue;
+
+      // A case we already hold, written with a wrong or unverifiable number:
+      // use our row. It stays a model suggestion (not a landmark match), so
+      // selection treats it like a verified model citation.
+      const resolved = resolveCorpusCase(
+        { citation, title: item.title },
+        MASTER_CASE_LAW_DB,
+      );
+      const sharedWords = resolved ? sharedWordsWithScenario(resolved) : 0;
+      if (resolved && sharedWords >= MIN_DISTINCT_TERMS) {
+        aiCitationCandidates.push({
+          citation: resolved.citation,
+          title: resolved.title,
+          summary: [
+            resolved.ratio,
+            ...(resolved.tags || []),
+            ...(resolved.topics || []),
+          ]
+            .filter(Boolean)
+            .join(" "),
+          url: "",
+          matchedTerm: "AI suggestion",
+          court: resolved.court,
+          year: resolved.year,
+          isLandmark: true, // curated: no CanLII call needed
+          modelSuggested: true,
+          resolvedFromCorpus: true,
+          fullTextWords: sharedWords,
+        });
+        prefilterDiagnostics.totalAiCandidatesParsed += 1;
+        continue;
+      }
+
       aiCitationCandidates.push({
         citation,
         title: parsed.parties || sanitizeTerm(item.title || "") || null,
@@ -2792,21 +2926,43 @@ export async function retrieveVerifiedCaseLaw({
   }
 
   // Apply semantic filtering by core legal issue and score candidates by scenario fit.
-  const semanticFilter = filterBySemanticRelevance(
-    scenario,
-    aiCitationCandidates,
+  //
+  // Corpus cases the model suggested and the scenario text corroborates (two
+  // or more shared words) are "vouched". They skip the lexical heuristics that
+  // were dropping them (the trial-delay regex, compatibility demotion, score
+  // thresholds) but still pass the gates that encode legal facts, and they
+  // rank by how much text they share with the scenario.
+  const vouchedCandidates = aiCitationCandidates.filter(
+    (c) => c.resolvedFromCorpus,
   );
+  const regularCandidates = aiCitationCandidates.filter(
+    (c) => !c.resolvedFromCorpus,
+  );
+  const semanticFilter = filterBySemanticRelevance(scenario, regularCandidates);
   const issue = semanticFilter.issue;
   const semanticFiltered = semanticFilter.candidates;
   const scenarioTokens = tokenizeScenario(scenario);
-  const scoredCandidates = semanticFiltered.map((candidate) =>
-    scoreCandidateForScenario({
-      candidate,
-      scenarioTokens,
-      issue,
-      filters,
-    }),
-  );
+  const scoredCandidates = semanticFiltered
+    .map((candidate) =>
+      scoreCandidateForScenario({
+        candidate,
+        scenarioTokens,
+        issue,
+        filters,
+      }),
+    )
+    .concat(
+      vouchedCandidates
+        .filter((c) => passesLegalHardGates(scenario, issue, c))
+        .map((c) => ({
+          ...c,
+          retrievalScore: VOUCHED_BASE_SCORE + (c.fullTextWords || 0),
+          retrievalReasons: [
+            "model_suggested_corpus_case",
+            `fulltext_words:${c.fullTextWords || 0}`,
+          ],
+        })),
+    );
 
   // Verify AI citations via the working lookupCase() endpoint
   const sorted = sortCandidatesForStableVerification(
@@ -2857,6 +3013,7 @@ export async function retrieveVerifiedCaseLaw({
         ),
         verificationStatus: "verified",
         retrievalScore: Number(candidate?.retrievalScore) || 0,
+        ...(candidate.modelSuggested ? { [VERIFIED_BY_LOOKUP]: true } : {}),
       });
     } else {
       if (toVerify.length >= MAX_VERIFICATION_CALLS) continue;
@@ -3013,3 +3170,16 @@ export async function retrieveVerifiedCaseLaw({
     },
   };
 }
+
+// Exposed for offline diagnostics (scripts and tests); not part of the API.
+export const __testables = {
+  detectCoreIssue,
+  passesLegalHardGates,
+  isClearlyNonCriminalScenario,
+  isCandidateCompatibleWithIssue,
+  detectCandidateDomains,
+  filterBySemanticRelevance,
+  scoreCandidateForScenario,
+  selectFinalCandidates,
+  tokenizeScenario,
+};

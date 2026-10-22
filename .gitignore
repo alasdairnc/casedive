@@ -24,6 +24,11 @@ security_audit/
 coverage/
 .vitest/
 
+# Local eval run outputs
+.filter-baseline.json
+artifacts/statute-grounding-eval.json
+artifacts/statute-grounding-read.json
+
 # Internal security audits (kept local, not published)
 artifacts/audit/
 artifacts/security-audit-*.md

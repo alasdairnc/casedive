@@ -35,6 +35,12 @@ import {
 } from "./_statuteGrounding.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
 import {
+  MIN_DISTINCT_TERMS,
+  fuseRankings,
+  isFullTextRankingEnabled,
+  rankCorpus,
+} from "./_corpusRanker.js";
+import {
   RANK_STOP_WORDS,
   stripNegatedEvents,
   tokenizeWithExpansion,
@@ -144,9 +150,13 @@ function buildUserPromptContent(
 const CACHE_TTL_S = ANALYZE_CACHE_TTL_SECONDS;
 
 function cacheKey(scenario, filters) {
-  // Flag-on results carry statute grounding; keep them out of flag-off users' cache.
+  // Flag-on results carry statute grounding (g) or full-text case ranking (f);
+  // keep each out of other users' cache. Both off keeps the original "v4".
+  const flags =
+    (isStatuteGroundingEnabled() ? "g" : "") +
+    (isFullTextRankingEnabled() ? "f" : "");
   return (
-    (isStatuteGroundingEnabled() ? "cache:analyze:v4g:" : "cache:analyze:v4:") +
+    `cache:analyze:v4${flags}:` +
     createHash("sha256")
       .update(scenario + JSON.stringify(filters))
       .digest("hex")
@@ -604,7 +614,9 @@ function selectTopRetrievedCases(rawScenario, retrievedCases, limit = 3) {
 
 export const __testables = {
   selectTopRetrievedCases,
+  matchLandmarkCases,
   modelTimeoutMs,
+  analyzeWithRetry,
 };
 
 // ── Deterministic RAG Token Matching ─────────────────────────────────────────
@@ -661,7 +673,23 @@ function matchLandmarkCases(scenario) {
   }
 
   matched.sort((a, b) => b.score - a.score);
-  return matched.slice(0, 3).map((m) => m.caseLaw);
+  const literal = matched.map((m) => m.caseLaw);
+  if (!isFullTextRankingEnabled()) return literal.slice(0, 3);
+
+  // Full-text pass (RETRIEVAL_FULLTEXT=on): also rank facts and ratio, and
+  // fuse with the literal ranking. A case only the full-text ranker found
+  // must match at least MIN_DISTINCT_TERMS different words.
+  const literalCitations = new Set(literal.map((c) => c.citation));
+  const fullText = rankCorpus(s, MASTER_CASE_LAW_DB)
+    .filter(
+      (r) =>
+        literalCitations.has(r.caseLaw.citation) ||
+        r.matchedWords >= MIN_DISTINCT_TERMS,
+    )
+    .map((r) => r.caseLaw);
+  return fuseRankings(literal, fullText)
+    .slice(0, 3)
+    .map((f) => f.caseLaw);
 }
 
 // ── Parse with one retry ─────────────────────────────────────────────────────
@@ -993,6 +1021,7 @@ export default async function handler(req, res) {
               criminalCode: Array.isArray(result.criminal_code)
                 ? result.criminal_code
                 : [],
+              civilLaw: Array.isArray(result.civil_law) ? result.civil_law : [],
               apiKey: canliiKey,
               maxResults: 10,
               timeoutMs: 7_000,
