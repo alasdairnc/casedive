@@ -29,7 +29,10 @@ const CASES = [
   ["Error sending confirmation email", /couldn't send the email/i, null],
   ["Error sending recovery email", /couldn't send the email/i, null],
   ["Error sending email", /couldn't send the email/i, null],
-  ["email rate limit exceeded", /too many attempts/i, null],
+  ["email rate limit exceeded", /try again in a little while/i, null],
+  ["over_email_send_rate_limit", /try again in a little while/i, null],
+  ["Request rate limit reached", /try again in a little while/i, null],
+  ["over_request_rate_limit", /try again in a little while/i, null],
   [
     "For security purposes, you can only request this after 42 seconds.",
     /too many attempts/i,
@@ -171,7 +174,7 @@ describe("friendlyCodeError", () => {
   describe("falls through to friendlyAuthError for non-code errors", () => {
     it("keeps the rate-limit message", () => {
       const result = friendlyCodeError("email rate limit exceeded");
-      expect(result.message).toMatch(/too many attempts/i);
+      expect(result.message).toMatch(/try again in a little while/i);
       expect(result.message).not.toBe(WRONG_OR_EXPIRED);
       expect(result.action).toBeNull();
     });

@@ -406,6 +406,36 @@ describe("AuthModal component", () => {
     expect(screen.queryByRole("tabpanel")).toBeNull();
   });
 
+  it("describes the code field with the sent-to status so a screen reader hears the address", async () => {
+    const AuthModal = await getModal();
+    await reachSignupCodeScreen(AuthModal, { email: "new@b.com" });
+    const ids = screen
+      .getByLabelText(CODE_LABEL)
+      .getAttribute("aria-describedby")
+      .split(" ");
+    const status = screen.getByRole("status");
+    expect(ids).toContain(status.id);
+    expect(status.textContent).toMatch(/We sent a code to new@b\.com/);
+    // Every id it points at has to exist, or the description is silently empty.
+    for (const id of ids) expect(document.getElementById(id)).not.toBeNull();
+  });
+
+  it("describes Continue with the password-updated status", async () => {
+    const AuthModal = await getModal();
+    render(<AuthModal isOpen={true} onClose={vi.fn()} mode="reset" />);
+    fillPassword("BrandNewPass1!", "New password");
+    submit("Update password");
+    await settle();
+
+    const status = screen.getByRole("status");
+    expect(status.textContent).toMatch(/Password updated/);
+    expect(
+      screen.getByRole("button", { name: "Continue" }).getAttribute(
+        "aria-describedby",
+      ),
+    ).toBe(status.id);
+  });
+
   it("drops the old bottom links now that the tabs do that job", async () => {
     const AuthModal = await getModal();
     const { unmount } = render(
