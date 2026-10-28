@@ -48,8 +48,18 @@ const RULES = [
     action: null,
   },
   {
-    test: /rate limit|only request this after|too many requests|over_email_send_rate_limit/i,
+    // Supabase's per-address email throttle ("you can only request this after
+    // N seconds"): a minute is the right wait.
+    test: /only request this after/i,
     message: "Too many attempts. Wait a minute, then try again.",
+    action: null,
+  },
+  {
+    // The project-wide hourly email cap and the per-IP request limits take
+    // longer than a minute to clear, so don't promise one.
+    test: /rate limit|too many requests|over_email_send_rate_limit|over_request_rate_limit/i,
+    message:
+      "We're getting a lot of requests right now. Please try again in a little while.",
     action: null,
   },
   {

@@ -66,11 +66,12 @@ Supabase → Authentication → URL Configuration:
   - `https://www.casedive.ca/**`
   - `https://casedive.ca/**`
   - `http://localhost:5173/**` (local dev, added 2026-09-25)
-  - Optional, for Vercel previews: `https://*-alasdairncs-projects.vercel.app/**`.
-    Preview URLs look like
-    `casefinder-project-git-<branch>-alasdairncs-projects.vercel.app`, and only
-    this Vercel team can create hosts ending in `-alasdairncs-projects`.
-    Without it, email links sent from a preview land on the live site.
+  - To test from a Vercel preview, add that one preview's exact URL for the
+    test and remove it afterwards. Don't add a wildcard such as
+    `https://*-alasdairncs-projects.vercel.app/**`: project names are chosen by
+    whoever creates the project, so another account could register a host that
+    matches it and receive the session from an emailed link. Without an entry,
+    email links sent from a preview land on the live site.
 
 The app passes `window.location.origin` as the redirect for the sign-up and
 reset emails (the button in them, while the templates still carry one) and for
@@ -105,8 +106,13 @@ site with the session in the URL, and the app shows "Email confirmed — you're
 signed in" (or goes to the set new password step for a reset link), or "That
 email link has expired or was already used" if the link is spent or older than
 an hour. Some corporate mail scanners open links before the user does, which
-burns one-time links; the code is the way around that, and "Resend code" is
-the way back.
+burns one-time links. While the emails still carry the button, the button and
+the code check the same one-time secret, so a scanned email's code is spent
+too. A scanned sign-up email has already confirmed the account, so the user
+signs in with their password ("Resend code" sends nothing for a confirmed
+address). A scanned reset email needs a new reset email, and its button can be
+scanned again. The code only gets past scanners once rollout step 4 removes the
+button.
 
 ### Rollout order
 
@@ -119,7 +125,8 @@ is serving.
 2. Deploy the code.
 3. Run the smoke test in section 7. Its sign-up and reset emails are also the
    check that each template shows the code large and still has the button.
-4. Later, once the code flow has been live and verified: remove the button
+4. Once the code flow has been live and verified, and soon after, because it
+   is also what makes the code safe from mail scanners: remove the button
    paragraph (the line with `{{ .ConfirmationURL }}`) from both templates, in
    the repo and in Supabase, and shorten the intro to "Enter this code on
    CaseDive. The code expires in 1 hour." New emails then carry the code only;

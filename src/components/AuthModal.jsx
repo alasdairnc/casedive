@@ -614,7 +614,11 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
           )}
 
           {(codeStep || passwordUpdated || notice) && (
-            <div role="status" style={calloutStyle(t.accentGreen)}>
+            <div
+              id="auth-status"
+              role="status"
+              style={calloutStyle(t.accentGreen)}
+            >
               {passwordUpdated
                 ? "Password updated. You're signed in with your new password."
                 : codeStep
@@ -631,6 +635,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
               variant="primary"
               size="md"
               fullWidth
+              aria-describedby="auth-status"
               onClick={onClose}
             >
               Continue
@@ -651,7 +656,7 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                     pattern="[0-9]*"
                     autoComplete="one-time-code"
                     maxLength={CODE_MAX}
-                    aria-describedby="auth-code-help"
+                    aria-describedby="auth-status auth-code-help"
                     value={code}
                     placeholder="123456"
                     onChange={(e) =>
