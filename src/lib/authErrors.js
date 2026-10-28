@@ -3,10 +3,9 @@
  * optional follow-up action the modal can offer as a button.
  *
  * action values:
- *   "resend" — offer to resend the confirmation email
+ *   "resend" — offer to send a new confirmation code
  *   "forgot" — offer the reset-password flow
  *   "signin" — offer to switch to the Sign In tab
- *   "magic"  — offer an email sign-in link
  *   null     — nothing extra to offer
  */
 const RULES = [
@@ -18,7 +17,7 @@ const RULES = [
   {
     test: /email not confirmed|email_not_confirmed/i,
     message:
-      "You haven't confirmed your email yet. Check your inbox, or we can send the link again.",
+      "You haven't confirmed your email yet. Check your inbox, or we can send a new code.",
     action: "resend",
   },
   {
@@ -27,15 +26,18 @@ const RULES = [
     action: "signin",
   },
   {
-    // Recovery session gone (reset link expired, or the tab sat too long).
+    // Recovery session gone (the reset session timed out, or the tab sat too
+    // long between entering the code and choosing a password).
     test: /auth session missing|session_not_found|session.*expired/i,
-    message: "Your reset link has expired. Request a new one.",
+    message: "Your reset session has expired. Request a new code.",
     action: "forgot",
   },
   {
+    // Reached from an old emailed link (the arrival toast), not from the
+    // modal's code field, which uses friendlyCodeError below.
     test: /otp_expired|link is invalid or has expired|token has expired|expired/i,
     message: "That email link has expired or was already used.",
-    action: "magic",
+    action: null,
   },
   {
     // Supabase could not hand the message to its mail sender (SMTP down or
@@ -101,10 +103,13 @@ const RULES = [
 
 const FALLBACK = "Something went wrong. Please try again.";
 
+function textOf(raw) {
+  return typeof raw === "string" ? raw : raw.message || raw.code || String(raw);
+}
+
 export function friendlyAuthError(raw) {
   if (!raw) return null;
-  const text =
-    typeof raw === "string" ? raw : raw.message || raw.code || String(raw);
+  const text = textOf(raw);
   for (const rule of RULES) {
     if (rule.test.test(text)) {
       return { message: rule.message, action: rule.action };
@@ -116,4 +121,21 @@ export function friendlyAuthError(raw) {
     return { message: FALLBACK, action: null };
   }
   return { message: trimmed, action: null };
+}
+
+// Supabase answers a wrong code and an expired one with the same error
+// ("Token has expired or is invalid" / otp_expired), so the copy covers both.
+// The modal's resend button sits right under the field, so no action here.
+const BAD_CODE = /otp_expired|token has expired|expired or is invalid|invalid.*(token|otp|code)|(token|otp|code).*invalid/i;
+
+/** Like friendlyAuthError, for errors from verifying an emailed code. */
+export function friendlyCodeError(raw) {
+  if (!raw) return null;
+  if (BAD_CODE.test(textOf(raw))) {
+    return {
+      message: "That code is wrong or has expired. Check it, or send a new one.",
+      action: null,
+    };
+  }
+  return friendlyAuthError(raw);
 }

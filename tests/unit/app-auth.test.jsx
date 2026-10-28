@@ -306,6 +306,78 @@ describe("App auth integration", () => {
     expect(clearRecovery).toHaveBeenCalled();
   });
 
+  // Reset-by-code: the modal is already open on the code screen when
+  // verifyRecoveryCode succeeds. That signs the user in and fires
+  // PASSWORD_RECOVERY, so useAuth flips to { user, recovery: true } while the
+  // modal is open. App must move it to reset mode and keep it open.
+  it("moves an already-open modal to reset mode when recovery turns on", async () => {
+    const clearRecovery = vi.fn();
+    let authState = {
+      user: null,
+      token: null,
+      loading: false,
+      isAuthEnabled: true,
+      signOut: mockSignOut,
+      recovery: false,
+      clearRecovery,
+    };
+    vi.doMock("../../src/hooks/useAuth.js", () => ({
+      useAuth: () => authState,
+    }));
+    const App = await getApp();
+    const { rerender } = render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
+    await waitFor(() => {
+      expect(screen.getByTestId("auth-modal").dataset.mode).toBe("signin");
+    });
+
+    authState = {
+      ...authState,
+      user: mockAuthUser,
+      token: "tok-abc",
+      recovery: true,
+    };
+    rerender(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("auth-modal").dataset.mode).toBe("reset");
+    });
+    // Being signed in must not close the modal mid-reset.
+    expect(screen.getByRole("dialog")).toBeDefined();
+    expect(clearRecovery).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: /close/i }));
+    expect(clearRecovery).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+  });
+
+  it("does not call clearRecovery when the modal closes outside a reset", async () => {
+    const clearRecovery = vi.fn();
+    vi.doMock("../../src/hooks/useAuth.js", () => ({
+      useAuth: () => ({
+        user: null,
+        token: null,
+        loading: false,
+        isAuthEnabled: true,
+        signOut: mockSignOut,
+        recovery: false,
+        clearRecovery,
+      }),
+    }));
+    const App = await getApp();
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
+    await waitFor(() => screen.getByRole("dialog"));
+    fireEvent.click(screen.getByRole("button", { name: /close/i }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    expect(clearRecovery).not.toHaveBeenCalled();
+  });
+
   // ── useAuth is consumed at App root ────────────────────────────────────────
 
   it("useAuth hook is imported and consumed by App", async () => {

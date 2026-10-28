@@ -21,7 +21,6 @@ const SESSION_RESTORE_TIMEOUT_MS = 3000;
 
 const WELCOME_COPY = {
   signup: "Email confirmed — you're signed in.",
-  magiclink: "You're signed in.",
   email_change: "Email updated — you're signed in.",
 };
 
@@ -167,16 +166,42 @@ export function AuthProvider({ children }) {
     return { error: null, needsConfirmation: true };
   }, []);
 
-  // Passwordless: email a one-click sign-in link. Creates the account on
-  // first use, so it doubles as sign-up.
-  const signInWithMagicLink = useCallback(async (email) => {
+  // Check the code from a confirmation or reset email. Success signs the user
+  // in: a "signup" code confirms the address, a "recovery" code opens a reset
+  // session (and fires PASSWORD_RECOVERY, so the app prompts for a new
+  // password). A wrong and an expired code return the same error.
+  const verifyEmailCode = useCallback(async (email, token, type) => {
     if (!supabase) return "Auth not configured";
-    const { error } = await supabase.auth.signInWithOtp({
+    const { data, error } = await supabase.auth.verifyOtp({
       email,
-      options: { emailRedirectTo: authRedirectUrl(), shouldCreateUser: true },
+      token,
+      type,
     });
-    return error ? error.message : null;
+    if (error) return error.message;
+    if (data?.session) {
+      setUser(data.user);
+      setToken(data.session.access_token);
+    }
+    return null;
   }, []);
+
+  // The modal closes on success, so say it worked the way an emailed
+  // confirmation link does: the same welcome toast.
+  const verifySignupCode = useCallback(
+    async (email, token) => {
+      const err = await verifyEmailCode(email, token, "signup");
+      if (!err) {
+        setAuthNotice({ kind: "welcome", message: WELCOME_COPY.signup });
+      }
+      return err;
+    },
+    [verifyEmailCode],
+  );
+
+  const verifyRecoveryCode = useCallback(
+    (email, token) => verifyEmailCode(email, token, "recovery"),
+    [verifyEmailCode],
+  );
 
   const signInWithGoogle = useCallback(async () => {
     if (!supabase) return "Auth not configured";
@@ -245,7 +270,8 @@ export function AuthProvider({ children }) {
       authMethods,
       signIn,
       signUp,
-      signInWithMagicLink,
+      verifySignupCode,
+      verifyRecoveryCode,
       signInWithGoogle,
       resendConfirmation,
       signOut,
@@ -262,7 +288,8 @@ export function AuthProvider({ children }) {
       authNotice,
       signIn,
       signUp,
-      signInWithMagicLink,
+      verifySignupCode,
+      verifyRecoveryCode,
       signInWithGoogle,
       resendConfirmation,
       signOut,

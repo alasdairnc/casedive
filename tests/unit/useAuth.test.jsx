@@ -11,18 +11,21 @@ const mockGetSession = vi.fn();
 const mockOnAuthStateChange = vi.fn();
 const mockResetPasswordForEmail = vi.fn();
 const mockUpdateUser = vi.fn();
-const mockSignInWithOtp = vi.fn();
+const mockVerifyOtp = vi.fn();
 const mockSignInWithOAuth = vi.fn();
 const mockResend = vi.fn();
 // What the page URL carried on load (email link result). Exposed through a
 // getter because the mocked module object is cached across resetModules().
 const mockUrlState = { initialAuthParams: null };
+// Flip `configured` to false to get the null client the app has when the
+// VITE_SUPABASE_* env vars are missing. Same getter trick as above.
+const mockClientState = { configured: true };
 
 // AuthProvider imports the shared client from ../lib/supabase.js — mock that
 // module directly so the provider receives a working client even though
 // VITE_SUPABASE_* env vars are undefined in the test environment.
-vi.mock("../../src/lib/supabase.js", () => ({
-  supabase: {
+vi.mock("../../src/lib/supabase.js", () => {
+  const client = {
     auth: {
       signInWithPassword: mockSignIn,
       signUp: mockSignUp,
@@ -31,24 +34,30 @@ vi.mock("../../src/lib/supabase.js", () => ({
       onAuthStateChange: mockOnAuthStateChange,
       resetPasswordForEmail: mockResetPasswordForEmail,
       updateUser: mockUpdateUser,
-      signInWithOtp: mockSignInWithOtp,
+      verifyOtp: mockVerifyOtp,
       signInWithOAuth: mockSignInWithOAuth,
       resend: mockResend,
       storageKey: "sb-test-auth-token",
     },
-  },
-  isAuthEnabled: true,
-  authMethods: { magicLink: true, google: false },
-  authRedirectUrl: () => "https://www.casedive.ca",
-  get initialAuthParams() {
-    return mockUrlState.initialAuthParams;
-  },
-}));
+  };
+  return {
+    get supabase() {
+      return mockClientState.configured ? client : null;
+    },
+    isAuthEnabled: true,
+    authMethods: { google: false },
+    authRedirectUrl: () => "https://www.casedive.ca",
+    get initialAuthParams() {
+      return mockUrlState.initialAuthParams;
+    },
+  };
+});
 
 describe("useAuth hook (via AuthProvider)", () => {
   beforeEach(() => {
     vi.resetModules();
     mockUrlState.initialAuthParams = null;
+    mockClientState.configured = true;
     mockGetSession.mockResolvedValue({ data: { session: null }, error: null });
     mockOnAuthStateChange.mockReturnValue({
       data: { subscription: { unsubscribe: vi.fn() } },
@@ -67,7 +76,13 @@ describe("useAuth hook (via AuthProvider)", () => {
     mockSignOut.mockResolvedValue({ error: null });
     mockResetPasswordForEmail.mockResolvedValue({ data: {}, error: null });
     mockUpdateUser.mockResolvedValue({ data: {}, error: null });
-    mockSignInWithOtp.mockResolvedValue({ data: {}, error: null });
+    mockVerifyOtp.mockResolvedValue({
+      data: {
+        user: { id: "uid-3", email: "code@b.com" },
+        session: { access_token: "tok-3" },
+      },
+      error: null,
+    });
     mockSignInWithOAuth.mockResolvedValue({ data: {}, error: null });
     mockResend.mockResolvedValue({ data: {}, error: null });
   });
@@ -151,7 +166,8 @@ describe("useAuth hook (via AuthProvider)", () => {
       "signIn",
       "signUp",
       "signOut",
-      "signInWithMagicLink",
+      "verifySignupCode",
+      "verifyRecoveryCode",
       "signInWithGoogle",
       "resendConfirmation",
       "resetPassword",
@@ -159,11 +175,9 @@ describe("useAuth hook (via AuthProvider)", () => {
     ]) {
       expect(typeof result.current[fn]).toBe("function");
     }
+    expect(result.current.signInWithMagicLink).toBeUndefined();
     expect(result.current.isAuthEnabled).toBe(true);
-    expect(result.current.authMethods).toEqual({
-      magicLink: true,
-      google: false,
-    });
+    expect(result.current.authMethods).toEqual({ google: false });
   });
 
   // ── Restore session ─────────────────────────────────────────────────────────
@@ -265,37 +279,127 @@ describe("useAuth hook (via AuthProvider)", () => {
     expect(res.error).toMatch(/already/i);
   });
 
-  // ── Email links ─────────────────────────────────────────────────────────────
+  // ── Emailed codes ───────────────────────────────────────────────────────────
 
-  it("signInWithMagicLink emails a link that can create the account", async () => {
+  it("verifySignupCode checks a signup code and signs the user in", async () => {
     const { result } = await renderAuth();
     await act(async () => {});
     let error;
     await act(async () => {
-      error = await result.current.signInWithMagicLink("a@b.com");
+      error = await result.current.verifySignupCode("code@b.com", "12345678");
     });
     expect(error).toBeNull();
-    expect(mockSignInWithOtp).toHaveBeenCalledWith({
-      email: "a@b.com",
-      options: {
-        emailRedirectTo: "https://www.casedive.ca",
-        shouldCreateUser: true,
-      },
+    expect(mockVerifyOtp).toHaveBeenCalledTimes(1);
+    expect(mockVerifyOtp).toHaveBeenCalledWith({
+      email: "code@b.com",
+      token: "12345678",
+      type: "signup",
+    });
+    expect(result.current.user).toMatchObject({ id: "uid-3" });
+    expect(result.current.token).toBe("tok-3");
+  });
+
+  it("verifySignupCode shows the same welcome as a confirmation link; a reset code does not", async () => {
+    const { result } = await renderAuth();
+    await act(async () => {});
+    await act(async () => {
+      await result.current.verifyRecoveryCode("code@b.com", "123456");
+    });
+    expect(result.current.authNotice).toBeNull();
+
+    await act(async () => {
+      await result.current.verifySignupCode("code@b.com", "123456");
+    });
+    expect(result.current.authNotice).toEqual({
+      kind: "welcome",
+      message: "Email confirmed — you're signed in.",
     });
   });
 
-  it("signInWithMagicLink returns the Supabase error message", async () => {
-    mockSignInWithOtp.mockResolvedValueOnce({
-      data: null,
-      error: { message: "Error sending magic link email" },
+  it("verifySignupCode returns the Supabase error and leaves the user signed out", async () => {
+    mockVerifyOtp.mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: "Token has expired or is invalid" },
     });
     const { result } = await renderAuth();
     await act(async () => {});
     let error;
     await act(async () => {
-      error = await result.current.signInWithMagicLink("a@b.com");
+      error = await result.current.verifySignupCode("code@b.com", "00000000");
     });
-    expect(error).toMatch(/error sending/i);
+    expect(error).toBe("Token has expired or is invalid");
+    expect(result.current.user).toBeNull();
+    expect(result.current.token).toBeNull();
+    expect(result.current.authNotice).toBeNull();
+  });
+
+  it("verifyRecoveryCode checks a reset code and signs the user in", async () => {
+    const { result } = await renderAuth();
+    await act(async () => {});
+    let error;
+    await act(async () => {
+      error = await result.current.verifyRecoveryCode("code@b.com", "123456");
+    });
+    expect(error).toBeNull();
+    expect(mockVerifyOtp).toHaveBeenCalledTimes(1);
+    expect(mockVerifyOtp).toHaveBeenCalledWith({
+      email: "code@b.com",
+      token: "123456",
+      type: "recovery",
+    });
+    expect(result.current.user).toMatchObject({ id: "uid-3" });
+    expect(result.current.token).toBe("tok-3");
+  });
+
+  it("verifyRecoveryCode returns the Supabase error and leaves the user signed out", async () => {
+    mockVerifyOtp.mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: "Token has expired or is invalid" },
+    });
+    const { result } = await renderAuth();
+    await act(async () => {});
+    let error;
+    await act(async () => {
+      error = await result.current.verifyRecoveryCode("code@b.com", "000000");
+    });
+    expect(error).toBe("Token has expired or is invalid");
+    expect(result.current.user).toBeNull();
+    expect(result.current.token).toBeNull();
+  });
+
+  it("verify functions report 'Auth not configured' when Supabase is missing", async () => {
+    mockClientState.configured = false;
+    const { result } = await renderAuth();
+    await act(async () => {});
+    let signupError;
+    let recoveryError;
+    await act(async () => {
+      signupError = await result.current.verifySignupCode("a@b.com", "123456");
+      recoveryError = await result.current.verifyRecoveryCode(
+        "a@b.com",
+        "123456",
+      );
+    });
+    expect(signupError).toBe("Auth not configured");
+    expect(recoveryError).toBe("Auth not configured");
+    expect(mockVerifyOtp).not.toHaveBeenCalled();
+    expect(result.current.user).toBeNull();
+  });
+
+  it("verify functions return null without a session when Supabase sends none", async () => {
+    mockVerifyOtp.mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: null,
+    });
+    const { result } = await renderAuth();
+    await act(async () => {});
+    let error;
+    await act(async () => {
+      error = await result.current.verifySignupCode("code@b.com", "123456");
+    });
+    expect(error).toBeNull();
+    expect(result.current.user).toBeNull();
+    expect(result.current.token).toBeNull();
   });
 
   it("resendConfirmation resends the signup email", async () => {

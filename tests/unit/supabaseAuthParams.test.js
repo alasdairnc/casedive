@@ -61,7 +61,6 @@ describe("auth build flags", () => {
   beforeEach(() => {
     vi.stubEnv("VITE_SUPABASE_URL", undefined);
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", undefined);
-    vi.stubEnv("VITE_AUTH_MAGIC_LINK", undefined);
     vi.stubEnv("VITE_AUTH_GOOGLE", undefined);
     vi.resetModules();
   });
@@ -75,8 +74,19 @@ describe("auth build flags", () => {
       "../../src/lib/supabase.js"
     );
     expect(isAuthEnabled).toBe(false);
-    expect(authMethods.magicLink).toBe(true);
-    expect(authMethods.google).toBe(false);
+    expect(authMethods).toEqual({ google: false });
     expect(Object.isFrozen(authMethods)).toBe(true);
+  });
+
+  it("turns Google on only when VITE_AUTH_GOOGLE is the string 'true'", async () => {
+    vi.stubEnv("VITE_AUTH_GOOGLE", "true");
+    vi.resetModules();
+    const on = await import("../../src/lib/supabase.js");
+    expect(on.authMethods).toEqual({ google: true });
+
+    vi.stubEnv("VITE_AUTH_GOOGLE", "1");
+    vi.resetModules();
+    const off = await import("../../src/lib/supabase.js");
+    expect(off.authMethods.google).toBe(false);
   });
 });

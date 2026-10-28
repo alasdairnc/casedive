@@ -5,10 +5,11 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 /**
  * Read what an email link or OAuth redirect put in the URL. Supabase's
- * implicit flow returns `#access_token=…&type=signup|magiclink|recovery…` on
- * success and `#error=…&error_code=otp_expired&error_description=…` (hash or
- * query) on failure. The client clears the hash once it has the session, so
- * this has to run at module load, before anything else touches the URL.
+ * implicit flow returns `#access_token=…&type=signup|recovery…` on success
+ * (the link in a confirmation or reset email, or a Google redirect) and
+ * `#error=…&error_code=otp_expired&error_description=…` (hash or query) on
+ * failure. The client clears the hash once it has the session, so this has to
+ * run at module load, before anything else touches the URL.
  */
 export function parseAuthParams(hash = "", search = "") {
   const fromHash = new URLSearchParams(String(hash).replace(/^#/, ""));
@@ -52,12 +53,11 @@ export const supabase =
 export const isAuthEnabled = Boolean(supabase);
 
 /**
- * Which sign-in options the modal offers. Build-time flags (see
- * docs/auth-setup.md): the email link is on unless explicitly disabled,
- * Google stays off until its OAuth client is configured in Supabase.
+ * Which extra sign-in options the modal offers. Build-time flag (see
+ * docs/auth-setup.md): Google stays off until its OAuth client is configured
+ * in Supabase. Email + password is always on.
  */
 export const authMethods = Object.freeze({
-  magicLink: import.meta.env.VITE_AUTH_MAGIC_LINK !== "false",
   google: import.meta.env.VITE_AUTH_GOOGLE === "true",
 });
 
