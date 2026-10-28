@@ -27,6 +27,8 @@ AI-powered Canadian legal research tool. Stack: React 18 + Vite, Vercel serverle
 
 **Caselaw curation:** `npm run improve:caselaw` (propose-only relevance loop, dated digest), `npm run expand:caselaw` (propose-only corpus expansion), `npm run caselaw:curate` (both in sequence)
 
+**Statute grounding eval (opt-in, spends Claude tokens, never CI):** `node --env-file=.env scripts/evaluate-statute-grounding.mjs --live --mode both` (about 64 calls; `--only id,id`, `--out file.json`). Run it before changing the CDSA/YCJA rules or prompt hints; it also saves the model's `analysis` for a human read.
+
 **Docs authoring:** `npm run docs:preview` (live-reload preview of docs/reports), `npm run docs:build -- <file.md>` (md → `artifacts/html/`), `npm run docs:lint` (markdownlint over reports + top-level docs). Generate digests with the `/weekly-report` skill.
 
 ## Memory & Session
@@ -63,6 +65,8 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - Hobby plan caps the project at 12 serverless functions; `api/` is at 9/12 since billing was parked (2026-09-25) and the unused `retrieve-caselaw` endpoint was removed (2026-09-28). Combine actions into one endpoint before adding a new file.
 - `user-data` (cloud sync) is rate-limited per Supabase user at 120/h, not the 5/h AI default. Sync fires on every bookmark and every search, so the default silently broke sync after five actions.
 - Vercel Hobby keeps about one hour of runtime logs. Anything older is only in Sentry.
+- CDSA/YCJA grounding (`api/_statuteGrounding.js`) runs only when `STATUTE_GROUNDING=on` (cache key `v4g`, so grounded results never reach flag-off users). Youth is an overlay, never a `primary` issue in retrieval/ranking (a youth primary displaces theft/assault case law). Cannabis alone is the Cannabis Act, not the CDSA. CDSA/YCJA `civil_law` items are anchored on the verified section text (`summary` replaced, `matched_section` dropped) because the model invented consequences in its own wording; `analysis` is still unchecked free text. Detail and eval results: `docs/statute-grounding.md`.
+- `/api/analyze` time budget: 40s per model call inside a 55s request (function limit 60s), retry only if 12s remain, timeout answers 504 (`ANALYZE_*` in `api/_constants.js`). `ANTHROPIC_TIMEOUT_MS` (25s) is for the 30s endpoints (case-summary). `max_tokens` is 1800; the handler logs `stopReason`/`outputTokens`, so judge it from data.
 
 ## API Module Structure
 
@@ -106,27 +110,11 @@ Call `advisor()` (no parameters — forwards full context to a stronger reviewer
 
 Consolidated 2026-09-25 from 27 pieces to 13. Everything here is referenced by a hook, a rule, a workflow or the roadmap; if you add one, add its reference too.
 
-**Skills** (`.claude/skills/`, invoke as `/name`)
+Skills (`.claude/skills/`, `/name`): `verify` (pre-push check; `/verify e2e`), `casedive-audit`, `new-api-endpoint` (mind the 12-function cap), `filter-tune`, `ops-checklist`, `weekly-report`.
 
-- `verify` — the one pre-push check: build, unit + component, guardrails, gitleaks, optional E2E (`/verify e2e`)
-- `casedive-audit` — full project audit (security, caching, tests, data, config); appends to `AUDIT_LOG.md`
-- `new-api-endpoint` — scaffold an endpoint with rate limit, validation, headers, logging pre-wired (remember the 12-function cap)
-- `filter-tune` — filter calibration pipeline with baseline safety check
-- `ops-checklist` — pre-deploy production checklist (Sentry, env vars, Redis quota)
-- `weekly-report` — Sunday digest in the established format
+Commands (`.claude/commands/`): `/improve-caselaw`, `/retrieval-health` (needs `RETRIEVAL_HEALTH_TOKEN`).
 
-**Commands** (`.claude/commands/`)
-
-- `/improve-caselaw` — propose-only caselaw relevance loop, interprets the digest
-- `/retrieval-health` — fetch and diagnose the live retrieval health snapshot (needs `RETRIEVAL_HEALTH_TOKEN`)
-
-**Subagents** (`.claude/agents/`)
-
-- `api-invariant-reviewer` — rate limiting, validation, headers, and caching invariants on `api/*.js` (the post-edit hook reminds you)
-- `legal-data-validator` — schema check on `criminalCodeData.js`, `civilLawData.js`, `charterData.js`
-- `retrieval-quality-reviewer` — scoring/threshold consistency after `_filter*`, `_scenarioClassification`, `_retrievalThresholds` changes
-- `retrieval-regression-detector` — runs the retrieval failure corpus after the same files change
-- `caselaw-curator` — propose-only relevance + expansion loop; never edits corpus, filter or threshold files
+Subagents (`.claude/agents/`): `api-invariant-reviewer` (`api/*.js` invariants), `legal-data-validator` (legal data schemas), `retrieval-quality-reviewer` + `retrieval-regression-detector` (after `_filter*`, `_scenarioClassification`, `_retrievalThresholds` changes), `caselaw-curator` (propose-only; never edits corpus/filter/threshold files). Descriptions live in each file.
 
 ## Workflow Rules (from claude-doctor)
 
@@ -141,7 +129,5 @@ Consolidated 2026-09-25 from 27 pieces to 13. Everything here is referenced by a
 
 ## Testing & Verification
 
-- Always start dev server (`npm run dev:api`) before E2E/Playwright tests — hung tests = missing server
-- After any refactor that changes data shapes or API contracts, run full unit suite before declaring done
-- For E2E failures, run with `--workers=1` first to rule out parallelism before diagnosing state issues
-- If 10+ tests fail simultaneously, suspect parallelism or missing server — not individual test bugs
+- After a refactor that changes data shapes or API contracts, run the full unit suite before declaring done
+- For E2E failures, run with `--workers=1` first; 10+ simultaneous failures = parallelism or missing server, not individual test bugs

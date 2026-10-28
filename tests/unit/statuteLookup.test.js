@@ -30,6 +30,26 @@ describe("lookupStatuteSection", () => {
     for (const [n, e] of YCJA_SECTIONS) if (e.kind !== "schedule") expect(lookupStatuteSection(`YCJA s. ${n}`), n).not.toBeNull();
   });
 
+  it("resolves schedules by Act and numeral", () => {
+    const s1 = lookupStatuteSection("CDSA Schedule I");
+    expect(s1.entry.kind).toBe("schedule");
+    expect(s1.entry.url).toBe(CDSA_SECTIONS.get("Schedule I").url);
+    expect(lookupStatuteSection("Schedule II, Controlled Drugs and Substances Act").entry.title).toBe(
+      CDSA_SECTIONS.get("Schedule II").title,
+    );
+    expect(lookupStatuteSection("YCJA Schedule").entry.url).toBe(YCJA_SECTIONS.get("Schedule").url);
+  });
+
+  it("prefers the section when a citation names both", () => {
+    expect(lookupStatuteSection("CDSA s. 5, Schedule I").entry.title).toBe(CDSA_SECTIONS.get("5").title);
+  });
+
+  it("rejects schedules that do not exist", () => {
+    expect(lookupStatuteSection("CDSA Schedule VII")).toBeNull();
+    expect(lookupStatuteSection("CDSA Schedule VIII")).toBeNull();
+    expect(lookupStatuteSection("CHRA Schedule I")).toBeNull();
+  });
+
   it("rejects sections that do not exist and other Acts", () => {
     expect(lookupStatuteSection("CDSA s. 9999")).toBeNull();
     expect(lookupStatuteSection("CHRA s. 3")).toBeNull();
