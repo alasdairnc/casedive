@@ -1,37 +1,44 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../lib/ThemeContext.jsx";
 import { useAuth } from "../hooks/useAuth.js";
-import { friendlyAuthError } from "../lib/authErrors.js";
+import { friendlyAuthError, friendlyCodeError } from "../lib/authErrors.js";
 import { RADIUS } from "../lib/ui.js";
 import Button from "./ui/Button.jsx";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD = 8;
+// Supabase lets the project choose a 6-10 digit email code (default 6), so
+// accept anything in that range rather than hardcoding one length.
+const CODE_MIN = 6;
+const CODE_MAX = 10;
+const CODE_RE = new RegExp(`^\\d{${CODE_MIN},${CODE_MAX}}$`);
+// Supabase refuses a second email to the same address within 60 seconds.
+const RESEND_COOLDOWN_S = 60;
+
+const TABS = [
+  { mode: "signin", label: "Sign in" },
+  { mode: "signup", label: "Create account" },
+];
+
+const ACCOUNT_INTRO =
+  "Optional. An account keeps your bookmarks and search history in sync across devices.";
 
 const COPY = {
   signin: {
     heading: "Sign in",
     submit: "Sign in",
-    intro:
-      "Optional. An account keeps your bookmarks and search history in sync across devices.",
+    intro: ACCOUNT_INTRO,
   },
   signup: {
     heading: "Create account",
     submit: "Create account",
-    intro:
-      "Optional. An account keeps your bookmarks and search history in sync across devices.",
-  },
-  magic: {
-    heading: "Email me a link",
-    submit: "Send sign-in link",
-    intro:
-      "No password needed. We'll email you a link that signs you in, and sets up your account if you're new.",
+    intro: ACCOUNT_INTRO,
   },
   forgot: {
     heading: "Reset password",
-    submit: "Send reset link",
+    submit: "Send reset code",
     intro:
-      "Enter your account email and we'll send you a link to choose a new password.",
+      "Enter your account email and we'll send you a code to choose a new password.",
   },
   reset: {
     heading: "Set new password",
@@ -40,20 +47,26 @@ const COPY = {
   },
 };
 
-// What the "check your email" screen says for each kind of email we send.
-const SENT_COPY = {
-  signup: (email) =>
-    `We sent a confirmation link to ${email}. Open it to finish creating your account.`,
-  forgot: (email) =>
-    `If there's an account for ${email}, we sent it a password reset link.`,
-  magic: (email) => `We sent a sign-in link to ${email}. It works once.`,
+// The "check your email" screen, for each kind of code we send.
+const CODE_COPY = {
+  signup: {
+    submit: "Verify and sign in",
+    sent: (email) =>
+      `We sent a code to ${email}. Enter it below to finish creating your account.`,
+    help: "No email after a couple of minutes? Check your spam or promotions folder, or sign in if you already have an account.",
+  },
+  recovery: {
+    submit: "Verify code",
+    sent: (email) =>
+      `If there's an account for ${email}, we sent it a code. Enter it below to choose a new password.`,
+    help: "Nothing after a couple of minutes? Check your spam or promotions folder, then resend.",
+  },
 };
 
 const ACTION_LABELS = {
-  resend: "Resend confirmation email",
+  resend: "Send a new code",
   forgot: "Reset your password",
   signin: "Sign in instead",
-  magic: "Email me a sign-in link",
 };
 
 const FOCUSABLE =
@@ -66,7 +79,8 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
     authMethods = {},
     signIn,
     signUp,
-    signInWithMagicLink,
+    verifySignupCode,
+    verifyRecoveryCode,
     signInWithGoogle,
     resendConfirmation,
     resetPassword,
@@ -80,20 +94,28 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   // { message, action } — action is a key of ACTION_LABELS or null
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
-  // "Check your email" screen: { kind: "signup" | "forgot" | "magic", email }
-  const [sent, setSent] = useState(null);
+  // "Enter the code" screen: { kind: "signup" | "recovery", email }
+  const [codeStep, setCodeStep] = useState(null);
+  const [code, setCode] = useState("");
+  // The resend button works again at resendAt (epoch ms). It is judged
+  // against `now`, which a timer and visibilitychange keep current.
+  const [resendAt, setResendAt] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
+  const cooldown = Math.max(0, Math.ceil((resendAt - now) / 1000));
   const [passwordUpdated, setPasswordUpdated] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const panelRef = useRef(null);
-  const headingRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const codeRef = useRef(null);
   const continueRef = useRef(null);
   const pressStartedOnBackdrop = useRef(false);
 
   // Reset to a clean slate every time the modal opens so a previous
   // session's mode, fields, or messages never leak into the next one.
+  // Also runs when the app pushes a new mode in (it opens "reset" once a
+  // recovery code or link has signed the user in).
   useEffect(() => {
     if (isOpen) {
       setMode(initialMode || "signin");
@@ -102,7 +124,9 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
       setShowPassword(false);
       setError(null);
       setNotice(null);
-      setSent(null);
+      setCodeStep(null);
+      setCode("");
+      setResendAt(0);
       setPasswordUpdated(false);
     }
   }, [isOpen, initialMode]);
@@ -119,43 +143,92 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   useEffect(() => {
     if (!isOpen) return;
     if (passwordUpdated) continueRef.current?.focus();
-    else if (sent) headingRef.current?.focus();
+    else if (codeStep) codeRef.current?.focus();
     else if (mode === "reset") passwordRef.current?.focus();
-    else emailRef.current?.focus();
-  }, [isOpen, mode, sent, passwordUpdated]);
+    // Arrowing between the tabs must keep focus on the tab strip.
+    else if (document.activeElement?.getAttribute("role") !== "tab") {
+      emailRef.current?.focus();
+    }
+  }, [isOpen, mode, codeStep, passwordUpdated]);
 
-  // Confirming the email or opening a sign-in link usually happens in a new
-  // tab. Supabase syncs the session back here, so close the waiting screen.
+  // Count down against the clock, not by ticks: a phone freezes this page's
+  // timers while the user reads the email in their mail app, so re-check
+  // when they come back as well.
   useEffect(() => {
-    if (isOpen && user && sent && sent.kind !== "forgot") onClose();
-  }, [isOpen, user, sent, onClose]);
+    if (!resendAt) return undefined;
+    const timer = setInterval(() => {
+      const current = Date.now();
+      setNow(current);
+      if (current >= resendAt) clearInterval(timer);
+    }, 1000);
+    const onVisible = () => setNow(Date.now());
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [resendAt]);
+
+  // Confirming through the emailed link in another tab syncs the session back
+  // here, so close the waiting screen. A reset code signs the user in too, but
+  // they still have to choose a new password, so that one stays open.
+  useEffect(() => {
+    if (isOpen && user && codeStep?.kind === "signup") onClose();
+  }, [isOpen, user, codeStep, onClose]);
 
   if (!isOpen) return null;
 
-  const needsEmail = mode !== "reset";
+  const needsEmail = mode !== "reset" && !codeStep;
   const needsPassword =
-    mode === "signin" || mode === "signup" || mode === "reset";
+    !codeStep && (mode === "signin" || mode === "signup" || mode === "reset");
   const isNewPassword = mode === "signup" || mode === "reset";
   const copy = COPY[mode] || COPY.signin;
+  const codeCopy = codeStep ? CODE_COPY[codeStep.kind] : null;
+  const showTabs =
+    !codeStep && !passwordUpdated && (mode === "signin" || mode === "signup");
   const heading = passwordUpdated
     ? "Password updated"
-    : sent
+    : codeStep
       ? "Check your email"
       : copy.heading;
-  const showOAuth =
-    authMethods.google && !sent && (mode === "signin" || mode === "signup");
+  const showOAuth = authMethods.google && showTabs;
+  const panelProps = showTabs
+    ? {
+        id: "auth-panel",
+        role: "tabpanel",
+        "aria-labelledby": `auth-tab-${mode}`,
+      }
+    : {};
 
-  function showError(raw) {
-    setError(friendlyAuthError(raw));
+  function showError(raw, friendly = friendlyAuthError) {
+    setError(friendly(raw));
   }
 
   function switchMode(next) {
     setMode(next);
     setError(null);
     setNotice(null);
-    setSent(null);
+    setCodeStep(null);
+    setCode("");
     setPassword("");
     setShowPassword(false);
+  }
+
+  function startCooldown() {
+    const current = Date.now();
+    setNow(current);
+    setResendAt(current + RESEND_COOLDOWN_S * 1000);
+  }
+
+  // Move to the "enter the code" screen once an email has gone out.
+  function enterCodeStep(kind, addr) {
+    setError(null);
+    setNotice(null);
+    setPassword("");
+    setShowPassword(false);
+    setCode("");
+    startCooldown();
+    setCodeStep({ kind, email: addr });
   }
 
   // Run an auth call with the shared busy flag. A thrown error (network
@@ -174,6 +247,9 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   }
 
   function validate() {
+    if (codeStep) {
+      return CODE_RE.test(code) ? null : "Enter the code from your email.";
+    }
     const trimmed = email.trim();
     if (needsEmail && !trimmed) return "Enter your email address.";
     if (needsEmail && !EMAIL_RE.test(trimmed)) {
@@ -197,7 +273,23 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
     const addr = email.trim();
 
     run(async () => {
-      if (mode === "signin") {
+      if (codeStep) {
+        const verify =
+          codeStep.kind === "signup" ? verifySignupCode : verifyRecoveryCode;
+        const err = await verify(codeStep.email, code);
+        if (err) {
+          showError(err, friendlyCodeError);
+          return;
+        }
+        setCode("");
+        if (codeStep.kind === "signup") {
+          onClose();
+        } else {
+          // The code opened a reset session; the next step is the new password.
+          setCodeStep(null);
+          setMode("reset");
+        }
+      } else if (mode === "signin") {
         const err = await signIn(addr, password);
         if (err) showError(err);
         else onClose();
@@ -207,19 +299,14 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
         if (errMsg) {
           showError(errMsg);
         } else if (result?.needsConfirmation) {
-          setPassword("");
-          setSent({ kind: "signup", email: addr });
+          enterCodeStep("signup", addr);
         } else {
           onClose();
         }
-      } else if (mode === "magic") {
-        const err = await signInWithMagicLink(addr);
-        if (err) showError(err);
-        else setSent({ kind: "magic", email: addr });
       } else if (mode === "forgot") {
         const err = await resetPassword(addr);
         if (err) showError(err);
-        else setSent({ kind: "forgot", email: addr });
+        else enterCodeStep("recovery", addr);
       } else if (mode === "reset") {
         const err = await updatePassword(password);
         if (err) {
@@ -233,19 +320,19 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   }
 
   function resend() {
-    if (!sent) return;
+    if (!codeStep || cooldown > 0) return;
     run(async () => {
-      const send = {
-        signup: resendConfirmation,
-        forgot: resetPassword,
-        magic: signInWithMagicLink,
-      }[sent.kind];
-      const err = await send(sent.email);
-      if (err) showError(err);
-      else
-        setNotice(
-          "Sent again. Use the newest email; older links stop working.",
-        );
+      const send =
+        codeStep.kind === "signup" ? resendConfirmation : resetPassword;
+      const err = await send(codeStep.email);
+      if (err) {
+        showError(err);
+      } else {
+        startCooldown();
+        setNotice("Sent again. Use the newest code; older ones stop working.");
+        // The button just disabled itself; don't leave focus on it.
+        codeRef.current?.focus();
+      }
     });
   }
 
@@ -258,28 +345,44 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
 
   function runAction(action) {
     if (action === "resend") {
+      // Only reached from a sign-in that hit an unconfirmed account.
       const addr = email.trim();
       run(async () => {
         const err = await resendConfirmation(addr);
         if (err) showError(err);
-        else setSent({ kind: "signup", email: addr });
+        else enterCodeStep("signup", addr);
       });
     } else if (action === "forgot") {
       switchMode("forgot");
     } else if (action === "signin") {
       switchMode("signin");
-    } else if (action === "magic") {
-      switchMode("magic");
     }
   }
 
   function actionAvailable(action) {
     if (!action || !ACTION_LABELS[action]) return false;
-    if (action === "magic") return Boolean(authMethods.magicLink);
     if (action === "resend") return EMAIL_RE.test(email.trim());
     if (action === "forgot") return mode !== "forgot";
     if (action === "signin") return mode !== "signin";
     return true;
+  }
+
+  // Left/Right/Home/End move between the two tabs, as in a native tab strip.
+  function onTabKeyDown(e) {
+    const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
+    if (step === undefined && e.key !== "Home" && e.key !== "End") return;
+    e.preventDefault();
+    const current = TABS.findIndex((tab) => tab.mode === mode);
+    const next =
+      e.key === "Home"
+        ? 0
+        : e.key === "End"
+          ? TABS.length - 1
+          : (current + step + TABS.length) % TABS.length;
+    // Home on the first tab (or End on the last) changes nothing, so don't
+    // wipe what the user already typed.
+    if (TABS[next].mode !== mode) switchMode(TABS[next].mode);
+    e.currentTarget.querySelector(`#auth-tab-${TABS[next].mode}`)?.focus();
   }
 
   // Keep Tab inside the dialog.
@@ -337,6 +440,8 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
   };
 
   const calloutStyle = (tone) => ({
+    // A long address in "We sent a code to …" must wrap inside a 320px panel.
+    overflowWrap: "anywhere",
     marginBottom: 18,
     padding: "10px 12px",
     background: t.bgAlt,
@@ -347,6 +452,22 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
     fontSize: 13,
     lineHeight: 1.6,
     color: tone,
+  });
+
+  const tabStyle = (selected) => ({
+    flex: 1,
+    minHeight: 40,
+    padding: "0 12px",
+    boxSizing: "border-box",
+    background: selected ? t.bg : "transparent",
+    border: `1px solid ${selected ? t.border : "transparent"}`,
+    borderRadius: RADIUS.sm,
+    color: selected ? t.text : t.textSecondary,
+    fontFamily: "var(--font-body)",
+    fontSize: 14,
+    fontWeight: selected ? 600 : 500,
+    cursor: "pointer",
+    transition: "background-color 0.15s, color 0.15s",
   });
 
   const bottomLink = (label, onClick) => (
@@ -422,22 +543,58 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
 
           <h2
             id="auth-modal-heading"
-            ref={headingRef}
-            tabIndex={-1}
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 24,
               fontWeight: 600,
               color: t.text,
-              margin: "0 0 10px",
-              // Programmatic focus target only (tabIndex -1), never tabbed to
-              outline: "none",
+              margin: "0 0 14px",
             }}
           >
             {heading}
           </h2>
 
-          {!sent && !passwordUpdated && <p style={introStyle}>{copy.intro}</p>}
+          {showTabs && (
+            <div
+              role="tablist"
+              aria-label="Account"
+              onKeyDown={onTabKeyDown}
+              style={{
+                display: "flex",
+                gap: 4,
+                padding: 4,
+                marginBottom: 18,
+                background: t.bgAlt,
+                border: `1px solid ${t.border}`,
+                borderRadius: RADIUS.md,
+              }}
+            >
+              {TABS.map((tab) => {
+                const selected = mode === tab.mode;
+                return (
+                  <button
+                    key={tab.mode}
+                    id={`auth-tab-${tab.mode}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    aria-controls="auth-panel"
+                    tabIndex={selected ? 0 : -1}
+                    onClick={() => {
+                      if (!selected) switchMode(tab.mode);
+                    }}
+                    style={tabStyle(selected)}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {!codeStep && !passwordUpdated && (
+            <p style={introStyle}>{copy.intro}</p>
+          )}
 
           {error && (
             <div role="alert" style={calloutStyle(t.accentRed)}>
@@ -456,14 +613,14 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
             </div>
           )}
 
-          {(sent || passwordUpdated || notice) && (
+          {(codeStep || passwordUpdated || notice) && (
             <div role="status" style={calloutStyle(t.accentGreen)}>
               {passwordUpdated
                 ? "Password updated. You're signed in with your new password."
-                : sent
-                  ? SENT_COPY[sent.kind](sent.email)
+                : codeStep
+                  ? codeCopy.sent(codeStep.email)
                   : null}
-              {notice && (sent || passwordUpdated) ? " " : null}
+              {notice && (codeStep || passwordUpdated) ? " " : null}
               {notice}
             </div>
           )}
@@ -478,21 +635,77 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
             >
               Continue
             </Button>
-          ) : sent ? (
+          ) : codeStep ? (
             <>
-              <p style={introStyle}>
-                Nothing after a couple of minutes? Check your spam or promotions
-                folder, then resend.
-              </p>
+              <form onSubmit={handleSubmit} noValidate>
+                <div style={{ marginBottom: 22 }}>
+                  <label htmlFor="auth-code" style={labelStyle}>
+                    Code from your email
+                  </label>
+                  <input
+                    id="auth-code"
+                    ref={codeRef}
+                    name="code"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    autoComplete="one-time-code"
+                    maxLength={CODE_MAX}
+                    aria-describedby="auth-code-help"
+                    value={code}
+                    placeholder="123456"
+                    onChange={(e) =>
+                      setCode(
+                        e.target.value.replace(/\D/g, "").slice(0, CODE_MAX),
+                      )
+                    }
+                    onFocus={focusInput}
+                    onBlur={blurInput}
+                    style={{
+                      ...inputStyle,
+                      fontSize: 22,
+                      letterSpacing: "0.3em",
+                      textAlign: "center",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  />
+                  <div
+                    id="auth-code-help"
+                    style={{
+                      marginTop: 8,
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      lineHeight: 1.5,
+                      color: t.textTertiary,
+                    }}
+                  >
+                    {codeCopy.help}
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="md"
+                  fullWidth
+                  disabled={submitting}
+                  style={submitting ? { cursor: "wait" } : undefined}
+                >
+                  {submitting ? "Please wait…" : codeCopy.submit}
+                </Button>
+              </form>
+
               <Button
                 variant="secondary"
                 size="md"
                 fullWidth
                 onClick={resend}
-                disabled={submitting}
+                disabled={submitting || cooldown > 0}
+                style={{ marginTop: 10 }}
               >
-                {submitting ? "Sending…" : "Resend email"}
+                {cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}
               </Button>
+
               <div
                 style={{
                   marginTop: 16,
@@ -503,241 +716,225 @@ export default function AuthModal({ isOpen, onClose, mode: initialMode }) {
                 }}
               >
                 {bottomLink("Use a different email", () => {
-                  setSent(null);
+                  setCodeStep(null);
+                  setCode("");
                   setError(null);
                   setNotice(null);
                 })}
-                {sent.kind !== "magic" &&
-                  bottomLink(
-                    sent.kind === "signup"
-                      ? "Already confirmed? Sign in"
-                      : "Back to sign in",
-                    () => switchMode("signin"),
-                  )}
+                {bottomLink(
+                  codeStep.kind === "signup"
+                    ? "Already have an account? Sign in"
+                    : "Back to sign in",
+                  () => switchMode("signin"),
+                )}
               </div>
             </>
           ) : (
             <>
-              {showOAuth && (
-                <>
-                  <Button
-                    variant="secondary"
-                    size="md"
-                    fullWidth
-                    onClick={googleSignIn}
-                    disabled={submitting}
-                  >
-                    Continue with Google
-                  </Button>
-                  <div
-                    aria-hidden="true"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      margin: "18px 0",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 12,
-                      color: t.textTertiary,
-                    }}
-                  >
-                    <span
-                      style={{ flex: 1, borderTop: `1px solid ${t.border}` }}
-                    />
-                    or
-                    <span
-                      style={{ flex: 1, borderTop: `1px solid ${t.border}` }}
-                    />
-                  </div>
-                </>
-              )}
-
-              <form onSubmit={handleSubmit} noValidate>
-                {needsEmail && (
-                  <div style={{ marginBottom: 16 }}>
-                    <label htmlFor="auth-email" style={labelStyle}>
-                      Email
-                    </label>
-                    <input
-                      id="auth-email"
-                      ref={emailRef}
-                      name="email"
-                      type="email"
-                      inputMode="email"
-                      autoComplete="email"
-                      autoCapitalize="none"
-                      spellCheck={false}
-                      value={email}
-                      placeholder="you@example.com"
-                      onChange={(e) => setEmail(e.target.value)}
-                      onFocus={focusInput}
-                      onBlur={blurInput}
-                      style={inputStyle}
-                    />
-                  </div>
+              <div {...panelProps}>
+                {showOAuth && (
+                  <>
+                    <Button
+                      variant="secondary"
+                      size="md"
+                      fullWidth
+                      onClick={googleSignIn}
+                      disabled={submitting}
+                    >
+                      Continue with Google
+                    </Button>
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        margin: "18px 0",
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        color: t.textTertiary,
+                      }}
+                    >
+                      <span
+                        style={{ flex: 1, borderTop: `1px solid ${t.border}` }}
+                      />
+                      or
+                      <span
+                        style={{ flex: 1, borderTop: `1px solid ${t.border}` }}
+                      />
+                    </div>
+                  </>
                 )}
 
-                {needsPassword && (
-                  <div style={{ marginBottom: 22 }}>
-                    <label htmlFor="auth-password" style={labelStyle}>
-                      {mode === "reset" ? "New password" : "Password"}
-                    </label>
-                    <div style={{ position: "relative" }}>
+                <form onSubmit={handleSubmit} noValidate>
+                  {needsEmail && (
+                    <div style={{ marginBottom: 16 }}>
+                      <label htmlFor="auth-email" style={labelStyle}>
+                        Email
+                      </label>
                       <input
-                        id="auth-password"
-                        ref={passwordRef}
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        autoComplete={
-                          mode === "signin"
-                            ? "current-password"
-                            : "new-password"
-                        }
-                        aria-describedby={
-                          isNewPassword ? "auth-password-hint" : undefined
-                        }
-                        value={password}
-                        placeholder={
-                          mode === "reset"
-                            ? "New password"
-                            : mode === "signup"
-                              ? "Create a password"
-                              : "Your password"
-                        }
-                        onChange={(e) => setPassword(e.target.value)}
+                        id="auth-email"
+                        ref={emailRef}
+                        name="email"
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        autoCapitalize="none"
+                        spellCheck={false}
+                        value={email}
+                        placeholder="you@example.com"
+                        onChange={(e) => setEmail(e.target.value)}
                         onFocus={focusInput}
                         onBlur={blurInput}
-                        style={{ ...inputStyle, paddingRight: 72 }}
+                        style={inputStyle}
                       />
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowPassword((v) => !v)}
-                        aria-label={
-                          showPassword ? "Hide password" : "Show password"
-                        }
-                        pressed={showPassword}
-                        style={{
-                          position: "absolute",
-                          right: 6,
-                          top: "50%",
-                          transform: "translateY(-50%)",
-                        }}
-                      >
-                        {showPassword ? "Hide" : "Show"}
-                      </Button>
                     </div>
-                    {mode === "signin" && (
-                      // After the field in the DOM so Tab goes email → password.
-                      <div style={{ textAlign: "right", marginTop: 8 }}>
+                  )}
+
+                  {needsPassword && (
+                    <div style={{ marginBottom: 22 }}>
+                      <label htmlFor="auth-password" style={labelStyle}>
+                        {mode === "reset" ? "New password" : "Password"}
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <input
+                          id="auth-password"
+                          ref={passwordRef}
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          autoComplete={
+                            mode === "signin"
+                              ? "current-password"
+                              : "new-password"
+                          }
+                          aria-describedby={
+                            isNewPassword ? "auth-password-hint" : undefined
+                          }
+                          value={password}
+                          placeholder={
+                            mode === "reset"
+                              ? "New password"
+                              : mode === "signup"
+                                ? "Create a password"
+                                : "Your password"
+                          }
+                          onChange={(e) => setPassword(e.target.value)}
+                          onFocus={focusInput}
+                          onBlur={blurInput}
+                          style={{ ...inputStyle, paddingRight: 72 }}
+                        />
                         <Button
-                          variant="link"
+                          variant="ghost"
                           size="sm"
-                          onClick={() => switchMode("forgot")}
+                          onClick={() => setShowPassword((v) => !v)}
+                          aria-label={
+                            showPassword ? "Hide password" : "Show password"
+                          }
+                          pressed={showPassword}
+                          style={{
+                            position: "absolute",
+                            right: 6,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
                         >
-                          Forgot password?
+                          {showPassword ? "Hide" : "Show"}
                         </Button>
                       </div>
-                    )}
-                    {isNewPassword && (
-                      <div
-                        id="auth-password-hint"
-                        style={{
-                          marginTop: 6,
-                          fontFamily: "var(--font-body)",
-                          fontSize: 12,
-                          color: t.textTertiary,
-                        }}
-                      >
-                        At least {MIN_PASSWORD} characters. A short phrase is
-                        easy to remember.
-                      </div>
-                    )}
-                  </div>
-                )}
+                      {mode === "signin" && (
+                        // After the field in the DOM so Tab goes email → password.
+                        <div style={{ textAlign: "right", marginTop: 8 }}>
+                          <Button
+                            variant="link"
+                            size="sm"
+                            onClick={() => switchMode("forgot")}
+                          >
+                            Forgot password?
+                          </Button>
+                        </div>
+                      )}
+                      {isNewPassword && (
+                        <div
+                          id="auth-password-hint"
+                          style={{
+                            marginTop: 6,
+                            fontFamily: "var(--font-body)",
+                            fontSize: 12,
+                            color: t.textTertiary,
+                          }}
+                        >
+                          At least {MIN_PASSWORD} characters. A short phrase is
+                          easy to remember.
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-                {!needsPassword && <div style={{ marginBottom: 6 }} />}
+                  {!needsPassword && <div style={{ marginBottom: 6 }} />}
 
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="md"
-                  fullWidth
-                  disabled={submitting}
-                  style={submitting ? { cursor: "wait" } : undefined}
-                >
-                  {submitting ? "Please wait…" : copy.submit}
-                </Button>
-
-                {(mode === "signin" ||
-                  mode === "signup" ||
-                  mode === "magic") && (
-                  <p
-                    style={{
-                      margin: "12px 0 0",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 12,
-                      lineHeight: 1.5,
-                      color: t.textTertiary,
-                      textAlign: "center",
-                    }}
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="md"
+                    fullWidth
+                    disabled={submitting}
+                    style={submitting ? { cursor: "wait" } : undefined}
                   >
-                    By continuing, you accept the{" "}
-                    <Button
-                      variant="link"
-                      size="sm"
-                      href="/terms.html"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: 12 }}
-                    >
-                      Terms
-                    </Button>
-                    . The{" "}
-                    <Button
-                      variant="link"
-                      size="sm"
-                      href="/privacy.html"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: 12 }}
-                    >
-                      Privacy Policy
-                    </Button>{" "}
-                    explains what your account stores.
-                  </p>
-                )}
-              </form>
+                    {submitting ? "Please wait…" : copy.submit}
+                  </Button>
 
-              <div
-                style={{
-                  marginTop: 16,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-              >
-                {mode === "signin" &&
-                  bottomLink("New to CaseDive? Create an account", () =>
-                    switchMode("signup"),
+                  {showTabs && (
+                    <p
+                      style={{
+                        margin: "12px 0 0",
+                        fontFamily: "var(--font-body)",
+                        fontSize: 12,
+                        lineHeight: 1.5,
+                        color: t.textTertiary,
+                        textAlign: "center",
+                      }}
+                    >
+                      By continuing, you accept the{" "}
+                      <Button
+                        variant="link"
+                        size="sm"
+                        href="/terms.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: 12 }}
+                      >
+                        Terms
+                      </Button>
+                      . The{" "}
+                      <Button
+                        variant="link"
+                        size="sm"
+                        href="/privacy.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: 12 }}
+                      >
+                        Privacy Policy
+                      </Button>{" "}
+                      explains what your account stores.
+                    </p>
                   )}
-                {mode === "signup" &&
-                  bottomLink("Already have an account? Sign in", () =>
-                    switchMode("signin"),
-                  )}
-                {(mode === "signin" || mode === "signup") &&
-                  authMethods.magicLink &&
-                  bottomLink("Email me a sign-in link instead", () =>
-                    switchMode("magic"),
-                  )}
-                {mode === "magic" &&
-                  bottomLink("Use a password instead", () =>
-                    switchMode("signin"),
-                  )}
-                {mode === "forgot" &&
-                  bottomLink("Back to sign in", () => switchMode("signin"))}
+                </form>
               </div>
+
+              {mode === "forgot" && (
+                <div
+                  style={{
+                    marginTop: 16,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  {bottomLink("Back to sign in", () => switchMode("signin"))}
+                </div>
+              )}
             </>
           )}
         </div>

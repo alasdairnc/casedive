@@ -6,9 +6,12 @@ not from archaeology. Delete an item when it is done; the audit log in
 
 ## Owner-only setup
 
-1. **Finish the live smoke test** in section 7 of `docs/auth-setup.md`
-   (sign-up with a `+test` address, wrong password, reset, expired link). The
-   email-link step already passed on 2026-09-25.
+1. **Roll out sign-in with emailed codes** (the magic link is gone; sign-up and
+   reset now use a code). In order: paste `supabase/templates/confirm_signup.html`
+   and `recovery.html` into Supabase (they carry the code and still the button),
+   deploy, run the live smoke test in section 7 of `docs/auth-setup.md`, then
+   later remove the button from both templates to go code-only. Delete
+   `VITE_AUTH_MAGIC_LINK` from Vercel if it is set.
 2. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
    Variables. Nothing reads them since billing was parked.
 
@@ -16,8 +19,8 @@ Done on 2026-09-25: RLS verified on the three user tables, branch protection on
 `main`, Dependabot's first batch merged, custom SMTP through Resend (SPF, DKIM
 and DMARC passing; reset email landed in a Gmail inbox), confirm-signup, reset
 and magic-link templates branded (a live sign-in link from the new modal
-landed in the inbox with the branded template), `localhost:5173` added to the
-redirect URLs.
+landed in the inbox with the branded template; the magic-link option was
+removed later), `localhost:5173` added to the redirect URLs.
 
 ## Product
 
