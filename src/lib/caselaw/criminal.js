@@ -40,6 +40,10 @@ export const criminalCases = [
       "detention",
       "firearm",
       "police conduct",
+      "court exclude",
+      "exclude the evidence",
+      "exclude evidence",
+      "exclude a statement",
     ],
     facts:
       "A young Black man was stopped by three police officers while walking down the street. The Supreme Court found he was psychologically detained without reasonable suspicion, leading to the discovery of a firearm.",
@@ -312,6 +316,10 @@ export const criminalCases = [
       "section 1",
       "narcotics",
       "reverse onus",
+      "limit is justified",
+      "limit justified",
+      "reasonable limit",
+      "justify a limit",
     ],
     facts:
       "The accused was found with narcotics. A provision in the law required him to prove he was not trafficking, reversing the presumption of innocence under s. 11(d).",
@@ -785,6 +793,9 @@ export const criminalCases = [
       "stay of proceedings",
       "reasonable suspicion",
       "police inducement",
+      "undercover officer",
+      "kept pressing",
+      "pressured me to sell",
     ],
     facts:
       "Over roughly six months the accused repeatedly refused a police agent's requests to sell drugs, eventually relenting under persistent pressure and an implied threat. He raised entrapment.",
