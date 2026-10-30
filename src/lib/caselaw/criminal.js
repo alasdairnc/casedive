@@ -884,6 +884,28 @@ export const criminalCases = [
       "Where knowledge of the drug is the issue it can be proved by circumstantial evidence. A police expert may explain the customs and practices of the drug trade but may not give opinion evidence about the guilt of other people he has investigated; that testimony was inadmissible and the trial judge should not have relied on it. The Supreme Court nonetheless applied the curative proviso in s. 686(1)(b)(iii) and upheld the convictions because the remaining evidence that the accused knew about the cocaine was overwhelming.",
   },
   {
+    citation: "2013 ABCA 428",
+    title: "R. v. Wright",
+    year: 2013,
+    court: "ABCA",
+    topics: ["Theft", "Shoplifting", "Sentencing", "Discharge", "s. 334(b)"],
+    tags: [
+      "shoplifting",
+      "theft under $5000",
+      "section 334(b)",
+      "retail theft",
+      "merchandise",
+      "without paying",
+      "loss prevention officer",
+      "conditional discharge",
+      "section 730",
+    ],
+    facts:
+      "A loss prevention officer at a Rona store saw the 39-year-old accused, who had no prior record, put hand tools worth $181.44 into a shop vac box in his cart. He paid for the shop vac but not the tools and was stopped outside the store. He pleaded guilty to theft under $5,000 under s. 334(b) after 11 court appearances over about a year. The sentencing judge imposed a $200 fine and a $30 victim surcharge and refused a conditional discharge, which the defence had asked for.",
+    ratio:
+      "A sentence is only varied on appeal for an error in principle, a failure to consider a relevant factor, an overemphasis of a proper factor, or if it is demonstrably unfit. A conditional discharge is available for theft under $5,000, but it also has to be in the offender's best interests and not contrary to the public interest. Where an offender goes ahead with deliberation despite the measures merchants use against theft, such as tagging and loss prevention officers, deterrence is an objective and a judge may refuse a discharge. A late guilty plea after repeated trial dates is not aggravating but is not much mitigation. The Court of Appeal dismissed the sentence appeal and left the $200 fine in place.",
+  },
+  {
     citation: "2022 ABCA 89",
     title: "R. v. Sheppard",
     year: 2022,
