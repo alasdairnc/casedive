@@ -126,11 +126,11 @@ is serving.
 3. Run the smoke test in section 7. Its sign-up and reset emails are also the
    check that each template shows the code large and still has the button.
 4. Once the code flow has been live and verified, and soon after, because it
-   is also what makes the code safe from mail scanners: remove the button
-   paragraph (the line with `{{ .ConfirmationURL }}`) from both templates, in
-   the repo and in Supabase, and shorten the intro to "Enter this code on
-   CaseDive. The code expires in 1 hour." New emails then carry the code only;
-   links in emails already sent keep working until they expire.
+   is also what makes the code safe from mail scanners: paste the code-only
+   versions of both templates into Supabase. The repo copies are already
+   code-only (no `{{ .ConfirmationURL }}`, intro reads "Enter this code on
+   CaseDive. The code expires in 1 hour."). New emails then carry the code
+   only; links in emails already sent keep working until they expire.
 
 ## 4. Email code settings
 
