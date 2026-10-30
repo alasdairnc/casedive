@@ -11,6 +11,11 @@ export const ANALYZE_TOTAL_BUDGET_MS = 55_000;
 export const ANALYZE_MODEL_TIMEOUT_MS = 40_000;
 export const ANALYZE_POST_MODEL_RESERVE_MS = 8_000;
 export const ANALYZE_MIN_RETRY_MS = 12_000;
+// Sized for Haiku 4.5 (median 894 output tokens, max 1800 over 131 recordings).
+// Haiku 5.5 writes about 2.7x as much (median 2448, max 4031) and needs about
+// 5000, so a model change has to move this too; see docs/model-upgrade-plan.md.
+// Judge it from stopReason / outputTokens in the handler's logs.
+export const ANALYZE_MAX_TOKENS = 1800;
 export const ANTHROPIC_MODEL_ID =
   process.env.ANTHROPIC_MODEL_ID || "claude-haiku-4-5-20251001";
 
