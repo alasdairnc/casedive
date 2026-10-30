@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { retrieveVerifiedCaseLaw } from "../../api/_caseLawRetrieval.js";
+import {
+  __testables,
+  retrieveVerifiedCaseLaw,
+} from "../../api/_caseLawRetrieval.js";
 
 const originalFetch = globalThis.fetch;
 
@@ -388,5 +391,36 @@ describe("retrieveVerifiedCaseLaw landmark URL handling", () => {
     expect(citations).not.toContain("[1988] 1 SCR 963");
     expect(citations).not.toContain("2017 SCC 59");
     expect(citations).not.toContain("2013 SCC 60");
+  });
+});
+
+describe("isClearlyNonCriminalScenario", () => {
+  const nonCriminal = __testables.isClearlyNonCriminalScenario;
+
+  it("does not treat criminal offences as civil negligence or torts", () => {
+    expect(
+      nonCriminal(
+        "I drove 150 in an 80 zone, passed a line of cars and hit someone. Is that dangerous driving or criminal negligence?",
+      ),
+    ).toBe(false);
+    expect(
+      nonCriminal("Is dangerous driving causing death a manslaughter charge?"),
+    ).toBe(false);
+    expect(nonCriminal("He was tortured in custody by the guards.")).toBe(false);
+  });
+
+  it("still blocks civil, tort and employment scenarios", () => {
+    expect(
+      nonCriminal("My landlord was negligent and I want to sue for damages."),
+    ).toBe(true);
+    expect(
+      nonCriminal("I was wrongfully dismissed and want severance pay."),
+    ).toBe(true);
+    expect(
+      nonCriminal("I want to bring an action in tort against the store."),
+    ).toBe(true);
+    expect(
+      nonCriminal("Several torts were committed by my employer."),
+    ).toBe(true);
   });
 });

@@ -1065,12 +1065,21 @@ function isClearlyNonCriminalScenario(scenario) {
     "civil suit",
     "civil action",
   ];
-  const hasWorkplaceSignal = workplaceSignals.some((kw) => s.includes(kw));
+  // "tort" as a bare substring matched "tortured"; "negligence" also sits inside
+  // the criminal offence "criminal negligence".
+  const hasWorkplaceSignal = workplaceSignals.some((kw) =>
+    kw === "tort" ? /\btorts?\b/.test(s) : s.includes(kw),
+  );
+  const hasCriminalOffenceSignal =
+    /\b(criminal\s+negligence|dangerous\s+(driving|operation)|manslaughter|s\.?\s*(219|220|221|320\.13))\b/.test(
+      s,
+    );
 
   // Block criminal case-law if any non-criminal domain or workplace/tort/employment signal is present and no criminal domain is present
   return (
     (scenarioHasNonCriminalDomain || hasWorkplaceSignal) &&
-    !scenarioHasCriminalDomain
+    !scenarioHasCriminalDomain &&
+    !hasCriminalOffenceSignal
   );
 }
 
