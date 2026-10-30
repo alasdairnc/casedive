@@ -21,6 +21,7 @@ import {
   ANALYZE_CACHE_TTL_SECONDS,
   ANTHROPIC_MESSAGES_URL,
   ANTHROPIC_MODEL_ID,
+  ANALYZE_MAX_TOKENS,
   ANALYZE_MIN_RETRY_MS,
   ANALYZE_MODEL_TIMEOUT_MS,
   ANALYZE_POST_MODEL_RESERVE_MS,
@@ -221,7 +222,7 @@ async function callAnthropic(messages, system, apiKey, timeoutMs) {
     },
     body: JSON.stringify({
       model: ANTHROPIC_MODEL_ID,
-      max_tokens: 1800,
+      max_tokens: ANALYZE_MAX_TOKENS,
       system: [
         { type: "text", text: system, cache_control: { type: "ephemeral" } },
       ],

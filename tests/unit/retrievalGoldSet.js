@@ -71,6 +71,8 @@ export const C = {
   auger: "2009 ABCA 310",
   sekhon: "2014 SCC 15",
   sheppard: "2022 ABCA 89",
+  wright: "2013 ABCA 428",
+  cador: "2010 ABCA 232",
   baker: "[1999] 2 SCR 817",
   vavilov: "2019 SCC 65",
   dunsmuir: "2008 SCC 9",
@@ -124,8 +126,8 @@ export const RETRIEVAL_GOLD_SET = [
     id: "assault_knife_confrontation",
     scenario:
       "I stabbed someone with a knife during a confrontation. What's the crime?",
-    acceptable: [C.khill],
-    gap: "No assault-with-a-weapon / aggravated assault authority.",
+    acceptable: [C.khill, C.cador],
+    gap: "Cador covers the aggravated-assault fault element, but there is still no assault-with-a-weapon authority.",
   },
   {
     id: "selfdefence_home_intruder",
@@ -325,8 +327,8 @@ export const RETRIEVAL_GOLD_SET = [
     id: "theft_shoplifting_150",
     scenario:
       "I took merchandise from a store without paying. The value was $150. Am I facing jail time?",
+    relevant: [C.wright],
     wrong: [C.mclaughlin, C.stewart, C.auger],
-    gap: "No shoplifting / theft-under-$5000 authority. McLaughlin (computer theft) is the wrong answer.",
   },
   {
     id: "theft_victim_stolen_chair",

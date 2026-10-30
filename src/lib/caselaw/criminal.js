@@ -40,6 +40,10 @@ export const criminalCases = [
       "detention",
       "firearm",
       "police conduct",
+      "court exclude",
+      "exclude the evidence",
+      "exclude evidence",
+      "exclude a statement",
     ],
     facts:
       "A young Black man was stopped by three police officers while walking down the street. The Supreme Court found he was psychologically detained without reasonable suspicion, leading to the discovery of a firearm.",
@@ -312,6 +316,10 @@ export const criminalCases = [
       "section 1",
       "narcotics",
       "reverse onus",
+      "limit is justified",
+      "limit justified",
+      "reasonable limit",
+      "justify a limit",
     ],
     facts:
       "The accused was found with narcotics. A provision in the law required him to prove he was not trafficking, reversing the presumption of innocence under s. 11(d).",
@@ -785,6 +793,9 @@ export const criminalCases = [
       "stay of proceedings",
       "reasonable suspicion",
       "police inducement",
+      "undercover officer",
+      "kept pressing",
+      "pressured me to sell",
     ],
     facts:
       "Over roughly six months the accused repeatedly refused a police agent's requests to sell drugs, eventually relenting under persistent pressure and an implied threat. He raised entrapment.",
@@ -882,6 +893,50 @@ export const criminalCases = [
       "The accused drove a pickup truck from Washington State toward British Columbia and was stopped at the border, where customs officers found 50 one-kilogram bricks of cocaine in a concealed compartment worked by a hydraulic mechanism. The key fob in his pocket had been engineered to open the compartment when its buttons were pressed in sequence. He was charged with importing cocaine and possessing it for the purpose of trafficking; the only issue at trial was whether he knew the cocaine was there. The trial judge found that he did and rejected his evidence, relying in part on a police expert's testimony about the drug trade.",
     ratio:
       "Where knowledge of the drug is the issue it can be proved by circumstantial evidence. A police expert may explain the customs and practices of the drug trade but may not give opinion evidence about the guilt of other people he has investigated; that testimony was inadmissible and the trial judge should not have relied on it. The Supreme Court nonetheless applied the curative proviso in s. 686(1)(b)(iii) and upheld the convictions because the remaining evidence that the accused knew about the cocaine was overwhelming.",
+  },
+  {
+    citation: "2013 ABCA 428",
+    title: "R. v. Wright",
+    year: 2013,
+    court: "ABCA",
+    topics: ["Theft", "Shoplifting", "Sentencing", "Discharge", "s. 334(b)"],
+    tags: [
+      "shoplifting",
+      "theft under $5000",
+      "section 334(b)",
+      "retail theft",
+      "merchandise",
+      "without paying",
+      "loss prevention officer",
+      "conditional discharge",
+      "section 730",
+    ],
+    facts:
+      "A loss prevention officer at a Rona store saw the 39-year-old accused, who had no prior record, put hand tools worth $181.44 into a shop vac box in his cart. He paid for the shop vac but not the tools and was stopped outside the store. He pleaded guilty to theft under $5,000 under s. 334(b) after 11 court appearances over about a year. The sentencing judge imposed a $200 fine and a $30 victim surcharge and refused a conditional discharge, which the defence had asked for.",
+    ratio:
+      "A sentence is only varied on appeal for an error in principle, a failure to consider a relevant factor, an overemphasis of a proper factor, or if it is demonstrably unfit. A conditional discharge is available for theft under $5,000, but it also has to be in the offender's best interests and not contrary to the public interest. Where an offender goes ahead with deliberation despite the measures merchants use against theft, such as tagging and loss prevention officers, deterrence is an objective and a judge may refuse a discharge. A late guilty plea after repeated trial dates is not aggravating but is not much mitigation. The Court of Appeal dismissed the sentence appeal and left the $200 fine in place.",
+  },
+  {
+    citation: "2010 ABCA 232",
+    title: "R. v. Cador",
+    year: 2010,
+    court: "ABCA",
+    topics: ["Aggravated Assault", "Party to an Offence", "s. 21(2)", "s. 268"],
+    tags: [
+      "aggravated assault",
+      "section 268",
+      "objective foresight of bodily harm",
+      "party to the offence",
+      "common unlawful purpose",
+      "joint assault",
+      "group beating",
+      "lured",
+      "serious injuries",
+    ],
+    facts:
+      "Three men, one of them the accused's current boyfriend, beat her former boyfriend outside a bar while two held him down and the third repeatedly stomped and kicked his head, causing serious injuries. She had lured him to the bar and out the door where they lay in wait, stood by smoking a cigarette, did not intervene or call for help, and later told his sister 'it wasn't supposed to be that bad'. She did not strike him. She was convicted of aggravated assault and sentenced to seven years.",
+    ratio:
+      "The fault element for aggravated assault, including for a party under s. 21(2), is objective foresight of bodily harm; the Crown does not have to prove she foresaw the specific harm that resulted. A party to a joint plan to assault is bound by the consequences the same way as the person who struck the blows. The trial judge could infer from her role in the plan and her words that bodily harm was a foreseeable result of it. The Court of Appeal dismissed the appeal from conviction.",
   },
   {
     citation: "2022 ABCA 89",
