@@ -10,7 +10,7 @@ not from archaeology. Delete an item when it is done; the audit log in
    reset now use a code). In order: paste `supabase/templates/confirm_signup.html`
    and `recovery.html` into Supabase (they carry the code and still the button),
    deploy, run the live smoke test in section 7 of `docs/auth-setup.md`, then
-   later remove the button from both templates to go code-only. Delete
+   paste the code-only copies of both templates (already in the repo). Delete
    `VITE_AUTH_MAGIC_LINK` from Vercel if it is set.
 2. **Remove the four `STRIPE_*` variables** from Vercel → Settings → Environment
    Variables. Nothing reads them since billing was parked.
