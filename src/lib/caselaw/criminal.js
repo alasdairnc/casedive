@@ -906,6 +906,28 @@ export const criminalCases = [
       "A sentence is only varied on appeal for an error in principle, a failure to consider a relevant factor, an overemphasis of a proper factor, or if it is demonstrably unfit. A conditional discharge is available for theft under $5,000, but it also has to be in the offender's best interests and not contrary to the public interest. Where an offender goes ahead with deliberation despite the measures merchants use against theft, such as tagging and loss prevention officers, deterrence is an objective and a judge may refuse a discharge. A late guilty plea after repeated trial dates is not aggravating but is not much mitigation. The Court of Appeal dismissed the sentence appeal and left the $200 fine in place.",
   },
   {
+    citation: "2010 ABCA 232",
+    title: "R. v. Cador",
+    year: 2010,
+    court: "ABCA",
+    topics: ["Aggravated Assault", "Party to an Offence", "s. 21(2)", "s. 268"],
+    tags: [
+      "aggravated assault",
+      "section 268",
+      "objective foresight of bodily harm",
+      "party to the offence",
+      "common unlawful purpose",
+      "joint assault",
+      "group beating",
+      "lured",
+      "serious injuries",
+    ],
+    facts:
+      "Three men, one of them the accused's current boyfriend, beat her former boyfriend outside a bar while two held him down and the third repeatedly stomped and kicked his head, causing serious injuries. She had lured him to the bar and out the door where they lay in wait, stood by smoking a cigarette, did not intervene or call for help, and later told his sister 'it wasn't supposed to be that bad'. She did not strike him. She was convicted of aggravated assault and sentenced to seven years.",
+    ratio:
+      "The fault element for aggravated assault, including for a party under s. 21(2), is objective foresight of bodily harm; the Crown does not have to prove she foresaw the specific harm that resulted. A party to a joint plan to assault is bound by the consequences the same way as the person who struck the blows. The trial judge could infer from her role in the plan and her words that bodily harm was a foreseeable result of it. The Court of Appeal dismissed the appeal from conviction.",
+  },
+  {
     citation: "2022 ABCA 89",
     title: "R. v. Sheppard",
     year: 2022,

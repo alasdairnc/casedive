@@ -72,6 +72,7 @@ export const C = {
   sekhon: "2014 SCC 15",
   sheppard: "2022 ABCA 89",
   wright: "2013 ABCA 428",
+  cador: "2010 ABCA 232",
   baker: "[1999] 2 SCR 817",
   vavilov: "2019 SCC 65",
   dunsmuir: "2008 SCC 9",
@@ -125,8 +126,8 @@ export const RETRIEVAL_GOLD_SET = [
     id: "assault_knife_confrontation",
     scenario:
       "I stabbed someone with a knife during a confrontation. What's the crime?",
-    acceptable: [C.khill],
-    gap: "No assault-with-a-weapon / aggravated assault authority.",
+    acceptable: [C.khill, C.cador],
+    gap: "Cador covers the aggravated-assault fault element, but there is still no assault-with-a-weapon authority.",
   },
   {
     id: "selfdefence_home_intruder",
