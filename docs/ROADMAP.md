@@ -53,6 +53,13 @@ removed later), `localhost:5173` added to the redirect URLs.
    - **Run E2E on Mobile Safari.** #64's E2E ran on Chromium and Mobile Chrome
      only (no WebKit in the cloud container).
 
+6. **Turn on open case-law search.** Built behind `OPEN_CASE_SEARCH=on`
+   (`docs/open-case-search.md`): it finds cases for scenarios the corpus and
+   model miss, via A2AJ's free index. Left to do: run `npm run eval:open-search`,
+   try the flag on a Vercel preview with scenarios the corpus lacks, then enable.
+   Gaps to close later: no QCCA/ABCA/SKCA/MBCA coverage (Chatillon), no
+   treatment data, and the health store has no slot for open-search hits.
+
 ## Hygiene rules that keep this list short
 
 - One branch per task, `/verify`, PR, CI green, squash-merge, delete branch.
