@@ -29,6 +29,8 @@ AI-powered Canadian legal research tool. Stack: React 18 + Vite, Vercel serverle
 
 **Statute grounding eval (opt-in, spends Claude tokens, never CI):** `node --env-file=.env scripts/evaluate-statute-grounding.mjs --live --mode both` (about 64 calls; `--only id,id`, `--out file.json`). Run it before changing the CDSA/YCJA rules or prompt hints; it also saves the model's `analysis` for a human read.
 
+**Open case-law search eval (live A2AJ calls, no Claude tokens; run outside the sandbox):** `npm run eval:open-search` (`--only id`, `--out file.json`); read it before setting `OPEN_CASE_SEARCH=on`. See `docs/open-case-search.md`.
+
 **Docs authoring:** `npm run docs:preview` (live-reload preview of docs/reports), `npm run docs:build -- <file.md>` (md → `artifacts/html/`), `npm run docs:lint` (markdownlint over reports + top-level docs). Generate digests with the `/weekly-report` skill.
 
 ## Memory & Session
@@ -66,6 +68,7 @@ Save non-obvious decisions/gotchas to `.claude/projects/*/memory/` immediately.
 - `user-data` (cloud sync) is rate-limited per Supabase user at 120/h, not the 5/h AI default. Sync fires on every bookmark and every search, so the default silently broke sync after five actions.
 - Vercel Hobby keeps about one hour of runtime logs. Anything older is only in Sentry.
 - CDSA/YCJA grounding (`api/_statuteGrounding.js`) runs only when `STATUTE_GROUNDING=on` (cache key `v4g`, so grounded results never reach flag-off users). Youth is an overlay, never a `primary` issue in retrieval/ranking (a youth primary displaces theft/assault case law). Cannabis alone is the Cannabis Act, not the CDSA. CDSA/YCJA `civil_law` items are anchored on the verified section text (`summary` replaced, `matched_section` dropped) because the model invented consequences in its own wording; `analysis` is still unchecked free text. Detail and eval results: `docs/statute-grounding.md`.
+- Open case-law search (`api/_openCaseSearch.js`, flag `OPEN_CASE_SEARCH=on`, cache key `o`, default off) queries A2AJ's free full-text index when fewer than 3 candidates are pooled, because CanLII's API has no text search. It covers only SCC and the ON/BC/NS/NL/YT appeal courts (no QCCA, ABCA, SKCA, MBCA), has no treatment data (a hit may be overturned), and ranks by the model's search terms (no terms means no search: scenario words alone return noise). Pre-2000 hits CanLII can't confirm are kept as `verificationStatus: "unverified"`. Node `fetch` can't resolve DNS in the sandbox, so live checks need curl or an unsandboxed run.
 - `/api/analyze` time budget: 40s per model call inside a 55s request (function limit 60s), retry only if 12s remain, timeout answers 504 (`ANALYZE_*` in `api/_constants.js`). `ANTHROPIC_TIMEOUT_MS` (25s) is for the 30s endpoints (case-summary). `max_tokens` is 1800; the handler logs `stopReason`/`outputTokens`, so judge it from data.
 
 ## API Module Structure
@@ -107,6 +110,8 @@ Call `advisor()` (no parameters — forwards full context to a stronger reviewer
 - **Stuck:** after 2 consecutive tool failures, before changing approach
 
 ## Skills, Commands & Subagents
+
+**Do not spawn subagents unless absolutely necessary.** Fewer gives better results: each one starts cold and loses this conversation's context. Do the work inline with Read, Grep, Bash and Edit, including searches, reviews and test runs. Use one only when the user asks for it by name, or when a task cannot be done in this thread at all. Never use agents or workflows for exploration, parallel "angles" or thoroughness. The subagents listed below are for when the user asks for one, not defaults. This does not change the `advisor()` checkpoints.
 
 Consolidated 2026-09-25 from 27 pieces to 13. Everything here is referenced by a hook, a rule, a workflow or the roadmap; if you add one, add its reference too.
 
