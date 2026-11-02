@@ -30,7 +30,13 @@ import {
   missingRequiredConceptBuckets,
 } from "./_legalConcepts.js";
 import { cachedLookupCase } from "./_canliiCache.js";
+import {
+  isOpenCaseSearchEnabled,
+  searchOpenCaseLaw,
+} from "./_openCaseSearch.js";
 
+// Open case-law search runs only when fewer candidates than this are pooled.
+const OPEN_SEARCH_MIN_POOL = 3;
 const MAX_TERMS = 4;
 const MAX_DATABASES = 3;
 
@@ -437,6 +443,14 @@ function scoreCandidateForScenario({
   if (fallbackAnchor > 0) {
     score += fallbackAnchor * 3;
     reasons.push(`fallback_anchor:${fallbackAnchor}`);
+  }
+
+  // The open case-law index matched this many distinct query words in one
+  // passage; the one-line snippet scored above can't show that.
+  const openSearchHits = Number(candidate?.openSearchHits) || 0;
+  if (openSearchHits > 0) {
+    score += Math.min(openSearchHits, 4) * 3;
+    reasons.push(`open_search_hits:${openSearchHits}`);
   }
 
   const contextTerms = dedupeStrings(overlapTokens);
@@ -2585,7 +2599,9 @@ function dedupeCandidates(candidates) {
     }
   }
   return Array.from(byCitation.entries()).map(([key, candidate]) =>
-    modelSuggested.has(key) ? { ...candidate, modelSuggested: true } : candidate,
+    modelSuggested.has(key)
+      ? { ...candidate, modelSuggested: true }
+      : candidate,
   );
 }
 
@@ -2730,7 +2746,9 @@ export async function retrieveVerifiedCaseLaw({
   let corpusRanking = null;
   const sharedWordsWithScenario = (row) => {
     corpusRanking ||= rankCorpus(scenario, MASTER_CASE_LAW_DB);
-    const entry = corpusRanking.find((r) => r.caseLaw.citation === row.citation);
+    const entry = corpusRanking.find(
+      (r) => r.caseLaw.citation === row.citation,
+    );
     return entry ? entry.matchedWords : 0;
   };
   if (Array.isArray(aiCaseLaw)) {
@@ -2840,6 +2858,24 @@ export async function retrieveVerifiedCaseLaw({
     }
 
     aiCitationCandidates.splice(0, aiCitationCandidates.length, ...filtered);
+  }
+
+  let openSearchCandidates = 0;
+  // Thin pool (the model named little and the corpus matched little): ask the
+  // open case-law index. Added after the AI prefilter above because the index
+  // already ranked these by the same words.
+  if (
+    isOpenCaseSearchEnabled() &&
+    aiCitationCandidates.length + (landmarkMatches?.length || 0) <
+      OPEN_SEARCH_MIN_POOL
+  ) {
+    const openHits = await searchOpenCaseLaw({
+      scenario,
+      aiSuggestions,
+      filters,
+    });
+    openSearchCandidates = openHits.length;
+    aiCitationCandidates.push(...openHits);
   }
 
   // Inject Local Landmark RAG Matches into the verification pool
@@ -3033,9 +3069,33 @@ export async function retrieveVerifiedCaseLaw({
   const verifiedCases = [];
   for (let i = 0; i < toVerify.length; i++) {
     if (verificationResults[i].status === "verified") {
+      const item = toCaseLawItem(toVerify[i], verificationResults[i]);
       verifiedCases.push({
-        ...toCaseLawItem(toVerify[i], verificationResults[i]),
+        ...item,
+        // The index carries no treatment data: say so on the card.
+        ...(toVerify[i].existenceProven
+          ? {
+              matched_content: withSemanticMatchedContent(
+                toVerify[i],
+                "Found by open case-law search. Check on CanLII that it is still good law.",
+              ),
+            }
+          : {}),
         [VERIFIED_BY_LOOKUP]: true,
+      });
+    } else if (toVerify[i].existenceProven) {
+      // A court source returned it, but CanLII's lookup cannot confirm it
+      // (pre-2000 and SCR-only citations). Keep it, flagged unverified, with a
+      // CanLII search link; the client re-checks and never hides "unverified".
+      const c = toVerify[i];
+      verifiedCases.push({
+        ...toCaseLawItem(c, null),
+        url_canlii: buildSearchUrl(`${c.title || ""} ${c.citation}`.trim()),
+        matched_content: withSemanticMatchedContent(
+          c,
+          "Found by open case-law search, not yet confirmed on CanLII. Check that it is still good law.",
+        ),
+        verificationStatus: "unverified",
       });
     }
   }
@@ -3166,6 +3226,8 @@ export async function retrieveVerifiedCaseLaw({
       retrievalPass,
       semanticFilterDropCount: semanticFilter.dropCount,
       candidateSourceMix,
+      // Counted under `ai` in the mix above; the health store has no slot yet.
+      openSearchCandidates,
       reason: cases.length > 0 ? "verified_results" : "no_verified",
     },
   };

@@ -34,6 +34,7 @@ import {
   isStatuteGroundingEnabled,
 } from "./_statuteGrounding.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
+import { isOpenCaseSearchEnabled } from "./_openCaseSearch.js";
 import {
   MIN_DISTINCT_TERMS,
   fuseRankings,
@@ -150,11 +151,13 @@ function buildUserPromptContent(
 const CACHE_TTL_S = ANALYZE_CACHE_TTL_SECONDS;
 
 function cacheKey(scenario, filters) {
-  // Flag-on results carry statute grounding (g) or full-text case ranking (f);
-  // keep each out of other users' cache. Both off keeps the original "v4".
+  // Flag-on results carry statute grounding (g), full-text case ranking (f) or
+  // open case-law search (o); keep each out of other users' cache. All off
+  // keeps the original "v4".
   const flags =
     (isStatuteGroundingEnabled() ? "g" : "") +
-    (isFullTextRankingEnabled() ? "f" : "");
+    (isFullTextRankingEnabled() ? "f" : "") +
+    (isOpenCaseSearchEnabled() ? "o" : "");
   return (
     `cache:analyze:v4${flags}:` +
     createHash("sha256")
