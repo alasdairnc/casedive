@@ -52,6 +52,7 @@ const { RETRIEVAL_NEAR_MISS_NEGATIVES } = await import("../tests/unit/retrievalN
 const { RETRIEVAL_NEAR_MISS_NEGATIVES_2 } = await import("../tests/unit/retrievalNearMissNegatives2.js");
 const { RETRIEVAL_FAILURE_SET } = await import("../tests/unit/retrievalFailureSet.js");
 const { normalizeFilters } = await import("../api/_filters.js");
+const { ANTHROPIC_MODEL_ID } = await import("../api/_constants.js");
 const { __testables } = await import("../api/analyze.js");
 const { runCaseLawRetrieval } = await import("../api/_retrievalOrchestrator.js");
 const { retrieveVerifiedCaseLaw } = await import("../api/_caseLawRetrieval.js");
@@ -78,7 +79,11 @@ if (onlyIds) work = work.filter((w) => onlyIds.includes(w.id));
 const existing = fs.existsSync(outPath)
   ? JSON.parse(fs.readFileSync(outPath, "utf8"))
   : { model: null, recordedAt: null, canlii: {}, scenarios: {} };
-if (force) existing.scenarios = {};
+// --force re-records what was selected: everything, or only the --ids named.
+if (force) {
+  if (onlyIds) for (const w of work) delete existing.scenarios[w.scenario];
+  else existing.scenarios = {};
+}
 const todo = work.filter((w) => !existing.scenarios[w.scenario]);
 
 // Record every CanLII API response (status and title) by path.
@@ -166,7 +171,7 @@ async function recordOne(item) {
 }
 
 function save() {
-  existing.model = process.env.ANTHROPIC_MODEL_ID || "claude-haiku-4-5-20251001";
+  existing.model = ANTHROPIC_MODEL_ID;
   existing.recordedAt = new Date().toISOString();
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, JSON.stringify(existing, null, 2));
