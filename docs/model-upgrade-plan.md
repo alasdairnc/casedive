@@ -31,6 +31,26 @@ fewer citations per answer; check the recorded `ai.case_law` before assuming.
 Dropping a new model into `ANTHROPIC_MODEL_ID` fails quietly: at the old cap, nearly every call truncates, the
 retry doubles the latency, and some requests fail outright.
 
+## Cap probe and timing, 2026-10-30
+
+Same 10 gold scenarios per model, `ANALYZE_MAX_TOKENS` temporarily 6000 (reverted). Production stays on Haiku 4.5.
+
+| | Haiku 4.5 | Haiku 5.5 | Sonnet 5.5 | Opus 5.5 |
+|---|---|---|---|---|
+| Output tokens, max | 1800 | 3,731 | 4,940 | 3,549 |
+| Cut off at cap | 1 of 131 | 0 | 0 | 0 |
+| Citations per answer (avg) | not checked | 1.0 (3 of 10 had none) | 2.3 | 2.6 |
+| Call time, 5 sequential calls (s) | 7.5-12.6 | 8.4-16.8 | 10.4-31.0 | 17.3-36.1 |
+
+- Raising the cap fixes truncation, but Haiku 5.5 still suggests about half as many citations as Sonnet or Opus
+  5.5, which fits its lower dev hit rate in the trial above.
+- Time tracks output tokens (all four run at roughly 100-150 tokens per second). Opus 5.5's slowest call was 36 s
+  against the 40 s per-call budget, so a slightly longer reply would time out (504). Sonnet 5.5's 4,940-token reply
+  would also sit near the limit.
+- Neither is a safe drop-in swap. Next step if revisited: a shorter-output prompt (option 2 below, aim for about
+  2,000 tokens) on Opus 5.5, re-time it, then run the gate. The timing sample is small (5 calls, no pre-retrieved
+  cases in the prompt, so real requests run a bit slower).
+
 ## Gate for any model change
 
 Run in order; stop at the first failure.
