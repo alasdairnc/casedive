@@ -40,7 +40,7 @@ Use `src/components/ui/Button.jsx` for every button and button-styled link. Don'
 hand-roll button styles or mutate styles in `onMouseEnter`/`onMouseLeave`.
 
 - `primary` — teal fill; the one main action in a view (Research, Sign in, form submit)
-- `secondary` (default) — outlined; Donate, Export PDF, example chips, Re-run
+- `secondary` (default) — outlined; Export PDF, example chips, Re-run
 - `ghost` — no border; header nav items, Report, Sign out, icon buttons
 - `danger` — outlined red; destructive actions such as Clear all
 - `link` — inline teal text link (footer links, "View on CanLII")

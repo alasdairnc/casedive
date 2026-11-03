@@ -9,27 +9,7 @@ import {
   RADIUS,
 } from "../lib/ui.js";
 
-const DONATE_URL = "https://buymeacoffee.com/alasdairnc";
 const MOBILE_NAV_ID = "cd-mobile-nav";
-
-function HeartIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z" />
-    </svg>
-  );
-}
 
 // Hamburger when closed, × when open. The button's name stays "Menu" either
 // way; aria-expanded carries the state.
@@ -260,16 +240,6 @@ export default function Header({
         >
           {!isMobile && (
             <>
-              <Button
-                variant="secondary"
-                size="sm"
-                href={DONATE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <HeartIcon />
-                Donate
-              </Button>
               {user ? (
                 <>
                   {!isCompact && emailText}
@@ -334,18 +304,6 @@ export default function Header({
               {countBadge(item.count)}
             </Button>
           ))}
-          <Button
-            variant="ghost"
-            fullWidth
-            href={DONATE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setMenuOpen(false)}
-            style={mobileItemStyle}
-          >
-            <HeartIcon />
-            Donate
-          </Button>
 
           {user && (
             <div

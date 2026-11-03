@@ -93,8 +93,6 @@ function toScenarioSnippet(value) {
     .slice(0, MAX_CASE_LAW_REPORT_SCENARIO_SNIPPET_LENGTH);
 }
 
-const DONATE_URL = "https://buymeacoffee.com/alasdairnc";
-
 const contentColumn = {
   maxWidth: CONTENT_MAX_WIDTH,
   margin: "0 auto",
@@ -257,16 +255,6 @@ function SiteFooter({ t }) {
           </Button>
           <Button variant="link" size="sm" href="/terms.html" style={linkStyle}>
             Terms
-          </Button>
-          <Button
-            variant="link"
-            size="sm"
-            href={DONATE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={linkStyle}
-          >
-            Donate
           </Button>
         </nav>
       </div>
