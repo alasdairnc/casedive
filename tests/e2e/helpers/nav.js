@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 
-// At phone widths the header nav (Criminal Code, Saved, History, Donate)
+// At phone widths the header nav (Criminal Code, Saved, History)
 // lives behind a "Menu" toggle. Call this right before each header-nav
 // interaction: clicking a menu item closes the menu again. No-op on desktop,
 // and on builds that predate the menu (live smoke against an older deploy).

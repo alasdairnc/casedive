@@ -208,16 +208,10 @@ describe("Header nav labels", () => {
     vi.resetModules();
   });
 
-  it("links Donate to Buy Me a Coffee in a new tab", async () => {
+  it("has no Donate link", async () => {
     const Header = await getHeader();
     render(<Header {...navProps()} />);
-    const donate = screen.getByRole("link", { name: "Donate" });
-    expect(donate.textContent).toBe("Donate");
-    expect(donate.getAttribute("href")).toBe(
-      "https://buymeacoffee.com/alasdairnc",
-    );
-    expect(donate.getAttribute("target")).toBe("_blank");
-    expect(donate.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(screen.queryByRole("link", { name: "Donate" })).toBeNull();
   });
 
   it("shows 'Criminal Code' while keeping the Explorer accessible name", async () => {
@@ -304,7 +298,6 @@ describe("Header mobile menu", () => {
     expect(
       screen.getByRole("button", { name: /criminal code explorer/i }),
     ).toBeDefined();
-    expect(screen.getByRole("link", { name: "Donate" })).toBeDefined();
     // Still exactly one Sign in button
     expect(screen.getAllByRole("button", { name: /sign in/i })).toHaveLength(1);
 
