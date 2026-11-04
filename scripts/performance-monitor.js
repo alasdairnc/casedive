@@ -182,8 +182,8 @@ async function run() {
   const oneHour = body?.windows?.["1h"] || {};
   const alerts = Array.isArray(body?.alerts) ? body.alerts : [];
   const thresholds = body?.thresholds || {};
-  const failures = Array.isArray(body?.recentFailures)
-    ? body.recentFailures
+  const failures = Array.isArray(body?.failures?.items)
+    ? body.failures.items
     : [];
   const improvements = Array.isArray(body?.improvements)
     ? body.improvements
@@ -219,11 +219,11 @@ async function run() {
   if (outputFormat !== "json" && topFailures.length > 0) {
     console.log("[perf-monitor] Recent failures (top 3):");
     for (const f of topFailures) {
-      const scenario = (f?.scenarioSnippet || "(missing scenario)")
+      const scenario = (f?.snippet || "(missing scenario)")
         .replace(/\s+/g, " ")
         .slice(0, 140);
       console.log(
-        `- ${f?.ts || "n/a"} | ${f?.endpoint || "unknown"} | ${f?.reason || "unknown"} | ${scenario}`,
+        `- ${f?.lastSeen || "n/a"} | x${f?.count || 1} | ${f?.reason || "unknown"} | ${scenario}`,
       );
     }
   }
@@ -232,7 +232,7 @@ async function run() {
   if (outputFormat !== "json" && topImprovements.length > 0) {
     console.log("[perf-monitor] Suggested retrieval improvements (top 3):");
     for (const item of topImprovements) {
-      const scenario = (item?.scenarioSnippet || "(missing scenario)")
+      const scenario = (item?.examples?.[0]?.snippet || "(no example)")
         .replace(/\s+/g, " ")
         .slice(0, 120);
       const terms = Array.isArray(item?.suggestedTerms)

@@ -76,7 +76,7 @@ function groupEvents(events) {
       map.set(key, {
         key,
         reason: event.reason || "unknown",
-        count: 1,
+        count: Number(event.count) || 1,
         firstSeen: new Date(ts).toISOString(),
         lastSeen: new Date(ts).toISOString(),
         scenarioSnippet: normalizeSnippet(event.scenarioSnippet),
@@ -85,7 +85,7 @@ function groupEvents(events) {
       continue;
     }
 
-    existing.count += 1;
+    existing.count += Number(event.count) || 1;
     if (new Date(existing.firstSeen).getTime() > ts) {
       existing.firstSeen = new Date(ts).toISOString();
     }
@@ -122,11 +122,16 @@ function writeOutputs(summary) {
 async function fetchFailureArchive(baseUrl, token, limit, maxPages) {
   const cleanBase = String(baseUrl || "").replace(/\/$/, "");
   const allItems = [];
-  let beforeTs = null;
+  let offset = 0;
 
   for (let page = 0; page < maxPages; page += 1) {
-    const params = new URLSearchParams({ failureLimit: String(limit) });
-    if (beforeTs) params.set("failuresBeforeTs", String(beforeTs));
+    // The server dedupes by scenario and keeps a repeat count, so one record
+    // is one distinct scenario. Only unreviewed ones are of interest here.
+    const params = new URLSearchParams({
+      failureLimit: String(limit),
+      status: "new",
+      failuresOffset: String(offset),
+    });
     const url = `${cleanBase}/api/retrieval-health?${params.toString()}`;
 
     const headers = {
@@ -154,12 +159,19 @@ async function fetchFailureArchive(baseUrl, token, limit, maxPages) {
     }
 
     const json = await response.json();
-    const archive = json?.failureArchive || {};
-    const items = Array.isArray(archive.items) ? archive.items : [];
-    allItems.push(...items);
+    const queue = json?.failures || {};
+    const items = Array.isArray(queue.items) ? queue.items : [];
+    // Map the queue record onto the field names the grouping below uses.
+    allItems.push(
+      ...items.map((item) => ({
+        ...item,
+        scenarioSnippet: item.snippet,
+        ts: item.lastSeen,
+      })),
+    );
 
-    if (!archive.hasMore || !archive.nextBeforeTs) break;
-    beforeTs = archive.nextBeforeTs;
+    if (!queue.hasMore || typeof queue.nextOffset !== "number") break;
+    offset = queue.nextOffset;
   }
 
   return allItems;
