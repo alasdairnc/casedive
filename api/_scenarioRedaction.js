@@ -62,7 +62,7 @@ export function redactScenario(
 export function scenarioFingerprint(redacted) {
   const normalized = collapse(redacted)
     .toLowerCase()
-    .replace(/[^a-z0-9\[\] ]+/g, "");
+    .replace(/[^a-z0-9[\] ]+/g, "");
   if (!normalized) return null;
   // A leading "f" keeps the id out of JSON number syntax: @upstash/redis
   // JSON-parses what it reads, and an all-digit id would come back as a number.

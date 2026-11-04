@@ -14,6 +14,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { buildFixtureStub } from "../src/components/retrievalHealthUtils.js";
 
 const FIXTURE = path.resolve("tests/fixtures/promoted-failures.json");
 const PAGE_SIZE = 100;
@@ -59,31 +60,6 @@ async function fetchPromoted(baseUrl, token) {
   return items;
 }
 
-export function toStub(item) {
-  return {
-    id: `prod_${item.id}`,
-    sourceFailureId: item.id,
-    scenario: item.snippet,
-    expectedPrimary: item.classId || item.issuePrimary || "general_criminal",
-    expectedResult: "nonzero_required",
-    shouldInclude: [],
-    shouldExclude: [],
-    expectedKeywords: [],
-    minResults: 1,
-    maxResults: 3,
-    landmarkMatches: [],
-    knownFailure:
-      "promoted from production; add labels, then remove this mark",
-    observed: {
-      reason: item.reason,
-      count: item.count,
-      firstSeen: item.firstSeen,
-      lastSeen: item.lastSeen,
-    },
-    ...(item.note ? { reviewNote: item.note } : {}),
-  };
-}
-
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const token = process.env.RETRIEVAL_HEALTH_TOKEN || "";
@@ -110,7 +86,7 @@ async function main() {
   // JSON.stringify is the only thing that ever serialises user-supplied text.
   fs.writeFileSync(
     FIXTURE,
-    `${JSON.stringify([...existing, ...fresh.map(toStub)], null, 2)}\n`,
+    `${JSON.stringify([...existing, ...fresh.map(buildFixtureStub)], null, 2)}\n`,
   );
   console.log(`Wrote ${FIXTURE}. Fill in the labels, then remove knownFailure.`);
 }

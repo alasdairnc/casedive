@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildAgentFixPrompt,
+  buildFixtureStub,
   clip,
   fmtDate,
   num,
@@ -44,6 +45,34 @@ describe("retrievalHealthUtils", () => {
     expect(prompt).toContain("Issue class: trial_delay");
     expect(prompt).toContain("Primary issue: trial_delay");
     expect(prompt).toContain("Error message: network failure");
+  });
+
+  it("includes the redacted scenario and repeat count when available", () => {
+    const prompt = buildAgentFixPrompt({
+      snippet: "My chair was stolen",
+      count: 4,
+      reason: "no_verified",
+    });
+    expect(prompt).toContain("My chair was stolen");
+    expect(prompt).toContain("Seen 4 time(s)");
+  });
+
+  it("builds a labelled-later test stub that cannot pass by accident", () => {
+    const stub = buildFixtureStub({
+      id: "f0123456789abcde",
+      snippet: "My chair was stolen",
+      classId: "theft",
+      reason: "no_verified",
+      count: 2,
+    });
+    expect(stub).toMatchObject({
+      id: "prod_f0123456789abcde",
+      sourceFailureId: "f0123456789abcde",
+      scenario: "My chair was stolen",
+      expectedPrimary: "theft",
+      shouldInclude: [],
+    });
+    expect(stub.knownFailure).toBeTruthy();
   });
 
   it("computes severity and status from thresholded values", () => {

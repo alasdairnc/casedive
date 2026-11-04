@@ -26,7 +26,7 @@ export function buildAgentFixPrompt(sample = {}) {
   const lines = [
     "Investigate and fix retrieval failure for this CaseDive scenario.",
     "",
-    `Failure time: ${sample.ts || "unknown"}`,
+    `Failure time: ${sample.lastSeen || sample.ts || "unknown"}`,
     `Endpoint: ${sample.endpoint || "unknown"}`,
     `Reason: ${sample.reason || "unknown"}`,
     `Retrieval error: ${sample.retrievalError ? "yes" : "no"}`,
@@ -34,12 +34,19 @@ export function buildAgentFixPrompt(sample = {}) {
     `Verified count: ${sample.verifiedCount ?? 0}`,
     `Fallback used: ${sample.fallbackPathUsed ? "yes" : "no"}`,
     `Latency (ms): ${sample.latencyMs ?? "n/a"}`,
-    `Semantic drops: ${sample.semanticFilterDropCount ?? 0}`,
     `Issue class: ${sample.classId || "unknown"}`,
     `Primary issue: ${sample.issuePrimary || sample.classId || "unknown"}`,
     "",
-    "Use aggregated retrieval telemetry only; no raw scenario text is available.",
   ];
+
+  if (sample.snippet) {
+    lines.push(
+      "Scenario (redacted; names may remain):",
+      sample.snippet,
+      `Seen ${sample.count ?? 1} time(s)`,
+      "",
+    );
+  }
 
   if (sample.fallbackTriggerReason) {
     lines.push(`Fallback trigger: ${sample.fallbackTriggerReason}`);
@@ -137,4 +144,30 @@ export function statusFromData(data) {
   if ((data?.totalStoredEvents || 0) === 0)
     return { label: "No events", color: "#8c8c8c" };
   return { label: "Healthy", color: "#3E9E63" };
+}
+
+// A regression-test stub for a failed scenario. Labels are left empty on
+// purpose: a human decides what the right answer is before knownFailure goes.
+export function buildFixtureStub(item = {}) {
+  return {
+    id: `prod_${item.id}`,
+    sourceFailureId: item.id,
+    scenario: item.snippet,
+    expectedPrimary: item.classId || item.issuePrimary || "general_criminal",
+    expectedResult: "nonzero_required",
+    shouldInclude: [],
+    shouldExclude: [],
+    expectedKeywords: [],
+    minResults: 1,
+    maxResults: 3,
+    landmarkMatches: [],
+    knownFailure: "promoted from production; add labels, then remove this mark",
+    observed: {
+      reason: item.reason,
+      count: item.count,
+      firstSeen: item.firstSeen,
+      lastSeen: item.lastSeen,
+    },
+    ...(item.note ? { reviewNote: item.note } : {}),
+  };
 }

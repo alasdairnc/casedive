@@ -12,6 +12,39 @@ function renderDashboard() {
   );
 }
 
+function makeQueue(items, overrides = {}) {
+  return {
+    items,
+    counts: { all: items.length, new: items.length, reviewed: 0, promoted: 0, ignored: 0 },
+    total: items.length,
+    hasMore: false,
+    nextOffset: null,
+    limit: 20,
+    offset: 0,
+    retentionDays: 30,
+    ...overrides,
+  };
+}
+
+function makeFailure(overrides = {}) {
+  return {
+    id: "f0123456789abcde",
+    snippet: "My chair was stolen from outside my apartment.",
+    reason: "no_verified",
+    classId: "theft",
+    issuePrimary: "theft",
+    count: 3,
+    status: "new",
+    note: null,
+    firstSeen: new Date(Date.now() - 86400000).toISOString(),
+    lastSeen: new Date().toISOString(),
+    finalCaseLawCount: 0,
+    fallbackPathUsed: false,
+    errorMessage: null,
+    ...overrides,
+  };
+}
+
 function makeHealthResponse(overrides = {}) {
   return {
     generatedAt: new Date().toISOString(),
@@ -113,7 +146,7 @@ function makeHealthResponse(overrides = {}) {
       avgRelevanceScoreMin1h: 5,
       minSampleSize1h: 8,
     },
-    recentFailures: [],
+    failures: makeQueue([]),
     improvements: [],
     alerts: [],
     ...overrides,
@@ -247,5 +280,127 @@ describe("RetrievalHealthDashboard all-time issue trends", () => {
     expect(
       screen.getByText("No-verified at 90.0% (threshold 85.0%)"),
     ).toBeTruthy();
+  });
+});
+
+describe("RetrievalHealthDashboard failure queue", () => {
+  function stubFetch(handler) {
+    const fetchMock = vi.fn(async (url, init = {}) => handler(String(url), init));
+    vi.stubGlobal("fetch", fetchMock);
+    return fetchMock;
+  }
+  const ok = (body) => ({ ok: true, json: async () => body });
+
+  it("shows redacted scenarios with repeat counts and tab totals", async () => {
+    stubFetch(() =>
+      ok(
+        makeHealthResponse({
+          failures: makeQueue([makeFailure()], {
+            counts: { all: 6, new: 1, reviewed: 2, promoted: 1, ignored: 2 },
+          }),
+        }),
+      ),
+    );
+    renderDashboard();
+
+    await screen.findByText("My chair was stolen from outside my apartment.");
+    expect(screen.getByText("seen 3×")).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "New (1)" })).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Reviewed (2)" })).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Ignored (2)" })).toBeTruthy();
+  });
+
+  it("requests the selected status when a tab is clicked", async () => {
+    const fetchMock = stubFetch(() => ok(makeHealthResponse()));
+    renderDashboard();
+    await screen.findByText("Failed scenarios");
+
+    fireEvent.click(screen.getByRole("tab", { name: /Ignored/ }));
+
+    await waitFor(() => {
+      expect(
+        fetchMock.mock.calls.some(([url]) => String(url).includes("status=ignored")),
+      ).toBe(true);
+    });
+  });
+
+  it("posts a triage change with the note, then reloads the queue", async () => {
+    const failure = makeFailure();
+    const fetchMock = stubFetch((url, init) => {
+      if (init.method === "POST") return ok({ failure: { ...failure, status: "promoted" } });
+      return ok(makeHealthResponse({ failures: makeQueue([failure]) }));
+    });
+    renderDashboard();
+    await screen.findByText(failure.snippet);
+
+    fireEvent.change(screen.getByLabelText("Reviewer note"), {
+      target: { value: "add to corpus" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Promote to test" }));
+
+    await waitFor(() => {
+      const post = fetchMock.mock.calls.find(([, init]) => init?.method === "POST");
+      expect(post).toBeTruthy();
+      expect(JSON.parse(post[1].body)).toEqual({
+        id: failure.id,
+        status: "promoted",
+        note: "add to corpus",
+      });
+    });
+    // A GET after the POST means the list was refreshed from the server.
+    await waitFor(() => {
+      const calls = fetchMock.mock.calls;
+      const postIndex = calls.findIndex(([, init]) => init?.method === "POST");
+      expect(calls.slice(postIndex + 1).some(([, init]) => !init?.method)).toBe(true);
+    });
+  });
+
+  it("shows the server error when a triage change fails", async () => {
+    stubFetch((url, init) => {
+      if (init.method === "POST") {
+        return { ok: false, status: 404, json: async () => ({ error: "Not found" }) };
+      }
+      return ok(makeHealthResponse({ failures: makeQueue([makeFailure()]) }));
+    });
+    renderDashboard();
+    await screen.findByText("My chair was stolen from outside my apartment.");
+
+    fireEvent.click(screen.getByRole("button", { name: "Mark reviewed" }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain("Not found");
+  });
+
+  it("loads the next page with the queue offset", async () => {
+    const fetchMock = stubFetch((url) => {
+      if (url.includes("failuresOffset=1")) {
+        return ok(
+          makeHealthResponse({
+            failures: makeQueue([makeFailure({ id: "f0000000000000002", snippet: "second page scenario" })], {
+              total: 2,
+              offset: 1,
+            }),
+          }),
+        );
+      }
+      return ok(
+        makeHealthResponse({
+          failures: makeQueue([makeFailure()], { total: 2, hasMore: true, nextOffset: 1 }),
+        }),
+      );
+    });
+    renderDashboard();
+    await screen.findByText("My chair was stolen from outside my apartment.");
+
+    fireEvent.click(screen.getByRole("button", { name: "Load more" }));
+
+    await screen.findByText("second page scenario");
+    expect(screen.getByText("My chair was stolen from outside my apartment.")).toBeTruthy();
+    expect(fetchMock).toHaveBeenCalled();
+  });
+
+  it("explains an empty queue", async () => {
+    stubFetch(() => ok(makeHealthResponse()));
+    renderDashboard();
+    expect(await screen.findByText(/Nothing waiting for review/)).toBeTruthy();
   });
 });
