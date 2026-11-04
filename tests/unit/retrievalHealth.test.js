@@ -47,7 +47,7 @@ vi.mock("../../api/_logging.js", () => ({
 
 const { default: handler } = await import("../../api/retrieval-health.js");
 
-const ID = "0123456789abcdef";
+const ID = "f123456789abcdef";
 
 function createRes() {
   return {

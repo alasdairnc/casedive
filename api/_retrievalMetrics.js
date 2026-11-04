@@ -169,15 +169,24 @@ export async function logRetrievalMetrics(input = {}) {
     return payload;
   }
 
-  // Alert rules read the 1h window, which costs a list read. Only pay for it
-  // when this request could have moved a rate: it failed, or it was slow.
-  if (payload.source !== "retrieval") return payload;
-  const event = normalizeEvent({ ts: Date.now(), ...payload });
-  const slow =
-    Number(payload.retrievalLatencyMs) >
-    RETRIEVAL_ALERT_THRESHOLDS.p95LatencyMs1h;
-  if (!event || !(classifyEvent(event).isFailure || slow)) return payload;
+  // Alert rules read the 1h window, which costs a list read and can end in a
+  // webhook POST. Only do that when this request could have moved a rate (it
+  // failed or was slow), and DON'T make the caller wait: the returned promise
+  // settles once the event is stored. A rare alert lost to a frozen function is
+  // cheaper than adding webhook latency to the user's response.
+  if (payload.source === "retrieval") {
+    const event = normalizeEvent({ ts: Date.now(), ...payload });
+    const slow =
+      Number(payload.retrievalLatencyMs) >
+      RETRIEVAL_ALERT_THRESHOLDS.p95LatencyMs1h;
+    if (event && (classifyEvent(event).isFailure || slow)) {
+      void evaluateAlertsInBackground(payload);
+    }
+  }
+  return payload;
+}
 
+async function evaluateAlertsInBackground(payload) {
   try {
     const { windows } = await getWindowSnapshot();
     await emitRetrievalAlerts({
@@ -188,5 +197,4 @@ export async function logRetrievalMetrics(input = {}) {
   } catch {
     // Threshold checks must never fail the request flow.
   }
-  return payload;
 }

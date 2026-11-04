@@ -180,7 +180,7 @@ describe("failure queue", () => {
     expect(queue.items[0].snippet).toContain("[phone]");
     expect(queue.items[0].snippet).toContain("[email]");
     expect(queue.items[0].snippet).not.toMatch(/555|a@b\.com/);
-    expect(queue.items[0].id).toMatch(/^[a-f0-9]{16}$/);
+    expect(queue.items[0].id).toMatch(/^f[a-f0-9]{15}$/);
   });
 
   it("keeps no snippet for a successful retrieval", async () => {
@@ -299,7 +299,7 @@ describe("failure queue", () => {
       await recordRetrievalMetricsEvent(miss());
       const id = (await getFailureQueue({ status: "all" })).items[0].id;
 
-      expect(await setFailureStatus("0000000000000000", { status: "reviewed" })).toBeNull();
+      expect(await setFailureStatus("f00000000000000", { status: "reviewed" })).toBeNull();
       expect(await setFailureStatus("not-a-fingerprint", { status: "reviewed" })).toBeNull();
       expect(await setFailureStatus(id, { status: "deleted" })).toBeNull();
       expect((await getFailureQueue({ status: "all" })).items[0].status).toBe("new");

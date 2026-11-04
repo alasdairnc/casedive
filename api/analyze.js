@@ -1205,6 +1205,7 @@ export default async function handler(req, res) {
     await flushMetricWrites(requestId);
     return res.status(200).json(withRequestId(result, requestId));
   } catch (err) {
+    await flushMetricWrites(requestId);
     // The model call hit its time cap. Say so instead of a generic 500, and keep
     // it out of Sentry as an exception (logError still records it).
     if (err?.name === "TimeoutError" || err?.name === "AbortError") {

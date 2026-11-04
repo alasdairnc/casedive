@@ -64,7 +64,9 @@ export function scenarioFingerprint(redacted) {
     .toLowerCase()
     .replace(/[^a-z0-9\[\] ]+/g, "");
   if (!normalized) return null;
-  return createHash("sha256").update(normalized).digest("hex").slice(0, 16);
+  // A leading "f" keeps the id out of JSON number syntax: @upstash/redis
+  // JSON-parses what it reads, and an all-digit id would come back as a number.
+  return `f${createHash("sha256").update(normalized).digest("hex").slice(0, 15)}`;
 }
 
-export const FINGERPRINT_PATTERN = /^[a-f0-9]{16}$/;
+export const FINGERPRINT_PATTERN = /^f[a-f0-9]{15}$/;

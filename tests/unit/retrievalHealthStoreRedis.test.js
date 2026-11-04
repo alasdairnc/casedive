@@ -264,7 +264,7 @@ describe("retrieval health store with Redis", () => {
 
   it("returns null when triaging an id that has expired", async () => {
     expect(
-      await setFailureStatus("0123456789abcdef", { status: "reviewed" }),
+      await setFailureStatus("f123456789abcdef", { status: "reviewed" }),
     ).toBeNull();
   });
 

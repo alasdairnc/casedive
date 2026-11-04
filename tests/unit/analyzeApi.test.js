@@ -769,6 +769,41 @@ describe("CanLII retrieval timeout", () => {
     });
   });
 
+  it("does not send the response until the metrics write has settled", async () => {
+    // A serverless function can be frozen once the response ends, so an
+    // unfinished Redis write would be lost. The response has to wait for it.
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [],
+      meta: { reason: "no_verified", issuePrimary: "theft" },
+    });
+    let release;
+    mockLogRetrievalMetrics.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          release = resolve;
+        }),
+    );
+
+    try {
+      const req = createReq({
+        body: { scenario: "someone stole my bike from the porch" },
+      });
+      const res = createRes();
+      const pending = handler(req, res);
+
+      await vi.waitFor(() => expect(mockLogRetrievalMetrics).toHaveBeenCalled());
+      await new Promise((resolve) => setTimeout(resolve, 25));
+      expect(res.body).toBeNull();
+
+      release({});
+      await pending;
+      expect(res.statusCode).toBe(200);
+    } finally {
+      mockLogRetrievalMetrics.mockReset();
+    }
+  });
+
   it("logs no_verified telemetry when retrieval meta reason is verified_results but ranked final case_law is empty", async () => {
     mockAnthropicSuccess();
 

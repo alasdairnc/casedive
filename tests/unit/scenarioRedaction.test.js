@@ -76,6 +76,14 @@ describe("scenarioFingerprint", () => {
     expect(a).toBe(b);
   });
 
+  it("never produces an id that JSON-parses (Upstash would turn it into a number)", () => {
+    for (let i = 0; i < 5000; i++) {
+      const id = scenarioFingerprint(`scenario number ${i} ${i * 7919}`);
+      expect(id).toMatch(FINGERPRINT_PATTERN);
+      expect(() => JSON.parse(id)).toThrow();
+    }
+  });
+
   it("returns null for empty input", () => {
     expect(scenarioFingerprint("")).toBeNull();
     expect(scenarioFingerprint("  ")).toBeNull();
