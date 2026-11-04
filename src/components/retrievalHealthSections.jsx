@@ -67,6 +67,14 @@ export function healthSummaryFromState({ data, status, checks }) {
       detail: "Connect to /api/retrieval-health to calculate health checks.",
     };
   }
+  const lowSample = checks.every((c) => c.badge.lowSample);
+  if (lowSample && (data?.totalStoredEvents || 0) > 0) {
+    return {
+      headline: "Not enough traffic to judge",
+      detail:
+        "Rates are only flagged once a few requests stand behind them, so one bad request doesn't read as an outage.",
+    };
+  }
   const critical = checks.filter((c) => c.badge.level === "critical").length;
   const warning = checks.filter((c) => c.badge.level === "warning").length;
 
@@ -408,7 +416,9 @@ export function Improvements({ items, t }) {
                 }}
               >
                 <strong>{item.classId}</strong> · {num(item.failureCount)}{" "}
-                failures across {num(item.scenarioCount ?? 1)} scenario(s)
+                {item.failureCount === 1 ? "failure" : "failures"} across{" "}
+                {num(item.scenarioCount ?? 1)}{" "}
+                {(item.scenarioCount ?? 1) === 1 ? "scenario" : "scenarios"}
               </div>
               {Array.isArray(item.suggestedTerms) &&
                 item.suggestedTerms.length > 0 && (

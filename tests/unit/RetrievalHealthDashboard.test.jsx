@@ -404,3 +404,57 @@ describe("RetrievalHealthDashboard failure queue", () => {
     expect(await screen.findByText(/Nothing waiting for review/)).toBeTruthy();
   });
 });
+
+describe("RetrievalHealthDashboard low-traffic honesty", () => {
+  const ok = (body) => ({ ok: true, json: async () => body });
+
+  it("does not call one failed request critical", async () => {
+    const base = makeHealthResponse();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        ok({
+          ...base,
+          totalStoredEvents: 1,
+          thresholds: { ...base.thresholds, noVerifiedRate1h: 0.7, minSampleSize1h: 3 },
+          windows: {
+            ...base.windows,
+            "1h": {
+              ...base.windows["1h"],
+              samples: { operational: 1, quality: 1, latency: 1 },
+              rates: { ...base.windows["1h"].rates, errorRate: 0, noVerifiedRate: 1 },
+            },
+          },
+        }),
+      ),
+    );
+    renderDashboard();
+
+    await screen.findByText("Not enough traffic to judge");
+    expect(screen.queryByText("Needs immediate attention")).toBeNull();
+    expect(screen.queryByText("Critical")).toBeNull();
+    // The three overview checks plus the per-window panel badges.
+    expect(screen.getAllByText("Low sample").length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("uses singular wording for one failure in one scenario", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        ok(
+          makeHealthResponse({
+            improvements: [
+              { id: "improve-1", classId: "theft", failureCount: 1, scenarioCount: 1, suggestedTerms: [], examples: [] },
+            ],
+          }),
+        ),
+      ),
+    );
+    const { container } = renderDashboard();
+    await screen.findByText("Where to tune next");
+    await waitFor(() => {
+      expect(container.textContent).toMatch(/theft\s*·\s*1 failure across 1 scenario/);
+    });
+    expect(container.textContent).not.toMatch(/1 failures/);
+  });
+});

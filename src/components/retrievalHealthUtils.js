@@ -68,11 +68,27 @@ export function buildAgentFixPrompt(sample = {}) {
   return lines.join("\n");
 }
 
+export const DEFAULT_MIN_SAMPLES = 3;
+
+// `sample` is { count, min }: with fewer than `min` requests behind a rate, one
+// bad request reads as 100% and should not look like an emergency. The server
+// applies the same minimum (minSampleSize1h) before it raises an alert.
 export function severityForMetric(
   value,
   threshold,
   direction = "above_is_bad",
+  sample = null,
 ) {
+  if (sample && Number(sample.count || 0) < (sample.min ?? DEFAULT_MIN_SAMPLES)) {
+    return {
+      label: "Low sample",
+      color: "#8c8c8c",
+      border: "#b3b3b3",
+      level: "neutral",
+      lowSample: true,
+    };
+  }
+
   if (value == null || threshold == null) {
     return {
       label: "No data",
@@ -122,10 +138,19 @@ export function statusFromData(data) {
   const oneHour = data?.windows?.["1h"];
   if (!oneHour) return { label: "No data", color: "#8c8c8c" };
 
-  const errorRate = oneHour?.rates?.errorRate;
-  const noVerifiedRate = oneHour?.rates?.noVerifiedRate;
-  const p95 = oneHour?.latencyMs?.p95;
   const thresholds = data?.thresholds || {};
+  const min = thresholds.minSampleSize1h ?? DEFAULT_MIN_SAMPLES;
+  const enough = (count) => Number(count || 0) >= min;
+  // Each rate is only judged once enough requests stand behind it.
+  const errorRate = enough(oneHour?.samples?.operational)
+    ? oneHour?.rates?.errorRate
+    : null;
+  const noVerifiedRate = enough(oneHour?.samples?.quality)
+    ? oneHour?.rates?.noVerifiedRate
+    : null;
+  const p95 = enough(oneHour?.samples?.latency)
+    ? oneHour?.latencyMs?.p95
+    : null;
 
   if (alerts > 0) return { label: "Alerting", color: "#E15B4C" };
   if (
@@ -143,6 +168,12 @@ export function statusFromData(data) {
   }
   if ((data?.totalStoredEvents || 0) === 0)
     return { label: "No events", color: "#8c8c8c" };
+  if (
+    !enough(oneHour?.samples?.operational) &&
+    !enough(oneHour?.samples?.quality)
+  ) {
+    return { label: "Low traffic", color: "#8c8c8c" };
+  }
   return { label: "Healthy", color: "#3E9E63" };
 }
 

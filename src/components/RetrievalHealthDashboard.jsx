@@ -24,6 +24,8 @@ import FailureQueue from "./retrievalHealthFailures.jsx";
 import useRetrievalHealth from "./useRetrievalHealth.js";
 
 function buildChecks(oneHour, thresholds) {
+  const min = thresholds?.minSampleSize1h;
+  const sample = (count) => ({ count, min });
   return [
     {
       id: "error-rate",
@@ -34,6 +36,7 @@ function buildChecks(oneHour, thresholds) {
         oneHour?.rates?.errorRate,
         thresholds?.errorRate1h,
         "above_is_bad",
+        sample(oneHour?.samples?.operational),
       ),
       whyItMatters: "High values indicate retrieval requests are failing.",
     },
@@ -46,6 +49,7 @@ function buildChecks(oneHour, thresholds) {
         oneHour?.rates?.noVerifiedRate,
         thresholds?.noVerifiedRate1h,
         "above_is_bad",
+        sample(oneHour?.samples?.quality),
       ),
       whyItMatters:
         "High values mean users get no verified case law despite a response.",
@@ -59,6 +63,7 @@ function buildChecks(oneHour, thresholds) {
         oneHour?.latencyMs?.p95,
         thresholds?.p95LatencyMs1h,
         "above_is_bad",
+        sample(oneHour?.samples?.latency),
       ),
       whyItMatters: "Tail latency captures the slowest user experiences.",
     },

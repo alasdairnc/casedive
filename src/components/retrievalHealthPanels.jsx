@@ -254,20 +254,38 @@ export function WindowPanel({ label, windowStats, thresholds, t }) {
     thresholds?.noVerifiedRate1h ?? 0.45,
     thresholds?.fallbackPathRate1h ?? 0.65,
   );
-  const errBadge = severityForMetric(rates.errorRate, thresholds?.errorRate1h);
+  // Same rule as the server's alerts: a rate needs a few requests behind it.
+  const min = thresholds?.minSampleSize1h;
+  const sample = (count) => ({ count, min });
+  const errBadge = severityForMetric(
+    rates.errorRate,
+    thresholds?.errorRate1h,
+    "above_is_bad",
+    sample(samples.operational),
+  );
   const noVBadge = severityForMetric(
     rates.noVerifiedRate,
     thresholds?.noVerifiedRate1h,
+    "above_is_bad",
+    sample(samples.quality),
   );
   const fallbackBadge = severityForMetric(
     rates.fallbackPathRate,
     thresholds?.fallbackPathRate1h,
+    "above_is_bad",
+    sample(samples.operational),
   );
-  const p95Badge = severityForMetric(p95, thresholds?.p95LatencyMs1h);
+  const p95Badge = severityForMetric(
+    p95,
+    thresholds?.p95LatencyMs1h,
+    "above_is_bad",
+    sample(samples.latency),
+  );
   const relevanceBadge = severityForMetric(
     rates.avgRelevanceScore,
     thresholds?.avgRelevanceScoreMin1h,
     "below_is_bad",
+    sample(samples.quality),
   );
 
   return (
