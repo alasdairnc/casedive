@@ -3,10 +3,14 @@
 
 import { createLog } from "./_logging.js";
 import {
-  getRetrievalHealthSnapshot,
+  getWindowSnapshot,
   recordRetrievalMetricsEvent,
 } from "./_retrievalHealthStore.js";
-import { emitRetrievalAlerts } from "./_retrievalThresholds.js";
+import { classifyEvent, normalizeEvent } from "./_retrievalEvents.js";
+import {
+  emitRetrievalAlerts,
+  RETRIEVAL_ALERT_THRESHOLDS,
+} from "./_retrievalThresholds.js";
 import { classifyScenarioText } from "./_scenarioClassification.js";
 
 const METRIC_FIELDS = [
@@ -155,27 +159,34 @@ export function buildRetrievalMetrics(input = {}) {
 
 export async function logRetrievalMetrics(input = {}) {
   const payload = buildRetrievalMetrics(input);
+  // The log line never carries scenario text; only the store sees it, and it
+  // redacts before writing.
   console.log(createLog(payload));
 
-  let healthSnapshot;
   try {
-    await recordRetrievalMetricsEvent(payload);
-    healthSnapshot = await getRetrievalHealthSnapshot();
+    await recordRetrievalMetricsEvent({ ...payload, scenario: input.scenario });
   } catch {
     return payload;
   }
 
-  if (payload.source === "retrieval" && payload.reason !== "filter_disabled") {
-    try {
-      await emitRetrievalAlerts({
-        requestId: payload.requestId,
-        endpoint: payload.endpoint,
-        healthSnapshot,
-      });
-    } catch {
-      // Ignore threshold check failures; request flow must not fail on metrics.
-    }
-  }
+  // Alert rules read the 1h window, which costs a list read. Only pay for it
+  // when this request could have moved a rate: it failed, or it was slow.
+  if (payload.source !== "retrieval") return payload;
+  const event = normalizeEvent({ ts: Date.now(), ...payload });
+  const slow =
+    Number(payload.retrievalLatencyMs) >
+    RETRIEVAL_ALERT_THRESHOLDS.p95LatencyMs1h;
+  if (!event || !(classifyEvent(event).isFailure || slow)) return payload;
 
+  try {
+    const { windows } = await getWindowSnapshot();
+    await emitRetrievalAlerts({
+      requestId: payload.requestId,
+      endpoint: payload.endpoint,
+      healthSnapshot: { windows },
+    });
+  } catch {
+    // Threshold checks must never fail the request flow.
+  }
   return payload;
 }

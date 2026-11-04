@@ -58,8 +58,32 @@ import {
   logError,
 } from "./_logging.js";
 
+// Metrics writes start without blocking the retrieval path, but the response
+// must not go out until they settle: once a serverless response ends, the
+// function can be frozen and an unfinished Redis write is lost. Writes are one
+// pipelined round trip, so waiting costs little. Keyed by requestId because one
+// instance can serve overlapping requests.
+const pendingMetricWrites = new Map();
+
 function logRetrievalMetricsAsync(payload) {
-  Promise.resolve(logRetrievalMetrics(payload)).catch(() => {});
+  const id = payload.requestId;
+  const list = pendingMetricWrites.get(id) || new Set();
+  const write = Promise.resolve(logRetrievalMetrics(payload))
+    .catch(() => {})
+    .finally(() => {
+      // Self-cleaning, so error paths that never flush don't leak entries.
+      list.delete(write);
+      if (list.size === 0 && pendingMetricWrites.get(id) === list) {
+        pendingMetricWrites.delete(id);
+      }
+    });
+  list.add(write);
+  pendingMetricWrites.set(id, list);
+}
+
+async function flushMetricWrites(requestId) {
+  const list = pendingMetricWrites.get(requestId);
+  if (list?.size) await Promise.allSettled([...list]);
 }
 
 // Deliberate empty results keep their own reason. Flattening them to
@@ -923,6 +947,7 @@ export default async function handler(req, res) {
             rlResult,
             { cacheUsed: true },
           );
+          await flushMetricWrites(requestId);
           return res.status(200).json(withRequestId(cachedResult, requestId));
         }
         logCacheMiss(requestId, "analyze");
@@ -1177,6 +1202,7 @@ export default async function handler(req, res) {
     logSuccess(requestId, "analyze", 200, Date.now() - startMs, rlResult, {
       cached: true,
     });
+    await flushMetricWrites(requestId);
     return res.status(200).json(withRequestId(result, requestId));
   } catch (err) {
     // The model call hit its time cap. Say so instead of a generic 500, and keep

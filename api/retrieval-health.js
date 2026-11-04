@@ -3,10 +3,12 @@
 import { randomUUID, timingSafeEqual } from "crypto";
 import { checkRateLimit, getClientIp, rateLimitHeaders } from "./_rateLimit.js";
 import {
-  getFailureScenarioPage,
+  FAILURE_STATUSES,
+  getFailureQueue,
   getRetrievalHealthSnapshot,
-  getTrendlineSnapshots,
+  setFailureStatus,
 } from "./_retrievalHealthStore.js";
+import { FINGERPRINT_PATTERN } from "./_scenarioRedaction.js";
 import {
   evaluateRetrievalAlerts,
   RETRIEVAL_ALERT_THRESHOLDS,
@@ -16,6 +18,7 @@ import {
   applyStandardApiHeaders,
   handleOptionsAndMethod,
   respondRateLimit,
+  validateJsonRequest,
 } from "./_apiCommon.js";
 import {
   logRequestStart,
@@ -48,9 +51,51 @@ function isAuthorized(req) {
   return timingSafeEqual(Buffer.from(authHeader), Buffer.from(expected));
 }
 
-import { redis } from "./_rateLimit.js";
-import { withRedisTimeout } from "./_redisTimeout.js";
-import { API_REDIS_TIMEOUT_MS } from "./_constants.js";
+const NOTE_MAX_CHARS = 280;
+const TRIAGE_BODY_MAX_BYTES = 2_000;
+
+function parseQuery(req) {
+  try {
+    const url = new URL(
+      req.url || "http://localhost/api/retrieval-health",
+      "http://localhost",
+    );
+    const status = url.searchParams.get("status");
+    return {
+      status: status === "all" || FAILURE_STATUSES.includes(status)
+        ? status
+        : "new",
+      limit: parseBoundedInt(
+        url.searchParams.get("failureLimit"),
+        20,
+        1,
+        MAX_FAILURE_ARCHIVE_LIMIT,
+      ),
+      offset: parseBoundedInt(
+        url.searchParams.get("failuresOffset"),
+        0,
+        0,
+        MAX_FAILURE_ARCHIVE_OFFSET,
+      ),
+    };
+  } catch {
+    return { status: "new", limit: 20, offset: 0 };
+  }
+}
+
+// POST { id, status, note? }: triage one failed scenario. Strict on purpose:
+// the id must be a fingerprint we minted, the status a known value, the note
+// short plain text. Nothing here can create a failure record, only update one.
+function parseTriageBody(body) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) return null;
+  const { id, status, note } = body;
+  if (typeof id !== "string" || !FINGERPRINT_PATTERN.test(id)) return null;
+  if (!FAILURE_STATUSES.includes(status)) return null;
+  if (note !== undefined && note !== null) {
+    if (typeof note !== "string" || note.length > NOTE_MAX_CHARS) return null;
+  }
+  return { id, status, note: typeof note === "string" ? note : "" };
+}
 
 export default async function handler(req, res) {
   const requestId = req.headers["x-vercel-id"] || randomUUID();
@@ -60,10 +105,10 @@ export default async function handler(req, res) {
   applyStandardApiHeaders(
     req,
     res,
-    "GET, OPTIONS",
+    "GET, POST, OPTIONS",
     "Authorization, Content-Type",
   );
-  if (handleOptionsAndMethod(req, res, "GET")) return;
+  if (handleOptionsAndMethod(req, res, ["GET", "POST"])) return;
 
   const rlResult = await checkRateLimit(getClientIp(req), "retrieval-health");
   logRateLimitCheck(requestId, "retrieval-health", rlResult, getClientIp(req));
@@ -83,83 +128,54 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  // Parse + clamp pagination params BEFORE building the cache key, so the key is
-  // derived from the normalized (clamped) values rather than the raw query string.
-  // Keying on raw req.url would let distinct unclamped values (e.g. failuresOffset=5
-  // vs failuresOffset=999999, both clamped to <=1000) mint separate 7-day cache
-  // entries holding identical data — cache fragmentation / unbounded growth.
-  let failureLimit;
-  let failuresBeforeTs;
-  let failuresOffset;
   try {
-    const url = new URL(
-      req.url || "http://localhost/api/retrieval-health",
-      "http://localhost",
-    );
-    failureLimit = parseBoundedInt(
-      url.searchParams.get("failureLimit"),
-      20,
-      1,
-      MAX_FAILURE_ARCHIVE_LIMIT,
-    );
-    failuresBeforeTs = parseBoundedInt(
-      url.searchParams.get("failuresBeforeTs"),
-      null,
-      1,
-      Number.MAX_SAFE_INTEGER,
-    );
-    failuresOffset = parseBoundedInt(
-      url.searchParams.get("failuresOffset"),
-      0,
-      0,
-      MAX_FAILURE_ARCHIVE_OFFSET,
-    );
-  } catch {
-    failureLimit = 20;
-    failuresBeforeTs = null;
-    failuresOffset = 0;
-  }
-
-  // Redis response caching (7-day TTL). Key bump v1 -> v2: now keyed on clamped params.
-  const cacheKey = `cache:retrieval-health:v2:${failureLimit}:${failuresBeforeTs ?? "none"}:${failuresOffset}`;
-  if (redis) {
-    try {
-      const cached = await withRedisTimeout(
-        redis.get(cacheKey),
-        API_REDIS_TIMEOUT_MS,
-      );
-      if (cached) {
-        logSuccess(
+    if (req.method === "POST") {
+      if (
+        !validateJsonRequest(req, res, {
+          requestId,
+          endpoint: "retrieval-health",
+          maxBytes: TRIAGE_BODY_MAX_BYTES,
+          logValidationError,
+        })
+      ) {
+        return;
+      }
+      const triage = parseTriageBody(req.body);
+      if (!triage) {
+        logValidationError(
           requestId,
           "retrieval-health",
-          200,
-          Date.now() - startMs,
-          rlResult,
-          { cached: true },
+          "Invalid triage body",
+          "body",
         );
-        return res
-          .status(200)
-          .json(typeof cached === "string" ? JSON.parse(cached) : cached);
+        return res.status(400).json({ error: "Invalid request" });
       }
-    } catch {
-      // Best-effort cache: on a Redis error, carry on without it.
+      const updated = await setFailureStatus(triage.id, triage);
+      if (!updated) return res.status(404).json({ error: "Not found" });
+      logSuccess(
+        requestId,
+        "retrieval-health",
+        200,
+        Date.now() - startMs,
+        rlResult,
+        { triage: triage.status },
+      );
+      return res.status(200).json({ failure: updated });
     }
-  }
 
-  try {
-    const [snapshot, trendline, failureArchive] = await Promise.all([
+    // No response cache: this is a live view and triage must show on reload.
+    const query = parseQuery(req);
+    const [snapshot, failures] = await Promise.all([
       getRetrievalHealthSnapshot(),
-      getTrendlineSnapshots(),
-      getFailureScenarioPage({
-        limit: failureLimit,
-        beforeTs: failuresBeforeTs,
-        offset: failuresOffset,
-      }),
+      getFailureQueue(query),
     ]);
     const alerts = evaluateRetrievalAlerts(snapshot);
-    const improvements = buildRetrievalImprovements(
-      snapshot?.recentFailures || [],
-    );
+    // Suggestions come from the whole open backlog, not just the page shown.
+    const backlog =
+      query.status === "new" && !failures.hasMore && query.offset === 0
+        ? failures.items
+        : (await getFailureQueue({ status: "new", limit: 100 })).items;
+    const improvements = buildRetrievalImprovements(backlog);
 
     const response = {
       generatedAt: snapshot.generatedAt,
@@ -170,24 +186,12 @@ export default async function handler(req, res) {
       totalStoredEvents: snapshot.totalStoredEvents,
       windows: snapshot.windows,
       alltime: snapshot.alltime,
-      recentFailures: snapshot.recentFailures,
-      failureArchive,
+      trendline: snapshot.trendline,
+      failures,
       improvements,
-      trendline,
       thresholds: RETRIEVAL_ALERT_THRESHOLDS,
       alerts,
     };
-
-    if (redis) {
-      try {
-        await withRedisTimeout(
-          redis.setex(cacheKey, 7 * 24 * 60 * 60, JSON.stringify(response)),
-          API_REDIS_TIMEOUT_MS,
-        );
-      } catch {
-        // Best-effort cache: on a Redis error, carry on without it.
-      }
-    }
 
     logSuccess(
       requestId,

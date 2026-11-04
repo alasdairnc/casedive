@@ -1,990 +1,510 @@
 // api/_retrievalHealthStore.js
-// Rolling retrieval metrics store with Redis + in-memory fallback.
+// Retrieval health storage. Three separate shapes, each in the form that suits it:
+//
+//   totals   hash, HINCRBY, no TTL   lifetime counters (atomic; no read-modify-write)
+//   recent   capped list, 7d TTL     the last N events, for 5m/1h windows + trendline
+//   failures one hash per scenario   redacted snippet + count + review status, 30d TTL
+//
+// Every request is ONE pipelined round trip. Events never carry scenario text;
+// the redacted snippet lives only on the failure record, and only for failures.
+// Redis falls back to in-memory state in dev and when Redis is unreachable.
 
 import { redis } from "./_rateLimit.js";
 import { RETRIEVAL_HEALTH_STORE_REDIS_TIMEOUT_MS } from "./_constants.js";
 import { withRedisTimeout } from "./_redisTimeout.js";
+import {
+  classifyEvent,
+  eventIncrements,
+  normalizeEvent,
+  statsFromTotals,
+  sumIncrements,
+  toNonNegativeInt,
+} from "./_retrievalEvents.js";
+import {
+  FINGERPRINT_PATTERN,
+  redactScenario,
+  scenarioFingerprint,
+} from "./_scenarioRedaction.js";
 
-// v1 holds a JSON string written before events moved to a Redis list; a list
-// command on it fails with WRONGTYPE, so the list lives under a new key.
-const EVENT_LIST_KEY = "metrics:retrieval:events:v2";
-const EVENT_LIST_TTL_S = 60 * 60 * 24 * 30;
-const LAST_EVENT_KEY = "metrics:retrieval:last-event:v1";
-const EVENT_COUNT_KEY = "metrics:retrieval:event-count:v1";
-const ALLTIME_KEY = "metrics:retrieval:alltime:v1";
+const RECENT_KEY = "metrics:retrieval:recent:v3";
+const TOTALS_KEY = "metrics:retrieval:totals:v3";
+const FAILURE_PREFIX = "metrics:retrieval:failure:v3:";
+const FAILURE_INDEX_KEY = "metrics:retrieval:failure-index:v3";
+
 const REDIS_TIMEOUT_MS = RETRIEVAL_HEALTH_STORE_REDIS_TIMEOUT_MS;
-const MAX_MEMORY_EVENTS = 2500;
-const MAX_PERSISTED_EVENTS = 10_000;
+export const RECENT_MAX_EVENTS = 1500;
+const RECENT_TTL_S = 60 * 60 * 24 * 7;
 const MEMORY_RETENTION_MS = 2 * 60 * 60 * 1000;
+// Redacted failure snippets are deleted after this long without a repeat.
+export const FAILURE_RETENTION_DAYS = 30;
+const FAILURE_TTL_S = FAILURE_RETENTION_DAYS * 24 * 60 * 60;
+const FAILURE_INDEX_MAX = 300;
+const NOTE_MAX_CHARS = 280;
 
-// Events that are not retrieval attempts: the filter was off, or the model's
-// own scope gate correctly returned nothing for a non-criminal question. Neither
-// counts toward failure or no-verified rates.
-const NON_OPERATIONAL_REASONS = new Set([
-  "filter_disabled",
-  "non_criminal_scope",
-]);
+export const FAILURE_STATUSES = ["new", "reviewed", "promoted", "ignored"];
 
 export const RETRIEVAL_WINDOWS = {
   "5m": 5 * 60 * 1000,
   "1h": 60 * 60 * 1000,
 };
 
-const memoryEvents = [];
+const mem = {
+  recent: [],
+  totals: {},
+  failures: new Map(),
+};
 
-function toNumber(value) {
-  const num = Number(value);
-  return Number.isFinite(num) ? num : null;
+export function resetMemoryStoreForTests() {
+  mem.recent = [];
+  mem.totals = {};
+  mem.failures = new Map();
 }
 
-function toNonNegativeInt(value) {
-  const num = toNumber(value);
-  if (num == null || num < 0) return 0;
-  return Math.floor(num);
+function guarded(promise) {
+  return withRedisTimeout(promise, REDIS_TIMEOUT_MS);
 }
 
-function normalizeEvent(raw) {
-  let event = raw;
-  if (typeof raw === "string") {
-    try {
-      event = JSON.parse(raw);
-    } catch {
-      return null;
-    }
-  }
-  if (!event || typeof event !== "object") return null;
+// ---- event building ---------------------------------------------------------
 
-  const ts = toNumber(event.ts);
-  if (ts == null || ts <= 0) return null;
-
-  const latency = toNumber(event.retrievalLatencyMs);
-
-  return {
-    ts: Math.floor(ts),
-    endpoint: typeof event.endpoint === "string" ? event.endpoint : "unknown",
-    source: typeof event.source === "string" ? event.source : "retrieval",
-    reason: typeof event.reason === "string" ? event.reason : "unknown",
-    retrievalError: Boolean(event.retrievalError),
-    caseLawFilterEnabled: event.caseLawFilterEnabled !== false,
-    cacheHit: Boolean(event.cacheHit),
-    retrievalLatencyMs:
-      latency != null && latency >= 0 ? Math.floor(latency) : null,
-    finalCaseLawCount: toNonNegativeInt(event.finalCaseLawCount),
-    verifiedCount: toNonNegativeInt(event.verifiedCount),
-    relevanceScoreAvg: (() => {
-      const score = toNumber(event.relevanceScoreAvg);
-      if (score == null || score < 0) return null;
-      return Number(score.toFixed(3));
-    })(),
-    fallbackPathUsed: event.fallbackPathUsed === true,
-    fallbackTriggerReason:
-      typeof event.fallbackTriggerReason === "string" &&
-      event.fallbackTriggerReason.trim().length > 0
-        ? event.fallbackTriggerReason.trim().slice(0, 80)
-        : null,
-    issuePrimary:
-      typeof event.issuePrimary === "string" &&
-      event.issuePrimary.trim().length > 0
-        ? event.issuePrimary.trim().slice(0, 40)
-        : "general_criminal",
-    classId:
-      typeof event.classId === "string" && event.classId.trim().length > 0
-        ? event.classId.trim().slice(0, 40)
-        : "general_criminal",
-    retrievalPass:
-      typeof event.retrievalPass === "string" &&
-      event.retrievalPass.trim().length > 0
-        ? event.retrievalPass.trim().slice(0, 40)
-        : null,
-    prefilterConceptRescueCount: toNonNegativeInt(
-      event.prefilterConceptRescueCount,
-    ),
-    semanticFilterDropCount: toNonNegativeInt(event.semanticFilterDropCount),
-    candidateSourceMix: {
-      ai: toNonNegativeInt(event?.candidateSourceMix?.ai),
-      landmark: toNonNegativeInt(event?.candidateSourceMix?.landmark),
-      localFallback: toNonNegativeInt(event?.candidateSourceMix?.localFallback),
-    },
-    errorMessage:
-      typeof event.errorMessage === "string" &&
-      event.errorMessage.trim().length > 0
-        ? event.errorMessage.trim().slice(0, 200)
-        : null,
-  };
-}
-
-function buildStoredEvent(metricsPayload = {}) {
+function buildStoredEvent(payload = {}) {
   return normalizeEvent({
     ts: Date.now(),
-    endpoint: metricsPayload.endpoint,
-    source: metricsPayload.source,
-    reason: metricsPayload.reason,
+    endpoint: payload.endpoint,
+    source: payload.source,
+    reason: payload.reason,
     retrievalError:
-      metricsPayload.retrievalError === true ||
-      metricsPayload.reason === "retrieval_error" ||
-      metricsPayload.reason === "missing_api_key",
-    caseLawFilterEnabled: metricsPayload.caseLawFilterEnabled !== false,
-    cacheHit: metricsPayload.cacheHit === true,
-    retrievalLatencyMs: metricsPayload.retrievalLatencyMs,
-    finalCaseLawCount: metricsPayload.finalCaseLawCount,
-    verifiedCount: metricsPayload.verifiedCount,
-    relevanceScoreAvg: metricsPayload.relevanceScoreAvg,
-    fallbackPathUsed: metricsPayload.fallbackPathUsed === true,
-    fallbackTriggerReason: metricsPayload.fallbackTriggerReason,
-    issuePrimary: metricsPayload.issuePrimary,
-    classId: metricsPayload.classId,
-    retrievalPass: metricsPayload.retrievalPass,
-    prefilterConceptRescueCount: metricsPayload.prefilterConceptRescueCount,
-    semanticFilterDropCount: metricsPayload.semanticFilterDropCount,
-    candidateSourceMix: metricsPayload.candidateSourceMix,
-    errorMessage: metricsPayload.errorMessage,
+      payload.retrievalError === true ||
+      payload.reason === "retrieval_error" ||
+      payload.reason === "missing_api_key",
+    caseLawFilterEnabled: payload.caseLawFilterEnabled !== false,
+    cacheHit: payload.cacheHit === true,
+    retrievalLatencyMs: payload.retrievalLatencyMs,
+    finalCaseLawCount: payload.finalCaseLawCount,
+    verifiedCount: payload.verifiedCount,
+    relevanceScoreAvg: payload.relevanceScoreAvg,
+    fallbackPathUsed: payload.fallbackPathUsed === true,
+    fallbackTriggerReason: payload.fallbackTriggerReason,
+    issuePrimary: payload.issuePrimary,
+    classId: payload.classId,
+    retrievalPass: payload.retrievalPass,
+    prefilterConceptRescueCount: payload.prefilterConceptRescueCount,
+    semanticFilterDropCount: payload.semanticFilterDropCount,
+    candidateSourceMix: payload.candidateSourceMix,
+    errorMessage: payload.errorMessage,
   });
 }
 
-function getFailureEvents(events = []) {
-  if (!Array.isArray(events) || events.length === 0) return [];
-
-  const explicitFailureReasons = new Set([
-    "no_verified",
-    "retrieval_error",
-    "missing_api_key",
-    "retrieval_timeout",
-    "unknown_cached",
-  ]);
-
-  return events.filter((event) => {
-    const isOperational =
-      (event.source === "retrieval" || event.source === "cache") &&
-      event.caseLawFilterEnabled &&
-      !NON_OPERATIONAL_REASONS.has(event.reason);
-    if (!isOperational) return false;
-
-    const effectiveFinalCount = Math.max(
-      toNonNegativeInt(event.finalCaseLawCount),
-      toNonNegativeInt(event.verifiedCount),
-    );
-    const hasNoResults =
-      effectiveFinalCount === 0 && event.reason !== "verified_results";
-
-    return (
-      event.retrievalError ||
-      explicitFailureReasons.has(event.reason) ||
-      hasNoResults
-    );
-  });
-}
-
-function toFailureSample(event) {
+// The failure record for an event, or null when there's nothing to review (not
+// a failure, or no scenario text to fingerprint). Redaction happens HERE, before
+// anything is written, so no caller can store raw text by mistake.
+function buildFailureRecord(event, rawScenario) {
+  if (!classifyEvent(event).isFailure) return null;
+  const snippet = redactScenario(rawScenario);
+  const id = scenarioFingerprint(snippet);
+  if (!id) return null;
   return {
-    ts: new Date(event.ts).toISOString(),
-    endpoint: event.endpoint || "unknown",
-    reason: event.reason || "unknown",
-    retrievalError: Boolean(event.retrievalError),
-    finalCaseLawCount: toNonNegativeInt(event.finalCaseLawCount),
-    verifiedCount: toNonNegativeInt(event.verifiedCount),
-    fallbackPathUsed: event.fallbackPathUsed === true,
-    latencyMs: Number.isFinite(event.retrievalLatencyMs)
-      ? event.retrievalLatencyMs
+    id,
+    snippet,
+    reason: event.reason,
+    classId: event.classId,
+    issuePrimary: event.issuePrimary,
+    finalCaseLawCount: Math.max(event.finalCaseLawCount, event.verifiedCount),
+    latencyMs: event.retrievalLatencyMs,
+    fallbackPathUsed: event.fallbackPathUsed,
+    errorMessage: event.errorMessage,
+    ts: event.ts,
+  };
+}
+
+// ---- failure records --------------------------------------------------------
+
+function failureFromHash(id, hash) {
+  if (!hash || typeof hash !== "object" || Object.keys(hash).length === 0) {
+    return null;
+  }
+  const str = (v, fallback = "") => (v == null ? fallback : String(v));
+  const num = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+  const status = FAILURE_STATUSES.includes(str(hash.status))
+    ? str(hash.status)
+    : "new";
+  const first = num(hash.firstSeen);
+  const last = num(hash.lastSeen);
+  return {
+    id,
+    snippet: str(hash.snippet),
+    reason: str(hash.reason, "unknown"),
+    classId: str(hash.classId, "general_criminal"),
+    issuePrimary: str(hash.issuePrimary, "general_criminal"),
+    count: toNonNegativeInt(hash.count) || 1,
+    firstSeen: first ? new Date(first).toISOString() : null,
+    lastSeen: last ? new Date(last).toISOString() : null,
+    status,
+    note: str(hash.note) || null,
+    reviewedAt: num(hash.reviewedAt)
+      ? new Date(num(hash.reviewedAt)).toISOString()
       : null,
-    semanticFilterDropCount: toNonNegativeInt(event.semanticFilterDropCount),
-    issuePrimary: event.issuePrimary || "general_criminal",
-    classId: event.classId || "general_criminal",
-    fallbackTriggerReason: event.fallbackTriggerReason || null,
-    errorMessage: event.errorMessage || null,
+    finalCaseLawCount: toNonNegativeInt(hash.finalCaseLawCount),
+    latencyMs: num(hash.latencyMs),
+    fallbackPathUsed: String(hash.fallbackPathUsed) === "1",
+    errorMessage: str(hash.errorMessage) || null,
   };
 }
 
-function clampFailurePageLimit(value, fallback = 20) {
-  const num = Number(value);
-  if (!Number.isFinite(num) || num <= 0) return fallback;
-  return Math.min(100, Math.floor(num));
-}
-
-function getFailureScenarioPageFromEvents(
-  events = [],
-  { beforeTs = null, offset = 0, limit = 20 } = {},
-) {
-  const safeLimit = clampFailurePageLimit(limit, 20);
-  const safeOffset = Math.max(0, Math.floor(Number(offset) || 0));
-  const beforeTsMs = Number(beforeTs);
-  const hasCursor = Number.isFinite(beforeTsMs) && beforeTsMs > 0;
-
-  const sortedFailures = getFailureEvents(events)
-    .slice()
-    .sort((a, b) => b.ts - a.ts);
-
-  const filtered = hasCursor
-    ? sortedFailures.filter((event) => event.ts < beforeTsMs)
-    : sortedFailures;
-  const page = filtered.slice(safeOffset, safeOffset + safeLimit);
-  const nextOffset = safeOffset + page.length;
-
-  return {
-    items: page.map((event) => toFailureSample(event)),
-    hasMore: filtered.length > nextOffset,
-    nextOffset: filtered.length > nextOffset ? nextOffset : null,
-    nextBeforeTs:
-      page.length > 0 ? Math.max(0, page[page.length - 1].ts - 1) : null,
-    totalFailures: sortedFailures.length,
-    limit: safeLimit,
-    offset: safeOffset,
-  };
-}
-
-function getRecentFailureScenarios(events = [], limit = 20) {
-  return getFailureScenarioPageFromEvents(events, { limit }).items;
-}
-
-function pruneMemory(nowMs = Date.now()) {
-  const cutoff = nowMs - MEMORY_RETENTION_MS;
-  while (memoryEvents.length > 0 && memoryEvents[0].ts < cutoff) {
-    memoryEvents.shift();
+function writeFailureMemory(f) {
+  const existing = mem.failures.get(f.id);
+  if (existing) {
+    existing.count += 1;
+    existing.lastSeen = f.ts;
+    existing.reason = f.reason;
+    existing.classId = f.classId;
+    existing.issuePrimary = f.issuePrimary;
+    existing.finalCaseLawCount = f.finalCaseLawCount;
+    existing.latencyMs = f.latencyMs;
+    existing.fallbackPathUsed = f.fallbackPathUsed ? "1" : "0";
+    existing.errorMessage = f.errorMessage;
+    return;
   }
-  if (memoryEvents.length > MAX_MEMORY_EVENTS) {
-    memoryEvents.splice(0, memoryEvents.length - MAX_MEMORY_EVENTS);
+  mem.failures.set(f.id, {
+    snippet: f.snippet,
+    reason: f.reason,
+    classId: f.classId,
+    issuePrimary: f.issuePrimary,
+    count: 1,
+    firstSeen: f.ts,
+    lastSeen: f.ts,
+    status: "new",
+    finalCaseLawCount: f.finalCaseLawCount,
+    latencyMs: f.latencyMs,
+    fallbackPathUsed: f.fallbackPathUsed ? "1" : "0",
+    errorMessage: f.errorMessage,
+  });
+  // Keep the in-memory queue bounded like the Redis index.
+  if (mem.failures.size > FAILURE_INDEX_MAX) {
+    const oldest = [...mem.failures.entries()].sort(
+      (a, b) => a[1].lastSeen - b[1].lastSeen,
+    )[0];
+    if (oldest) mem.failures.delete(oldest[0]);
   }
 }
 
-async function readRedisEvents() {
-  const rows = await withRedisTimeout(
-    redis.lrange(EVENT_LIST_KEY, 0, -1),
-    REDIS_TIMEOUT_MS,
+function defined(obj) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== null && v !== undefined),
   );
+}
 
-  if (!Array.isArray(rows)) return [];
-  const out = [];
-  for (const row of rows) {
-    const normalized = normalizeEvent(row);
-    if (normalized) out.push(normalized);
+// ---- write path -------------------------------------------------------------
+
+async function writeRedis(event, failure) {
+  const pipe = redis.pipeline();
+  pipe.rpush(RECENT_KEY, JSON.stringify(event));
+  pipe.ltrim(RECENT_KEY, -RECENT_MAX_EVENTS, -1);
+  pipe.expire(RECENT_KEY, RECENT_TTL_S);
+
+  for (const [field, n] of Object.entries(eventIncrements(event))) {
+    pipe.hincrby(TOTALS_KEY, field, n);
   }
-  if (out.length <= MAX_PERSISTED_EVENTS) return out;
-  return out.slice(out.length - MAX_PERSISTED_EVENTS);
+  pipe.hsetnx(TOTALS_KEY, "firstTs", event.ts);
+  pipe.hset(TOTALS_KEY, { lastTs: event.ts });
+
+  if (failure) {
+    const key = FAILURE_PREFIX + failure.id;
+    // First sighting only: these must survive repeats and later triage.
+    pipe.hsetnx(key, "snippet", failure.snippet);
+    pipe.hsetnx(key, "firstSeen", failure.ts);
+    pipe.hsetnx(key, "status", "new");
+    pipe.hset(
+      key,
+      defined({
+        lastSeen: failure.ts,
+        reason: failure.reason,
+        classId: failure.classId,
+        issuePrimary: failure.issuePrimary,
+        finalCaseLawCount: failure.finalCaseLawCount,
+        latencyMs: failure.latencyMs,
+        fallbackPathUsed: failure.fallbackPathUsed ? "1" : "0",
+        errorMessage: failure.errorMessage,
+      }),
+    );
+    pipe.hincrby(key, "count", 1);
+    pipe.expire(key, FAILURE_TTL_S);
+    pipe.zadd(FAILURE_INDEX_KEY, { score: failure.ts, member: failure.id });
+    // Bound the queue: drop the least recently seen beyond the cap.
+    pipe.zremrangebyrank(FAILURE_INDEX_KEY, 0, -(FAILURE_INDEX_MAX + 1));
+  }
+
+  await guarded(pipe.exec());
 }
 
-async function readRedisLastEvent() {
-  const raw = await withRedisTimeout(
-    redis.get(LAST_EVENT_KEY),
-    REDIS_TIMEOUT_MS,
-  );
-  return normalizeEvent(raw);
+function writeMemory(event, failure) {
+  mem.recent.push(event);
+  const cutoff = event.ts - MEMORY_RETENTION_MS;
+  while (mem.recent.length > 0 && mem.recent[0].ts < cutoff) mem.recent.shift();
+  if (mem.recent.length > RECENT_MAX_EVENTS) {
+    mem.recent.splice(0, mem.recent.length - RECENT_MAX_EVENTS);
+  }
+  for (const [field, n] of Object.entries(eventIncrements(event))) {
+    mem.totals[field] = (mem.totals[field] || 0) + n;
+  }
+  mem.totals.firstTs = mem.totals.firstTs
+    ? Math.min(mem.totals.firstTs, event.ts)
+    : event.ts;
+  mem.totals.lastTs = Math.max(mem.totals.lastTs || 0, event.ts);
+  if (failure) writeFailureMemory(failure);
 }
 
-async function writeRedisLastEvent(event) {
-  await withRedisTimeout(
-    redis.set(LAST_EVENT_KEY, JSON.stringify(event)),
-    REDIS_TIMEOUT_MS,
-  );
+/**
+ * Record one retrieval event. `payload.scenario` is optional raw text: it is
+ * redacted here and kept only if the event is a failure.
+ */
+export async function recordRetrievalMetricsEvent(payload = {}) {
+  const event = buildStoredEvent(payload);
+  if (!event) return false;
+  const failure = buildFailureRecord(event, payload.scenario);
+
+  if (redis) {
+    try {
+      await writeRedis(event, failure);
+      return true;
+    } catch {
+      // fall through to the in-memory store
+    }
+  }
+  writeMemory(event, failure);
+  return true;
 }
 
-async function incrementRedisEventCount() {
-  const count = await withRedisTimeout(
-    redis.incr(EVENT_COUNT_KEY),
-    REDIS_TIMEOUT_MS,
-  );
-  const num = Number(count);
-  return Number.isFinite(num) ? num : null;
-}
+// ---- read path --------------------------------------------------------------
 
-async function readRedisEventCount() {
-  const raw = await withRedisTimeout(
-    redis.get(EVENT_COUNT_KEY),
-    REDIS_TIMEOUT_MS,
-  );
-  const num = Number(raw);
-  return Number.isFinite(num) && num > 0 ? Math.floor(num) : 0;
-}
-
-function ratio(numerator, denominator) {
-  if (!denominator) return null;
-  return Number((numerator / denominator).toFixed(4));
+export async function getRecentEvents({ limit = RECENT_MAX_EVENTS } = {}) {
+  const max = Math.min(Math.max(1, limit), RECENT_MAX_EVENTS);
+  let events;
+  if (redis) {
+    try {
+      const rows = await guarded(redis.lrange(RECENT_KEY, -max, -1));
+      events = (Array.isArray(rows) ? rows : [])
+        .map(normalizeEvent)
+        .filter(Boolean);
+    } catch {
+      events = mem.recent.slice(-max);
+    }
+  } else {
+    events = mem.recent.slice(-max);
+  }
+  return events.sort((a, b) => a.ts - b.ts);
 }
 
 function percentile(values, pct) {
-  if (!Array.isArray(values) || values.length === 0) return null;
+  if (values.length === 0) return null;
   const sorted = [...values].sort((a, b) => a - b);
   const index = Math.max(0, Math.ceil(pct * sorted.length) - 1);
   return sorted[Math.min(index, sorted.length - 1)];
 }
 
-function average(values) {
-  if (!Array.isArray(values) || values.length === 0) return null;
-  const total = values.reduce((sum, value) => sum + value, 0);
-  return Math.round(total / values.length);
-}
-
 function computeWindowStats(events, nowMs, windowMs) {
   const cutoff = nowMs - windowMs;
-  const windowEvents = events.filter((event) => event.ts >= cutoff);
-  const retrievalEvents = windowEvents.filter(
-    (event) => event.source === "retrieval",
-  );
-  const cacheEvents = windowEvents.filter((event) => event.source === "cache");
-
-  const filterDisabledCount = retrievalEvents.filter(
-    (event) => event.reason === "filter_disabled",
-  ).length;
-  const missingApiKeyCount = retrievalEvents.filter(
-    (event) => event.reason === "missing_api_key",
-  ).length;
-
-  const operationalEvents = retrievalEvents.filter(
-    (event) =>
-      event.caseLawFilterEnabled && !NON_OPERATIONAL_REASONS.has(event.reason),
-  );
-  const errorEvents = operationalEvents.filter(
-    (event) =>
-      event.retrievalError ||
-      event.reason === "retrieval_error" ||
-      event.reason === "missing_api_key",
-  );
-  const qualityEvents = operationalEvents.filter(
-    (event) =>
-      event.reason !== "retrieval_error" && event.reason !== "missing_api_key",
-  );
-  const noVerifiedEvents = qualityEvents.filter(
-    (event) => event.finalCaseLawCount === 0,
-  );
-  const verifiedEvents = qualityEvents.filter(
-    (event) => event.finalCaseLawCount > 0,
-  );
-
-  const latencyValues = operationalEvents
-    .map((event) => event.retrievalLatencyMs)
-    .filter((value) => Number.isFinite(value));
-
-  const verifiedTotal = qualityEvents.reduce(
-    (sum, event) => sum + event.finalCaseLawCount,
-    0,
-  );
-  const relevanceScores = qualityEvents
-    .map((event) => event.relevanceScoreAvg)
-    .filter((value) => Number.isFinite(value));
-  const fallbackPathCount = operationalEvents.filter(
-    (event) => event.fallbackPathUsed,
-  ).length;
-  const semanticFilterDrops = operationalEvents.reduce(
-    (sum, event) => sum + toNonNegativeInt(event.semanticFilterDropCount),
-    0,
-  );
-  const conceptRescueCount = operationalEvents.reduce(
-    (sum, event) => sum + toNonNegativeInt(event.prefilterConceptRescueCount),
-    0,
-  );
-
-  const issueMap = new Map();
-  for (const event of operationalEvents) {
-    const key = event.issuePrimary || "general_criminal";
-    if (!issueMap.has(key)) {
-      issueMap.set(key, {
-        issuePrimary: key,
-        requests: 0,
-        fallbackPath: 0,
-        noVerified: 0,
-        errors: 0,
-        verifiedTotal: 0,
-      });
-    }
-    const row = issueMap.get(key);
-    row.requests += 1;
-    row.fallbackPath += event.fallbackPathUsed ? 1 : 0;
-    row.noVerified += event.finalCaseLawCount === 0 ? 1 : 0;
-    row.errors += event.retrievalError ? 1 : 0;
-    row.verifiedTotal += toNonNegativeInt(event.finalCaseLawCount);
-  }
-  const byIssue = [...issueMap.values()]
-    .sort((a, b) => b.requests - a.requests)
-    .slice(0, 6)
-    .map((row) => ({
-      issuePrimary: row.issuePrimary,
-      requests: row.requests,
-      fallbackPathRate: ratio(row.fallbackPath, row.requests),
-      noVerifiedRate: ratio(row.noVerified, row.requests),
-      errorRate: ratio(row.errors, row.requests),
-      avgVerifiedPerRequest: row.requests
-        ? Number((row.verifiedTotal / row.requests).toFixed(4))
-        : null,
-    }));
-  const sourceMixTotals = operationalEvents.reduce(
-    (acc, event) => {
-      acc.ai += toNonNegativeInt(event?.candidateSourceMix?.ai);
-      acc.landmark += toNonNegativeInt(event?.candidateSourceMix?.landmark);
-      acc.localFallback += toNonNegativeInt(
-        event?.candidateSourceMix?.localFallback,
-      );
-      return acc;
-    },
-    { ai: 0, landmark: 0, localFallback: 0 },
-  );
-  const sourceTotal =
-    sourceMixTotals.ai +
-    sourceMixTotals.landmark +
-    sourceMixTotals.localFallback;
-  const lastEvent =
-    windowEvents.length > 0 ? windowEvents[windowEvents.length - 1] : null;
-
-  return {
-    samples: {
-      total: windowEvents.length,
-      retrieval: retrievalEvents.length,
-      cache: cacheEvents.length,
-      operational: operationalEvents.length,
-      quality: qualityEvents.length,
-      latency: latencyValues.length,
-    },
-    counts: {
-      filterDisabled: filterDisabledCount,
-      missingApiKey: missingApiKeyCount,
-      errors: errorEvents.length,
-      noVerified: noVerifiedEvents.length,
-      verifiedResults: verifiedEvents.length,
-      fallbackPath: fallbackPathCount,
-      semanticFilterDrops,
-    },
-    rates: {
-      errorRate: ratio(errorEvents.length, operationalEvents.length),
-      noVerifiedRate: ratio(noVerifiedEvents.length, qualityEvents.length),
-      avgVerifiedPerRequest: qualityEvents.length
-        ? Number((verifiedTotal / qualityEvents.length).toFixed(4))
-        : null,
-      fallbackPathRate: ratio(fallbackPathCount, operationalEvents.length),
-      avgRelevanceScore: relevanceScores.length
-        ? Number(
-            (
-              relevanceScores.reduce((sum, value) => sum + value, 0) /
-              relevanceScores.length
-            ).toFixed(4),
-          )
-        : null,
-      avgSemanticFilterDrops: operationalEvents.length
-        ? Number((semanticFilterDrops / operationalEvents.length).toFixed(4))
-        : null,
-      avgConceptRescues: operationalEvents.length
-        ? Number((conceptRescueCount / operationalEvents.length).toFixed(4))
-        : null,
-      candidateSourceMix:
-        sourceTotal > 0
-          ? {
-              ai: Number((sourceMixTotals.ai / sourceTotal).toFixed(4)),
-              landmark: Number(
-                (sourceMixTotals.landmark / sourceTotal).toFixed(4),
-              ),
-              localFallback: Number(
-                (sourceMixTotals.localFallback / sourceTotal).toFixed(4),
-              ),
-            }
-          : null,
-    },
-    latencyMs: {
-      avg: average(latencyValues),
-      p95: percentile(latencyValues, 0.95),
-    },
-    breakdowns: {
-      byIssue,
-    },
-    lastEventAt: lastEvent ? new Date(lastEvent.ts).toISOString() : null,
-  };
+  const inWindow = events.filter((e) => e.ts >= cutoff);
+  const stats = statsFromTotals(sumIncrements(inWindow));
+  const latencies = inWindow
+    .filter((e) => classifyEvent(e).operational)
+    .map((e) => e.retrievalLatencyMs)
+    .filter((v) => Number.isFinite(v));
+  stats.latencyMs.p95 = percentile(latencies, 0.95);
+  const last = inWindow[inWindow.length - 1];
+  stats.lastEventAt = last ? new Date(last.ts).toISOString() : null;
+  return stats;
 }
 
-async function updateAlltimeAccumulator(event) {
-  const timeout = () =>
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS),
-    );
-
-  const raw = await Promise.race([redis.get(ALLTIME_KEY), timeout()]);
-  let acc = {};
-  if (raw) {
-    try {
-      acc = typeof raw === "string" ? JSON.parse(raw) : raw;
-      if (typeof acc !== "object" || acc === null) acc = {};
-    } catch {
-      acc = {};
-    }
-  }
-
-  const isRetrieval = event.source !== "cache";
-  const isCache = event.source === "cache";
-  const isOperational =
-    isRetrieval &&
-    event.caseLawFilterEnabled &&
-    !NON_OPERATIONAL_REASONS.has(event.reason);
-  const isError =
-    isOperational &&
-    (event.retrievalError ||
-      event.reason === "retrieval_error" ||
-      event.reason === "missing_api_key");
-  const isQuality = isOperational && !isError;
-  const hasLatency = isOperational && Number.isFinite(event.retrievalLatencyMs);
-
-  acc.firstTs = acc.firstTs ? Math.min(acc.firstTs, event.ts) : event.ts;
-  acc.lastTs = Math.max(acc.lastTs || 0, event.ts);
-  acc.total = (acc.total || 0) + 1;
-  acc.retrieval = (acc.retrieval || 0) + (isRetrieval ? 1 : 0);
-  acc.cache = (acc.cache || 0) + (isCache ? 1 : 0);
-  acc.operational = (acc.operational || 0) + (isOperational ? 1 : 0);
-  acc.quality = (acc.quality || 0) + (isQuality ? 1 : 0);
-  acc.latencyCount = (acc.latencyCount || 0) + (hasLatency ? 1 : 0);
-  acc.filterDisabled =
-    (acc.filterDisabled || 0) +
-    (isRetrieval && event.reason === "filter_disabled" ? 1 : 0);
-  acc.missingApiKey =
-    (acc.missingApiKey || 0) +
-    (isRetrieval && event.reason === "missing_api_key" ? 1 : 0);
-  acc.errors = (acc.errors || 0) + (isError ? 1 : 0);
-  acc.noVerified =
-    (acc.noVerified || 0) +
-    (isQuality && event.finalCaseLawCount === 0 ? 1 : 0);
-  acc.verifiedResults =
-    (acc.verifiedResults || 0) +
-    (isQuality && event.finalCaseLawCount > 0 ? 1 : 0);
-  acc.verifiedTotal =
-    (acc.verifiedTotal || 0) + (isQuality ? event.finalCaseLawCount : 0);
-  acc.latencySum =
-    (acc.latencySum || 0) + (hasLatency ? event.retrievalLatencyMs : 0);
-  acc.fallbackPath =
-    (acc.fallbackPath || 0) + (isOperational && event.fallbackPathUsed ? 1 : 0);
-  acc.semanticFilterDrops =
-    (acc.semanticFilterDrops || 0) +
-    (isOperational ? toNonNegativeInt(event.semanticFilterDropCount) : 0);
-  acc.prefilterConceptRescues =
-    (acc.prefilterConceptRescues || 0) +
-    (isOperational ? toNonNegativeInt(event.prefilterConceptRescueCount) : 0);
-  acc.relevanceScoreCount =
-    (acc.relevanceScoreCount || 0) +
-    (isQuality && Number.isFinite(event.relevanceScoreAvg) ? 1 : 0);
-  acc.relevanceScoreSum =
-    (acc.relevanceScoreSum || 0) +
-    (isQuality && Number.isFinite(event.relevanceScoreAvg)
-      ? event.relevanceScoreAvg
-      : 0);
-  acc.sourceAi =
-    (acc.sourceAi || 0) +
-    (isOperational ? toNonNegativeInt(event?.candidateSourceMix?.ai) : 0);
-  acc.sourceLandmark =
-    (acc.sourceLandmark || 0) +
-    (isOperational ? toNonNegativeInt(event?.candidateSourceMix?.landmark) : 0);
-  acc.sourceLocalFallback =
-    (acc.sourceLocalFallback || 0) +
-    (isOperational
-      ? toNonNegativeInt(event?.candidateSourceMix?.localFallback)
-      : 0);
-
-  const issuePrimary = event.issuePrimary || "general_criminal";
-  if (!acc.byIssue || typeof acc.byIssue !== "object") acc.byIssue = {};
-  if (!acc.byIssue[issuePrimary]) {
-    acc.byIssue[issuePrimary] = {
-      requests: 0,
-      fallbackPath: 0,
-      noVerified: 0,
-      errors: 0,
-      verifiedTotal: 0,
-    };
-  }
-  const issueAcc = acc.byIssue[issuePrimary];
-  if (isOperational) {
-    issueAcc.requests += 1;
-    issueAcc.fallbackPath += event.fallbackPathUsed ? 1 : 0;
-    issueAcc.noVerified += event.finalCaseLawCount === 0 ? 1 : 0;
-    issueAcc.errors += event.retrievalError ? 1 : 0;
-    issueAcc.verifiedTotal += toNonNegativeInt(event.finalCaseLawCount);
-  }
-
-  await Promise.race([redis.set(ALLTIME_KEY, JSON.stringify(acc)), timeout()]);
-}
-
-async function getAlltimeSnapshot(events) {
-  if (redis) {
-    try {
-      const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Redis timeout")), REDIS_TIMEOUT_MS),
-      );
-      const raw = await Promise.race([redis.get(ALLTIME_KEY), timeout]);
-      if (raw) {
-        const acc = typeof raw === "string" ? JSON.parse(raw) : raw;
-        if (acc && typeof acc === "object") {
-          const {
-            total = 0,
-            retrieval = 0,
-            cache = 0,
-            operational = 0,
-            quality = 0,
-            latencyCount = 0,
-            filterDisabled = 0,
-            missingApiKey = 0,
-            errors = 0,
-            noVerified = 0,
-            verifiedResults = 0,
-            verifiedTotal = 0,
-            latencySum = 0,
-            fallbackPath = 0,
-            semanticFilterDrops = 0,
-            prefilterConceptRescues = 0,
-            relevanceScoreCount = 0,
-            relevanceScoreSum = 0,
-            sourceAi = 0,
-            sourceLandmark = 0,
-            sourceLocalFallback = 0,
-            byIssue = {},
-          } = acc;
-          const sourceTotal = sourceAi + sourceLandmark + sourceLocalFallback;
-          const byIssueRows = Object.entries(byIssue || {})
-            .map(([issuePrimary, row]) => ({
-              issuePrimary,
-              requests: toNonNegativeInt(row?.requests),
-              fallbackPath: toNonNegativeInt(row?.fallbackPath),
-              noVerified: toNonNegativeInt(row?.noVerified),
-              errors: toNonNegativeInt(row?.errors),
-              verifiedTotal: toNonNegativeInt(row?.verifiedTotal),
-            }))
-            .filter((row) => row.requests > 0)
-            .sort((a, b) => b.requests - a.requests)
-            .slice(0, 6)
-            .map((row) => ({
-              issuePrimary: row.issuePrimary,
-              requests: row.requests,
-              fallbackPathRate: ratio(row.fallbackPath, row.requests),
-              noVerifiedRate: ratio(row.noVerified, row.requests),
-              errorRate: ratio(row.errors, row.requests),
-              avgVerifiedPerRequest: row.requests
-                ? Number((row.verifiedTotal / row.requests).toFixed(4))
-                : null,
-            }));
-          return {
-            firstEventAt: acc.firstTs
-              ? new Date(acc.firstTs).toISOString()
-              : null,
-            samples: {
-              total,
-              retrieval,
-              cache,
-              operational,
-              quality,
-              latency: latencyCount,
-            },
-            counts: {
-              filterDisabled,
-              missingApiKey,
-              errors,
-              noVerified,
-              verifiedResults,
-              fallbackPath,
-              semanticFilterDrops,
-            },
-            rates: {
-              errorRate: ratio(errors, operational),
-              noVerifiedRate: ratio(noVerified, quality),
-              avgVerifiedPerRequest: quality
-                ? Number((verifiedTotal / quality).toFixed(4))
-                : null,
-              fallbackPathRate: ratio(fallbackPath, operational),
-              avgRelevanceScore: relevanceScoreCount
-                ? Number((relevanceScoreSum / relevanceScoreCount).toFixed(4))
-                : null,
-              avgSemanticFilterDrops: operational
-                ? Number((semanticFilterDrops / operational).toFixed(4))
-                : null,
-              avgConceptRescues: operational
-                ? Number((prefilterConceptRescues / operational).toFixed(4))
-                : null,
-              candidateSourceMix:
-                sourceTotal > 0
-                  ? {
-                      ai: Number((sourceAi / sourceTotal).toFixed(4)),
-                      landmark: Number(
-                        (sourceLandmark / sourceTotal).toFixed(4),
-                      ),
-                      localFallback: Number(
-                        (sourceLocalFallback / sourceTotal).toFixed(4),
-                      ),
-                    }
-                  : null,
-            },
-            latencyMs: {
-              avg:
-                latencyCount > 0 ? Math.round(latencySum / latencyCount) : null,
-              p95: null,
-            },
-            breakdowns: {
-              byIssue: byIssueRows,
-            },
-            lastEventAt: acc.lastTs ? new Date(acc.lastTs).toISOString() : null,
-          };
-        }
-      }
-    } catch {
-      // fall through to in-memory computation
-    }
-  }
-
-  // In-memory fallback: compute from all stored events (no window cutoff)
-  return computeWindowStats(events, Date.now(), Infinity);
-}
-
-export async function recordRetrievalMetricsEvent(metricsPayload = {}) {
-  const event = buildStoredEvent(metricsPayload);
-  if (!event) return false;
-
-  if (redis) {
-    // Guaranteed lightweight writes first.
-    try {
-      await Promise.allSettled([
-        writeRedisLastEvent(event),
-        incrementRedisEventCount(),
-      ]);
-    } catch {
-      // Ignore; continue to best-effort primary write path.
-    }
-
-    // Best-effort alltime accumulator update (no TTL — persists indefinitely).
-    try {
-      await updateAlltimeAccumulator(event);
-    } catch {
-      // Non-fatal.
-    }
-
-    try {
-      await withRedisTimeout(
-        redis.rpush(EVENT_LIST_KEY, JSON.stringify(event)),
-        REDIS_TIMEOUT_MS,
-      );
-      await withRedisTimeout(
-        redis.ltrim(EVENT_LIST_KEY, -MAX_PERSISTED_EVENTS, -1),
-        REDIS_TIMEOUT_MS,
-      );
-      await withRedisTimeout(
-        redis.expire(EVENT_LIST_KEY, EVENT_LIST_TTL_S),
-        REDIS_TIMEOUT_MS,
-      );
-      return true;
-    } catch {
-      // fall through to in-memory store
-    }
-  }
-
-  memoryEvents.push(event);
-  pruneMemory(event.ts);
-  return true;
-}
-
-export async function getRetrievalEvents({ nowMs = Date.now() } = {}) {
-  let events;
-  if (redis) {
-    try {
-      events = await readRedisEvents();
-    } catch {
-      events = [...memoryEvents];
-    }
-  } else {
-    events = [...memoryEvents];
-  }
-
-  const sorted = [...events].sort((a, b) => a.ts - b.ts);
-
-  if (redis) {
-    if (sorted.length <= MAX_PERSISTED_EVENTS) return sorted;
-    return sorted.slice(sorted.length - MAX_PERSISTED_EVENTS);
-  }
-
-  const cutoff = nowMs - MEMORY_RETENTION_MS;
-  const recent = sorted.filter((event) => event.ts >= cutoff);
-
-  memoryEvents.length = 0;
-  memoryEvents.push(...recent);
-  pruneMemory(nowMs);
-
-  return recent;
-}
-
-export async function getFailureScenarioPage({
-  beforeTs = null,
-  offset = 0,
-  limit = 20,
-  nowMs = Date.now(),
-} = {}) {
-  const events = await getRetrievalEvents({ nowMs });
-  return getFailureScenarioPageFromEvents(events, { beforeTs, offset, limit });
-}
-
-export async function getTrendlineSnapshots({
-  nowMs = Date.now(),
-  buckets = 15,
-  bucketMs = 5 * 60 * 1000,
-} = {}) {
-  const events = await getRetrievalEvents({ nowMs });
+export function buildTrendline(
+  events,
+  { nowMs = Date.now(), buckets = 15, bucketMs = 5 * 60 * 1000 } = {},
+) {
   const windowStart = nowMs - buckets * bucketMs;
-
-  const result = [];
+  const out = [];
   for (let i = 0; i < buckets; i++) {
-    const bucketStart = windowStart + i * bucketMs;
-    const bucketEnd = bucketStart + bucketMs;
-    const ts = bucketEnd;
-
-    const bucketEvents = events.filter(
-      (e) => e.ts >= bucketStart && e.ts < bucketEnd,
+    const start = windowStart + i * bucketMs;
+    const end = start + bucketMs;
+    const totals = sumIncrements(
+      events.filter((e) => e.ts >= start && e.ts < end),
     );
-    const operational = bucketEvents.filter(
-      (e) =>
-        e.source === "retrieval" &&
-        e.caseLawFilterEnabled &&
-        !NON_OPERATIONAL_REASONS.has(e.reason),
-    );
-    const quality = operational.filter(
-      (e) => e.reason !== "retrieval_error" && e.reason !== "missing_api_key",
-    );
-    const errors = operational.filter((e) => e.retrievalError);
-    const noVerified = quality.filter((e) => e.finalCaseLawCount === 0);
-    const latencies = operational
-      .map((e) => e.retrievalLatencyMs)
-      .filter((v) => Number.isFinite(v));
-
-    result.push({
-      ts,
-      errorRate:
-        operational.length > 0
-          ? Number((errors.length / operational.length).toFixed(4))
-          : null,
-      noVerifiedRate:
-        quality.length > 0
-          ? Number((noVerified.length / quality.length).toFixed(4))
-          : null,
-      avgLatencyMs:
-        latencies.length > 0
-          ? Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length)
-          : null,
+    const operational = totals.operational || 0;
+    const quality = totals.quality || 0;
+    out.push({
+      ts: end,
+      errorRate: operational
+        ? Number(((totals.errors || 0) / operational).toFixed(4))
+        : null,
+      noVerifiedRate: quality
+        ? Number(((totals.noVerified || 0) / quality).toFixed(4))
+        : null,
+      avgLatencyMs: totals.latencyCount
+        ? Math.round(totals.latencySum / totals.latencyCount)
+        : null,
     });
   }
-
-  return result;
+  return out;
 }
 
-function getHistoryMode() {
-  return redis ? "all_time_capped" : "memory_rolling";
+export async function getTrendlineSnapshots(opts = {}) {
+  const events = await getRecentEvents();
+  return buildTrendline(events, opts);
 }
 
-function getHistoryMaxEvents() {
-  return redis ? MAX_PERSISTED_EVENTS : MAX_MEMORY_EVENTS;
+async function getAlltimeStats() {
+  let totals = null;
+  if (redis) {
+    try {
+      const hash = await guarded(redis.hgetall(TOTALS_KEY));
+      if (hash && Object.keys(hash).length > 0) totals = hash;
+    } catch {
+      // fall back to in-memory totals
+    }
+  }
+  if (!totals) totals = mem.totals;
+
+  const stats = statsFromTotals(totals);
+  const firstTs = Number(totals.firstTs);
+  const lastTs = Number(totals.lastTs);
+  stats.firstEventAt =
+    Number.isFinite(firstTs) && firstTs > 0
+      ? new Date(firstTs).toISOString()
+      : null;
+  stats.lastEventAt =
+    Number.isFinite(lastTs) && lastTs > 0 ? new Date(lastTs).toISOString() : null;
+  return stats;
 }
 
-export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
-  const events = await getRetrievalEvents({ nowMs });
+/** 5m/1h windows only. Cheap enough for the alert check on a failing request. */
+export async function getWindowSnapshot({ nowMs = Date.now() } = {}) {
+  const events = await getRecentEvents();
   const windows = {};
-  let snapshotSource = "primary";
-  let backupLastEvent = null;
-
   for (const [label, windowMs] of Object.entries(RETRIEVAL_WINDOWS)) {
     windows[label] = computeWindowStats(events, nowMs, windowMs);
   }
+  return { events, windows };
+}
 
-  let totalStoredEvents = events.length;
-
-  // Backup read path: if primary storage returns no events, fall back to count + latest event keys.
-  if (totalStoredEvents === 0 && redis) {
-    try {
-      const backupCount = await readRedisEventCount();
-      const lastEvent = await readRedisLastEvent();
-      if (
-        backupCount > 0 ||
-        (lastEvent && lastEvent.ts >= nowMs - MEMORY_RETENTION_MS)
-      ) {
-        totalStoredEvents = Math.max(backupCount, 1);
-        snapshotSource = "backup_last_event";
-        backupLastEvent = lastEvent;
-
-        for (const [label, windowMs] of Object.entries(RETRIEVAL_WINDOWS)) {
-          if (lastEvent && lastEvent.ts >= nowMs - windowMs) {
-            const stats = windows[label];
-            stats.samples.total = Math.max(1, stats.samples.total);
-            if (lastEvent.source === "cache") {
-              stats.samples.cache = Math.max(1, stats.samples.cache);
-            } else {
-              stats.samples.retrieval = Math.max(1, stats.samples.retrieval);
-            }
-            if (!stats.lastEventAt) {
-              stats.lastEventAt = new Date(lastEvent.ts).toISOString();
-            }
-          }
-        }
-      }
-    } catch {
-      // Ignore fallback read failures and keep empty snapshot.
-      snapshotSource = "empty";
-    }
-  } else if (totalStoredEvents === 0) {
-    snapshotSource = "empty";
-  }
-
-  const alltime = await getAlltimeSnapshot(events);
-  let recentFailures = getRecentFailureScenarios(events);
-
-  // If the primary event list is unavailable but backup keys indicate activity,
-  // surface the latest failure so the dashboard can still show actionable data.
-  if (
-    recentFailures.length === 0 &&
-    backupLastEvent &&
-    snapshotSource === "backup_last_event"
-  ) {
-    const isOperational =
-      (backupLastEvent.source === "retrieval" ||
-        backupLastEvent.source === "cache") &&
-      backupLastEvent.caseLawFilterEnabled &&
-      !NON_OPERATIONAL_REASONS.has(backupLastEvent.reason);
-
-    if (isOperational) {
-      const explicitFailureReasons = new Set([
-        "no_verified",
-        "retrieval_error",
-        "missing_api_key",
-        "retrieval_timeout",
-        "unknown_cached",
-      ]);
-      const effectiveFinalCount = Math.max(
-        toNonNegativeInt(backupLastEvent.finalCaseLawCount),
-        toNonNegativeInt(backupLastEvent.verifiedCount),
-      );
-      const hasNoResults =
-        effectiveFinalCount === 0 &&
-        backupLastEvent.reason !== "verified_results";
-      const isFailure =
-        backupLastEvent.retrievalError ||
-        explicitFailureReasons.has(backupLastEvent.reason) ||
-        hasNoResults;
-
-      if (isFailure) {
-        recentFailures = [
-          {
-            ts: new Date(backupLastEvent.ts).toISOString(),
-            endpoint: backupLastEvent.endpoint || "unknown",
-            reason: backupLastEvent.reason || "unknown",
-            retrievalError: Boolean(backupLastEvent.retrievalError),
-            finalCaseLawCount: effectiveFinalCount,
-            verifiedCount: toNonNegativeInt(backupLastEvent.verifiedCount),
-            fallbackPathUsed: backupLastEvent.fallbackPathUsed === true,
-            latencyMs: Number.isFinite(backupLastEvent.retrievalLatencyMs)
-              ? backupLastEvent.retrievalLatencyMs
-              : null,
-            semanticFilterDropCount: toNonNegativeInt(
-              backupLastEvent.semanticFilterDropCount,
-            ),
-            issuePrimary: backupLastEvent.issuePrimary || "general_criminal",
-            classId: backupLastEvent.classId || "general_criminal",
-            fallbackTriggerReason:
-              backupLastEvent.fallbackTriggerReason || null,
-            errorMessage: backupLastEvent.errorMessage || null,
-          },
-        ];
-      }
-    }
-  }
-
+export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
+  const [{ events, windows }, alltime] = await Promise.all([
+    getWindowSnapshot({ nowMs }),
+    getAlltimeStats(),
+  ]);
   return {
     generatedAt: new Date(nowMs).toISOString(),
-    snapshotSource,
-    retentionMs: MEMORY_RETENTION_MS,
-    historyMode: getHistoryMode(),
-    historyMaxEvents: getHistoryMaxEvents(),
-    totalStoredEvents,
+    snapshotSource: alltime.samples.total > 0 ? "primary" : "empty",
+    retentionMs: redis ? RECENT_TTL_S * 1000 : MEMORY_RETENTION_MS,
+    historyMode: redis ? "counters_plus_recent" : "memory_rolling",
+    historyMaxEvents: RECENT_MAX_EVENTS,
+    totalStoredEvents: alltime.samples.total,
     windows,
     alltime,
-    recentFailures,
+    trendline: buildTrendline(events, { nowMs }),
   };
+}
+
+// ---- failure queue ----------------------------------------------------------
+
+async function readAllFailures() {
+  if (redis) {
+    try {
+      const ids = await guarded(
+        redis.zrange(FAILURE_INDEX_KEY, 0, -1, { rev: true }),
+      );
+      const list = (Array.isArray(ids) ? ids : []).map(String);
+      if (list.length === 0) return [];
+      const pipe = redis.pipeline();
+      for (const id of list) pipe.hgetall(FAILURE_PREFIX + id);
+      const rows = await guarded(pipe.exec());
+      const items = [];
+      const expired = [];
+      list.forEach((id, i) => {
+        const item = failureFromHash(id, rows[i]);
+        if (item) items.push(item);
+        else expired.push(id);
+      });
+      if (expired.length > 0) {
+        // Records expire on their own; drop their index entries lazily.
+        guarded(redis.zrem(FAILURE_INDEX_KEY, ...expired)).catch(() => {});
+      }
+      return items;
+    } catch {
+      // fall through to memory
+    }
+  }
+  return [...mem.failures.entries()]
+    .map(([id, rec]) => failureFromHash(id, rec))
+    .filter(Boolean)
+    .sort((a, b) => Date.parse(b.lastSeen) - Date.parse(a.lastSeen));
+}
+
+/**
+ * The review queue. `status` is one of FAILURE_STATUSES or "all". Counts are
+ * always for the whole queue so the UI can label every tab.
+ */
+export async function getFailureQueue({
+  status = "new",
+  offset = 0,
+  limit = 20,
+} = {}) {
+  const all = await readAllFailures();
+  const counts = { all: all.length };
+  for (const s of FAILURE_STATUSES) counts[s] = 0;
+  for (const item of all) counts[item.status] += 1;
+
+  const filtered =
+    status === "all" ? all : all.filter((item) => item.status === status);
+  const safeLimit = Math.min(100, Math.max(1, Math.floor(Number(limit)) || 20));
+  const safeOffset = Math.max(0, Math.floor(Number(offset)) || 0);
+  const items = filtered.slice(safeOffset, safeOffset + safeLimit);
+  const next = safeOffset + items.length;
+
+  return {
+    items,
+    counts,
+    total: filtered.length,
+    hasMore: filtered.length > next,
+    nextOffset: filtered.length > next ? next : null,
+    limit: safeLimit,
+    offset: safeOffset,
+    retentionDays: FAILURE_RETENTION_DAYS,
+  };
+}
+
+/**
+ * Triage one failure. Returns the updated record, or null when the id is
+ * unknown or has expired. Validation is strict because this is a write path.
+ */
+export async function setFailureStatus(id, { status, note } = {}) {
+  if (typeof id !== "string" || !FINGERPRINT_PATTERN.test(id)) return null;
+  if (!FAILURE_STATUSES.includes(status)) return null;
+  const cleanNote =
+    typeof note === "string"
+      ? note.replace(/\s+/g, " ").trim().slice(0, NOTE_MAX_CHARS)
+      : "";
+  const reviewedAt = Date.now();
+
+  if (redis) {
+    try {
+      const key = FAILURE_PREFIX + id;
+      const exists = await guarded(redis.exists(key));
+      if (!exists) return null;
+      // An empty note clears an old one rather than being skipped.
+      await guarded(
+        redis.hset(key, { status, note: cleanNote, reviewedAt }),
+      );
+      const hash = await guarded(redis.hgetall(key));
+      return failureFromHash(id, hash);
+    } catch {
+      // fall through to memory
+    }
+  }
+  const rec = mem.failures.get(id);
+  if (!rec) return null;
+  rec.status = status;
+  rec.note = cleanNote;
+  rec.reviewedAt = reviewedAt;
+  return failureFromHash(id, rec);
 }
