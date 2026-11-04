@@ -100,6 +100,7 @@ describe("retrievalHealthUtils", () => {
       },
       windows: {
         "1h": {
+          samples: { operational: 10, quality: 10, latency: 10 },
           rates: { errorRate: 0.02, noVerifiedRate: 0.1 },
           latencyMs: { p95: 900 },
         },
@@ -107,5 +108,68 @@ describe("retrievalHealthUtils", () => {
     });
 
     expect(status.label).toBe("Healthy");
+  });
+
+  describe("low sample sizes", () => {
+    it("does not rate a metric that has too few requests behind it", () => {
+      const badge = severityForMetric(1, 0.7, "above_is_bad", { count: 1, min: 3 });
+      expect(badge).toMatchObject({ label: "Low sample", level: "neutral", lowSample: true });
+    });
+
+    it("rates it normally once the minimum is reached", () => {
+      expect(
+        severityForMetric(1, 0.7, "above_is_bad", { count: 3, min: 3 }).level,
+      ).toBe("critical");
+      // No sample info keeps the old behaviour.
+      expect(severityForMetric(1, 0.7).level).toBe("critical");
+    });
+
+    it("defaults the minimum to 3 when the server does not send one", () => {
+      expect(
+        severityForMetric(1, 0.7, "above_is_bad", { count: 2 }).lowSample,
+      ).toBe(true);
+    });
+
+    it("reports Low traffic instead of Warning for a single bad request", () => {
+      const status = statusFromData({
+        alerts: [],
+        totalStoredEvents: 1,
+        thresholds: { errorRate1h: 0.05, noVerifiedRate1h: 0.7, minSampleSize1h: 3 },
+        windows: {
+          "1h": {
+            samples: { operational: 1, quality: 1, latency: 1 },
+            rates: { errorRate: 0, noVerifiedRate: 1 },
+            latencyMs: { p95: 19 },
+          },
+        },
+      });
+      expect(status.label).toBe("Low traffic");
+    });
+
+    it("still warns when enough requests are bad", () => {
+      const status = statusFromData({
+        alerts: [],
+        totalStoredEvents: 5,
+        thresholds: { errorRate1h: 0.05, noVerifiedRate1h: 0.7, minSampleSize1h: 3 },
+        windows: {
+          "1h": {
+            samples: { operational: 5, quality: 5, latency: 5 },
+            rates: { errorRate: 0, noVerifiedRate: 0.8 },
+            latencyMs: { p95: 19 },
+          },
+        },
+      });
+      expect(status.label).toBe("Warning");
+    });
+
+    it("an active alert always wins", () => {
+      const status = statusFromData({
+        alerts: [{ id: "x" }],
+        totalStoredEvents: 1,
+        thresholds: { minSampleSize1h: 3 },
+        windows: { "1h": { samples: { operational: 1, quality: 1, latency: 1 }, rates: {}, latencyMs: {} } },
+      });
+      expect(status.label).toBe("Alerting");
+    });
   });
 });
