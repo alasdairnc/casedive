@@ -15,8 +15,10 @@ casedive/
 |  |- _logging.js             # Structured request/API/error logs
 |  |- _rateLimit.js           # Sliding-window limiter (Redis + in-memory fallback)
 |  |- _requestDedup.js        # In-memory in-flight deduplication for concurrent identical requests
-|  |- _retrievalHealthStore.js # Rolling retrieval event storage + 5m/1h aggregation
-|  |- _retrievalImprovements.js # Deterministic tuning suggestions from recent retrieval failures
+|  |- _retrievalEvents.js     # One classifier + counters for retrieval events (operational/error/failure)
+|  |- _retrievalHealthStore.js # Health store: lifetime counters hash, capped recent list, redacted failure queue
+|  |- _retrievalImprovements.js # Deterministic tuning suggestions from the open failure queue
+|  |- _scenarioRedaction.js   # Redact + fingerprint scenario text kept for failed searches
 |  |- _retrievalMetrics.js    # Structured retrieval telemetry payload/log helper
 |  |- _retrievalOrchestrator.js # Shared retrieval runner used by endpoints needing verified case-law
 |  |- _retrievalThresholds.js # Retrieval threshold evaluator + deduped alert emission
@@ -26,7 +28,7 @@ casedive/
 |  |- case-summary.js         # POST /api/case-summary — structured case summary via Anthropic
 |  |- export-pdf.js           # POST /api/export-pdf — branded PDF export
 |  |- filter-quality.js       # GET /api/filter-quality — internal filter dashboard (auth-gated)
-|  |- retrieval-health.js     # GET /api/retrieval-health — retrieval metrics/alerts snapshot (auth-gated)
+|  |- retrieval-health.js     # GET/POST /api/retrieval-health — health snapshot, failure queue, triage (auth-gated)
 |  \- verify.js               # POST /api/verify — citation verification (max 10 citations)
 |- src/
 |  |- components/             # Header, FiltersPanel, SearchArea, StagedLoading, Results,

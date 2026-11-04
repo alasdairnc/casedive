@@ -58,9 +58,41 @@ import {
   logError,
 } from "./_logging.js";
 
+// Metrics writes start without blocking the retrieval path, but the response
+// must not go out until they settle: once a serverless response ends, the
+// function can be frozen and an unfinished Redis write is lost. Writes are one
+// pipelined round trip, so waiting costs little. Keyed by requestId because one
+// instance can serve overlapping requests.
+const pendingMetricWrites = new Map();
+
 function logRetrievalMetricsAsync(payload) {
-  Promise.resolve(logRetrievalMetrics(payload)).catch(() => {});
+  const id = payload.requestId;
+  const list = pendingMetricWrites.get(id) || new Set();
+  const write = Promise.resolve(logRetrievalMetrics(payload))
+    .catch(() => {})
+    .finally(() => {
+      // Self-cleaning, so error paths that never flush don't leak entries.
+      list.delete(write);
+      if (list.size === 0 && pendingMetricWrites.get(id) === list) {
+        pendingMetricWrites.delete(id);
+      }
+    });
+  list.add(write);
+  pendingMetricWrites.set(id, list);
 }
+
+async function flushMetricWrites(requestId) {
+  const list = pendingMetricWrites.get(requestId);
+  if (list?.size) await Promise.allSettled([...list]);
+}
+
+// Deliberate empty results keep their own reason. Flattening them to
+// "no_verified" hid the UI's "no search terms" message and counted
+// out-of-scope questions as retrieval failures.
+const DELIBERATE_EMPTY_REASONS = new Set([
+  "non_criminal_scope",
+  "no_terms_or_databases",
+]);
 
 function computeTelemetryReason({
   retrievalError = false,
@@ -69,6 +101,9 @@ function computeTelemetryReason({
 }) {
   if (retrievalError === true) return "retrieval_error";
   if (reason === "missing_api_key") return "missing_api_key";
+  if (finalCaseLawCount === 0 && DELIBERATE_EMPTY_REASONS.has(reason)) {
+    return reason;
+  }
   return finalCaseLawCount > 0 ? "verified_results" : "no_verified";
 }
 
@@ -912,6 +947,7 @@ export default async function handler(req, res) {
             rlResult,
             { cacheUsed: true },
           );
+          await flushMetricWrites(requestId);
           return res.status(200).json(withRequestId(cachedResult, requestId));
         }
         logCacheMiss(requestId, "analyze");
@@ -1166,8 +1202,10 @@ export default async function handler(req, res) {
     logSuccess(requestId, "analyze", 200, Date.now() - startMs, rlResult, {
       cached: true,
     });
+    await flushMetricWrites(requestId);
     return res.status(200).json(withRequestId(result, requestId));
   } catch (err) {
+    await flushMetricWrites(requestId);
     // The model call hit its time cap. Say so instead of a generic 500, and keep
     // it out of Sentry as an exception (logError still records it).
     if (err?.name === "TimeoutError" || err?.name === "AbortError") {

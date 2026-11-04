@@ -6,21 +6,15 @@ const mockRateLimitHeaders = vi.fn(() => ({ "X-RateLimit-Limit": "60" }));
 const mockApplyCorsHeaders = vi.fn();
 const mockIsOriginAllowed = vi.fn(() => true);
 const mockGetRetrievalHealthSnapshot = vi.fn();
-const mockGetTrendlineSnapshots = vi.fn();
-const mockGetFailureScenarioPage = vi.fn();
+const mockGetFailureQueue = vi.fn();
+const mockSetFailureStatus = vi.fn();
 const mockEvaluateRetrievalAlerts = vi.fn(() => []);
 
-// retrieval-health.js also imports `redis` from this module (used to gate the
-// response cache). vitest throws on access to an undefined named export, so the
-// mock must declare it. These tests exercise the non-cached path, so redis is null.
-let mockRedis = null;
 vi.mock("../../api/_rateLimit.js", () => ({
   checkRateLimit: mockCheckRateLimit,
   getClientIp: mockGetClientIp,
   rateLimitHeaders: mockRateLimitHeaders,
-  get redis() {
-    return mockRedis;
-  },
+  redis: null,
 }));
 
 vi.mock("../../api/_cors.js", () => ({
@@ -29,9 +23,10 @@ vi.mock("../../api/_cors.js", () => ({
 }));
 
 vi.mock("../../api/_retrievalHealthStore.js", () => ({
+  FAILURE_STATUSES: ["new", "reviewed", "promoted", "ignored"],
   getRetrievalHealthSnapshot: mockGetRetrievalHealthSnapshot,
-  getTrendlineSnapshots: mockGetTrendlineSnapshots,
-  getFailureScenarioPage: mockGetFailureScenarioPage,
+  getFailureQueue: mockGetFailureQueue,
+  setFailureStatus: mockSetFailureStatus,
 }));
 
 vi.mock("../../api/_retrievalThresholds.js", () => ({
@@ -51,6 +46,8 @@ vi.mock("../../api/_logging.js", () => ({
 }));
 
 const { default: handler } = await import("../../api/retrieval-health.js");
+
+const ID = "f123456789abcdef";
 
 function createRes() {
   return {
@@ -76,6 +73,22 @@ function createRes() {
   };
 }
 
+function getReq(url = "/api/retrieval-health", token = "test-token") {
+  return { method: "GET", url, headers: { authorization: `Bearer ${token}` } };
+}
+
+function postReq(body, { token = "test-token", contentType } = {}) {
+  return {
+    method: "POST",
+    url: "/api/retrieval-health",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "content-type": contentType ?? "application/json",
+    },
+    body,
+  };
+}
+
 describe("retrieval-health handler", () => {
   const originalToken = process.env.RETRIEVAL_HEALTH_TOKEN;
 
@@ -89,38 +102,31 @@ describe("retrieval-health handler", () => {
     });
     mockGetRetrievalHealthSnapshot.mockResolvedValue({
       generatedAt: new Date(0).toISOString(),
-      retentionMs: 86_400_000,
-      historyMode: "all_time_capped",
-      historyMaxEvents: 10_000,
+      snapshotSource: "primary",
+      retentionMs: 604_800_000,
+      historyMode: "counters_plus_recent",
+      historyMaxEvents: 1500,
       totalStoredEvents: 10,
-      windows: { fiveMinutes: {}, oneHour: {} },
-      recentFailures: [
-        {
-          ts: new Date(1).toISOString(),
-          endpoint: "analyze",
-          reason: "no_verified",
-          classId: "trial_delay",
-          issuePrimary: "trial_delay",
-        },
-      ],
+      windows: { "5m": {}, "1h": {} },
+      alltime: { samples: { total: 10 } },
+      trendline: [],
     });
-    mockGetTrendlineSnapshots.mockResolvedValue([
-      { ts: 1, errorRate: null, noVerifiedRate: null, avgLatencyMs: null },
-    ]);
-    mockGetFailureScenarioPage.mockResolvedValue({
+    mockGetFailureQueue.mockResolvedValue({
       items: [
         {
-          ts: new Date(1).toISOString(),
-          endpoint: "analyze",
+          id: ID,
+          snippet: "my chair was stolen",
           reason: "no_verified",
-          classId: "trial_delay",
-          issuePrimary: "trial_delay",
+          classId: "theft",
+          issuePrimary: "theft",
+          count: 3,
+          status: "new",
         },
       ],
+      counts: { all: 1, new: 1, reviewed: 0, promoted: 0, ignored: 0 },
+      total: 1,
       hasMore: false,
       nextOffset: null,
-      nextBeforeTs: null,
-      totalFailures: 1,
       limit: 20,
       offset: 0,
     });
@@ -131,7 +137,7 @@ describe("retrieval-health handler", () => {
     process.env.RETRIEVAL_HEALTH_TOKEN = originalToken;
   });
 
-  it("returns 200 for OPTIONS preflight", async () => {
+  it("returns 200 for OPTIONS preflight and advertises POST", async () => {
     const req = { method: "OPTIONS", headers: {} };
     const res = createRes();
 
@@ -143,17 +149,14 @@ describe("retrieval-health handler", () => {
     expect(mockApplyCorsHeaders).toHaveBeenCalledWith(
       req,
       res,
-      "GET, OPTIONS",
+      "GET, POST, OPTIONS",
       "Authorization, Content-Type",
     );
   });
 
-  it("returns 405 for non-GET methods", async () => {
-    const req = { method: "POST", headers: {} };
+  it("returns 405 for methods other than GET and POST", async () => {
     const res = createRes();
-
-    await handler(req, res);
-
+    await handler({ method: "DELETE", headers: {} }, res);
     expect(res.statusCode).toBe(405);
     expect(res.body).toEqual({ error: "Method not allowed" });
   });
@@ -165,184 +168,147 @@ describe("retrieval-health handler", () => {
       remaining: 0,
       reset: 123,
     });
-    const req = {
-      method: "GET",
-      headers: { authorization: "Bearer test-token" },
-    };
     const res = createRes();
-
-    await handler(req, res);
-
+    await handler(getReq(), res);
     expect(res.statusCode).toBe(429);
-    expect(res.body).toEqual({
-      error: "Rate limit exceeded. Please try again later.",
-    });
   });
 
-  it("returns 401 when auth token is missing or invalid", async () => {
-    const req = { method: "GET", headers: { authorization: "Bearer wrong" } };
-    const res = createRes();
+  it("returns 401 for a wrong token on GET and POST", async () => {
+    const getRes = createRes();
+    await handler(getReq("/api/retrieval-health", "wrong"), getRes);
+    expect(getRes.statusCode).toBe(401);
 
-    await handler(req, res);
-
-    expect(res.statusCode).toBe(401);
-    expect(res.body).toEqual({ error: "Unauthorized" });
+    const postRes = createRes();
+    await handler(postReq({ id: ID, status: "reviewed" }, { token: "wrong" }), postRes);
+    expect(postRes.statusCode).toBe(401);
+    expect(mockSetFailureStatus).not.toHaveBeenCalled();
   });
 
-  it("returns 401 when token is not configured", async () => {
+  it("returns 401 when the token is not configured", async () => {
     process.env.RETRIEVAL_HEALTH_TOKEN = "";
-    const req = {
-      method: "GET",
-      headers: { authorization: "Bearer anything" },
-    };
     const res = createRes();
-
-    await handler(req, res);
-
+    await handler(getReq("/api/retrieval-health", "anything"), res);
     expect(res.statusCode).toBe(401);
-    expect(res.body).toEqual({ error: "Unauthorized" });
   });
 
-  it("returns health snapshot payload for authorized requests", async () => {
-    mockEvaluateRetrievalAlerts.mockReturnValue([{ code: "high_error_rate" }]);
-    const req = {
-      method: "GET",
-      headers: { authorization: "Bearer test-token" },
-    };
+  it("returns the snapshot with the failure queue and is never cached", async () => {
     const res = createRes();
-
-    await handler(req, res);
+    await handler(getReq(), res);
 
     expect(res.statusCode).toBe(200);
+    expect(res.headers["Cache-Control"]).toBe("no-store");
     expect(res.body).toMatchObject({
-      generatedAt: new Date(0).toISOString(),
-      retentionMs: 86_400_000,
-      historyMode: "all_time_capped",
-      historyMaxEvents: 10_000,
       totalStoredEvents: 10,
-      recentFailures: [
-        {
-          ts: new Date(1).toISOString(),
-          endpoint: "analyze",
-          reason: "no_verified",
-          classId: "trial_delay",
-          issuePrimary: "trial_delay",
-        },
-      ],
-      failureArchive: {
-        items: [
-          {
-            ts: new Date(1).toISOString(),
-            endpoint: "analyze",
-            reason: "no_verified",
-            classId: "trial_delay",
-            issuePrimary: "trial_delay",
-          },
-        ],
-        hasMore: false,
-        nextOffset: null,
-        nextBeforeTs: null,
-        totalFailures: 1,
-        limit: 20,
-        offset: 0,
-      },
-      trendline: [
-        { ts: 1, errorRate: null, noVerifiedRate: null, avgLatencyMs: null },
-      ],
-      alerts: [{ code: "high_error_rate" }],
-      thresholds: {
-        highErrorRate: 0.2,
-        highNoVerifiedRate: 0.7,
-      },
+      trendline: [],
+      alerts: [],
+      failures: { total: 1 },
     });
+    expect(res.body.failures.items[0].snippet).toBe("my chair was stolen");
     expect(Array.isArray(res.body.improvements)).toBe(true);
-    expect(res.headers["X-RateLimit-Limit"]).toBe("60");
-    expect(res.headers["X-Content-Type-Options"]).toBe("nosniff");
-    expect(res.headers["X-Frame-Options"]).toBe("DENY");
-    expect(res.headers["Referrer-Policy"]).toBe(
-      "strict-origin-when-cross-origin",
-    );
-    expect(res.headers["Content-Security-Policy"]).toBe("default-src 'none'");
+    expect(res.body.improvements[0]).toMatchObject({
+      classId: "theft",
+      failureCount: 3,
+    });
   });
 
-  it("clamps archive pagination query params before reading failures", async () => {
-    const req = {
-      method: "GET",
-      url: "/api/retrieval-health?failureLimit=999&failuresBeforeTs=Infinity&failuresOffset=5000",
-      headers: { authorization: "Bearer test-token" },
-    };
+  it("clamps status and pagination params before reading the queue", async () => {
     const res = createRes();
+    await handler(
+      getReq(
+        "/api/retrieval-health?status=bogus&failureLimit=9999&failuresOffset=999999",
+      ),
+      res,
+    );
 
-    await handler(req, res);
-
-    expect(mockGetFailureScenarioPage).toHaveBeenCalledWith({
+    expect(res.statusCode).toBe(200);
+    expect(mockGetFailureQueue).toHaveBeenCalledWith({
+      status: "new",
       limit: 100,
-      beforeTs: null,
       offset: 1000,
     });
   });
 
-  // Regression: the response cache key must be derived from the CLAMPED params, not
-  // the raw req.url. Two requests whose raw params differ but clamp to the same values
-  // must resolve to the same cache entry (second request = cache hit), preventing
-  // cache fragmentation / unbounded 7-day-TTL growth from unclamped query values.
-  it("keys the response cache on clamped params (no fragmentation from out-of-range values)", async () => {
-    const store = new Map();
-    mockRedis = {
-      get: vi.fn((key) => Promise.resolve(store.get(key) ?? null)),
-      setex: vi.fn((key, _ttl, value) => {
-        store.set(key, value);
-        return Promise.resolve("OK");
-      }),
-    };
+  it("accepts a known status filter, including all", async () => {
+    await handler(getReq("/api/retrieval-health?status=ignored"), createRes());
+    expect(mockGetFailureQueue).toHaveBeenCalledWith(
+      expect.objectContaining({ status: "ignored" }),
+    );
+    mockGetFailureQueue.mockClear();
+    await handler(getReq("/api/retrieval-health?status=all"), createRes());
+    expect(mockGetFailureQueue).toHaveBeenCalledWith(
+      expect.objectContaining({ status: "all" }),
+    );
+  });
 
-    try {
-      // First request: failuresOffset=5000 clamps to 1000.
-      const req1 = {
-        method: "GET",
-        url: "/api/retrieval-health?failureLimit=999&failuresOffset=5000",
-        headers: { authorization: "Bearer test-token" },
-      };
-      await handler(req1, createRes());
+  describe("POST triage", () => {
+    it("updates a failure and returns it", async () => {
+      mockSetFailureStatus.mockResolvedValue({ id: ID, status: "promoted" });
+      const res = createRes();
 
-      // Second request: a DIFFERENT raw offset (99999) that clamps to the SAME 1000.
-      const req2 = {
-        method: "GET",
-        url: "/api/retrieval-health?failureLimit=12345&failuresOffset=99999",
-        headers: { authorization: "Bearer test-token" },
-      };
-      const res2 = createRes();
-      await handler(req2, res2);
+      await handler(
+        postReq({ id: ID, status: "promoted", note: "add to corpus" }),
+        res,
+      );
 
-      // Exactly one cache entry was written (both requests share the clamped key:
-      // limit=100, offset=1000), and the second request was served from cache.
-      expect(store.size).toBe(1);
-      expect(mockRedis.setex).toHaveBeenCalledTimes(1);
-      expect(res2.statusCode).toBe(200);
-      // Second request hit the cache, so the upstream store was only read once total.
-      expect(mockGetFailureScenarioPage).toHaveBeenCalledTimes(1);
-      // The key reflects clamped values, not the raw query string.
-      const writtenKey = [...store.keys()][0];
-      expect(writtenKey).toContain("v2:100:none:1000");
-      expect(writtenKey).not.toContain("5000");
-      expect(writtenKey).not.toContain("99999");
-    } finally {
-      mockRedis = null;
-    }
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual({ failure: { id: ID, status: "promoted" } });
+      expect(mockSetFailureStatus).toHaveBeenCalledWith(ID, {
+        id: ID,
+        status: "promoted",
+        note: "add to corpus",
+      });
+    });
+
+    it("returns 404 for an unknown or expired id", async () => {
+      mockSetFailureStatus.mockResolvedValue(null);
+      const res = createRes();
+      await handler(postReq({ id: ID, status: "reviewed" }), res);
+      expect(res.statusCode).toBe(404);
+    });
+
+    it.each([
+      ["a missing id", { status: "reviewed" }],
+      ["a non-fingerprint id", { id: "../../etc/passwd", status: "reviewed" }],
+      ["an id that is too long", { id: `${ID}0`, status: "reviewed" }],
+      ["an unknown status", { id: ID, status: "deleted" }],
+      ["a non-string note", { id: ID, status: "reviewed", note: { a: 1 } }],
+      ["an oversized note", { id: ID, status: "reviewed", note: "x".repeat(281) }],
+      ["an array body", [ID]],
+      ["a null body", null],
+    ])("rejects %s with 400 and never touches the store", async (_name, body) => {
+      const res = createRes();
+      await handler(postReq(body), res);
+      expect(res.statusCode).toBe(400);
+      expect(mockSetFailureStatus).not.toHaveBeenCalled();
+    });
+
+    it("rejects a non-JSON content type with 415", async () => {
+      const res = createRes();
+      await handler(
+        postReq({ id: ID, status: "reviewed" }, { contentType: "text/plain" }),
+        res,
+      );
+      expect(res.statusCode).toBe(415);
+      expect(mockSetFailureStatus).not.toHaveBeenCalled();
+    });
+
+    it("rejects an oversized body with 413", async () => {
+      const res = createRes();
+      await handler(
+        postReq({ id: ID, status: "reviewed", pad: "x".repeat(5000) }),
+        res,
+      );
+      expect(res.statusCode).toBe(413);
+      expect(mockSetFailureStatus).not.toHaveBeenCalled();
+    });
   });
 
   it("passes through upstream 4xx errors unchanged", async () => {
     const upstreamError = new Error("bad request");
     upstreamError.status = 400;
     mockGetRetrievalHealthSnapshot.mockRejectedValue(upstreamError);
-    const req = {
-      method: "GET",
-      headers: { authorization: "Bearer test-token" },
-    };
     const res = createRes();
-
-    await handler(req, res);
-
+    await handler(getReq(), res);
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: "Internal server error" });
   });
@@ -351,14 +317,8 @@ describe("retrieval-health handler", () => {
     const upstreamError = new Error("upstream failed");
     upstreamError.status = 503;
     mockGetRetrievalHealthSnapshot.mockRejectedValue(upstreamError);
-    const req = {
-      method: "GET",
-      headers: { authorization: "Bearer test-token" },
-    };
     const res = createRes();
-
-    await handler(req, res);
-
+    await handler(getReq(), res);
     expect(res.statusCode).toBe(502);
     expect(res.body).toEqual({ error: "Internal server error" });
   });

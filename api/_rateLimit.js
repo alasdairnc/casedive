@@ -10,7 +10,9 @@ import { withRedisTimeout } from "./_redisTimeout.js";
 const MAX_REQUESTS = 5;
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const REDIS_TIMEOUT_MS = RATE_LIMIT_REDIS_TIMEOUT_MS;
-const RETRIEVAL_HEALTH_MAX_REQUESTS = 100; // Higher limit for internal monitoring
+// Token-gated internal dashboard. Auto-refresh polls every 30s (120/h) and
+// triage POSTs share the budget, so 100/h returned 429s mid-session.
+const RETRIEVAL_HEALTH_MAX_REQUESTS = 600;
 const BACKEND_UNAVAILABLE_RETRY_AFTER_SECONDS = 60;
 
 export let redis = null;

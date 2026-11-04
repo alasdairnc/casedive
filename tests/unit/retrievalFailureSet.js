@@ -1,3 +1,22 @@
+import fs from "node:fs";
+
+// Stubs promoted from production by `npm run retrieval:promote`. They are data,
+// not code, so user-supplied scenario text never lands in a source file. Each
+// is marked knownFailure until a human fills in the labels and removes the mark.
+const PROMOTED_FIXTURE = new URL(
+  "../fixtures/promoted-failures.json",
+  import.meta.url,
+);
+
+function loadPromotedFailures() {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(PROMOTED_FIXTURE, "utf8"));
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 export const RETRIEVAL_FAILURE_SET = [
   {
     id: "stolen_chair_not_socan",
@@ -1334,4 +1353,5 @@ export const RETRIEVAL_FAILURE_SET = [
       },
     ],
   },
+  ...loadPromotedFailures(),
 ];

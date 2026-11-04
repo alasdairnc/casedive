@@ -62,7 +62,10 @@ function normalizeSnippet(snippet) {
 }
 
 function makeScenarioKey(item) {
-  const basis = `${normalizeSnippet(item.scenarioSnippet)}|${String(item.reason || "unknown")}`;
+  // The server already dedupes by scenario fingerprint. This repo is public and
+  // these reports are uploaded as workflow artifacts, so scenario text is never
+  // carried here: group on the fingerprint, not the text.
+  const basis = `${String(item.id || normalizeSnippet(item.scenarioSnippet))}|${String(item.reason || "unknown")}`;
   return crypto.createHash("sha256").update(basis).digest("hex").slice(0, 16);
 }
 
@@ -76,16 +79,17 @@ function groupEvents(events) {
       map.set(key, {
         key,
         reason: event.reason || "unknown",
-        count: 1,
+        count: Number(event.count) || 1,
         firstSeen: new Date(ts).toISOString(),
         lastSeen: new Date(ts).toISOString(),
-        scenarioSnippet: normalizeSnippet(event.scenarioSnippet),
+        scenarioId: event.id || null,
+        classId: event.classId || null,
         samples: [event].slice(0, 3),
       });
       continue;
     }
 
-    existing.count += 1;
+    existing.count += Number(event.count) || 1;
     if (new Date(existing.firstSeen).getTime() > ts) {
       existing.firstSeen = new Date(ts).toISOString();
     }
@@ -122,11 +126,16 @@ function writeOutputs(summary) {
 async function fetchFailureArchive(baseUrl, token, limit, maxPages) {
   const cleanBase = String(baseUrl || "").replace(/\/$/, "");
   const allItems = [];
-  let beforeTs = null;
+  let offset = 0;
 
   for (let page = 0; page < maxPages; page += 1) {
-    const params = new URLSearchParams({ failureLimit: String(limit) });
-    if (beforeTs) params.set("failuresBeforeTs", String(beforeTs));
+    // The server dedupes by scenario and keeps a repeat count, so one record
+    // is one distinct scenario. Only unreviewed ones are of interest here.
+    const params = new URLSearchParams({
+      failureLimit: String(limit),
+      status: "new",
+      failuresOffset: String(offset),
+    });
     const url = `${cleanBase}/api/retrieval-health?${params.toString()}`;
 
     const headers = {
@@ -154,12 +163,19 @@ async function fetchFailureArchive(baseUrl, token, limit, maxPages) {
     }
 
     const json = await response.json();
-    const archive = json?.failureArchive || {};
-    const items = Array.isArray(archive.items) ? archive.items : [];
-    allItems.push(...items);
+    const queue = json?.failures || {};
+    const items = Array.isArray(queue.items) ? queue.items : [];
+    // Map the queue record onto the field names the grouping below uses.
+    // Drop the text at the door (see makeScenarioKey).
+    allItems.push(
+      ...items.map(({ snippet: _snippet, note: _note, ...item }) => ({
+        ...item,
+        ts: item.lastSeen,
+      })),
+    );
 
-    if (!archive.hasMore || !archive.nextBeforeTs) break;
-    beforeTs = archive.nextBeforeTs;
+    if (!queue.hasMore || typeof queue.nextOffset !== "number") break;
+    offset = queue.nextOffset;
   }
 
   return allItems;
@@ -224,7 +240,7 @@ function renderMarkdown(summary, grouped) {
 
   for (const group of grouped.slice(0, 20)) {
     lines.push(
-      `- (${group.count}) ${group.reason}: ${group.scenarioSnippet || "(no scenario snippet)"}`,
+      `- (${group.count}) ${group.reason}: ${group.classId || "unknown class"} [${group.scenarioId || "no id"}]`,
     );
   }
   lines.push("");
