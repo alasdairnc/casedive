@@ -106,6 +106,59 @@ describe("retrieval health store recent failures", () => {
     });
   });
 
+  it("does not count a non_criminal_scope empty as a failure or a no-verified miss", async () => {
+    const { recordRetrievalMetricsEvent, getRetrievalHealthSnapshot } =
+      await loadStore();
+    const futureNow = Date.now() + 60_000;
+
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "non_criminal_scope",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 0,
+      verifiedCount: 0,
+      issuePrimary: "general_criminal",
+      retrievalLatencyMs: 9,
+    });
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "verified_results",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 2,
+      verifiedCount: 2,
+      issuePrimary: "robbery",
+    });
+
+    const snapshot = await getRetrievalHealthSnapshot({ nowMs: futureNow });
+    const oneHour = snapshot.windows["1h"];
+
+    expect(snapshot.recentFailures).toHaveLength(0);
+    expect(oneHour.rates.noVerifiedRate).toBe(0);
+  });
+
+  it("still counts a no_terms_or_databases empty as a failure", async () => {
+    const { recordRetrievalMetricsEvent, getRetrievalHealthSnapshot } =
+      await loadStore();
+
+    await recordRetrievalMetricsEvent({
+      endpoint: "analyze",
+      source: "retrieval",
+      reason: "no_terms_or_databases",
+      caseLawFilterEnabled: true,
+      finalCaseLawCount: 0,
+      verifiedCount: 0,
+      issuePrimary: "general_criminal",
+    });
+
+    const snapshot = await getRetrievalHealthSnapshot({
+      nowMs: Date.now() + 60_000,
+    });
+    expect(snapshot.recentFailures).toHaveLength(1);
+    expect(snapshot.recentFailures[0].reason).toBe("no_terms_or_databases");
+  });
+
   it("returns paginated failure archive pages", async () => {
     const { recordRetrievalMetricsEvent, getFailureScenarioPage } =
       await loadStore();

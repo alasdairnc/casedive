@@ -62,6 +62,14 @@ function logRetrievalMetricsAsync(payload) {
   Promise.resolve(logRetrievalMetrics(payload)).catch(() => {});
 }
 
+// Deliberate empty results keep their own reason. Flattening them to
+// "no_verified" hid the UI's "no search terms" message and counted
+// out-of-scope questions as retrieval failures.
+const DELIBERATE_EMPTY_REASONS = new Set([
+  "non_criminal_scope",
+  "no_terms_or_databases",
+]);
+
 function computeTelemetryReason({
   retrievalError = false,
   reason = "",
@@ -69,6 +77,9 @@ function computeTelemetryReason({
 }) {
   if (retrievalError === true) return "retrieval_error";
   if (reason === "missing_api_key") return "missing_api_key";
+  if (finalCaseLawCount === 0 && DELIBERATE_EMPTY_REASONS.has(reason)) {
+    return reason;
+  }
   return finalCaseLawCount > 0 ? "verified_results" : "no_verified";
 }
 

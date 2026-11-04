@@ -704,6 +704,71 @@ describe("CanLII retrieval timeout", () => {
     expect(res.body.meta.case_law.reason).toBe("no_verified");
   });
 
+  it.each(["non_criminal_scope", "no_terms_or_databases"])(
+    "keeps the deliberate empty reason %s in response meta and telemetry",
+    async (emptyReason) => {
+      mockAnthropicSuccess();
+      mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+        cases: [],
+        meta: { reason: emptyReason, issuePrimary: "general_criminal" },
+      });
+
+      const req = createReq({
+        body: { scenario: "my landlord kept my damage deposit" },
+      });
+      const res = createRes();
+      await handler(req, res);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.meta.case_law.reason).toBe(emptyReason);
+      const metricCall = mockLogRetrievalMetrics.mock.calls.find(
+        ([payload]) => payload?.source === "retrieval",
+      );
+      expect(metricCall[0]).toMatchObject({
+        reason: emptyReason,
+        finalCaseLawCount: 0,
+      });
+    },
+  );
+
+  it("logs a deliberate empty reason from a cached result as that reason", async () => {
+    mockRedis = {
+      get: vi.fn().mockResolvedValue(
+        JSON.stringify({
+          summary: "Cached summary",
+          criminal_code: [],
+          case_law: [],
+          civil_law: [],
+          charter: [],
+          analysis: "Cached analysis",
+          suggestions: [],
+          meta: {
+            case_law: {
+              source: "retrieval_ranked",
+              verifiedCount: 0,
+              reason: "non_criminal_scope",
+            },
+          },
+        }),
+      ),
+      setex: vi.fn().mockResolvedValue("OK"),
+    };
+
+    const req = createReq({
+      body: { scenario: "my landlord kept my damage deposit" },
+    });
+    const res = createRes();
+    await handler(req, res);
+
+    const cacheCall = mockLogRetrievalMetrics.mock.calls.find(
+      ([payload]) => payload?.source === "cache",
+    );
+    expect(cacheCall[0]).toMatchObject({
+      reason: "non_criminal_scope",
+      finalCaseLawCount: 0,
+    });
+  });
+
   it("logs no_verified telemetry when retrieval meta reason is verified_results but ranked final case_law is empty", async () => {
     mockAnthropicSuccess();
 

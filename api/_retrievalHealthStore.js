@@ -17,6 +17,14 @@ const MAX_MEMORY_EVENTS = 2500;
 const MAX_PERSISTED_EVENTS = 10_000;
 const MEMORY_RETENTION_MS = 2 * 60 * 60 * 1000;
 
+// Events that are not retrieval attempts: the filter was off, or the model's
+// own scope gate correctly returned nothing for a non-criminal question. Neither
+// counts toward failure or no-verified rates.
+const NON_OPERATIONAL_REASONS = new Set([
+  "filter_disabled",
+  "non_criminal_scope",
+]);
+
 export const RETRIEVAL_WINDOWS = {
   "5m": 5 * 60 * 1000,
   "1h": 60 * 60 * 1000,
@@ -148,7 +156,7 @@ function getFailureEvents(events = []) {
     const isOperational =
       (event.source === "retrieval" || event.source === "cache") &&
       event.caseLawFilterEnabled &&
-      event.reason !== "filter_disabled";
+      !NON_OPERATIONAL_REASONS.has(event.reason);
     if (!isOperational) return false;
 
     const effectiveFinalCount = Math.max(
@@ -320,7 +328,8 @@ function computeWindowStats(events, nowMs, windowMs) {
   ).length;
 
   const operationalEvents = retrievalEvents.filter(
-    (event) => event.caseLawFilterEnabled && event.reason !== "filter_disabled",
+    (event) =>
+      event.caseLawFilterEnabled && !NON_OPERATIONAL_REASONS.has(event.reason),
   );
   const errorEvents = operationalEvents.filter(
     (event) =>
@@ -498,7 +507,7 @@ async function updateAlltimeAccumulator(event) {
   const isOperational =
     isRetrieval &&
     event.caseLawFilterEnabled &&
-    event.reason !== "filter_disabled";
+    !NON_OPERATIONAL_REASONS.has(event.reason);
   const isError =
     isOperational &&
     (event.retrievalError ||
@@ -817,7 +826,7 @@ export async function getTrendlineSnapshots({
       (e) =>
         e.source === "retrieval" &&
         e.caseLawFilterEnabled &&
-        e.reason !== "filter_disabled",
+        !NON_OPERATIONAL_REASONS.has(e.reason),
     );
     const quality = operational.filter(
       (e) => e.reason !== "retrieval_error" && e.reason !== "missing_api_key",
@@ -918,7 +927,7 @@ export async function getRetrievalHealthSnapshot({ nowMs = Date.now() } = {}) {
       (backupLastEvent.source === "retrieval" ||
         backupLastEvent.source === "cache") &&
       backupLastEvent.caseLawFilterEnabled &&
-      backupLastEvent.reason !== "filter_disabled";
+      !NON_OPERATIONAL_REASONS.has(backupLastEvent.reason);
 
     if (isOperational) {
       const explicitFailureReasons = new Set([
