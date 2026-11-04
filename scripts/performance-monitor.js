@@ -182,12 +182,15 @@ async function run() {
   const oneHour = body?.windows?.["1h"] || {};
   const alerts = Array.isArray(body?.alerts) ? body.alerts : [];
   const thresholds = body?.thresholds || {};
-  const failures = Array.isArray(body?.failures?.items)
+  const rawFailures = Array.isArray(body?.failures?.items)
     ? body.failures.items
     : [];
-  const improvements = Array.isArray(body?.improvements)
-    ? body.improvements
-    : [];
+  // This script's output lands in public Actions logs: never carry scenario text
+  // (or reviewer notes) through it. Keep ids, counts and classes.
+  const failures = rawFailures.map(({ snippet: _s, note: _n, ...rest }) => rest);
+  const improvements = (Array.isArray(body?.improvements) ? body.improvements : []).map(
+    ({ examples: _e, ...rest }) => rest,
+  );
 
   if (outputFormat !== "json") {
     console.log("[perf-monitor] Retrieval health snapshot");
@@ -219,11 +222,9 @@ async function run() {
   if (outputFormat !== "json" && topFailures.length > 0) {
     console.log("[perf-monitor] Recent failures (top 3):");
     for (const f of topFailures) {
-      const scenario = (f?.snippet || "(missing scenario)")
-        .replace(/\s+/g, " ")
-        .slice(0, 140);
+      // Public Actions logs: no scenario text, only the id to look up.
       console.log(
-        `- ${f?.lastSeen || "n/a"} | x${f?.count || 1} | ${f?.reason || "unknown"} | ${scenario}`,
+        `- ${f?.lastSeen || "n/a"} | x${f?.count || 1} | ${f?.reason || "unknown"} | ${f?.classId || "unknown"} | ${f?.id || "no id"}`,
       );
     }
   }
@@ -232,14 +233,11 @@ async function run() {
   if (outputFormat !== "json" && topImprovements.length > 0) {
     console.log("[perf-monitor] Suggested retrieval improvements (top 3):");
     for (const item of topImprovements) {
-      const scenario = (item?.examples?.[0]?.snippet || "(no example)")
-        .replace(/\s+/g, " ")
-        .slice(0, 120);
       const terms = Array.isArray(item?.suggestedTerms)
         ? item.suggestedTerms.slice(0, 3).join(" | ")
         : "";
       console.log(
-        `- ${item?.classId || "general"} | ${item?.failureCount || 0}x | ${scenario}`,
+        `- ${item?.classId || "general"} | ${item?.failureCount || 0}x across ${item?.scenarioCount || 0} scenario(s)`,
       );
       if (terms) console.log(`  terms: ${terms}`);
     }

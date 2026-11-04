@@ -4,12 +4,13 @@
 //
 //   node --env-file=.env scripts/promote-retrieval-failures.js [--dry-run]
 //
-// Propose-only: it writes a data file, never source, never labels. The scenario
-// is the redacted snippet from the dashboard, so check it still reads as a real
-// scenario before keeping it. Re-running is safe: stubs are keyed by the
-// failure's id (`sourceFailureId`) and existing ones are skipped.
+// Propose-only: it writes a data file, never source, never labels. The repo is
+// PUBLIC, so the file gets a placeholder scenario, not user text. The real
+// (redacted) text is printed to your terminal only. Re-running is safe: stubs are
+// keyed by the failure's id (`sourceFailureId`) and existing ones are skipped.
 //
-// To finish a stub: set expectedPrimary, add shouldInclude/shouldExclude
+// To finish a stub: rewrite `scenario` as a synthetic one (same legal facts,
+// invented details), set expectedPrimary, add shouldInclude/shouldExclude
 // citations and landmarkMatches, then delete `knownFailure`.
 
 import fs from "node:fs";
@@ -79,6 +80,7 @@ async function main() {
     `${promoted.length} promoted, ${fresh.length} new, ${promoted.length - fresh.length} already in the fixture.`,
   );
   for (const item of fresh) {
+    // Terminal only: this text must not be committed (the repo is public).
     console.log(`+ prod_${item.id}  x${item.count}  ${item.snippet}`);
   }
   if (args.dryRun || fresh.length === 0) return;
@@ -86,7 +88,7 @@ async function main() {
   // JSON.stringify is the only thing that ever serialises user-supplied text.
   fs.writeFileSync(
     FIXTURE,
-    `${JSON.stringify([...existing, ...fresh.map(buildFixtureStub)], null, 2)}\n`,
+    `${JSON.stringify([...existing, ...fresh.map((item) => buildFixtureStub(item, { includeText: false }))], null, 2)}\n`,
   );
   console.log(`Wrote ${FIXTURE}. Fill in the labels, then remove knownFailure.`);
 }

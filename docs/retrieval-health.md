@@ -40,7 +40,9 @@ npm run retrieval:promote -- --dry-run   # list what would be added
 npm run retrieval:promote                # append stubs to tests/fixtures/promoted-failures.json
 ```
 
-Stubs are `knownFailure` entries with empty labels, so they never fail the suite. `tests/unit/retrievalFailureSet.js` loads them. To finish one: set `expectedPrimary`, add `shouldInclude` / `shouldExclude` citations and `landmarkMatches`, then delete `knownFailure`. The script is idempotent (`sourceFailureId`) and only ever serialises user text through `JSON.stringify`.
+**This repo is public, so user text is never committed.** The script prints each redacted snippet to your terminal only and writes a placeholder `scenario` (`REWRITE: synthetic <class> scenario`). The same rule covers the other repo-visible outputs: `scripts/performance-monitor.js` (public Actions logs) and `scripts/collect-production-no-caselaw.js` (workflow artifacts) print ids, classes and counts, never text.
+
+Stubs are `knownFailure` entries with empty labels, so they never fail the suite. `tests/unit/retrievalFailureSet.js` loads them. To finish one: rewrite `scenario` as a synthetic one (same legal facts, invented details), set `expectedPrimary`, add `shouldInclude` / `shouldExclude` citations and `landmarkMatches`, then delete `knownFailure`. The script is idempotent (`sourceFailureId`). The dashboard's "Copy test stub" button does include the redacted text, for pasting locally while you rewrite it.
 
 ## Alerts
 
@@ -69,4 +71,4 @@ Old lifetime numbers are not migrated (the store held 57 events).
 
 > **Searches that return no results.** When a search returns no verified case law or fails, we keep a short copy of your scenario so we can fix the gap. Before it is stored, our server removes email addresses, phone numbers, web links, postal codes, street addresses and long ID numbers, and cuts it to about 280 characters. This automatic clean-up can't reliably remove names, so please leave names out. We keep one copy of each distinct scenario, with a count of how many times it was searched. It isn't linked to your account or IP address, and we delete it 30 days after it was last seen.
 
-Plus a row in "How long we keep it" (_Redacted copies of searches that returned no results — 30 days after last seen_), "failed-search copies" in the Upstash line, and a new effective date.
+Reviewer-written test cases are synthetic rewrites, so the policy needs no line about the repo. Plus a row in "How long we keep it" (_Redacted copies of searches that returned no results — 30 days after last seen_), "failed-search copies" in the Upstash line, and a new effective date.

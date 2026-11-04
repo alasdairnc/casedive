@@ -57,6 +57,16 @@ describe("retrievalHealthUtils", () => {
     expect(prompt).toContain("Seen 4 time(s)");
   });
 
+  it("keeps user text out of CLI stubs because the repo is public", () => {
+    const stub = buildFixtureStub(
+      { id: "f0123456789abcde", snippet: "SECRET scenario text", classId: "theft", count: 2 },
+      { includeText: false },
+    );
+    expect(JSON.stringify(stub)).not.toContain("SECRET");
+    expect(stub.scenario).toContain("REWRITE");
+    expect(stub.scenario).toContain("theft");
+  });
+
   it("builds a labelled-later test stub that cannot pass by accident", () => {
     const stub = buildFixtureStub({
       id: "f0123456789abcde",

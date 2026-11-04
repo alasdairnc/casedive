@@ -148,11 +148,17 @@ export function statusFromData(data) {
 
 // A regression-test stub for a failed scenario. Labels are left empty on
 // purpose: a human decides what the right answer is before knownFailure goes.
-export function buildFixtureStub(item = {}) {
+//
+// `includeText` is for the clipboard only. The repo is public, so the CLI writes
+// a placeholder and the reviewer rewrites it as a synthetic scenario (same
+// legal facts, invented details) before committing.
+export function buildFixtureStub(item = {}, { includeText = true } = {}) {
   return {
     id: `prod_${item.id}`,
     sourceFailureId: item.id,
-    scenario: item.snippet,
+    scenario: includeText
+      ? item.snippet
+      : `REWRITE: synthetic ${item.classId || "general_criminal"} scenario (seen ${item.count ?? 1}x)`,
     expectedPrimary: item.classId || item.issuePrimary || "general_criminal",
     expectedResult: "nonzero_required",
     shouldInclude: [],

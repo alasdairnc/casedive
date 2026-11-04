@@ -62,7 +62,10 @@ function normalizeSnippet(snippet) {
 }
 
 function makeScenarioKey(item) {
-  const basis = `${normalizeSnippet(item.scenarioSnippet)}|${String(item.reason || "unknown")}`;
+  // The server already dedupes by scenario fingerprint. This repo is public and
+  // these reports are uploaded as workflow artifacts, so scenario text is never
+  // carried here: group on the fingerprint, not the text.
+  const basis = `${String(item.id || normalizeSnippet(item.scenarioSnippet))}|${String(item.reason || "unknown")}`;
   return crypto.createHash("sha256").update(basis).digest("hex").slice(0, 16);
 }
 
@@ -79,7 +82,8 @@ function groupEvents(events) {
         count: Number(event.count) || 1,
         firstSeen: new Date(ts).toISOString(),
         lastSeen: new Date(ts).toISOString(),
-        scenarioSnippet: normalizeSnippet(event.scenarioSnippet),
+        scenarioId: event.id || null,
+        classId: event.classId || null,
         samples: [event].slice(0, 3),
       });
       continue;
@@ -162,10 +166,10 @@ async function fetchFailureArchive(baseUrl, token, limit, maxPages) {
     const queue = json?.failures || {};
     const items = Array.isArray(queue.items) ? queue.items : [];
     // Map the queue record onto the field names the grouping below uses.
+    // Drop the text at the door (see makeScenarioKey).
     allItems.push(
-      ...items.map((item) => ({
+      ...items.map(({ snippet: _snippet, note: _note, ...item }) => ({
         ...item,
-        scenarioSnippet: item.snippet,
         ts: item.lastSeen,
       })),
     );
@@ -236,7 +240,7 @@ function renderMarkdown(summary, grouped) {
 
   for (const group of grouped.slice(0, 20)) {
     lines.push(
-      `- (${group.count}) ${group.reason}: ${group.scenarioSnippet || "(no scenario snippet)"}`,
+      `- (${group.count}) ${group.reason}: ${group.classId || "unknown class"} [${group.scenarioId || "no id"}]`,
     );
   }
   lines.push("");
