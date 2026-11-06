@@ -88,7 +88,7 @@ The ranker does find the right case. In the traced misses, Jordan, Martineau, Ro
 
 1. **Semantic filter** (`filterBySemanticRelevance`) drops Jordan-type cases unless the scenario matches a regex ("delay", "waited"); "waiting eighteen months" does not. It also drops Roy, Creighton and Briscoe on domain-compatibility rules.
 2. **Scoring** (`scoreCandidateForScenario`) is token overlap on a candidate's ratio, tags and topics, plus a match against hand-coded issue terms. Martineau scores 0 or -2 and loses to unrelated cases.
-3. **Two issue detectors** (`detectCoreIssue`, `detectScenarioIssueForRanking`) disagree; "trial delay on a theft charge" is read as theft.
+3. **Issue detection** (`detectCoreIssue`) reads "trial delay on a theft charge" as theft. (`analyze.js` had a second detector until 2026-11; both passes now share `detectCoreIssue`.)
 
 BM25 scores cannot replace those gates: the 26 negatives score 3.7 to 16.3, overlapping the positives (5 to 40), and many match two or three words. Telling "a parking ticket" from a real criminal question takes issue knowledge. The next step is not more lexical tuning. It is either (a) a model rerank of the corpus candidates, whose effect needs recorded `aiCaseLaw` fixtures (a live run spends Claude tokens and needs an explicit opt-in), or (b) replacing the brittle filter and scoring rules with one calibrated score, validated against the dev set, the held-out set and the negative replay together.
 

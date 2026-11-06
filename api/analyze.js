@@ -29,6 +29,11 @@ import {
 } from "./_constants.js";
 import { normalizeFilters } from "./_filters.js";
 import {
+  detectCandidateDomains,
+  detectCoreIssue,
+  isCandidateCompatibleWithIssue,
+} from "./_caseLawRetrieval.js";
+import {
   anchorStatuteItems,
   buildStatuteGrounding,
   checkStatuteCitations,
@@ -297,157 +302,33 @@ function tokenizeForRanking(text) {
   });
 }
 
-function detectScenarioIssueForRanking(scenarioTokens, scenarioText = "") {
-  const has = (token) => scenarioTokens.has(token);
-  const hasAny = (tokens) => tokens.some((t) => has(t));
-  // "stopped by police" / "held for X minutes" are common lay phrasings of
-  // psychological detention that never use "detain" or "arrest" — mirrors
-  // the pattern in api/_caseLawRetrieval.js's detectCoreIssue (fixed there
-  // for the R v Grant retrieval regression; this file's token-set check
-  // never got the same fix, see tests/unit/analyzeRanking.test.js).
-  const hasLayDetentionPhrasing =
-    /\bstopped\s+by\s+(the\s+)?police\b|\bheld\s+for\s+\w+\s+(minutes?|hours?)\b/.test(
-      scenarioText.toLowerCase(),
-    );
-
-  if (
-    (has("km/h") ||
-      (hasAny(["pulled", "roadside", "traffic"]) &&
-        hasAny(["speed", "speeding"]))) &&
-    hasAny(["limit", "speed", "speeding", "ticket", "citation", "fine", "over"])
-  )
-    return "minor_traffic_stop";
-  if (
-    hasAny([
-      "delay",
-      "adjourned",
-      "adjournment",
-      "backlog",
-      "11b",
-      "jordan",
-      "cody",
-    ])
-  )
-    return "trial_delay";
-  if (
-    hasAny(["counsel", "lawyer"]) &&
-    hasAny(["detained", "detention", "arrested", "arrest"])
-  )
-    return "charter_counsel";
-  if (hasAny(["search", "seizure", "warrant", "privacy", "phone", "device"]))
-    return "charter_search_seizure";
-  if (
-    hasAny(["detained", "detention", "arbitrary", "arrested", "arrest"]) ||
-    hasLayDetentionPhrasing
-  )
-    return "charter_detention";
-  if (hasAny(["impaired", "drunk", "breath", "breathalyzer", "ride", "over80"]))
-    return "impaired_driving";
-  if (hasAny(["robbery", "robbed", "mugged", "mugging"])) return "robbery";
-  if (hasAny(["theft", "steal", "stolen", "shoplifting", "shoplift"]))
-    return "theft";
-  if (hasAny(["drug", "cocaine", "fentanyl", "trafficking", "cdsa"]))
-    return "drug_trafficking";
-  if (hasAny(["sexual", "rape", "consent"])) return "sexual_assault";
-  if (hasAny(["assault", "punch", "stab", "weapon", "knife", "fight"]))
-    return "assault";
-  return "general_criminal";
+// The scenario's issue and each case's domains come from retrieval's own
+// classifier (api/_caseLawRetrieval.js), so a fix there reaches this second
+// pass too. This file used to keep its own copy, which missed the R v Grant
+// lay-detention fix and the forced-entry s. 8 fix.
+//
+// Shown items carry matched_content, not the candidate-side matchedTerm, so
+// it is passed in that slot to keep its text counting toward the domains.
+function caseDomainsForRanking(item) {
+  return detectCandidateDomains({
+    ...item,
+    matchedTerm: item?.matched_content || item?.matchedTerm || "",
+  });
 }
 
-function detectCaseDomainsForRanking(item) {
-  const text =
-    `${item?.citation || ""} ${item?.summary || ""} ${item?.matched_content || ""}`.toLowerCase();
-  const out = new Set();
+// Stricter than retrieval on purpose: on a traffic or counsel scenario, a case
+// with no recognisable domain is dropped rather than shown.
+const STRICT_UNKNOWN_DOMAIN_ISSUES = new Set([
+  "minor_traffic_stop",
+  "charter_counsel",
+]);
 
-  if (
-    /\b(jordan|cody|11\(b\)|11b|trial\s+delay|reasonable\s+time|adjournment)\b/.test(
-      text,
-    )
-  )
-    out.add("trial_delay");
-  if (
-    /\b(counsel|lawyer|10\(b\)|right\s+to\s+counsel|informational\s+duty|woods)\b/.test(
-      text,
-    )
-  )
-    out.add("charter_counsel");
-  if (
-    /\b(search|seizure|warrant|privacy|hunter|marakah|vu|s\.\s*8|section\s*8)\b/.test(
-      text,
-    )
-  )
-    out.add("charter_search_seizure");
-  if (/\b(detention|arbitrary|grant|s\.\s*9|section\s*9)\b/.test(text))
-    out.add("charter_detention");
-  if (/\b(impaired|breath|breathalyzer|roadside|over\s*80)\b/.test(text))
-    out.add("impaired_driving");
-  if (/\b(robbery|robbed|mugging|mugged|s\.\s*343)\b/.test(text))
-    out.add("robbery");
-  if (/\b(theft|stolen|shoplift|s\.\s*322)\b/.test(text)) out.add("theft");
-  if (/\b(cdsa|trafficking|drug|narcotic|possession|s\.\s*5)\b/.test(text))
-    out.add("drug_trafficking");
-  if (/\b(sexual\s+assault|consent|complainant|s\.\s*271)\b/.test(text))
-    out.add("sexual_assault");
-  if (
-    /\b(assault|bodily\s+harm|weapon|self-defence|self\s*defence|s\.\s*267)\b/.test(
-      text,
-    )
-  )
-    out.add("assault");
-
-  return out;
-}
-
-function caseCompatibleWithScenarioIssue(issue, caseDomains) {
-  if (issue === "general_criminal") return true;
-  if (!(caseDomains instanceof Set) || caseDomains.size === 0) {
-    const strictUnknownDomainIssues = new Set([
-      "theft",
-      "robbery",
-      "trial_delay",
-      "minor_traffic_stop",
-      "charter_counsel",
-    ]);
-    return !strictUnknownDomainIssues.has(issue);
+function caseFitsScenarioIssue(issue, item) {
+  const domains = caseDomainsForRanking(item);
+  if (domains.size === 0 && STRICT_UNKNOWN_DOMAIN_ISSUES.has(issue)) {
+    return false;
   }
-
-  const compatibility = {
-    trial_delay: new Set(["trial_delay"]),
-    charter_counsel: new Set([
-      "charter_counsel",
-      "charter_detention",
-      "impaired_driving",
-    ]),
-    charter_search_seizure: new Set([
-      "charter_search_seizure",
-      "charter_detention",
-      "impaired_driving",
-    ]),
-    charter_detention: new Set([
-      "charter_detention",
-      "charter_search_seizure",
-      "charter_counsel",
-      "impaired_driving",
-    ]),
-    impaired_driving: new Set([
-      "impaired_driving",
-      "charter_detention",
-      "charter_counsel",
-      "charter_search_seizure",
-    ]),
-    robbery: new Set(["robbery", "theft", "assault"]),
-    theft: new Set(["theft", "robbery"]),
-    drug_trafficking: new Set(["drug_trafficking"]),
-    sexual_assault: new Set(["sexual_assault"]),
-    assault: new Set(["assault", "robbery"]),
-  };
-
-  const allowed = compatibility[issue];
-  if (!allowed) return true;
-  for (const domain of caseDomains) {
-    if (allowed.has(domain)) return true;
-  }
-  return false;
+  return isCandidateCompatibleWithIssue(issue, domains);
 }
 
 function scoreRetrievedCase(scenarioTokens, scenarioIssue, item) {
@@ -462,11 +343,7 @@ function scoreRetrievedCase(scenarioTokens, scenarioIssue, item) {
 
   let score = overlap * 4;
 
-  const caseDomains = detectCaseDomainsForRanking(item);
-  const compatible = caseCompatibleWithScenarioIssue(
-    scenarioIssue,
-    caseDomains,
-  );
+  const compatible = caseFitsScenarioIssue(scenarioIssue, item);
   if (!compatible) score -= 10;
 
   // Domain-specific boosts for common impaired-driving / search-and-seizure scenarios.
@@ -599,7 +476,7 @@ function selectTopRetrievedCases(rawScenario, retrievedCases, limit = 3) {
   const scenario = stripNegatedEvents(rawScenario);
   const cases = Array.isArray(retrievedCases) ? [...retrievedCases] : [];
   const scenarioTokens = new Set(tokenizeForRanking(scenario));
-  const scenarioIssue = detectScenarioIssueForRanking(scenarioTokens, scenario);
+  const scenarioIssue = detectCoreIssue(scenario).primary;
   const minOverlap =
     scenarioTokens.size >= 8 ? 3 : scenarioTokens.size >= 4 ? 2 : 1;
   const strictNoFallbackIssues = new Set([
@@ -607,10 +484,9 @@ function selectTopRetrievedCases(rawScenario, retrievedCases, limit = 3) {
     "charter_counsel",
   ]);
 
-  const compatibleCases = cases.filter((c) => {
-    const candidateDomains = detectCaseDomainsForRanking(c);
-    return caseCompatibleWithScenarioIssue(scenarioIssue, candidateDomains);
-  });
+  const compatibleCases = cases.filter((c) =>
+    caseFitsScenarioIssue(scenarioIssue, c),
+  );
 
   // Filter: allow a dynamic overlap threshold or strong ranked score to avoid overly strict misses.
   const filtered = compatibleCases.filter((c) => {

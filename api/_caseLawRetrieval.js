@@ -475,7 +475,7 @@ function scoreCandidateForScenario({
  * Returns { primary: string, subIssues: Set<string> }
  * Used to filter case law results to semantically relevant categories.
  */
-function detectCoreIssue(scenario) {
+export function detectCoreIssue(scenario) {
   const s = (scenario || "").toLowerCase();
 
   if (isMinorTrafficStopScenario(s)) {
@@ -880,14 +880,16 @@ function detectCoreIssue(scenario) {
   return { primary: "general_criminal", allowed: new Set() };
 }
 
-function detectCandidateDomains(candidate) {
+export function detectCandidateDomains(candidate) {
   const haystack = normalizeForMatch(
     `${candidate?.citation || ""} ${candidate?.title || ""} ${candidate?.summary || ""} ${candidate?.matchedTerm || ""}`,
   );
   const out = new Set();
 
+  // Bare "consent" is not a sexual-assault signal: R v Jobidon is consent to a
+  // fist fight, and reading it as sexual assault also removed its assault tag.
   const hasSexualAssaultSignal =
-    /\b(sexual\s+assault|consent|complainant|s\.?\s*271)\b/.test(haystack);
+    /\b(sexual\s+assault|complainant|s\.?\s*271)\b/.test(haystack);
 
   if (
     /\b(jordan|cody|11\s*b|11\(b\)|trial\s+delay|reasonable\s+time|crown\s+delay|adjournment)\b/.test(
@@ -1098,7 +1100,7 @@ function isClearlyNonCriminalScenario(scenario) {
   );
 }
 
-function isCandidateCompatibleWithIssue(issuePrimary, candidateDomains) {
+export function isCandidateCompatibleWithIssue(issuePrimary, candidateDomains) {
   if (!issuePrimary) return true;
   const hasDomains =
     candidateDomains instanceof Set && candidateDomains.size > 0;

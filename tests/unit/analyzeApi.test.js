@@ -56,7 +56,9 @@ vi.mock("../../api/_sentry.js", () => ({
   Sentry: { captureException: mockCaptureException },
 }));
 
-vi.mock("../../api/_caseLawRetrieval.js", () => ({
+// Only retrieval itself is mocked; analyze.js ranks with the real classifiers.
+vi.mock("../../api/_caseLawRetrieval.js", async (importOriginal) => ({
+  ...(await importOriginal()),
   retrieveVerifiedCaseLaw: mockRetrieveVerifiedCaseLaw,
 }));
 
