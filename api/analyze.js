@@ -191,6 +191,31 @@ function buildUserPromptContent(
 
 const CACHE_TTL_S = ANALYZE_CACHE_TTL_SECONDS;
 
+// True when the case law in a result is missing or short because of an outage
+// or missing config, not because of the scenario: retrieval timed out or threw,
+// there is no CanLII key, or a source failed fast and its cases were dropped.
+// Such a result is never cached, and an old cached copy is treated as a miss;
+// cached, it showed "no case law" for that scenario for the whole cache TTL.
+function hasDegradedCaseLaw(result) {
+  const caseLawMeta = result?.meta?.case_law;
+  if (!caseLawMeta || typeof caseLawMeta !== "object") return false;
+  const retrieval =
+    caseLawMeta.retrieval && typeof caseLawMeta.retrieval === "object"
+      ? caseLawMeta.retrieval
+      : null;
+  return (
+    caseLawMeta.source === "retrieval_error" ||
+    caseLawMeta.reason === "missing_api_key" ||
+    Number(retrieval?.upstreamErrors) > 0 ||
+    // Cached before upstreamErrors existed: it can't say whether a lookup
+    // failed fast, so one that made lookups runs again. Dead once a full cache
+    // TTL has passed since this shipped.
+    (retrieval !== null &&
+      !("upstreamErrors" in retrieval) &&
+      Number(retrieval.verificationCalls) > 0)
+  );
+}
+
 function cacheKey(scenario, filters) {
   // Flag-on results carry statute grounding (g), full-text case ranking (f) or
   // open case-law search (o); keep each out of other users' cache. All off
@@ -792,9 +817,14 @@ export default async function handler(req, res) {
           redis.get(cacheKeyStr),
           API_REDIS_TIMEOUT_MS,
         );
-        if (cached) {
-          const cachedResult =
-            typeof cached === "string" ? JSON.parse(cached) : cached;
+        const cachedResult = cached
+          ? typeof cached === "string"
+            ? JSON.parse(cached)
+            : cached
+          : null;
+        // Degraded entries written before this check existed can still be in
+        // Redis; analyze those again instead of serving them.
+        if (cachedResult && !hasDegradedCaseLaw(cachedResult)) {
           if (filters.lawTypes.case_law !== false) {
             const cachedCaseLaw = Array.isArray(cachedResult?.case_law)
               ? cachedResult.case_law
@@ -995,6 +1025,7 @@ export default async function handler(req, res) {
               verificationCalls: retrievalMeta.verificationCalls ?? 0,
               candidateCount: retrievalMeta.candidateCount ?? 0,
               termsTried: retrievalMeta.termsTried ?? 0,
+              upstreamErrors: retrievalMeta.upstreamErrors ?? 0,
             },
           };
           logRetrievalMetricsAsync({
@@ -1074,8 +1105,9 @@ export default async function handler(req, res) {
       });
     }
 
-    // Store in cache (fire-and-forget)
-    if (redis) {
+    // Store in cache (fire-and-forget), unless retrieval was failing.
+    const cacheable = !hasDegradedCaseLaw(result);
+    if (redis && cacheable) {
       withRedisTimeout(
         redis.setex(
           cacheKey(scenario, filters),
@@ -1087,7 +1119,7 @@ export default async function handler(req, res) {
     }
 
     logSuccess(requestId, "analyze", 200, Date.now() - startMs, rlResult, {
-      cached: true,
+      cached: Boolean(redis) && cacheable,
     });
     await flushMetricWrites(requestId);
     return res.status(200).json(withRequestId(result, requestId));

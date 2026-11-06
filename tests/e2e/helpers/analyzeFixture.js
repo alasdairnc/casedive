@@ -45,6 +45,7 @@ export function retrievalMeta(caseLaw = []) {
         verificationCalls: count,
         candidateCount: count,
         termsTried: 0,
+        upstreamErrors: 0,
       },
     },
   };
