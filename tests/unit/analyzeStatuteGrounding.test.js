@@ -38,7 +38,8 @@ vi.mock("../../api/_sentry.js", () => ({
   initSentry: vi.fn(),
   Sentry: { captureException: vi.fn() },
 }));
-vi.mock("../../api/_caseLawRetrieval.js", () => ({
+vi.mock("../../api/_caseLawRetrieval.js", async (importOriginal) => ({
+  ...(await importOriginal()),
   retrieveVerifiedCaseLaw: mockRetrieveVerifiedCaseLaw,
 }));
 vi.mock("../../src/lib/caselaw/index.js", () => ({ MASTER_CASE_LAW_DB: [] }));

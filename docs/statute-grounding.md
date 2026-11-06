@@ -139,9 +139,8 @@ ANTHROPIC_API_KEY=... node scripts/evaluate-statute-grounding.mjs --live --mode 
 
 - **Youth case law.** The corpus has none. Adding any means verifying every
   cite on CanLII (the corpus had 24 fabricated pre-2000 cites once).
-- **Possession routing in case law.** `detectScenarioIssueForRanking`
-  (`analyze.js`) and `_caseLawRetrieval.js` map "possession" to
-  `drug_trafficking`, so a simple-possession scenario is ranked as an s. 5
+- **Possession routing in case law.** `_caseLawRetrieval.js` (shared with
+  `analyze.js`'s ranking pass) maps "possession" to `drug_trafficking`, so a simple-possession scenario is ranked as an s. 5
   case. Separate change: it edits the retrieval files that need the
   retrieval-regression pass.
 - **Cannabis Act.** Not in the data, so `verify.js` cannot verify it.

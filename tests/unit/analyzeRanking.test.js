@@ -34,13 +34,11 @@ describe("selectTopRetrievedCases fallback", () => {
 
   it("ranks a Charter detention case over an off-domain decoy for lay-phrased detention scenarios", () => {
     // "stopped by police" / "held for X minutes" never say "detain" or
-    // "arrest" — api/_caseLawRetrieval.js's detectCoreIssue recognizes these
-    // lay phrasings (fixed for the R v Grant retrieval regression), but this
-    // file's own classifier only matched literal detention/arrest tokens. It
-    // fell through to "general_criminal", which skips the domain-compatibility
-    // penalty for every candidate (caseCompatibleWithScenarioIssue returns
-    // true unconditionally for general_criminal), so an unrelated theft case
-    // with slightly higher raw token overlap outranked the correct case.
+    // "arrest". analyze.js used to keep its own copy of the issue classifier
+    // that missed this lay phrasing (fixed only in retrieval's detectCoreIssue
+    // for the R v Grant regression); it fell through to "general_criminal"
+    // and an unrelated theft case outranked Grant. Both passes now share
+    // detectCoreIssue.
     const scenario =
       "I was stopped by police outside a convenience store and held for forty minutes before they went through my backpack";
     const retrievedCases = [
@@ -67,6 +65,69 @@ describe("selectTopRetrievedCases fallback", () => {
     );
 
     expect(selected[0].citation).toBe("R v Grant, 2009 SCC 32");
+  });
+});
+
+describe("selectTopRetrievedCases shares retrieval's classifier", () => {
+  it("treats a forced police entry as a search and ranks an s. 8 case over a break-and-enter decoy", () => {
+    // Forced-entry phrasing was added to retrieval's detectCoreIssue (#111).
+    // analyze.js's own copy never got it, read this as general_criminal and
+    // let the decoy with more overlapping words win.
+    const selected = __testables.selectTopRetrievedCases(
+      "Police kicked down the door of my apartment at 3 a.m. and went through every room.",
+      [
+        {
+          citation: "R v Doe, 2015 ONCA 30",
+          summary:
+            "Break and enter of an apartment at 3 a.m.; the accused kicked the door and went through every room before police arrived.",
+          matched_content: "",
+          year: 2015,
+        },
+        {
+          citation: "R v Feeney, [1997] 2 SCR 13",
+          summary:
+            "Warrantless police entry into a dwelling violated the Charter s. 8 right against unreasonable search.",
+          matched_content: "",
+          year: 1997,
+        },
+      ],
+      3,
+    );
+
+    expect(selected[0].citation).toBe("R v Feeney, [1997] 2 SCR 13");
+    expect(selected.map((c) => c.citation)).not.toContain(
+      "R v Doe, 2015 ONCA 30",
+    );
+  });
+
+  it("keeps R v Jobidon on a fist-fight assault scenario", () => {
+    // Jobidon is about consent to a fight. Retrieval's domain detector read
+    // bare "consent" as sexual assault and dropped its assault tag, so the
+    // shared gate would have removed it from assault scenarios.
+    const selected = __testables.selectTopRetrievedCases(
+      "I got into a bar fight and the other guy broke my arm. We both agreed to fight outside.",
+      [
+        {
+          citation: "R. v. Jobidon, [1991] 2 SCR 714",
+          summary:
+            "Consent is no defence to assault where the parties intend and cause serious bodily harm in a fist fight.",
+          matched_content: "Landmark Case Law Database",
+          year: 1991,
+        },
+        {
+          citation: "R. v. Khill, 2021 SCC 37",
+          summary:
+            "Self-defence to a charge arising from an assault; the accused's role in the incident.",
+          matched_content: "Landmark Case Law Database",
+          year: 2021,
+        },
+      ],
+      3,
+    );
+
+    expect(selected.map((c) => c.citation)).toContain(
+      "R. v. Jobidon, [1991] 2 SCR 714",
+    );
   });
 });
 
