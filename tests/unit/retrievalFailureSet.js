@@ -86,6 +86,31 @@ export const RETRIEVAL_FAILURE_SET = [
     ],
   },
   {
+    // Production miss f66871cc, synthetic wording. Forced police entry with no
+    // "search"/"warrant" word fell through to general_criminal and returned
+    // nothing.
+    id: "prod_f66871cc_forced_entry_drugs",
+    scenario: "Police busted open the door of my apartment to look for drugs.",
+    expectedPrimary: "charter_search_seizure",
+    expectedResult: "nonzero_required",
+    shouldInclude: ["Hunter"],
+    shouldExclude: ["R v Jordan", "11(b)", "trial delay"],
+    expectedKeywords: ["search", "seizure", "warrant"],
+    minResults: 1,
+    maxResults: 3,
+    landmarkMatches: [
+      {
+        citation: "Hunter v Southam Inc, [1984] 2 SCR 145",
+        title: "Hunter v Southam Inc",
+        ratio:
+          "Foundational Charter s. 8 case requiring prior authorization for most searches.",
+        tags: ["charter", "s. 8", "search", "warrant"],
+        topics: ["search", "seizure", "privacy"],
+        year: 1984,
+      },
+    ],
+  },
+  {
     id: "delay_positive_jordan",
     scenario:
       "My trial has been delayed for over three years and keeps getting adjourned.",

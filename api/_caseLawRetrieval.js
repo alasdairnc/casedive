@@ -497,8 +497,12 @@ function detectCoreIssue(scenario) {
   const patterns = {
     search_seizure: {
       tests: [
-        /\b(search|searched|searching|seiz\w*|warrant|warrantless|privacy|phone|device|records|text|computer|digital)\b/,
-        /\b(charter|police|officer\w*|lawful|unreasonable|state|without\s+warrant|no\s+warrant)\b/,
+        // The second alternative is lay phrasing of a forced police entry
+        // ("police busted down my door") that never says "search". Police must
+        // be the subject next to the verb, so a burglar kicking in a door while
+        // police are mentioned elsewhere still reads as break and enter.
+        /\b(search|searched|searching|seiz\w*|warrant|warrantless|privacy|phone|device|records|text|computer|digital)\b|\b(police|officers?|cops?|rcmp)\s+(\w+\s+){0,2}?((bust\w*|kick\w*|smash\w*|batter\w*|rammed|forced|burst|barg\w*|storm\w*)\s+(\w+\s+){0,2}?(down|open|in|into|through)\s+(\w+\s+){0,3}?(door|doors|home|house|apartment|condo|suite|residence)|forced\s+(their|his|her)\s+way\s+(in|into))\b/,
+        /\b(charter|police|officer\w*|cops?|rcmp|lawful|unreasonable|state|without\s+warrant|no\s+warrant)\b/,
       ],
       primary: "charter_search_seizure",
       subIssues: new Set([
