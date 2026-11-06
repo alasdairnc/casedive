@@ -325,7 +325,6 @@ describe("structured features", () => {
       miss({
         scenario: "The police searched my phone without a warrant after they arrested me",
         termsTried: 3,
-        databasesTried: 2,
         candidateCount: 5,
         verificationCalls: 4,
         semanticFilterDropCount: 2,
@@ -338,7 +337,6 @@ describe("structured features", () => {
     expect(item.lengthBucket).toBe("medium");
     expect(item.diagnostics).toEqual({
       termsTried: 3,
-      databasesTried: 2,
       candidateCount: 5,
       verificationCalls: 4,
       semanticFilterDropCount: 2,

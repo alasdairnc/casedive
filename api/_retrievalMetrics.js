@@ -15,8 +15,6 @@ import { classifyScenarioText } from "./_scenarioClassification.js";
 
 const METRIC_FIELDS = [
   "termsTried",
-  "databasesTried",
-  "searchCalls",
   "candidateCount",
   "verificationCalls",
   "verifiedCount",
@@ -123,8 +121,6 @@ export function buildRetrievalMetrics(input = {}) {
     retrievalLatencyMs: toDurationMs(retrievalLatencyMs),
     finalCaseLawCount: finalCount,
     termsTried: metrics.termsTried,
-    databasesTried: metrics.databasesTried,
-    searchCalls: metrics.searchCalls,
     candidateCount: metrics.candidateCount,
     verificationCalls: metrics.verificationCalls,
     verifiedCount: metrics.verifiedCount,

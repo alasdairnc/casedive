@@ -64,7 +64,7 @@ describe("retrievalHealthUtils", () => {
       concepts: ["search", "theft"],
       lengthBucket: "medium",
       count: 3,
-      diagnostics: { termsTried: 2, databasesTried: 1, candidateCount: 0, verificationCalls: 0, semanticFilterDropCount: 4 },
+      diagnostics: { termsTried: 2, candidateCount: 0, verificationCalls: 0, semanticFilterDropCount: 4 },
     });
     expect(prompt).toContain("Matched legal concepts: search, theft");
     expect(prompt).toContain("2 search term(s)");

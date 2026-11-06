@@ -167,6 +167,26 @@ describe("Results desktop layout", () => {
     ]);
     expect(document.getElementById("cd-section-case_law")).toBeTruthy();
   });
+
+  it("reports candidates evaluated in the empty state, not a database count", () => {
+    // Retrieval no longer searches CanLII databases; the card used to read
+    // "0 databases searched" because it printed a counter that is always 0.
+    renderResults({
+      ...DATA,
+      case_law: [],
+      meta: {
+        case_law: {
+          source: "retrieval",
+          reason: "no_verified",
+          retrieval: { candidateCount: 4 },
+        },
+      },
+    });
+
+    const section = document.getElementById("cd-section-case_law");
+    expect(section.textContent).toMatch(/4 candidates evaluated/);
+    expect(section.textContent).not.toMatch(/databases? searched/);
+  });
 });
 
 describe("Results across the breakpoint", () => {

@@ -38,9 +38,6 @@ import {
 // Open case-law search runs only when fewer candidates than this are pooled.
 const OPEN_SEARCH_MIN_POOL = 3;
 const MAX_TERMS = 4;
-const MAX_DATABASES = 3;
-
-const DEFAULT_DB_IDS = ["csc-scc", "onca", "onsc", "bcca", "abca"];
 
 const JURISDICTION_DB_IDS = {
   Ontario: ["onca", "onsc", "oncj"],
@@ -2504,28 +2501,6 @@ function extractCaseLawSearchTerms({
   );
 }
 
-function pickDatabaseTargets(filters = {}) {
-  const { jurisdiction = "all", courtLevel = "all" } = filters || {};
-
-  if (courtLevel === "scc") return ["csc-scc"];
-
-  let ids;
-  if (jurisdiction !== "all" && JURISDICTION_DB_IDS[jurisdiction]) {
-    ids = [...JURISDICTION_DB_IDS[jurisdiction], "csc-scc"]; // Always include SCC as fallback
-  } else {
-    ids = [...DEFAULT_DB_IDS];
-  }
-
-  if (courtLevel !== "all" && COURT_LEVEL_DB_IDS[courtLevel]) {
-    const levelSet = new Set(COURT_LEVEL_DB_IDS[courtLevel]);
-    // Filter to prioritized level, but keep others as fallbacks if needed
-    const filtered = ids.filter((dbId) => levelSet.has(dbId));
-    ids = filtered.length > 0 ? filtered : COURT_LEVEL_DB_IDS[courtLevel];
-  }
-
-  return dedupeStrings(ids).slice(0, MAX_DATABASES + 1);
-}
-
 // ── Candidate ranking ────────────────────────────────────────────────────────
 
 function candidateDatabaseRank(candidate) {
@@ -2695,8 +2670,6 @@ export async function retrieveVerifiedCaseLaw({
         reason: "missing_api_key",
         issuePrimary: detectCoreIssue(scenario).primary,
         termsTried: 0,
-        databasesTried: 0,
-        searchCalls: 0,
         candidateCount: 0,
         verificationCalls: 0,
         verifiedCount: 0,
@@ -2718,8 +2691,6 @@ export async function retrieveVerifiedCaseLaw({
         reason: "non_criminal_scope",
         issuePrimary: scopeIssue.primary,
         termsTried: 0,
-        databasesTried: 0,
-        searchCalls: 0,
         candidateCount: 0,
         verificationCalls: 0,
         verifiedCount: 0,
@@ -2732,7 +2703,6 @@ export async function retrieveVerifiedCaseLaw({
     aiSuggestions,
     criminalCode,
   });
-  const dbTargets = pickDatabaseTargets(filters);
   const detectedIssue = detectCoreIssue(scenario);
   let localFallbackUsed = false;
   const prefilterDiagnostics = {
@@ -2945,8 +2915,6 @@ export async function retrieveVerifiedCaseLaw({
         reason: terms.length === 0 ? "no_terms_or_databases" : "no_verified",
         issuePrimary: detectedIssue.primary,
         termsTried: terms.length,
-        databasesTried: dbTargets.length,
-        searchCalls: 0,
         candidateCount: 0,
         verificationCalls: 0,
         verifiedCount: 0,
@@ -3216,8 +3184,6 @@ export async function retrieveVerifiedCaseLaw({
         detectedIssue.primary ||
         "general_criminal",
       termsTried: terms.length,
-      databasesTried: dbTargets.length,
-      searchCalls: 0,
       candidateCount: aiCitationCandidates.length,
       verificationCalls: verificationCallsTotal,
       verifiedCount: cases.length,

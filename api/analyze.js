@@ -1068,10 +1068,7 @@ export default async function handler(req, res) {
             });
           const retrievalDurationMs = Date.now() - retrievalStartMs;
 
-          if (
-            (retrievalMeta.searchCalls || 0) > 0 ||
-            (retrievalMeta.verificationCalls || 0) > 0
-          ) {
+          if ((retrievalMeta.verificationCalls || 0) > 0) {
             logExternalApiCall(
               requestId,
               "analyze",
@@ -1104,7 +1101,6 @@ export default async function handler(req, res) {
               fallbackReason: retrievalMeta.fallbackReason || null,
               retrievalPass: retrievalMeta.retrievalPass || null,
               issuePrimary: retrievalMeta.issuePrimary || null,
-              searchCalls: retrievalMeta.searchCalls ?? 0,
               verificationCalls: retrievalMeta.verificationCalls ?? 0,
               candidateCount: retrievalMeta.candidateCount ?? 0,
               termsTried: retrievalMeta.termsTried ?? 0,

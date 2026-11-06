@@ -10,8 +10,6 @@ describe("buildRetrievalMetrics", () => {
       source: "retrieval",
       retrievalMeta: {
         termsTried: 4,
-        databasesTried: 3,
-        searchCalls: 0,
         candidateCount: 12,
         verificationCalls: 8,
         verifiedCount: 3,
