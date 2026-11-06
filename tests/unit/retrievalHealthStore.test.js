@@ -244,16 +244,17 @@ describe("failure queue", () => {
 
   it("orders the queue by most recently seen", async () => {
     const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    let queue;
     vi.useFakeTimers();
     try {
       vi.setSystemTime(1_700_000_000_000);
       await recordRetrievalMetricsEvent(miss({ scenario: "older scenario" }));
       vi.setSystemTime(1_700_000_060_000);
       await recordRetrievalMetricsEvent(miss({ scenario: "newer scenario" }));
+      queue = await getFailureQueue({ status: "all" });
     } finally {
       vi.useRealTimers();
     }
-    const queue = await getFailureQueue({ status: "all" });
     expect(queue.items.map((i) => i.snippet)).toEqual([
       "newer scenario",
       "older scenario",
@@ -304,6 +305,185 @@ describe("failure queue", () => {
       expect(await setFailureStatus(id, { status: "deleted" })).toBeNull();
       expect((await getFailureQueue({ status: "all" })).items[0].status).toBe("new");
     });
+  });
+});
+
+describe("structured features", () => {
+  it("keeps legal concepts, a length bucket and retrieval diagnostics", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    await recordRetrievalMetricsEvent(
+      miss({
+        scenario: "The police searched my phone without a warrant after they arrested me",
+        termsTried: 3,
+        databasesTried: 2,
+        candidateCount: 5,
+        verificationCalls: 4,
+        semanticFilterDropCount: 2,
+        retrievalPass: "fallback",
+        fallbackPathUsed: true,
+      }),
+    );
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item.concepts).toEqual(expect.arrayContaining(["search", "detention"]));
+    expect(item.lengthBucket).toBe("medium");
+    expect(item.diagnostics).toEqual({
+      termsTried: 3,
+      databasesTried: 2,
+      candidateCount: 5,
+      verificationCalls: 4,
+      semanticFilterDropCount: 2,
+    });
+    expect(item.retrievalPass).toBe("fallback");
+    expect(item.fallbackPathUsed).toBe(true);
+  });
+
+  it("only stores concepts from the controlled vocabulary, never free words", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    await recordRetrievalMetricsEvent(miss({ scenario: "Zorblax Qwerty had my fidget spinner stolen" }));
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item.concepts).toEqual(["theft"]);
+  });
+
+  it("ignores negated events when extracting concepts", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    await recordRetrievalMetricsEvent(
+      miss({ scenario: "there was no search or arrest, they just took my bike" }),
+    );
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item.concepts).not.toContain("search");
+    expect(item.concepts).not.toContain("detention");
+  });
+
+  it("buckets scenario length without storing the length", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    await recordRetrievalMetricsEvent(miss({ scenario: "short one" }));
+    await recordRetrievalMetricsEvent(miss({ scenario: `${"word ".repeat(80)}long` }));
+    const items = (await getFailureQueue({ status: "all" })).items;
+    expect(items.map((i) => i.lengthBucket).sort()).toEqual(["long", "short"]);
+  });
+
+  it("stores a fixed error label, never the raw message", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue, getRecentEvents } =
+      await loadStore();
+    await recordRetrievalMetricsEvent(
+      miss({
+        reason: "retrieval_error",
+        retrievalError: true,
+        errorMessage: "fetch failed for https://a2aj.ca/search?q=Jane Doe stole my bike",
+      }),
+    );
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item.errorMessage).toBe("network_error");
+    const events = await getRecentEvents();
+    expect(JSON.stringify([item, events])).not.toMatch(/Jane Doe|a2aj/);
+  });
+});
+
+describe("text retention", () => {
+  const DAY = 24 * 60 * 60 * 1000;
+
+  async function withClock(fn) {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(1_800_000_000_000);
+      return await fn((ms) => vi.setSystemTime(1_800_000_000_000 + ms));
+    } finally {
+      vi.useRealTimers();
+    }
+  }
+
+  it("masks names in the stored snippet", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    await recordRetrievalMetricsEvent(miss({ scenario: "My neighbour Jane Doe stole my bike" }));
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item.snippet).toBe("My neighbour [name] stole my bike");
+  });
+
+  it("expires the text 14 days after FIRST capture; repeats do not extend it", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    await withClock(async (at) => {
+      await recordRetrievalMetricsEvent(miss());
+      at(10 * DAY);
+      await recordRetrievalMetricsEvent(miss()); // a repeat 10 days in
+      at(13 * DAY);
+      let [item] = (await getFailureQueue({ status: "all" })).items;
+      expect(item.textState).toBe("present");
+      expect(item.snippet).toBeTruthy();
+
+      at(15 * DAY);
+      await recordRetrievalMetricsEvent(miss()); // another repeat after expiry
+      [item] = (await getFailureQueue({ status: "all" })).items;
+      // The structured record lives on and keeps counting...
+      expect(item.count).toBe(3);
+      // ...and the repeat after expiry captured a fresh text with a new clock.
+      expect(item.textState).toBe("present");
+    });
+  });
+
+  it("shows the text as expired once its clock runs out and no repeat arrives", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    await withClock(async (at) => {
+      await recordRetrievalMetricsEvent(miss());
+      at(15 * DAY);
+      const [item] = (await getFailureQueue({ status: "all" })).items;
+      expect(item.snippet).toBeNull();
+      expect(item.textState).toBe("expired");
+      expect(item.concepts).toEqual(["theft"]);
+    });
+  });
+
+  it.each(["reviewed", "ignored"])(
+    "erases the text when a failure is marked %s",
+    async (status) => {
+      const { recordRetrievalMetricsEvent, getFailureQueue, setFailureStatus } =
+        await loadStore();
+      await recordRetrievalMetricsEvent(miss());
+      const id = (await getFailureQueue({ status: "all" })).items[0].id;
+
+      const updated = await setFailureStatus(id, { status });
+      expect(updated.snippet).toBeNull();
+      expect(updated.textState).toBe("erased");
+      // The structured record stays.
+      expect(updated.concepts).toEqual(["theft"]);
+      expect(updated.count).toBe(1);
+    },
+  );
+
+  it("keeps the text for a promoted failure so the promote script can show it", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue, setFailureStatus } =
+      await loadStore();
+    await recordRetrievalMetricsEvent(miss());
+    const id = (await getFailureQueue({ status: "all" })).items[0].id;
+    const updated = await setFailureStatus(id, { status: "promoted" });
+    expect(updated.textState).toBe("present");
+    expect(updated.snippet).toBeTruthy();
+  });
+
+  it.each(["reviewed", "ignored"])(
+    "does not store text again when a %s scenario repeats",
+    async (status) => {
+      const { recordRetrievalMetricsEvent, getFailureQueue, setFailureStatus } =
+        await loadStore();
+      await recordRetrievalMetricsEvent(miss());
+      const id = (await getFailureQueue({ status: "all" })).items[0].id;
+      await setFailureStatus(id, { status });
+
+      await recordRetrievalMetricsEvent(miss());
+      const [item] = (await getFailureQueue({ status: "all" })).items;
+      expect(item.count).toBe(2);
+      expect(item.snippet).toBeNull();
+      expect(item.textState).toBe("erased");
+    },
+  );
+
+  it("reopening a reviewed scenario does not bring its text back", async () => {
+    const { recordRetrievalMetricsEvent, getFailureQueue, setFailureStatus } =
+      await loadStore();
+    await recordRetrievalMetricsEvent(miss());
+    const id = (await getFailureQueue({ status: "all" })).items[0].id;
+    await setFailureStatus(id, { status: "reviewed" });
+    const reopened = await setFailureStatus(id, { status: "new" });
+    expect(reopened.snippet).toBeNull();
   });
 });
 

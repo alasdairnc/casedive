@@ -21,6 +21,7 @@ const {
 // a sorted set. `calls` counts round trips so a test can assert "one per event".
 function makeRedis() {
   const lists = new Map();
+  const strings = new Map();
   const hashes = new Map();
   const zsets = new Map();
   const ttls = new Map();
@@ -75,7 +76,29 @@ function makeRedis() {
       const h = hashes.get(key);
       return h && Object.keys(h).length ? { ...h } : null;
     },
-    exists: (key) => (hashes.has(key) || lists.has(key) ? 1 : 0),
+    exists: (key) =>
+      hashes.has(key) || lists.has(key) || strings.has(key) ? 1 : 0,
+    get: (key) => (strings.has(key) ? strings.get(key) : null),
+    // SET with NX / EX, like Upstash: NX leaves an existing key and its TTL alone.
+    set: (key, value, opts = {}) => {
+      if (opts.nx && strings.has(key)) return null;
+      strings.set(key, value);
+      if (opts.ex) ttls.set(key, opts.ex);
+      return "OK";
+    },
+    del: (...keys) => {
+      let n = 0;
+      for (const key of keys) {
+        for (const store of [strings, hashes, lists]) {
+          if (store.delete(key)) n += 1;
+        }
+      }
+      return n;
+    },
+    hget: (key, field) => {
+      const h = hashes.get(key);
+      return h && field in h ? h[field] : null;
+    },
     zadd: (key, { score, member }) => {
       const z = zsets.get(key) ?? new Map();
       z.set(member, score);
@@ -117,6 +140,7 @@ function makeRedis() {
   return {
     ...direct,
     lists,
+    strings,
     hashes,
     zsets,
     ttls,
@@ -158,14 +182,15 @@ describe("retrieval health store with Redis", () => {
     mockRedis = makeRedis();
   });
 
-  it("writes each event in one pipelined round trip", async () => {
+  it("writes each event in one pipelined round trip; a failure adds one status read", async () => {
     await recordRetrievalMetricsEvent(metrics("verified_results"));
+    expect(mockRedis.calls).toEqual({ exec: 1, direct: 0 });
+
     await recordRetrievalMetricsEvent(
       metrics("no_verified", { scenario: "my chair was stolen" }),
     );
-
-    expect(mockRedis.calls.exec).toBe(2);
-    expect(mockRedis.calls.direct).toBe(0);
+    // One pipeline, plus a single HGET to see whether text may be stored.
+    expect(mockRedis.calls).toEqual({ exec: 2, direct: 1 });
   });
 
   it("keeps every event in order, not just the first", async () => {
@@ -209,57 +234,119 @@ describe("retrieval health store with Redis", () => {
     expect(mockRedis.ttls.has("metrics:retrieval:totals:v3")).toBe(false);
   });
 
-  it("stores a redacted snippet only on the failure record, with a 30 day expiry", async () => {
+  const TEXT = "metrics:retrieval:failure-text:v3:";
+  const RECORD = "metrics:retrieval:failure:v3:";
+  const recordKey = () =>
+    [...mockRedis.hashes.keys()].find((k) => k.startsWith(RECORD));
+  const textKey = () =>
+    [...mockRedis.strings.keys()].find((k) => k.startsWith(TEXT));
+
+  it("keeps the redacted snippet in its own key and out of every hash and list", async () => {
     await recordRetrievalMetricsEvent(
       metrics("no_verified", {
-        scenario: "My bike was stolen, email me at jane@example.com",
+        scenario: "My bike was stolen, email me at jane@example.com. Please ask Jane Doe.",
       }),
     );
 
+    expect(mockRedis.strings.get(textKey())).toBe(
+      "My bike was stolen, email me at [email]. Please ask [name].",
+    );
+    // No raw contact detail or name anywhere in Redis.
     const everything = JSON.stringify([
       ...mockRedis.lists.values(),
+      ...mockRedis.hashes.values(),
+      ...mockRedis.strings.values(),
     ]);
-    expect(everything).not.toContain("bike");
+    expect(everything).not.toMatch(/jane@example|Jane Doe/);
+    // The structured hash has no snippet field at all.
+    expect(mockRedis.hashes.get(recordKey())).not.toHaveProperty("snippet");
+    expect(mockRedis.hashes.get(recordKey()).concepts).toBe("theft");
+  });
 
-    const [key] = [...mockRedis.hashes.keys()].filter((k) =>
-      k.startsWith("metrics:retrieval:failure:v3:"),
-    );
-    const record = mockRedis.hashes.get(key);
-    expect(record.snippet).toContain("[email]");
-    expect(JSON.stringify([...mockRedis.hashes.values()])).not.toContain(
-      "jane@example.com",
-    );
-    expect(mockRedis.ttls.get(key)).toBe(60 * 60 * 24 * 30);
+  it("gives the structured record 30 days and the text 14, and repeats never extend the text", async () => {
+    const meta = metrics("no_verified", { scenario: "my chair was stolen" });
+    await recordRetrievalMetricsEvent(meta);
+    expect(mockRedis.ttls.get(recordKey())).toBe(60 * 60 * 24 * 30);
+    expect(mockRedis.ttls.get(textKey())).toBe(60 * 60 * 24 * 14);
+
+    // Simulate time passing on the text key, then a repeat arrives.
+    mockRedis.ttls.set(textKey(), 5 * 24 * 60 * 60);
+    await recordRetrievalMetricsEvent(meta);
+    expect(mockRedis.ttls.get(textKey())).toBe(5 * 24 * 60 * 60); // untouched (SET NX)
+    expect(mockRedis.ttls.get(recordKey())).toBe(60 * 60 * 24 * 30); // refreshed
   });
 
   it("round-trips the failure queue and triage through Redis", async () => {
-    await recordRetrievalMetricsEvent(
-      metrics("no_verified", { scenario: "my chair was stolen" }),
-    );
-    await recordRetrievalMetricsEvent(
-      metrics("no_verified", { scenario: "my chair was stolen" }),
-    );
+    const meta = metrics("no_verified", { scenario: "my chair was stolen" });
+    await recordRetrievalMetricsEvent(meta);
+    await recordRetrievalMetricsEvent(meta);
 
     const queue = await getFailureQueue({ status: "new" });
     expect(queue.total).toBe(1);
     expect(queue.items[0]).toMatchObject({
       snippet: "my chair was stolen",
+      textState: "present",
+      concepts: ["theft"],
       count: 2,
       status: "new",
     });
+    expect(queue.textRetentionDays).toBe(14);
 
     const updated = await setFailureStatus(queue.items[0].id, {
-      status: "reviewed",
+      status: "promoted",
       note: "check corpus",
     });
-    expect(updated).toMatchObject({ status: "reviewed", note: "check corpus" });
+    expect(updated).toMatchObject({ status: "promoted", note: "check corpus", snippet: "my chair was stolen" });
 
-    // A repeat after triage bumps the count but keeps the status.
+    await recordRetrievalMetricsEvent(meta);
+    const after = await getFailureQueue({ status: "promoted" });
+    expect(after.items[0]).toMatchObject({ count: 3, status: "promoted" });
+  });
+
+  it.each(["reviewed", "ignored"])("deletes the text key when marked %s and never re-stores it", async (status) => {
+    const meta = metrics("no_verified", { scenario: "my chair was stolen" });
+    await recordRetrievalMetricsEvent(meta);
+    const id = (await getFailureQueue({ status: "all" })).items[0].id;
+    expect(textKey()).toBeTruthy();
+
+    const updated = await setFailureStatus(id, { status });
+    expect(textKey()).toBeUndefined();
+    expect(updated).toMatchObject({ status, snippet: null, textState: "erased", count: 1 });
+
+    await recordRetrievalMetricsEvent(meta); // the same scenario again
+    expect(textKey()).toBeUndefined();
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item).toMatchObject({ count: 2, snippet: null, textState: "erased" });
+  });
+
+  it("fails closed: if the status can't be read, the record updates but no text is written", async () => {
+    mockRedis.hget = vi.fn(async () => {
+      throw new Error("boom");
+    });
     await recordRetrievalMetricsEvent(
       metrics("no_verified", { scenario: "my chair was stolen" }),
     );
-    const after = await getFailureQueue({ status: "reviewed" });
-    expect(after.items[0]).toMatchObject({ count: 3, status: "reviewed" });
+    expect(recordKey()).toBeTruthy();
+    expect(textKey()).toBeUndefined();
+  });
+
+  it("reads digits-only and JSON-looking snippets back as text", async () => {
+    // Upstash JSON-parses reads; a scenario that is just numbers must still show.
+    await recordRetrievalMetricsEvent(metrics("no_verified", { scenario: "12" }));
+    mockRedis.strings.set(textKey(), 12); // what the real client would return
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item.snippet).toBe("12");
+  });
+
+  it("ignores a legacy snippet field that old records still carry", async () => {
+    await recordRetrievalMetricsEvent(
+      metrics("no_verified", { scenario: "my chair was stolen" }),
+    );
+    mockRedis.hashes.get(recordKey()).snippet = "LEGACY RAW TEXT";
+    mockRedis.strings.delete(textKey());
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item.snippet).toBeNull();
+    expect(JSON.stringify(item)).not.toContain("LEGACY");
   });
 
   it("returns null when triaging an id that has expired", async () => {
@@ -272,10 +359,7 @@ describe("retrieval health store with Redis", () => {
     await recordRetrievalMetricsEvent(
       metrics("no_verified", { scenario: "my chair was stolen" }),
     );
-    const [key] = [...mockRedis.hashes.keys()].filter((k) =>
-      k.startsWith("metrics:retrieval:failure:v3:"),
-    );
-    mockRedis.hashes.delete(key);
+    mockRedis.hashes.delete(recordKey());
 
     const queue = await getFailureQueue({ status: "all" });
     expect(queue.total).toBe(0);
@@ -288,7 +372,7 @@ describe("retrieval health store with Redis", () => {
         throw new Error("boom");
       },
       ...Object.fromEntries(
-        ["rpush", "ltrim", "expire", "hincrby", "hsetnx", "hset", "zadd", "zremrangebyrank"].map(
+        ["rpush", "ltrim", "expire", "hincrby", "hsetnx", "hset", "zadd", "zremrangebyrank", "set"].map(
           (n) => [n, function () { return this; }],
         ),
       ),

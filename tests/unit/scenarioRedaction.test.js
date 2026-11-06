@@ -48,11 +48,59 @@ describe("redactScenario", () => {
     expect(redactScenario(42)).toBe("");
   });
 
-  it("documents the known gap: names are not removed", () => {
-    // Pattern matching cannot find names. The privacy text must not claim it can.
-    expect(redactScenario("My neighbour Jane Doe took my bike")).toContain(
-      "Jane Doe",
-    );
+  describe("name masking", () => {
+    it("masks a full name in the middle of a sentence", () => {
+      const out = redactScenario("My neighbour Jane Doe took my bike");
+      expect(out).toBe("My neighbour [name] took my bike");
+    });
+
+    it("keeps the title and masks the name after it", () => {
+      expect(redactScenario("Officer Jones searched my car")).toBe(
+        "Officer [name] searched my car",
+      );
+      expect(redactScenario("I told Mr. Patel about it")).toContain("[name]");
+      expect(redactScenario("I told Mr. Patel about it")).not.toContain("Patel");
+    });
+
+    it("masks a single Capitalised word mid-sentence", () => {
+      expect(redactScenario("I think my friend Sarah saw it")).toBe(
+        "I think my friend [name] saw it",
+      );
+    });
+
+    it("masks two names in a row at the start of a sentence", () => {
+      expect(redactScenario("Jane Doe took my bike")).toBe("[name] took my bike");
+    });
+
+    it("keeps legal vocabulary, jurisdictions, days and acronyms", () => {
+      const text =
+        "On Monday in Ontario the Crown said the Criminal Code and the Charter applied at the RIDE stop, a CDSA matter";
+      expect(redactScenario(text)).toBe(text);
+    });
+
+    it("keeps a public case name after R v", () => {
+      const text = "My lawyer cited R v Grant and R. v. Mann";
+      expect(redactScenario(text)).toContain("R v Grant");
+      expect(redactScenario(text)).toContain("R. v. Mann");
+    });
+
+    it("does not touch the tags redaction already inserted", () => {
+      expect(redactScenario("Email me at a@b.com, thanks")).toBe(
+        "Email me at [email], thanks",
+      );
+    });
+
+    it("documents the remaining gaps: lowercase names and a lone name opening a sentence", () => {
+      // Heuristic masking cannot see these. The privacy text must not claim
+      // names are always removed.
+      expect(redactScenario("my brother mike took my bike")).toContain("mike");
+      expect(redactScenario("Mike took my bike")).toContain("Mike");
+    });
+
+    it("is idempotent", () => {
+      const once = redactScenario("My neighbour Jane Doe, Officer Jones, call 416-555-0101");
+      expect(redactScenario(once)).toBe(once);
+    });
   });
 });
 
@@ -68,6 +116,12 @@ describe("scenarioFingerprint", () => {
     expect(scenarioFingerprint("my chair was stolen")).not.toBe(
       scenarioFingerprint("my bike was stolen"),
     );
+  });
+
+  it("is the same when only masked names differ", () => {
+    const a = scenarioFingerprint(redactScenario("my neighbour Jane Doe took my bike"));
+    const b = scenarioFingerprint(redactScenario("my neighbour Bob Roy took my bike"));
+    expect(a).toBe(b);
   });
 
   it("is the same when only redacted details differ", () => {

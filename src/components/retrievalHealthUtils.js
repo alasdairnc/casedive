@@ -36,13 +36,33 @@ export function buildAgentFixPrompt(sample = {}) {
     `Latency (ms): ${sample.latencyMs ?? "n/a"}`,
     `Issue class: ${sample.classId || "unknown"}`,
     `Primary issue: ${sample.issuePrimary || sample.classId || "unknown"}`,
-    "",
   ];
+
+  const concepts = Array.isArray(sample.concepts) ? sample.concepts : [];
+  if (concepts.length > 0 || sample.lengthBucket) {
+    lines.push(
+      `Matched legal concepts: ${concepts.join(", ") || "none"}`,
+      `Scenario length: ${sample.lengthBucket || "unknown"}`,
+    );
+  }
+  const d = sample.diagnostics;
+  if (d) {
+    lines.push(
+      `Retrieval: ${d.termsTried} search term(s), ${d.databasesTried} database(s), ${d.candidateCount} candidate(s), ${d.verificationCalls} verification call(s), ${d.semanticFilterDropCount} dropped by the semantic filter`,
+    );
+  }
+  lines.push("");
 
   if (sample.snippet) {
     lines.push(
-      "Scenario (redacted; names may remain):",
+      "Scenario (redacted; some names may remain):",
       sample.snippet,
+      `Seen ${sample.count ?? 1} time(s)`,
+      "",
+    );
+  } else if (sample.textState) {
+    lines.push(
+      `Scenario text is no longer stored (${sample.textState}). Work from the concepts and retrieval figures above.`,
       `Seen ${sample.count ?? 1} time(s)`,
       "",
     );
@@ -187,9 +207,12 @@ export function buildFixtureStub(item = {}, { includeText = true } = {}) {
   return {
     id: `prod_${item.id}`,
     sourceFailureId: item.id,
-    scenario: includeText
-      ? item.snippet
-      : `REWRITE: synthetic ${item.classId || "general_criminal"} scenario (seen ${item.count ?? 1}x)`,
+    // Placeholder when text is withheld (CLI, public repo) or already deleted.
+    scenario:
+      includeText && item.snippet
+        ? item.snippet
+        : `REWRITE: synthetic ${item.classId || "general_criminal"} scenario (seen ${item.count ?? 1}x)`,
+    concepts: Array.isArray(item.concepts) ? item.concepts : [],
     expectedPrimary: item.classId || item.issuePrimary || "general_criminal",
     expectedResult: "nonzero_required",
     shouldInclude: [],

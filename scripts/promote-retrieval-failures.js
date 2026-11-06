@@ -73,7 +73,7 @@ async function main() {
   const known = new Set(existing.map((stub) => stub.sourceFailureId));
   const promoted = await fetchPromoted(args.baseUrl, token);
   const fresh = promoted.filter(
-    (item) => item.snippet && !known.has(item.id),
+    (item) => !known.has(item.id),
   );
 
   console.log(
@@ -81,7 +81,10 @@ async function main() {
   );
   for (const item of fresh) {
     // Terminal only: this text must not be committed (the repo is public).
-    console.log(`+ prod_${item.id}  x${item.count}  ${item.snippet}`);
+    const text = item.snippet || `(text ${item.textState || "gone"}; use the concepts)`;
+    console.log(
+      `+ prod_${item.id}  x${item.count}  [${(item.concepts || []).join(",")}]  ${text}`,
+    );
   }
   if (args.dryRun || fresh.length === 0) return;
 

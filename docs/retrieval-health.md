@@ -10,7 +10,8 @@ Three shapes, because the data has three jobs. Every request writes them in one 
 | ------------------------------------ | ---------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
 | `metrics:retrieval:totals:v3`        | hash (`HINCRBY`) | none     | Lifetime counters. Atomic, so concurrent writers can't lose counts (the old JSON blob could).               |
 | `metrics:retrieval:recent:v3`        | capped list      | 7 days   | Last 1500 events, for the 5m/1h windows and the trendline. **No scenario text.**                            |
-| `metrics:retrieval:failure:v3:<id>`  | hash per scenario| 30 days  | Redacted snippet, repeat count, first/last seen, review status and note. Refreshed on every repeat.         |
+| `metrics:retrieval:failure:v3:<id>`  | hash per scenario| 30 days  | **Structured features only**: matched legal concepts, length bucket, retrieval figures, repeat count, first/last seen, review status and note. No scenario text. Refreshed on every repeat. |
+| `metrics:retrieval:failure-text:v3:<id>` | string       | 14 days  | The redacted, name-masked snippet. Written once with `SET NX EX`, so **repeats never extend the 14 days**. Deleted when the failure is reviewed or ignored, and never re-stored for a scenario already reviewed or ignored. |
 | `metrics:retrieval:failure-index:v3` | sorted set       | none     | Failure ids by last-seen time, capped at 300. Ids whose record expired are dropped on read.                 |
 
 Redis falls back to in-memory state in dev and when Redis is unreachable.
@@ -21,10 +22,16 @@ Reason codes that are not retrieval attempts (`filter_disabled`, `non_criminal_s
 
 ## Failed scenarios
 
-A failure is an operational event with an error, a timeout, or zero verified case law. The server stores a **redacted** copy of the scenario for it, and only for failures:
+A failure is an operational event with an error, a timeout, or zero verified case law. For it the server keeps two separate things, only for failures:
 
-- `api/_scenarioRedaction.js` strips emails, URLs, phone numbers, SINs, postal codes, street addresses and any run of 6+ digits, then caps the text at 280 characters.
-- **It cannot reliably remove names or places.** Don't describe it as full anonymisation anywhere (including the privacy policy).
+- **Structured features** (30 days, refreshed on repeats): the legal concepts the scenario matched (the controlled vocabulary in `_legalConcepts.js`, with the same negation handling as retrieval, so "there was no search" is not a search), a coarse length bucket, and retrieval figures (terms tried, databases, candidates, verification calls, semantic drops, pass, fallback). None of it is the user's wording. These are what the tuning suggestions are built from, so they keep working after the text is gone.
+- **A redacted snippet** (14 days from first capture, deleted on review):
+
+- `api/_scenarioRedaction.js` strips emails, URLs, phone numbers, SINs, postal codes, street addresses and any run of 6+ digits, **masks likely names** (Capitalised words that aren't legal vocabulary, jurisdictions, days/months or acronyms, and the name after a title such as "Officer"; a public case name after "R v" is kept), then caps the text at 280 characters.
+- **It still cannot catch every name.** Lowercase names and a single name that opens a sentence get through, and Capitalised place names are masked too (over-masking is the safe direction). Don't describe it as full anonymisation anywhere, including the privacy policy.
+- Reviewing or ignoring a failure **deletes its text key**. The dashboard says so on each card. Promoted failures keep their text until it expires, so `npm run retrieval:promote` can show it to you.
+- If the status read that gates text storage fails, no text is written (fail closed).
+- `errorMessage` is reduced to a fixed label (`timeout`, `network_error`, `rate_limited`, `http_4xx`, `http_5xx`, `upstream_error`): raw upstream errors can echo the query.
 - Redaction runs inside the store, before the write, so no caller can store raw text. The metrics log line never carries scenario text either.
 - The id is `f` + 15 hex characters of a hash of the redacted text. The leading letter matters: `@upstash/redis` JSON-parses what it reads, so an all-digit id would come back as a number.
 - The same scenario seen again bumps `count` and `lastSeen`; it never resets the review status.
@@ -56,19 +63,26 @@ If a window has more than 1500 events, only the latest 1500 are read; `historyMa
 
 ## One-off cleanup after deploying
 
-The old stores are no longer read or written. The v1 event list kept an unredacted `scenarioSnippet` with no expiry, so check for it:
+The old stores are no longer read or written. The v1 event list kept an unredacted `scenarioSnippet` with no expiry. This was run on 2026-11-06 and the keys are gone; it is kept here for reference.
 
 ```bash
 node --env-file=.env scripts/purge-legacy-retrieval-keys.js            # list only
 node --env-file=.env scripts/purge-legacy-retrieval-keys.js --delete   # remove
 ```
 
-Old lifetime numbers are not migrated (the store held 57 events).
+The first v3 release stored the snippet inline in each failure hash with a 30-day expiry. The new reader ignores that field, but it is still in Redis until you remove it:
+
+```bash
+node --env-file=.env scripts/purge-legacy-retrieval-keys.js --strip-v3-snippets            # list only
+node --env-file=.env scripts/purge-legacy-retrieval-keys.js --strip-v3-snippets --delete   # remove
+```
+
+Name masking changes the text a fingerprint is computed from, so scenarios recorded before it will not merge with new repeats of the same scenario. That is harmless: the old records age out.
 
 ## Privacy policy
 
-`public/privacy.html` must describe the failed-scenario copies before this ships. Proposed wording:
+`public/privacy.html` must match this page. Wording:
 
-> **Searches that return no results.** When a search returns no verified case law or fails, we keep a short copy of your scenario so we can fix the gap. Before it is stored, our server removes email addresses, phone numbers, web links, postal codes, street addresses and long ID numbers, and cuts it to about 280 characters. This automatic clean-up can't reliably remove names, so please leave names out. We keep one copy of each distinct scenario, with a count of how many times it was searched. It isn't linked to your account or IP address, and we delete it 30 days after it was last seen.
+> **Searches that return no results.** When a search returns no verified case law or fails, we keep two things so we can fix the gap. First, a short list of general legal topics the search touched (for example "theft" or "search") and technical figures about how the search went. This contains none of your wording, isn't linked to your account or IP address, and is kept for 30 days after it was last seen. Second, a short copy of your scenario. Before it is stored, our server removes email addresses, phone numbers, web links, postal codes, street addresses and long ID numbers, masks words that look like names, and cuts it to about 280 characters. This clean-up can't catch every name, so please leave names out. We keep one copy of each distinct scenario, delete it 14 days after we first stored it, and delete it sooner when we review it. Repeat searches don't extend those 14 days.
 
-Reviewer-written test cases are synthetic rewrites, so the policy needs no line about the repo. Plus a row in "How long we keep it" (_Redacted copies of searches that returned no results — 30 days after last seen_), "failed-search copies" in the Upstash line, and a new effective date.
+Retention table rows: _General legal topics and search figures for searches with no results: 30 days after last seen_; _Redacted copy of a scenario from a search with no results: up to 14 days (deleted sooner once reviewed)_. Reviewer-written test cases are synthetic rewrites, so the policy needs no line about the repo.

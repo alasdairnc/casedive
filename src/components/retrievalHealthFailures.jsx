@@ -60,7 +60,28 @@ function buttonStyle(t, { primary = false, disabled = false } = {}) {
   };
 }
 
-function FailureCard({ item, busy, onTriage, t }) {
+const TEXT_GONE = {
+  erased: "Scenario text deleted when this was reviewed.",
+  expired: "Scenario text deleted after its retention period.",
+};
+
+function Chip({ children, t }) {
+  return (
+    <span
+      style={{
+        border: `1px solid ${t.borderLight}`,
+        padding: "2px 8px",
+        fontFamily: "var(--font-body)",
+        fontSize: 11,
+        color: t.textSecondary,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function FailureCard({ item, busy, onTriage, textRetentionDays, t }) {
   const [note, setNote] = useState(item.note || "");
   const [copied, setCopied] = useState("");
   const actions = ACTIONS[item.status] || ACTIONS.new;
@@ -84,18 +105,45 @@ function FailureCard({ item, busy, onTriage, t }) {
         background: t.bg,
       }}
     >
-      <p
-        style={{
-          margin: "0 0 8px 0",
-          fontFamily: "var(--font-body)",
-          fontSize: 14,
-          lineHeight: 1.5,
-          color: t.text,
-          overflowWrap: "anywhere",
-        }}
-      >
-        {item.snippet || "(no scenario text)"}
-      </p>
+      {item.snippet ? (
+        <p
+          style={{
+            margin: "0 0 8px 0",
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            lineHeight: 1.5,
+            color: t.text,
+            overflowWrap: "anywhere",
+          }}
+        >
+          {item.snippet}
+        </p>
+      ) : (
+        <p
+          style={{
+            margin: "0 0 8px 0",
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            fontStyle: "italic",
+            color: t.textTertiary,
+          }}
+        >
+          {TEXT_GONE[item.textState] || TEXT_GONE.expired}
+        </p>
+      )}
+      {(item.concepts?.length > 0 || item.lengthBucket) && (
+        <div
+          aria-label="Matched legal concepts"
+          style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}
+        >
+          {(item.concepts || []).map((concept) => (
+            <Chip key={concept} t={t}>
+              {concept}
+            </Chip>
+          ))}
+          {item.lengthBucket && <Chip t={t}>{item.lengthBucket} scenario</Chip>}
+        </div>
+      )}
       <div
         style={{
           display: "flex",
@@ -113,6 +161,13 @@ function FailureCard({ item, busy, onTriage, t }) {
         <span>first {fmtDate(item.firstSeen)}</span>
         <span>last {fmtDate(item.lastSeen)}</span>
         {item.fallbackPathUsed && <span>fallback used</span>}
+        {item.diagnostics && (
+          <span>
+            {num(item.diagnostics.termsTried)} terms ·{" "}
+            {num(item.diagnostics.candidateCount)} candidates ·{" "}
+            {num(item.diagnostics.verificationCalls)} verified calls
+          </span>
+        )}
       </div>
       {item.errorMessage && (
         <p
@@ -146,6 +201,21 @@ function FailureCard({ item, busy, onTriage, t }) {
           resize: "vertical",
         }}
       />
+      {item.snippet && (
+        <p
+          style={{
+            margin: "0 0 10px 0",
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            color: t.textTertiary,
+          }}
+        >
+          Marking this reviewed or ignored deletes the stored text (it is
+          deleted after {textRetentionDays ?? 14} days anyway). The legal
+          concepts and counts stay. Promote keeps the text until it expires, so
+          you can rewrite it as a test.
+        </p>
+      )}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         {actions.map((action, index) => (
           <button
@@ -238,6 +308,7 @@ export default function FailureQueue({
               item={item}
               busy={busyIds?.has(item.id)}
               onTriage={onTriage}
+              textRetentionDays={queue?.textRetentionDays}
               t={t}
             />
           ))}
@@ -268,10 +339,11 @@ export default function FailureQueue({
             {loadingMore ? "Loading…" : "Load more"}
           </button>
         )}
-        {queue?.retentionDays ? (
+        {queue?.textRetentionDays ? (
           <span>
-            Snippets are redacted and deleted after {queue.retentionDays} days
-            without a repeat.
+            Text is redacted and deleted {queue.textRetentionDays} days after it
+            is first captured, or sooner once reviewed or ignored. Counts and
+            concepts are kept {queue.retentionDays} days.
           </span>
         ) : null}
       </div>

@@ -433,6 +433,21 @@ export function Improvements({ items, t }) {
                     Try terms: {item.suggestedTerms.join(" | ")}
                   </div>
                 )}
+              {Array.isArray(item.topConcepts) && item.topConcepts.length > 0 && (
+                <div
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 11,
+                    color: t.textSecondary,
+                    marginBottom: 4,
+                  }}
+                >
+                  Shared concepts:{" "}
+                  {item.topConcepts
+                    .map((c) => `${c.concept} (${num(c.count)})`)
+                    .join(" · ")}
+                </div>
+              )}
               {(item.examples || []).map((example) => (
                 <div
                   key={example.id || example.snippet}
