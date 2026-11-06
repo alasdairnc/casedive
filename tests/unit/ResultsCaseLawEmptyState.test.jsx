@@ -66,18 +66,32 @@ describe("Results case-law empty state when retrieval failed", () => {
     },
   );
 
-  it("says retrieval is unavailable when CanLII lookups failed fast and nothing is left", () => {
+  it("says retrieval is unavailable when CanLII failed fast and retrieval returned nothing", () => {
     // A 500 or 429 from CanLII doesn't make retrieval throw: the source stays
-    // retrieval_ranked and the failures are counted instead.
+    // retrieval_ranked and analyze.js sets the reason instead.
     renderResults({
       source: "retrieval_ranked",
       verifiedCount: 0,
-      reason: "no_verified",
+      reason: "retrieval_error",
       retrieval: { upstreamErrors: 2, issuePrimary: "charter_search_seizure" },
     });
 
     expect(screen.getByText(UNAVAILABLE)).toBeTruthy();
     expect(screen.queryByText(REPHRASE_TIP)).toBeNull();
+  });
+
+  it("keeps the traffic-stop message when the ranker emptied the list despite a failed lookup", () => {
+    // Retrieval found cases; the ranker dropped them on purpose. One failed
+    // lookup elsewhere doesn't make that an outage.
+    renderResults({
+      source: "retrieval_ranked",
+      verifiedCount: 0,
+      reason: "no_verified",
+      retrieval: { upstreamErrors: 1, issuePrimary: "minor_traffic_stop" },
+    });
+
+    expect(screen.queryByText(UNAVAILABLE)).toBeNull();
+    expect(screen.getByText(/routine traffic-stop fact pattern/)).toBeTruthy();
   });
 
   it("keeps the no-match message and tips when retrieval worked", () => {

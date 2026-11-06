@@ -385,6 +385,27 @@ describe("structured features", () => {
     const events = await getRecentEvents();
     expect(JSON.stringify([item, events])).not.toMatch(/Jane Doe|a2aj/);
   });
+
+  it("clears the error label when the same scenario later fails without one", async () => {
+    // A leftover outage label sends a real miss down the fix-retrieval-failure
+    // skill's "infra, not a logic fix" branch.
+    const { recordRetrievalMetricsEvent, getFailureQueue } = await loadStore();
+    await recordRetrievalMetricsEvent(
+      miss({
+        reason: "retrieval_error",
+        retrievalError: true,
+        errorMessage: "upstream_error",
+      }),
+    );
+    await recordRetrievalMetricsEvent(miss());
+
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item).toMatchObject({
+      reason: "no_verified",
+      count: 2,
+      errorMessage: null,
+    });
+  });
 });
 
 describe("text retention", () => {

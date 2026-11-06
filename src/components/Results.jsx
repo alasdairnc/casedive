@@ -275,11 +275,12 @@ export default function Results({
 
   // A timeout or error sets source "retrieval_error" (the reason alone,
   // "retrieval_timeout", used to fall through to "no match"). CanLII failing
-  // fast leaves the source alone and counts in upstreamErrors instead. This
-  // only feeds the empty state, so it means nothing was left to show.
+  // fast with nothing returned keeps source "retrieval_ranked" and sets
+  // reason "retrieval_error"; the server decides that, so a deliberate empty
+  // from the ranker keeps its own message.
   const caseLawRetrievalFailed =
     caseLawMeta?.source === "retrieval_error" ||
-    Number(retrievalMeta?.upstreamErrors) > 0;
+    caseLawMeta?.reason === "retrieval_error";
 
   const caseLawEmptyMessage = caseLawRetrievalFailed
     ? "Case law retrieval is temporarily unavailable. Please try again in a moment."

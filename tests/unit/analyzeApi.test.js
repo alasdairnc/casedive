@@ -1145,6 +1145,53 @@ describe("analyze cache and failed retrieval", () => {
     });
   });
 
+  it("keeps no_verified when the ranker emptied cases retrieval did return", async () => {
+    // A minor traffic stop drops loosely related landmarks on purpose. A failed
+    // lookup elsewhere in the same request doesn't make that an outage.
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [
+        {
+          citation: "R v Hape, 2007 SCC 26",
+          title: "R v Hape",
+          summary:
+            "Charter extraterritoriality doctrine and foreign investigations",
+          matched_content: "Landmark RAG Match",
+          year: 2007,
+          isLandmark: true,
+          retrievalScore: 24,
+        },
+      ],
+      meta: {
+        reason: "verified_results",
+        verifiedCount: 1,
+        verificationCalls: 2,
+        upstreamErrors: 1,
+      },
+    });
+
+    const res = createRes();
+    await handler(
+      createReq({
+        body: {
+          scenario: "I was pulled over for going 1 km/h over the speed limit",
+        },
+      }),
+      res,
+    );
+
+    expect(res.body.case_law).toEqual([]);
+    expect(res.body.meta.case_law.reason).toBe("no_verified");
+    const metric = mockLogRetrievalMetrics.mock.calls.find(
+      ([payload]) => payload?.source === "retrieval",
+    );
+    expect(metric[0]).toMatchObject({
+      reason: "no_verified",
+      retrievalError: false,
+    });
+  });
+
   it("logs a partial upstream failure that still showed case law as a success", async () => {
     useEmptyCache();
     mockAnthropicSuccess();

@@ -1009,12 +1009,14 @@ export default async function handler(req, res) {
             3,
           );
 
-          // CanLII or A2AJ failed fast and nothing was left to show: an outage,
+          // CanLII or A2AJ failed fast and retrieval came back empty: an outage,
           // not a relevance miss. Logged as "no_verified" it fed the
-          // no-verified rate and alert instead of the error rate.
+          // no-verified rate and alert instead of the error rate. Tested on
+          // what retrieval returned, not the ranked list: when the ranker
+          // drops cases on purpose (a minor traffic stop), that stays a miss.
           const upstreamFailed =
             Number(retrievalMeta.upstreamErrors) > 0 &&
-            result.case_law.length === 0;
+            retrievedCases.length === 0;
           const reason = computeTelemetryReason({
             retrievalError: upstreamFailed,
             reason: retrievalMeta.reason,
