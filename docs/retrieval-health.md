@@ -18,7 +18,9 @@ Redis falls back to in-memory state in dev and when Redis is unreachable.
 
 `api/_retrievalEvents.js` is the one place that decides what an event means (operational, error, quality, failure) and how it adds up. Window stats, lifetime counters, the trendline and failure capture all use it, so a new reason code is classified once.
 
-Reason codes that are not retrieval attempts (`filter_disabled`, `non_criminal_scope`) never count toward rates or failures. `no_terms_or_databases` does count as a miss.
+Reason codes that are not retrieval attempts (`filter_disabled`, `non_criminal_scope`) never count toward rates or alerts. `no_terms_or_databases` does count as a miss.
+
+`non_criminal_scope` (the scope check judged the question not criminal law, so no search ran) is still **listed for review**, because it shows what users ask that the tool doesn't cover and whether the check misjudged a criminal scenario. The card says "Out of scope". If the check was right, mark it ignored; if it was wrong, hand it off. This is why "stored events" can be higher than the number of items in the queue: stored events include searches that were fine.
 
 ## Failed scenarios
 

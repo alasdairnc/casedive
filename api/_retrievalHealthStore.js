@@ -121,14 +121,14 @@ function lengthBucket(chars) {
   return "long";
 }
 
-// The failure record for an event, or null when there's nothing to review (not
-// a failure, or no scenario text to fingerprint). Everything here that comes
+// The review record for an event, or null when there's nothing to review (not a
+// failure or an out-of-scope answer, or no scenario text to fingerprint). Everything here that comes
 // from the scenario is either a controlled-vocabulary label (legal concepts), a
 // coarse bucket, or the redacted snippet, which is kept apart (see TEXT_PREFIX).
 // Redaction happens HERE, before anything is written, so no caller can store raw
 // text by mistake.
 function buildFailureRecord(event, payload) {
-  if (!classifyEvent(event).isFailure) return null;
+  if (!classifyEvent(event).isReviewable) return null;
   const rawScenario = payload.scenario;
   const snippet = redactScenario(rawScenario);
   const id = scenarioFingerprint(snippet);

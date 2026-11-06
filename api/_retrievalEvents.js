@@ -143,6 +143,14 @@ export function classifyEvent(event) {
       event.reason === "retrieval_timeout" ||
       (effectiveCount === 0 && event.reason !== "verified_results"));
 
+  // Worth a human look even though it is not a failure: the scope gate decided
+  // the question isn't criminal law, so no search ran. It stays out of every
+  // rate (the gate answering correctly is not a miss), but the scenario is
+  // what shows what users ask that the tool doesn't cover, and whether the gate
+  // misjudged a criminal one.
+  const outOfScope = filterOn && event.reason === "non_criminal_scope";
+  const isReviewable = isFailure || outOfScope;
+
   return {
     isCache,
     isRetrieval,
@@ -152,6 +160,8 @@ export function classifyEvent(event) {
     noVerified,
     verified,
     isFailure,
+    outOfScope,
+    isReviewable,
   };
 }
 
