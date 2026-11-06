@@ -131,6 +131,20 @@ function FailureCard({ item, busy, onTriage, textRetentionDays, t }) {
           {TEXT_GONE[item.textState] || TEXT_GONE.expired}
         </p>
       )}
+      {item.reason === "non_criminal_scope" && (
+        <p
+          style={{
+            margin: "0 0 8px 0",
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: t.textSecondary,
+          }}
+        >
+          <strong>Out of scope.</strong> The scope check decided this isn&apos;t
+          criminal law, so no search ran. If that was right, mark it ignored. If
+          it was a criminal scenario, hand it off: the check got it wrong.
+        </p>
+      )}
       {(item.concepts?.length > 0 || item.lengthBucket) && (
         <div
           aria-label="Matched legal concepts"

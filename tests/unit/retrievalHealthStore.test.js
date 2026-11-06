@@ -108,7 +108,7 @@ describe("window and all-time stats", () => {
     expect(snapshot.totalStoredEvents).toBe(2);
   });
 
-  it("does not count a non_criminal_scope empty as a miss or a failure", async () => {
+  it("keeps a non_criminal_scope empty out of every rate, but lists it for review", async () => {
     const { recordRetrievalMetricsEvent, getRetrievalHealthSnapshot, getFailureQueue } =
       await loadStore();
     await recordRetrievalMetricsEvent({
@@ -127,8 +127,18 @@ describe("window and all-time stats", () => {
     const snapshot = await getRetrievalHealthSnapshot({
       nowMs: Date.now() + 60_000,
     });
+    // Not a miss: the gate answering correctly must not move any rate.
     expect(snapshot.windows["1h"].rates.noVerifiedRate).toBe(0);
-    expect((await getFailureQueue({ status: "all" })).total).toBe(0);
+    expect(snapshot.windows["1h"].samples.operational).toBe(1);
+    // But it is worth a look: what users ask that the tool doesn't cover, and
+    // whether the gate misjudged a criminal scenario.
+    const queue = await getFailureQueue({ status: "all" });
+    expect(queue.total).toBe(1);
+    expect(queue.items[0]).toMatchObject({
+      reason: "non_criminal_scope",
+      snippet: "my landlord kept my deposit",
+      status: "new",
+    });
   });
 
   it("excludes filter_disabled and cache events from operational rates", async () => {

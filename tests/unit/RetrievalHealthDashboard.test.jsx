@@ -573,3 +573,25 @@ describe("RetrievalHealthDashboard hand-off", () => {
     expect(await screen.findByText(/Copied: paste into Claude Code/)).toBeTruthy();
   });
 });
+
+describe("RetrievalHealthDashboard out-of-scope items", () => {
+  it("explains that the scope check ruled it out and what to do", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () =>
+          makeHealthResponse({
+            failures: makeQueue([
+              makeFailure({ reason: "non_criminal_scope", snippet: "My landlord kept my deposit", concepts: [] }),
+            ]),
+          }),
+      }),
+    );
+    const { container } = renderDashboard();
+    await screen.findByText("My landlord kept my deposit");
+    expect(container.textContent).toMatch(/Out of scope\./);
+    expect(container.textContent).toMatch(/mark it ignored/);
+    expect(container.textContent).toMatch(/the check got it wrong/);
+  });
+});

@@ -193,7 +193,7 @@ export default function RetrievalHealthDashboard({ onNavigateHome }) {
 
             <Section
               title="Failed scenarios"
-              hint="Distinct scenarios that returned no verified case law or errored, with redacted text. Promote the ones that should become regression tests."
+              hint="Distinct scenarios that returned no verified case law, errored, or were judged out of scope, with redacted text. Promote the ones that should become regression tests."
               t={t}
             >
               <FailureQueue

@@ -18,7 +18,9 @@ Redis falls back to in-memory state in dev and when Redis is unreachable.
 
 `api/_retrievalEvents.js` is the one place that decides what an event means (operational, error, quality, failure) and how it adds up. Window stats, lifetime counters, the trendline and failure capture all use it, so a new reason code is classified once.
 
-Reason codes that are not retrieval attempts (`filter_disabled`, `non_criminal_scope`) never count toward rates or failures. `no_terms_or_databases` does count as a miss.
+Reason codes that are not retrieval attempts (`filter_disabled`, `non_criminal_scope`) never count toward rates or alerts. `no_terms_or_databases` does count as a miss.
+
+`non_criminal_scope` (the scope check judged the question not criminal law, so no search ran) is still **listed for review**, because it shows what users ask that the tool doesn't cover and whether the check misjudged a criminal scenario. The card says "Out of scope". If the check was right, mark it ignored; if it was wrong, hand it off. This is why "stored events" can be higher than the number of items in the queue: stored events include searches that were fine.
 
 ## Failed scenarios
 
@@ -27,8 +29,9 @@ A failure is an operational event with an error, a timeout, or zero verified cas
 - **Structured features** (30 days, refreshed on repeats): the legal concepts the scenario matched (the controlled vocabulary in `_legalConcepts.js`, with the same negation handling as retrieval, so "there was no search" is not a search), a coarse length bucket, and retrieval figures (terms tried, databases, candidates, verification calls, semantic drops, pass, fallback). None of it is the user's wording. These are what the tuning suggestions are built from, so they keep working after the text is gone.
 - **A redacted snippet** (14 days from first capture, deleted on review):
 
-- `api/_scenarioRedaction.js` strips emails, URLs, phone numbers, SINs, postal codes, street addresses and any run of 6+ digits, **masks likely names** (Capitalised words that aren't legal vocabulary, jurisdictions, days/months or acronyms, and the name after a title such as "Officer"; a public case name after "R v" is kept), then caps the text at 280 characters.
-- **It still cannot catch every name.** Lowercase names and a single name that opens a sentence get through, and Capitalised place names are masked too (over-masking is the safe direction). Don't describe it as full anonymisation anywhere, including the privacy policy.
+- `api/_scenarioRedaction.js` strips emails, URLs, phone numbers, SINs, postal codes, street addresses and any run of 6+ digits, **masks likely people**, then caps the text at 280 characters.
+- **Masking needs a person signal, so context survives.** Cities, provinces, well-known shops and apps (matched as whole phrases, so "Tim Hortons" is kept but "my brother Tim" is not), venue words ("Eaton Centre", "King Street"), legal vocabulary and a public case name after "R v" are always kept: where it happened and what kind of place it was are what improve retrieval. A person is masked when there is a title ("Officer Jones"), two or more Capitalised words that aren't a place ("Jane Doe"), or a single name right after a relationship or introduction word ("my brother Mike", "named Sarah", "told Sarah") or before a verb a person does ("Sarah grabbed", "Sarah's"). A city that is also a first name (Victoria) is kept unless one of those signals is next to it. On the gold and failure sets masking touches no scenario (a test guards that).
+- **It still cannot catch every name.** Lowercase names, a lone name with no cue or verb ("I met Sarah yesterday") and a lone name that opens a sentence get through. That is the price of keeping context, and the privacy page says names can slip through. Don't describe it as full anonymisation anywhere.
 - Reviewing or ignoring a failure **deletes its text key**. The dashboard says so on each card. Promoted failures keep their text until it expires, so `npm run retrieval:promote` can show it to you.
 - If the status read that gates text storage fails, no text is written (fail closed).
 - `errorMessage` is reduced to a fixed label (`timeout`, `network_error`, `rate_limited`, `http_4xx`, `http_5xx`, `upstream_error`): raw upstream errors can echo the query.
