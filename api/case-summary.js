@@ -83,7 +83,6 @@ async function callAnthropic(caseText, apiKey) {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
       "anthropic-version": "2023-06-01",
-      "anthropic-beta": "prompt-caching-2024-07-31",
     },
     body: JSON.stringify({
       model: ANTHROPIC_MODEL_ID,
@@ -121,20 +120,13 @@ async function callAnthropic(caseText, apiKey) {
     throw err;
   }
 
+  // With citations on, the reply comes as several text blocks; join them.
   const data = await response.json();
-  let textContent = "";
-  const citationBlocks = [];
-  for (const block of data.content || []) {
-    if (block.type === "text") {
-      textContent += block.text || "";
-    } else if (block.type === "citations") {
-      citationBlocks.push(block);
-    }
-  }
-  return {
-    text: textContent.replace(/```json|```/g, "").trim(),
-    citations: citationBlocks,
-  };
+  const text = (data.content || [])
+    .filter((block) => block.type === "text")
+    .map((block) => block.text || "")
+    .join("");
+  return text.replace(/```json|```/g, "").trim();
 }
 
 export default async function handler(req, res) {
@@ -206,7 +198,7 @@ export default async function handler(req, res) {
     logSuccess(requestId, "case-summary", 200, Date.now() - startMs, rlResult, {
       landmark: true,
     });
-    return res.status(200).json({ ...landmarkResult, citations: [] });
+    return res.status(200).json(landmarkResult);
   }
 
   const cacheKey = `cache:case-summary:v2:${createHash("sha256").update(JSON.stringify(body)).digest("hex")}`;
@@ -262,7 +254,7 @@ export default async function handler(req, res) {
     }
 
     const anthropicStartMs = Date.now();
-    const { text: raw, citations } = await callAnthropic(caseText, apiKey);
+    const raw = await callAnthropic(caseText, apiKey);
     const anthropicDurationMs = Date.now() - anthropicStartMs;
     logExternalApiCall(
       requestId,
@@ -300,7 +292,7 @@ export default async function handler(req, res) {
         .json({ error: "Structured summary was incomplete." });
     }
 
-    const responsePayload = { ...normalized, citations };
+    const responsePayload = normalized;
 
     if (redis) {
       try {

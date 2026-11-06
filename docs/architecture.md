@@ -60,9 +60,8 @@ NOT the legacy `charges`/`cases` format.
 
 ## Case Summary (`/api/case-summary`)
 
-Returns: `facts`, `held`, `ratio`, `keyQuote`, `significance`, `citations` (Anthropic Citations API array).
-Case text passed as `type: "document"` with `citations: { enabled: true }`.
-Beta headers: `citations-2023-12-31` + `prompt-caching-2024-07-31`.
+Returns: `facts`, `held`, `ratio`, `keyQuote`, `significance`. Curated landmark cases are served from `landmarkCases.js` without a model call.
+Case text passed as `type: "document"` with `citations: { enabled: true }`; the reply's text blocks are joined and the citation spans are not returned (no client used them).
 Do NOT add `output_config.format` — structured output is incompatible with Citations.
 
 ## Verification Pipeline

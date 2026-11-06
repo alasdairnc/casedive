@@ -279,8 +279,8 @@ describe("case-summary handler", () => {
       ratio: expect.any(String),
       significance: expect.any(String),
       keyQuote: null,
-      citations: [],
     });
+    expect(res.body).not.toHaveProperty("citations");
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
@@ -316,7 +316,6 @@ describe("case-summary handler", () => {
       ...VALID_SUMMARY,
       facts: "Padded.",
       keyQuote: null,
-      citations: [],
     });
 
     const [url, init] = globalThis.fetch.mock.calls[0];
