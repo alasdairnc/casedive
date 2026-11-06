@@ -154,7 +154,6 @@ function buildFailureRecord(event, payload) {
     retrievalPass: event.retrievalPass,
     semanticFilterDropCount: event.semanticFilterDropCount,
     termsTried: toNonNegativeInt(payload.termsTried),
-    databasesTried: toNonNegativeInt(payload.databasesTried),
     candidateCount: toNonNegativeInt(payload.candidateCount),
     verificationCalls: toNonNegativeInt(payload.verificationCalls),
     errorMessage: event.errorMessage,
@@ -218,7 +217,6 @@ function failureFromHash(id, hash, text) {
     retrievalPass: str(hash.retrievalPass) || null,
     diagnostics: {
       termsTried: toNonNegativeInt(hash.termsTried),
-      databasesTried: toNonNegativeInt(hash.databasesTried),
       candidateCount: toNonNegativeInt(hash.candidateCount),
       verificationCalls: toNonNegativeInt(hash.verificationCalls),
       semanticFilterDropCount: toNonNegativeInt(hash.semanticFilterDropCount),
@@ -249,7 +247,6 @@ function latestFields(f) {
     retrievalPass: f.retrievalPass,
     semanticFilterDropCount: f.semanticFilterDropCount,
     termsTried: f.termsTried,
-    databasesTried: f.databasesTried,
     candidateCount: f.candidateCount,
     verificationCalls: f.verificationCalls,
     errorMessage: f.errorMessage,

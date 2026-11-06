@@ -47,7 +47,6 @@ function makeFailure(overrides = {}) {
     lengthBucket: "medium",
     diagnostics: {
       termsTried: 3,
-      databasesTried: 2,
       candidateCount: 5,
       verificationCalls: 4,
       semanticFilterDropCount: 1,

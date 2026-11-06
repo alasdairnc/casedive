@@ -309,9 +309,7 @@ export default function Results({
     : null;
 
   const retrievalStats = caseLawMeta?.retrieval;
-  const showRetrievalStats =
-    retrievalStats &&
-    (retrievalStats.searchCalls > 0 || retrievalStats.candidateCount > 0);
+  const showRetrievalStats = retrievalStats && retrievalStats.candidateCount > 0;
   const analysisRequestId = data?.meta?.requestId || null;
 
   // Check this result's citations. A newer result cancels the check for the
@@ -710,9 +708,6 @@ export default function Results({
               marginTop: 8,
             }}
           >
-            {retrievalStats.searchCalls} database
-            {retrievalStats.searchCalls !== 1 ? "s" : ""} searched
-            {" · "}
             {retrievalStats.candidateCount} candidate
             {retrievalStats.candidateCount !== 1 ? "s" : ""} evaluated
           </div>

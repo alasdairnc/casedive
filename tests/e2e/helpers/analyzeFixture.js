@@ -42,7 +42,6 @@ export function retrievalMeta(caseLaw = []) {
         fallbackReason: null,
         retrievalPass: "phase_b_ranked",
         issuePrimary: null,
-        searchCalls: 0,
         verificationCalls: count,
         candidateCount: count,
         termsTried: 0,

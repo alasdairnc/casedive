@@ -534,7 +534,6 @@ describe("RAG poisoning — user scenario sanitization", () => {
       ],
       meta: {
         reason: "verified_results",
-        searchCalls: 1,
         verificationCalls: 1,
       },
     });
@@ -649,7 +648,6 @@ describe("CanLII retrieval timeout", () => {
       ],
       meta: {
         reason: "verified_results",
-        searchCalls: 1,
         verificationCalls: 1,
       },
     });
@@ -686,7 +684,6 @@ describe("CanLII retrieval timeout", () => {
       ],
       meta: {
         reason: "verified_results",
-        searchCalls: 1,
         verificationCalls: 1,
       },
     });
@@ -820,7 +817,6 @@ describe("CanLII retrieval timeout", () => {
       ],
       meta: {
         reason: "verified_results",
-        searchCalls: 1,
         verificationCalls: 1,
       },
     });

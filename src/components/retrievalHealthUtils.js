@@ -48,7 +48,7 @@ export function buildAgentFixPrompt(sample = {}) {
   const d = sample.diagnostics;
   if (d) {
     lines.push(
-      `Retrieval: ${d.termsTried} search term(s), ${d.databasesTried} database(s), ${d.candidateCount} candidate(s), ${d.verificationCalls} verification call(s), ${d.semanticFilterDropCount} dropped by the semantic filter`,
+      `Retrieval: ${d.termsTried} search term(s), ${d.candidateCount} candidate(s), ${d.verificationCalls} verification call(s), ${d.semanticFilterDropCount} dropped by the semantic filter`,
     );
   }
   lines.push("");
