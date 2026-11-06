@@ -44,8 +44,6 @@ export const TOPICS = [
   { id: "appeals", group: "procedure", label: "Appeals & Review", blurb: "Appeals, ministerial review of wrongful convictions, and extraordinary remedies." },
 ];
 
-const TOPIC_IDS = new Set(TOPICS.map((t) => t.id));
-
 // Section-level exceptions where the Code's heading spans more than one topic.
 // `label` replaces the heading shown in the browse view.
 export const SECTION_OVERRIDES = {
@@ -184,10 +182,6 @@ export function groupLabelFor(num, entry) {
   }
   if (heading) return heading;
   return (entry.partOf || "").replace(/^Part\s+[IVXL.\d]+\s+—\s+/, "");
-}
-
-export function isKnownTopic(id) {
-  return TOPIC_IDS.has(id);
 }
 
 /**

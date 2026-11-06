@@ -233,13 +233,11 @@ function DownloadIcon() {
 
 const PDF_ERROR_RESET_MS = 4000;
 
+// The meta.case_law.source values api/analyze.js sends when retrieval ran.
 const CASE_LAW_EMPTY_SOURCES = new Set([
   "retrieval",
-  "hybrid",
-  "hybrid_reranked",
   "retrieval_ranked",
   "retrieval_error",
-  "ai_fallback",
 ]);
 
 const SECTIONS = [
@@ -353,7 +351,6 @@ export default function Results({
     };
   }, [data]);
 
-  const isOldFormat = data.charges && !data.criminal_code;
   useEffect(() => () => clearTimeout(pdfErrorTimer.current), []);
 
   const handleExportPdf = useCallback(async () => {
@@ -576,11 +573,9 @@ export default function Results({
     };
   };
 
-  const sections = isOldFormat
-    ? []
-    : SECTIONS.map(({ key, label }) => buildSection(key, label)).filter(
-        Boolean,
-      );
+  const sections = SECTIONS.map(({ key, label }) =>
+    buildSection(key, label),
+  ).filter(Boolean);
 
   // Jump-link targets, in page order. The case-law empty state renders after
   // the other sections, so its link goes last too.
@@ -639,14 +634,6 @@ export default function Results({
         {data.summary}
       </p>
     </>
-  );
-
-  // Old format notice
-  const oldFormatNotice = isOldFormat && (
-    <Callout tone={t.accent} t={t} style={{ marginTop: 32 }}>
-      This result uses an older format. Re-run your search to see grouped
-      results by law type.
-    </Callout>
   );
 
   // Grouped result sections; ids are the sidebar's jump targets
@@ -805,7 +792,6 @@ export default function Results({
       >
         <div style={{ minWidth: 0 }}>
           {summary}
-          {oldFormatNotice}
           {sectionNodes}
           {caseLawEmptyState}
           {!isWide && analysis}

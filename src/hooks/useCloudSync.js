@@ -144,7 +144,6 @@ export function useCloudSync(user, token) {
     clearHistory: clearLocalHistory,
     replaceHistory,
     rerunQuery,
-    getHistory,
   } = useSearchHistory(userId ? ACCOUNT_HISTORY_LIMIT : GUEST_HISTORY_LIMIT);
 
   const syncRef = useRef(syncStateFor(null));
@@ -342,6 +341,5 @@ export function useCloudSync(user, token) {
     addToHistory,
     clearHistory,
     rerunQuery,
-    getHistory,
   };
 }
