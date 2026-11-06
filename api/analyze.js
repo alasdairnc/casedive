@@ -1009,7 +1009,14 @@ export default async function handler(req, res) {
             3,
           );
 
+          // CanLII or A2AJ failed fast and nothing was left to show: an outage,
+          // not a relevance miss. Logged as "no_verified" it fed the
+          // no-verified rate and alert instead of the error rate.
+          const upstreamFailed =
+            Number(retrievalMeta.upstreamErrors) > 0 &&
+            result.case_law.length === 0;
           const reason = computeTelemetryReason({
+            retrievalError: upstreamFailed,
             reason: retrievalMeta.reason,
             finalCaseLawCount: result.case_law.length,
           });
@@ -1038,6 +1045,8 @@ export default async function handler(req, res) {
             retrievalMeta,
             retrievalLatencyMs: retrievalDurationMs,
             finalCaseLawCount: result.case_law.length,
+            retrievalError: upstreamFailed,
+            ...(upstreamFailed ? { errorMessage: "upstream_error" } : {}),
           });
         } catch (retrievalErr) {
           // Keep retrieval-first behavior even on retrieval failures (including timeout).

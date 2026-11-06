@@ -1118,6 +1118,66 @@ describe("analyze cache and failed retrieval", () => {
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
+  // A fast CanLII failure that leaves nothing to show is an outage. Logged as
+  // "no_verified" it counted as a relevance miss and pushed the no-verified
+  // alert instead of the error-rate one.
+  it("logs a fast upstream failure that left no case law as a retrieval error", async () => {
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [],
+      meta: { reason: "no_verified", verificationCalls: 3, upstreamErrors: 3 },
+    });
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.meta.case_law.reason).toBe("retrieval_error");
+    const metric = mockLogRetrievalMetrics.mock.calls.find(
+      ([payload]) => payload?.source === "retrieval",
+    );
+    expect(metric[0]).toMatchObject({
+      reason: "retrieval_error",
+      retrievalError: true,
+      errorMessage: "upstream_error",
+      finalCaseLawCount: 0,
+    });
+  });
+
+  it("logs a partial upstream failure that still showed case law as a success", async () => {
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [
+        {
+          citation: "R v Grant, 2009 SCC 32",
+          title: "R v Grant",
+          summary: "Charter s. 8 search of a phone without a warrant",
+          year: 2009,
+        },
+      ],
+      meta: {
+        reason: "verified_results",
+        verificationCalls: 2,
+        upstreamErrors: 1,
+      },
+    });
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.body.meta.case_law.reason).toBe("verified_results");
+    const metric = mockLogRetrievalMetrics.mock.calls.find(
+      ([payload]) => payload?.source === "retrieval",
+    );
+    expect(metric[0]).toMatchObject({
+      reason: "verified_results",
+      retrievalError: false,
+    });
+    expect(metric[0].errorMessage).toBeUndefined();
+  });
+
   it("still serves a healthy cached result without calling the model", async () => {
     mockRedis = {
       get: vi.fn().mockResolvedValue(
