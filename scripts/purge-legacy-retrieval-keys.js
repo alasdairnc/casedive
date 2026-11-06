@@ -7,6 +7,11 @@
 // Dry-run by default. The old v1 event store kept a `scenarioSnippet` per event
 // with no expiry and no redaction, so these keys can still hold raw scenario
 // text. They are no longer read or written; the new store uses `*:v3` keys.
+//
+//   --strip-v3-snippets            list v3 failure records that still carry an inline
+//                                  `snippet` field (written before text moved to its
+//                                  own 14-day key)
+//   --strip-v3-snippets --delete   remove that field from each one
 
 import { Redis } from "@upstash/redis";
 
@@ -30,6 +35,37 @@ if (!url || !token) {
 
 const redis = new Redis({ url, token });
 const doDelete = process.argv.includes("--delete");
+
+if (process.argv.includes("--strip-v3-snippets")) {
+  // Failure hashes written by the first v3 release kept the redacted text inline
+  // with a 30-day expiry. The new reader ignores that field, but it is still
+  // stored, so remove it. Structured fields on the record are left alone.
+  let cursor = "0";
+  const withSnippet = [];
+  let scanned = 0;
+  do {
+    const [next, keys] = await redis.scan(cursor, {
+      match: "metrics:retrieval:failure:v3:*",
+      count: 100,
+    });
+    cursor = String(next);
+    for (const key of keys) {
+      scanned += 1;
+      if (await redis.hexists(key, "snippet")) withSnippet.push(key);
+    }
+  } while (cursor !== "0");
+
+  console.log(
+    `${scanned} v3 failure record(s) scanned, ${withSnippet.length} with an inline snippet.`,
+  );
+  if (doDelete && withSnippet.length > 0) {
+    for (const key of withSnippet) await redis.hdel(key, "snippet");
+    console.log(`Removed the snippet field from ${withSnippet.length} record(s).`);
+  } else if (withSnippet.length > 0) {
+    console.log("Re-run with --strip-v3-snippets --delete to remove them.");
+  }
+  process.exit(0);
+}
 
 async function describe(key) {
   const type = await redis.type(key);

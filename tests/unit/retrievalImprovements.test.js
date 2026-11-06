@@ -30,4 +30,26 @@ describe("buildRetrievalImprovements", () => {
     expect(improvements[0].confidence).toBe("high");
     expect(improvements[0].issuePrimary).toBe("mischief");
   });
+
+  it("ranks the legal concepts that failures share, weighted by repeats", () => {
+    const [item] = buildRetrievalImprovements([
+      { classId: "theft", count: 3, concepts: ["theft", "search"] },
+      { classId: "theft", count: 1, concepts: ["theft"] },
+      { classId: "theft", count: 1, concepts: ["detention"] },
+    ]);
+    expect(item.topConcepts).toEqual([
+      { concept: "theft", count: 4 },
+      { concept: "search", count: 3 },
+      { concept: "detention", count: 1 },
+    ]);
+  });
+
+  it("still suggests from records whose text has been deleted", () => {
+    const [item] = buildRetrievalImprovements([
+      { classId: "theft", count: 2, snippet: null, concepts: ["theft"] },
+    ]);
+    expect(item.failureCount).toBe(2);
+    expect(item.examples).toEqual([]);
+    expect(item.topConcepts[0].concept).toBe("theft");
+  });
 });

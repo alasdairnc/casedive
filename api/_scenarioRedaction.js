@@ -4,8 +4,9 @@
 // Scenarios are people describing their own legal trouble. The health store
 // keeps a short redacted snippet of FAILED retrievals only, so a human can turn
 // real misses into regression cases. Redaction is best-effort pattern matching:
-// it removes contact details and identifiers, but it cannot reliably remove
-// names or places. The privacy policy wording must not promise otherwise.
+// it removes contact details and identifiers and masks likely names, but it
+// cannot catch every name (lowercase names, a single name opening a sentence).
+// The privacy policy wording must not promise otherwise.
 
 import { createHash } from "crypto";
 
@@ -32,6 +33,77 @@ const REDACTIONS = [
   [/\d{6,}/g, "[id]"],
 ];
 
+// ---- name masking ---------------------------------------------------------
+// Heuristic: runs of Capitalised words that are not known legal/place terms.
+// Over-masking is the safe direction, so a mid-sentence Capitalised word that
+// isn't on the allow-list becomes [name]. Known gaps (documented, tested):
+// lowercase names and a single name that opens a sentence.
+
+const TITLE_WORDS =
+  "Mr|Mrs|Ms|Miss|Mx|Dr|Prof|Officer|Constable|Const|Cst|Det|Detective|Sgt|Sergeant|Cpl|Corporal|Insp|Inspector|Judge|Justice|Mme|Mlle|Const";
+
+// Capitalised words that are legal vocabulary, jurisdictions or calendar words.
+const NAME_ALLOW = new Set(
+  (
+    "charter criminal code crown court courts supreme appeal federal provincial " +
+    "ontario quebec alberta manitoba saskatchewan british columbia nova scotia " +
+    "brunswick newfoundland labrador yukon nunavut northwest territories prince " +
+    "edward island canada canadian canadians police officer officers constable " +
+    "judge justice youth act section highway monday tuesday wednesday thursday " +
+    "friday saturday sunday january february march april may june july august " +
+    "september october november december mr mrs ms miss mx dr prof det sgt cpl " +
+    "cst const insp mme mlle detective sergeant corporal inspector"
+  ).split(" "),
+);
+
+const WORD = "[A-Z](?:[a-z]+|['’][A-Z][a-z]+)(?:[-'’][A-Za-z]+)*";
+const TITLE_NAME = new RegExp(
+  `\\b(${TITLE_WORDS})\\.?\\s+(?:${WORD})(?:\\s+(?:${WORD}))*`,
+  "g",
+);
+const CAP_RUN = new RegExp(`(?<![\\w\\[])${WORD}(?:\\s+${WORD})*`, "g");
+
+export function maskNames(text) {
+  // "Officer Jones" / "Mr. Smith" -> "Officer [name]" (the title is kept).
+  let out = text.replace(TITLE_NAME, (_m, title) => `${title} [name]`);
+
+  out = out.replace(CAP_RUN, (run, offset) => {
+    const before = out.slice(0, offset);
+    // A case name after "R v" is a public citation, not a person to hide.
+    if (/\bR\.?\s*v\.?\s*$/.test(before)) return run;
+    const atSentenceStart = offset === 0 || /[.!?]\s+$/.test(before);
+
+    const words = run.split(/\s+/);
+    const pieces = [];
+    let span = [];
+    const flush = (isFirstOfRun) => {
+      if (span.length === 0) return;
+      // A single Capitalised word opening a sentence is indistinguishable from
+      // an ordinary word, so it is left alone. Two or more in a row are a name.
+      const keep = span.length === 1 && isFirstOfRun && atSentenceStart;
+      pieces.push(keep ? span[0] : "[name]");
+      span = [];
+    };
+    let first = true;
+    for (const word of words) {
+      const allowed = NAME_ALLOW.has(word.toLowerCase());
+      if (allowed) {
+        flush(first);
+        pieces.push(word);
+        first = false;
+      } else {
+        const wasEmpty = span.length === 0;
+        span.push(word);
+        // `first` tracks whether the pending span begins the whole run.
+        if (wasEmpty && pieces.length > 0) first = false;
+      }
+    }
+    flush(first && pieces.length === 0);
+    return pieces.join(" ");
+  });
+  return out;
+}
+
 function collapse(text) {
   return String(text ?? "")
     .replace(/\s+/g, " ")
@@ -49,6 +121,7 @@ export function redactScenario(
   for (const [pattern, replacement] of REDACTIONS) {
     text = text.replace(pattern, replacement);
   }
+  text = maskNames(text);
 
   if (text.length <= maxChars) return text;
   // Cut on a word boundary so the snippet doesn't end mid-token.

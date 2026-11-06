@@ -30,6 +30,41 @@ export const NON_OPERATIONAL_REASONS = new Set([
 
 const ERROR_REASONS = new Set(["retrieval_error", "missing_api_key"]);
 
+const ERROR_LABELS = new Set([
+  "timeout",
+  "network_error",
+  "rate_limited",
+  "http_4xx",
+  "http_5xx",
+  "missing_api_key",
+  "upstream_error",
+]);
+
+/**
+ * Reduce an error message to a fixed label. Upstream errors can echo the query
+ * they were sent (a fetch URL, a "no results for ..." text), which may contain
+ * scenario wording, so the raw message is never stored on a health record.
+ * Idempotent: an existing label comes back unchanged.
+ */
+export function safeErrorLabel(message) {
+  if (typeof message !== "string") return null;
+  const text = message.trim();
+  if (!text) return null;
+  if (ERROR_LABELS.has(text)) return text;
+  const lower = text.toLowerCase();
+  if (/time(d)?\s*out|timeout|aborted/.test(lower)) return "timeout";
+  if (/api[_\s-]?key/.test(lower) && /missing|not\s+set|undefined/.test(lower)) {
+    return "missing_api_key";
+  }
+  if (/\b429\b|rate\s*limit|too many requests/.test(lower)) return "rate_limited";
+  if (/\b5\d\d\b/.test(lower)) return "http_5xx";
+  if (/\b4\d\d\b/.test(lower)) return "http_4xx";
+  if (/fetch failed|network|econn|enotfound|eai_again|socket|dns/.test(lower)) {
+    return "network_error";
+  }
+  return "upstream_error";
+}
+
 export function normalizeEvent(raw) {
   let event = raw;
   if (typeof raw === "string") {

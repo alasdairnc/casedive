@@ -22,6 +22,7 @@ function makeQueue(items, overrides = {}) {
     limit: 20,
     offset: 0,
     retentionDays: 30,
+    textRetentionDays: 14,
     ...overrides,
   };
 }
@@ -41,6 +42,16 @@ function makeFailure(overrides = {}) {
     finalCaseLawCount: 0,
     fallbackPathUsed: false,
     errorMessage: null,
+    textState: "present",
+    concepts: ["theft", "search"],
+    lengthBucket: "medium",
+    diagnostics: {
+      termsTried: 3,
+      databasesTried: 2,
+      candidateCount: 5,
+      verificationCalls: 4,
+      semanticFilterDropCount: 1,
+    },
     ...overrides,
   };
 }
@@ -456,5 +467,84 @@ describe("RetrievalHealthDashboard low-traffic honesty", () => {
       expect(container.textContent).toMatch(/theft\s*·\s*1 failure across 1 scenario/);
     });
     expect(container.textContent).not.toMatch(/1 failures/);
+  });
+});
+
+describe("RetrievalHealthDashboard privacy-aware failure cards", () => {
+  const ok = (body) => ({ ok: true, json: async () => body });
+  const stub = (failure) =>
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        ok(makeHealthResponse({ failures: makeQueue([failure]) })),
+      ),
+    );
+
+  it("shows the matched concepts, length bucket and retrieval figures", async () => {
+    stub(makeFailure());
+    const { container } = renderDashboard();
+    await screen.findByText("My chair was stolen from outside my apartment.");
+
+    const chips = screen.getByLabelText("Matched legal concepts");
+    expect(chips.textContent).toContain("theft");
+    expect(chips.textContent).toContain("search");
+    expect(chips.textContent).toContain("medium scenario");
+    expect(container.textContent).toMatch(/3 terms\s*·\s*5 candidates\s*·\s*4 verified calls/);
+  });
+
+  it("warns that reviewing or ignoring deletes the text", async () => {
+    stub(makeFailure());
+    renderDashboard();
+    expect(await screen.findByText(/deletes the stored text/)).toBeTruthy();
+  });
+
+  it("explains a scenario whose text was deleted on review, and keeps its concepts", async () => {
+    stub(makeFailure({ snippet: null, textState: "erased", status: "new" }));
+    renderDashboard();
+
+    expect(await screen.findByText("Scenario text deleted when this was reviewed.")).toBeTruthy();
+    expect(screen.getByLabelText("Matched legal concepts").textContent).toContain("theft");
+    // Nothing left to delete, so no warning.
+    expect(screen.queryByText(/deletes the stored text/)).toBeNull();
+  });
+
+  it("explains a scenario whose text expired", async () => {
+    stub(makeFailure({ snippet: null, textState: "expired" }));
+    renderDashboard();
+    expect(
+      await screen.findByText("Scenario text deleted after its retention period."),
+    ).toBeTruthy();
+  });
+
+  it("states both retention periods in the footer", async () => {
+    stub(makeFailure());
+    const { container } = renderDashboard();
+    await screen.findByText("My chair was stolen from outside my apartment.");
+    expect(container.textContent).toMatch(/deleted 14 days after it is first captured/);
+    expect(container.textContent).toMatch(/kept 30 days/);
+  });
+
+  it("shows shared concepts in the tuning suggestions", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        ok(
+          makeHealthResponse({
+            improvements: [
+              {
+                id: "improve-1", classId: "theft", failureCount: 4, scenarioCount: 2,
+                suggestedTerms: [], examples: [],
+                topConcepts: [{ concept: "theft", count: 4 }, { concept: "search", count: 3 }],
+              },
+            ],
+          }),
+        ),
+      ),
+    );
+    const { container } = renderDashboard();
+    await screen.findByText("Where to tune next");
+    await waitFor(() => {
+      expect(container.textContent).toContain("Shared concepts: theft (4) · search (3)");
+    });
   });
 });

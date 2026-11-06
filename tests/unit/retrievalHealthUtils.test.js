@@ -57,6 +57,30 @@ describe("retrievalHealthUtils", () => {
     expect(prompt).toContain("Seen 4 time(s)");
   });
 
+  it("works from concepts and retrieval figures when the text is gone", () => {
+    const prompt = buildAgentFixPrompt({
+      snippet: null,
+      textState: "erased",
+      concepts: ["search", "theft"],
+      lengthBucket: "medium",
+      count: 3,
+      diagnostics: { termsTried: 2, databasesTried: 1, candidateCount: 0, verificationCalls: 0, semanticFilterDropCount: 4 },
+    });
+    expect(prompt).toContain("Matched legal concepts: search, theft");
+    expect(prompt).toContain("2 search term(s)");
+    expect(prompt).toContain("Scenario text is no longer stored (erased)");
+    expect(prompt).not.toContain("Scenario (redacted");
+  });
+
+  it("uses a placeholder scenario in a stub when the text is already gone", () => {
+    const stub = buildFixtureStub(
+      { id: "f0123456789abcde", snippet: null, classId: "theft", count: 2, concepts: ["theft"] },
+      { includeText: true },
+    );
+    expect(stub.scenario).toContain("REWRITE");
+    expect(stub.concepts).toEqual(["theft"]);
+  });
+
   it("keeps user text out of CLI stubs because the repo is public", () => {
     const stub = buildFixtureStub(
       { id: "f0123456789abcde", snippet: "SECRET scenario text", classId: "theft", count: 2 },

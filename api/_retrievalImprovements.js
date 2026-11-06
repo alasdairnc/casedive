@@ -1,7 +1,9 @@
 // api/_retrievalImprovements.js
 // Build lightweight, deterministic tuning suggestions from the open failure
-// queue. Each failure record already carries a redacted snippet and a repeat
-// count, so suggestions are ranked by how many real users hit them.
+// queue. Each record carries structured features (matched legal concepts,
+// retrieval diagnostics) and a repeat count, so suggestions are ranked by how
+// many real users hit them and work even after the snippet text has been
+// deleted. Examples are shown only while a snippet still exists.
 
 import { getScenarioClassLabels } from "./_scenarioClassification.js";
 
@@ -26,6 +28,7 @@ export function buildRetrievalImprovements(failures = []) {
         reasons: new Set(),
         issuePrimaries: new Set(),
         examples: [],
+        concepts: new Map(),
         suggestedTerms: new Set(getScenarioClassLabels(classId)),
       });
     }
@@ -36,6 +39,10 @@ export function buildRetrievalImprovements(failures = []) {
     if (failure?.reason) entry.reasons.add(String(failure.reason));
     if (failure?.issuePrimary) {
       entry.issuePrimaries.add(String(failure.issuePrimary));
+    }
+    const weight = Number(failure?.count) || 1;
+    for (const concept of Array.isArray(failure?.concepts) ? failure.concepts : []) {
+      entry.concepts.set(concept, (entry.concepts.get(concept) || 0) + weight);
     }
     if (failure?.snippet && entry.examples.length < EXAMPLES_PER_CLASS) {
       entry.examples.push({ id: failure.id || null, snippet: failure.snippet });
@@ -53,6 +60,11 @@ export function buildRetrievalImprovements(failures = []) {
       scenarioCount: entry.scenarios,
       reasons: Array.from(entry.reasons),
       suggestedTerms: Array.from(entry.suggestedTerms).slice(0, 6),
+      // Legal concepts these failures share, most common first.
+      topConcepts: [...entry.concepts.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 5)
+        .map(([concept, count]) => ({ concept, count })),
       examples: entry.examples,
       action: "tune_query_terms",
       confidence: entry.count >= 2 ? "high" : "medium",
