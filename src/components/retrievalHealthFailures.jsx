@@ -230,6 +230,14 @@ function FailureCard({ item, busy, onTriage, textRetentionDays, t }) {
         ))}
         <button
           type="button"
+          onClick={() => copy("handoff", `/fix-retrieval-failure ${item.id}`)}
+          style={buttonStyle(t)}
+          title="Copies a command for Claude Code. Paste it into a session in the casedive repo."
+        >
+          {copied === "handoff" ? "Copied: paste into Claude Code" : "Hand off to Claude"}
+        </button>
+        <button
+          type="button"
           onClick={() => copy("prompt", buildAgentFixPrompt(item))}
           style={buttonStyle(t)}
         >

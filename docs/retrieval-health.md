@@ -51,6 +51,10 @@ npm run retrieval:promote                # append stubs to tests/fixtures/promot
 
 Stubs are `knownFailure` entries with empty labels, so they never fail the suite. `tests/unit/retrievalFailureSet.js` loads them. To finish one: rewrite `scenario` as a synthetic one (same legal facts, invented details), set `expectedPrimary`, add `shouldInclude` / `shouldExclude` citations and `landmarkMatches`, then delete `knownFailure`. The script is idempotent (`sourceFailureId`). The dashboard's "Copy test stub" button does include the redacted text, for pasting locally while you rewrite it.
 
+## Handing a failure to Claude
+
+Each card has a **Hand off to Claude** button. It copies `/fix-retrieval-failure <id>`; paste that into a Claude Code session in this repo. The project skill (`.claude/skills/fix-retrieval-failure/SKILL.md`, local and gitignored like the other project skills) fetches the record with `npm run retrieval:failure -- <id>` (needs `RETRIEVAL_HEALTH_TOKEN` in `.env`), reproduces the miss offline, makes the smallest fix, adds a synthetic regression case to `tests/unit/retrievalFailureSet.js`, runs the retrieval and guardrail suites, commits on a branch, and **stops for your OK**. It never pushes, opens a PR or changes the failure's status (reviewing deletes the stored text). It also never writes the real scenario text anywhere in the repo.
+
 ## Alerts
 
 `evaluateRetrievalAlerts` still reads the 1h window. To keep the analyze path cheap, alerts are only evaluated for a failing or slow retrieval, and they run without the response waiting on them. `analyze.js` does wait for the event write itself (`flushMetricWrites`), because a serverless function can be frozen once the response is sent.

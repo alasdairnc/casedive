@@ -548,3 +548,28 @@ describe("RetrievalHealthDashboard privacy-aware failure cards", () => {
     });
   });
 });
+
+describe("RetrievalHealthDashboard hand-off", () => {
+  it("copies a /fix-retrieval-failure command for the card's id", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", { clipboard: { writeText } });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => makeHealthResponse({ failures: makeQueue([makeFailure()]) }),
+      }),
+    );
+    renderDashboard();
+    await screen.findByText("My chair was stolen from outside my apartment.");
+
+    fireEvent.click(screen.getByRole("button", { name: "Hand off to Claude" }));
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith("/fix-retrieval-failure f0123456789abcde");
+    });
+    // The command carries the id only, never the scenario text.
+    expect(writeText.mock.calls[0][0]).not.toContain("chair");
+    expect(await screen.findByText(/Copied: paste into Claude Code/)).toBeTruthy();
+  });
+});
