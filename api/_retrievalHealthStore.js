@@ -73,13 +73,6 @@ const mem = {
   texts: new Map(),
 };
 
-export function resetMemoryStoreForTests() {
-  mem.recent = [];
-  mem.totals = {};
-  mem.failures = new Map();
-  mem.texts = new Map();
-}
-
 function guarded(promise) {
   return withRedisTimeout(promise, REDIS_TIMEOUT_MS);
 }

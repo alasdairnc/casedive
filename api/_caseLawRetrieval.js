@@ -1,6 +1,8 @@
 // api/_caseLawRetrieval.js
-// Phase A helper: retrieve real case-law candidates from CanLII search endpoints
-// and return only citations that verify through the existing lookup pipeline.
+// Pick case law for a scenario. CanLII's API has no text search, so candidates
+// come from the model's citations, the local corpus (landmark seeds, matches
+// and a fact-anchored fallback) and, behind a flag, the A2AJ open search.
+// Citations not in the corpus are confirmed by CanLII lookup before use.
 
 import {
   parseCitation,

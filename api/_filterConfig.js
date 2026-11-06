@@ -367,25 +367,3 @@ export const ISSUE_DOMAIN_RULES = {
     requiredConceptBuckets: [["trialDelay"]],
   },
 };
-
-/**
- * Get current config value (enables runtime overrides via env vars in future)
- */
-export function getConfig(key, defaultValue = null) {
-  return FILTER_CONFIG[key] ?? defaultValue;
-}
-
-/**
- * Update filter config (for runtime tuning/testing)
- */
-export function updateConfig(overrides = {}) {
-  Object.assign(FILTER_CONFIG, overrides);
-}
-
-/**
- * Reset to defaults
- */
-export function resetConfig() {
-  // Re-export original values if needed
-  // For now, this is a no-op since FILTER_CONFIG is the source of truth
-}
