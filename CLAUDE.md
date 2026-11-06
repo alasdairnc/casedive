@@ -116,7 +116,7 @@ Call `advisor()` (no parameters — forwards full context to a stronger reviewer
 
 Consolidated 2026-09-25 from 27 pieces to 13. Everything here is referenced by a hook, a rule, a workflow or the roadmap; if you add one, add its reference too.
 
-Skills (`.claude/skills/`, `/name`): `verify` (pre-push check; `/verify e2e`), `casedive-audit`, `new-api-endpoint` (mind the 12-function cap), `filter-tune`, `ops-checklist`, `weekly-report`.
+Skills (`.claude/skills/`, `/name`): `fix-retrieval-failure` (hand a dashboard failure id to Claude: reproduce, fix, regression case, stop for OK; see `docs/retrieval-health.md`), `verify` (pre-push check; `/verify e2e`), `casedive-audit`, `new-api-endpoint` (mind the 12-function cap), `filter-tune`, `ops-checklist`, `weekly-report`.
 
 Commands (`.claude/commands/`): `/improve-caselaw`, `/retrieval-health` (needs `RETRIEVAL_HEALTH_TOKEN`).
 
