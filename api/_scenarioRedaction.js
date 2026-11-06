@@ -12,7 +12,9 @@
 
 import { createHash } from "crypto";
 
-export const SCENARIO_SNIPPET_MAX_CHARS = 280;
+// Long enough to keep the facts of a typical paragraph; the first 280 dropped
+// the key details of longer scenarios.
+export const SCENARIO_SNIPPET_MAX_CHARS = 500;
 
 // Order matters: strip URLs and emails before the digit-based patterns so their
 // digits are not half-matched.
