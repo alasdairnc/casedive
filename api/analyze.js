@@ -535,6 +535,20 @@ export const __testables = {
 };
 
 // ── Deterministic RAG Token Matching ─────────────────────────────────────────
+// Words for who is in a scenario, not what happened. A fraud victim shares
+// "victim" with R v Barton's "indigenous victim" tag and nothing else, so on
+// their own these never make a match.
+const LANDMARK_ROLE_WORDS = new Set([
+  "victim",
+  "victims",
+  "accused",
+  "complainant",
+  "complainants",
+  "offender",
+  "suspect",
+  "defendant",
+]);
+
 function matchLandmarkCases(scenario) {
   if (!scenario) return [];
   // "There was no search" must not match the "search" tag.
@@ -572,6 +586,7 @@ function matchLandmarkCases(scenario) {
       .forEach((token) => tagTokens.add(token));
 
     for (const token of scenarioTokens) {
+      if (LANDMARK_ROLE_WORDS.has(token)) continue;
       if (tagTokens.has(token)) score += 3;
     }
 
