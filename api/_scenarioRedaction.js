@@ -5,12 +5,13 @@
 // keeps a short redacted snippet of FAILED retrievals only, so a human can turn
 // real misses into regression cases. Redaction is best-effort pattern matching:
 // it removes contact details and identifiers and masks likely names, but it
-// cannot catch every name (lowercase names, a lone name with no cue). It keeps
+// cannot catch every name (an uncommon name, a surname on its own). It keeps
 // places, shops and legal vocabulary on purpose: that context is what helps
 // improve retrieval.
 // The privacy policy wording must not promise otherwise.
 
 import { createHash } from "crypto";
+import { FIRST_NAMES } from "./_firstNames.js";
 
 // Long enough to keep the facts of a typical paragraph; the first 280 dropped
 // the key details of longer scenarios.
@@ -160,6 +161,26 @@ const STARTERS = words(
 const personSignal = (before, after) =>
   CUE_BEFORE.test(before) || PERSON_AFTER.test(after);
 
+// Phrases that must survive the first-name pass ("Tim Hortons" is a shop).
+const PROTECTED = new RegExp("\\b(?:" + PHRASES.join("|") + ")\\b", "gi");
+
+/**
+ * Mask common given names wherever they appear, in any case and with no cue
+ * needed ("police busted down my door samantha"). Names that are also ordinary
+ * or legal words are not in the list (see _firstNames.js).
+ */
+export function maskFirstNames(text) {
+  const saved = [];
+  const guarded = text.replace(PROTECTED, (m) => {
+    saved.push(m);
+    return "\uE000" + (saved.length - 1) + "\uE001";
+  });
+  const masked = guarded.replace(/(?<![\w[])[A-Za-z]{3,}(?![\w\]])/g, (word) =>
+    FIRST_NAMES.has(word.toLowerCase()) ? "[name]" : word,
+  );
+  return masked.replace(/\uE000(\d+)\uE001/g, (_m, i) => saved[Number(i)]);
+}
+
 export function maskNames(text) {
   // "Officer Jones" / "Mr. Smith" -> "Officer [name]" (the title is kept).
   const out = text.replace(TITLE_NAME, (_m, title) => title + " [name]");
@@ -264,7 +285,7 @@ export function redactScenario(
   for (const [pattern, replacement] of REDACTIONS) {
     text = text.replace(pattern, replacement);
   }
-  text = maskNames(text);
+  text = maskFirstNames(maskNames(text));
 
   if (text.length <= maxChars) return text;
   // Cut on a word boundary so the snippet doesn't end mid-token.
