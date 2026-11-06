@@ -2,7 +2,8 @@
 // Pick case law for a scenario. CanLII's API has no text search, so candidates
 // come from the model's citations, the local corpus (landmark seeds, matches
 // and a fact-anchored fallback) and, behind a flag, the A2AJ open search.
-// Citations not in the corpus are confirmed by CanLII lookup before use.
+// Citations not in the corpus are looked up on CanLII and dropped if it can't
+// confirm them, except open-search hits, which are kept marked "unverified".
 
 import {
   parseCitation,

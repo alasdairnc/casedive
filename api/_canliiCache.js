@@ -1,9 +1,9 @@
 // api/_canliiCache.js
 // Redis-backed cache around CanLII citation verification (lookupCase).
 //
-// Why: each /api/analyze request looks up to 10 model-suggested citations on
-// CanLII (the pass after the model call; the pre-model pass only matches the
-// local corpus and makes no lookups). lookupCase() is the only CanLII network
+// Why: each /api/analyze request looks up to 10 citations on CanLII (the
+// model's, plus open-search hits when that flag is on), in the pass after the
+// model call; the pre-model pass only matches the local corpus. lookupCase() is the only CanLII network
 // call in the retrieval path, and the same citations recur across users, so
 // this wrapper caches the verdict.
 //
