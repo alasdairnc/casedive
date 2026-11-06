@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { RETRIEVAL_GOLD_SET } from "./retrievalGoldSet.js";
+import { RETRIEVAL_FAILURE_SET } from "./retrievalFailureSet.js";
 import {
   FINGERPRINT_PATTERN,
   redactScenario,
@@ -95,6 +97,60 @@ describe("redactScenario", () => {
       // names are always removed.
       expect(redactScenario("my brother mike took my bike")).toContain("mike");
       expect(redactScenario("Mike took my bike")).toContain("Mike");
+    });
+
+    it("keeps places, shops and apps: where it happened helps retrieval", () => {
+      const text =
+        "I was arrested at the Eaton Centre in Toronto for shoplifting from Sephora after an Uber ride, near King Street and Dundas";
+      expect(redactScenario(text)).toBe(text);
+    });
+
+    it("masks the person but keeps the surrounding facts", () => {
+      expect(
+        redactScenario("My roommate Sarah and I were at Walmart in Brampton when security grabbed my bag"),
+      ).toBe("My roommate [name] and I were at Walmart in Brampton when security grabbed my bag");
+      expect(
+        redactScenario("Police in Mississauga said Mike took my laptop"),
+      ).toBe("Police in Mississauga said [name] took my laptop");
+    });
+
+    it("masks a single name after a relationship or introduction word", () => {
+      for (const text of [
+        "my brother Mike was there",
+        "a guy named Dave hit me",
+        "my landlord Raj entered the unit",
+        "I told Sarah about it",
+      ]) {
+        expect(redactScenario(text)).toContain("[name]");
+      }
+    });
+
+    it("masks a single name before a verb a person does, including possessives", () => {
+      expect(redactScenario("Then Sarah grabbed my phone")).toContain("[name]");
+      expect(redactScenario("Then Sarah's lawyer called")).toContain("[name]");
+    });
+
+    it("documents the cost of keeping context: a lone name with no cue slips through", () => {
+      // Kept on purpose, so shops and neighbourhoods are not hidden. The privacy
+      // text says names can slip through.
+      expect(redactScenario("I met Sarah yesterday")).toContain("Sarah");
+    });
+
+    it("does not mask pronouns or ordinary sentence openers", () => {
+      const text = "He took my bag. She said it was theirs. The officer saw it.";
+      expect(redactScenario(text)).toBe(text);
+    });
+
+    it("leaves every scenario in the gold and failure sets untouched by name masking", () => {
+      // These are realistic, impersonal scenarios. Losing words here would mean
+      // the masking is eating the signal retrieval needs.
+      const all = [...RETRIEVAL_GOLD_SET, ...RETRIEVAL_FAILURE_SET]
+        .map((c) => c.scenario)
+        .filter(Boolean);
+      expect(all.length).toBeGreaterThan(50);
+      for (const scenario of all) {
+        expect(redactScenario(scenario)).not.toContain("[name]");
+      }
     });
 
     it("is idempotent", () => {

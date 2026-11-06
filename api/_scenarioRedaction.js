@@ -5,7 +5,9 @@
 // keeps a short redacted snippet of FAILED retrievals only, so a human can turn
 // real misses into regression cases. Redaction is best-effort pattern matching:
 // it removes contact details and identifiers and masks likely names, but it
-// cannot catch every name (lowercase names, a single name opening a sentence).
+// cannot catch every name (lowercase names, a lone name with no cue). It keeps
+// places, shops and legal vocabulary on purpose: that context is what helps
+// improve retrieval.
 // The privacy policy wording must not promise otherwise.
 
 import { createHash } from "crypto";
@@ -34,74 +36,154 @@ const REDACTIONS = [
 ];
 
 // ---- name masking ---------------------------------------------------------
-// Heuristic: runs of Capitalised words that are not known legal/place terms.
-// Over-masking is the safe direction, so a mid-sentence Capitalised word that
-// isn't on the allow-list becomes [name]. Known gaps (documented, tested):
-// lowercase names and a single name that opens a sentence.
+// Goal: hide PEOPLE while keeping the context that helps improve retrieval
+// (where it happened, what shop or app, what kind of place). So masking needs a
+// person signal; a Capitalised word alone is not enough:
+//   - a title + name ("Officer Jones", "Mr. Patel");
+//   - two or more Capitalised words in a row ("Jane Doe"), unless one of them is
+//     a place word ("Eaton Centre", "King Street");
+//   - a single Capitalised word right after a relationship/introduction word
+//     ("my brother Mike", "named Sarah", "told Sarah") or right before a verb a
+//     person does ("Sarah grabbed", "Mike's").
+// Cities, provinces, well-known shops/apps and legal vocabulary are always kept.
+// Known gaps (documented, tested): lowercase names, a lone name with no cue or
+// verb ("I met Sarah yesterday"), and a lone name that opens a sentence.
 
 const TITLE_WORDS =
-  "Mr|Mrs|Ms|Miss|Mx|Dr|Prof|Officer|Constable|Const|Cst|Det|Detective|Sgt|Sergeant|Cpl|Corporal|Insp|Inspector|Judge|Justice|Mme|Mlle|Const";
+  "Mr|Mrs|Ms|Miss|Mx|Dr|Prof|Officer|Constable|Const|Cst|Det|Detective|Sgt|Sergeant|Cpl|Corporal|Insp|Inspector|Judge|Justice|Mme|Mlle";
 
-// Capitalised words that are legal vocabulary, jurisdictions or calendar words.
-const NAME_ALLOW = new Set(
-  (
-    "charter criminal code crown court courts supreme appeal federal provincial " +
+const words = (list) => new Set(list.split(/\s+/).filter(Boolean));
+
+// Legal vocabulary, jurisdictions and calendar words.
+const LEGAL_AND_CALENDAR = words(
+  "charter criminal code crown court courts supreme appeal federal provincial " +
     "ontario quebec alberta manitoba saskatchewan british columbia nova scotia " +
     "brunswick newfoundland labrador yukon nunavut northwest territories prince " +
     "edward island canada canadian canadians police officer officers constable " +
     "judge justice youth act section highway monday tuesday wednesday thursday " +
     "friday saturday sunday january february march april may june july august " +
     "september october november december mr mrs ms miss mx dr prof det sgt cpl " +
-    "cst const insp mme mlle detective sergeant corporal inspector"
-  ).split(" "),
+    "cst const insp mme mlle detective sergeant corporal inspector",
+);
+
+// Where it happened: the jurisdiction matters for which cases apply, and a city
+// does not identify anyone.
+const PLACES = words(
+  "toronto ottawa mississauga brampton hamilton london markham vaughan kitchener " +
+    "waterloo cambridge guelph windsor burlington oakville oshawa barrie kingston " +
+    "sudbury thunder bay niagara falls etobicoke scarborough north york " +
+    "vancouver surrey burnaby richmond victoria kelowna abbotsford nanaimo " +
+    "calgary edmonton lethbridge winnipeg regina saskatoon montreal laval gatineau " +
+    "sherbrooke halifax dartmouth moncton fredericton charlottetown yellowknife " +
+    "whitehorse iqaluit st john's",
+);
+
+// Shops, apps and services: what kind of place or platform it was.
+const BRANDS = words(
+  "walmart costco amazon uber lyft doordash skip lcbo tim hortons canadian tire " +
+    "home depot loblaws metro sobeys shoppers sephora mcdonald's starbucks subway " +
+    "apple google facebook instagram snapchat tiktok whatsapp netflix paypal " +
+    "interac visa mastercard ttc go via rcmp opp cbsa cra ikea best buy winners " +
+    "zellers rona staples wendy's harvey's",
+);
+
+// A span containing one of these is a place or venue, not a person
+// ("Eaton Centre", "King Street", "Rec Room").
+const PLACE_WORDS = words(
+  "street avenue road drive boulevard lane court crescent way place square " +
+    "centre center mall plaza park hospital school university college station " +
+    "bridge room bar pub club restaurant store market airport arena stadium " +
+    "library church temple mosque hotel motel inn gym theatre cinema tower " +
+    "building terminal highway expressway parkway",
+);
+
+const KEEP = new Set([
+  ...LEGAL_AND_CALENDAR,
+  ...PLACES,
+  ...BRANDS,
+]);
+
+// "my brother Mike", "named Sarah", "told Sarah", "with Sarah".
+const CUE_BEFORE = new RegExp(
+  "(?:^|\\W)(?:friend|neighbour|neighbor|brother|sister|mother|father|mom|dad|mum|" +
+    "wife|husband|partner|boyfriend|girlfriend|fiance|fiancee|ex|boss|manager|" +
+    "supervisor|landlord|landlady|tenant|teacher|principal|coach|cousin|uncle|" +
+    "aunt|grandma|grandmother|grandpa|grandfather|son|daughter|roommate|coworker|" +
+    "colleague|employee|client|customer|lawyer|doctor|nurse|named|called|told|" +
+    "asked|with|against)\\s+$",
+  "i",
+);
+// "Sarah grabbed", "Mike took", "Sarah's".
+const PERSON_AFTER = new RegExp(
+  "^(?:['’]s\\b|\\s+(?:said|says|told|asked|saw|took|hit|grabbed|kicked|called|" +
+    "texted|punched|pushed|threatened|stole|yelled|lied|admitted|confessed|" +
+    "claimed|accused|gave|sold|and\\s+(?:i|me|my)\\b))",
+  "i",
 );
 
 const WORD = "[A-Z](?:[a-z]+|['’][A-Z][a-z]+)(?:[-'’][A-Za-z]+)*";
 const TITLE_NAME = new RegExp(
-  `\\b(${TITLE_WORDS})\\.?\\s+(?:${WORD})(?:\\s+(?:${WORD}))*`,
+  "\\b(" + TITLE_WORDS + ")\\.?\\s+(?:" + WORD + ")(?:\\s+(?:" + WORD + "))*",
   "g",
 );
-const CAP_RUN = new RegExp(`(?<![\\w\\[])${WORD}(?:\\s+${WORD})*`, "g");
+const CAP_RUN = new RegExp("(?<![\\w\\[])" + WORD + "(?:\\s+" + WORD + ")*", "g");
+
+const isKept = (word) => KEEP.has(word.toLowerCase());
 
 export function maskNames(text) {
   // "Officer Jones" / "Mr. Smith" -> "Officer [name]" (the title is kept).
-  let out = text.replace(TITLE_NAME, (_m, title) => `${title} [name]`);
+  const out = text.replace(TITLE_NAME, (_m, title) => title + " [name]");
+  const edits = [];
 
-  out = out.replace(CAP_RUN, (run, offset) => {
-    const before = out.slice(0, offset);
+  for (const match of out.matchAll(CAP_RUN)) {
+    const runStart = match.index;
     // A case name after "R v" is a public citation, not a person to hide.
-    if (/\bR\.?\s*v\.?\s*$/.test(before)) return run;
-    const atSentenceStart = offset === 0 || /[.!?]\s+$/.test(before);
+    if (/\bR\.?\s*v\.?\s*$/.test(out.slice(0, runStart))) continue;
 
-    const words = run.split(/\s+/);
-    const pieces = [];
-    let span = [];
-    const flush = (isFirstOfRun) => {
-      if (span.length === 0) return;
-      // A single Capitalised word opening a sentence is indistinguishable from
-      // an ordinary word, so it is left alone. Two or more in a row are a name.
-      const keep = span.length === 1 && isFirstOfRun && atSentenceStart;
-      pieces.push(keep ? span[0] : "[name]");
-      span = [];
-    };
-    let first = true;
-    for (const word of words) {
-      const allowed = NAME_ALLOW.has(word.toLowerCase());
-      if (allowed) {
-        flush(first);
-        pieces.push(word);
-        first = false;
-      } else {
-        const wasEmpty = span.length === 0;
-        span.push(word);
-        // `first` tracks whether the pending span begins the whole run.
-        if (wasEmpty && pieces.length > 0) first = false;
-      }
+    // Word positions inside the run.
+    const tokens = [];
+    let cursor = 0;
+    for (const w of match[0].split(/\s+/)) {
+      const at = match[0].indexOf(w, cursor);
+      tokens.push({ w, start: runStart + at, end: runStart + at + w.length });
+      cursor = at + w.length;
     }
-    flush(first && pieces.length === 0);
-    return pieces.join(" ");
-  });
-  return out;
+
+    // Consecutive words that are not kept form one span.
+    let i = 0;
+    while (i < tokens.length) {
+      if (isKept(tokens[i].w)) {
+        i += 1;
+        continue;
+      }
+      let j = i;
+      while (j + 1 < tokens.length && !isKept(tokens[j + 1].w)) j += 1;
+      const span = tokens.slice(i, j + 1);
+      const start = span[0].start;
+      const end = span[span.length - 1].end;
+      const before = out.slice(0, start);
+      const after = out.slice(end);
+
+      let mask;
+      if (span.length >= 2) {
+        mask = !span.some((t) => PLACE_WORDS.has(t.w.toLowerCase()));
+      } else {
+        const atSentenceStart = start === 0 || /[.!?]\s+$/.test(before);
+        mask =
+          !atSentenceStart &&
+          !PLACE_WORDS.has(span[0].w.toLowerCase()) &&
+          (CUE_BEFORE.test(before) || PERSON_AFTER.test(after));
+      }
+      if (mask) edits.push({ start, end });
+      i = j + 1;
+    }
+  }
+
+  let result = out;
+  for (const { start, end } of edits.sort((x, y) => y.start - x.start)) {
+    result = result.slice(0, start) + "[name]" + result.slice(end);
+  }
+  return result;
 }
 
 function collapse(text) {
