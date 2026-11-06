@@ -43,6 +43,20 @@ describe("redactScenario", () => {
     expect(out).not.toMatch(/\s{2}/);
   });
 
+  it("keeps the facts of a paragraph-length scenario (500 characters)", () => {
+    const paragraph =
+      "I was driving home on Highway 401 near Toronto around midnight when the officer pulled me over for speeding. He said he smelled alcohol and demanded a breath sample at the roadside, but he never told me I could speak to a lawyer first. I blew over the limit at the station and got a 90-day licence suspension. " +
+      "My lawyer says the demand may not have been valid. At trial the Crown relied on the roadside result.";
+    expect(paragraph.length).toBeGreaterThan(400);
+    expect(paragraph.length).toBeLessThan(500);
+    expect(redactScenario(paragraph)).toBe(paragraph);
+    expect(SCENARIO_SNIPPET_MAX_CHARS).toBe(500);
+
+    const out = redactScenario(`${paragraph} ${paragraph}`);
+    expect(out.length).toBeLessThanOrEqual(501);
+    expect(out.endsWith("…")).toBe(true);
+  });
+
   it("returns an empty string for non-strings and blanks", () => {
     expect(redactScenario(undefined)).toBe("");
     expect(redactScenario(null)).toBe("");
