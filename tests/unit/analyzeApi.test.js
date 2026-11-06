@@ -885,6 +885,370 @@ describe("CanLII retrieval timeout", () => {
   });
 });
 
+// A result built while retrieval was failing says nothing about the scenario.
+// Cached for the full TTL, it showed "no case law" for that scenario to every
+// user for a week after the outage ended.
+describe("analyze cache and failed retrieval", () => {
+  const SCENARIO = "police searched my phone without a warrant";
+
+  function useEmptyCache() {
+    mockRedis = {
+      get: vi.fn().mockResolvedValue(null),
+      setex: vi.fn().mockResolvedValue("OK"),
+    };
+  }
+
+  // setex is fire-and-forget, but it is called before the response is sent.
+  function analyzeCacheWrites() {
+    return mockRedis.setex.mock.calls.filter(([key]) =>
+      String(key).startsWith("cache:analyze:"),
+    );
+  }
+
+  function cachedResultWith(caseLawMeta) {
+    return JSON.stringify({
+      summary: "Cached summary",
+      criminal_code: [],
+      case_law: [],
+      civil_law: [],
+      charter: [],
+      analysis: "Cached analysis",
+      suggestions: [],
+      meta: { case_law: caseLawMeta },
+    });
+  }
+
+  it("caches a result when retrieval succeeded", async () => {
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [],
+      meta: { reason: "no_verified", upstreamErrors: 0 },
+    });
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.statusCode).toBe(200);
+    const writes = analyzeCacheWrites();
+    expect(writes).toHaveLength(1);
+    expect(writes[0][1]).toBe(60 * 60 * 24 * 7);
+    expect(JSON.parse(writes[0][2]).meta.case_law.source).toBe(
+      "retrieval_ranked",
+    );
+  });
+
+  it("does not cache a result whose retrieval timed out", async () => {
+    vi.useFakeTimers();
+    try {
+      useEmptyCache();
+      mockAnthropicSuccess();
+      mockRetrieveVerifiedCaseLaw.mockReturnValue(new Promise(() => {}));
+
+      const res = createRes();
+      const pending = handler(createReq({ body: { scenario: SCENARIO } }), res);
+      await vi.advanceTimersByTimeAsync(13_000);
+      await pending;
+
+      expect(res.body.meta.case_law.reason).toBe("retrieval_timeout");
+      expect(analyzeCacheWrites()).toEqual([]);
+    } finally {
+      vi.useRealTimers();
+    }
+  }, 15_000);
+
+  it("does not cache a result whose retrieval threw", async () => {
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockRejectedValue(new Error("Network failure"));
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.body.meta.case_law.reason).toBe("retrieval_error");
+    expect(analyzeCacheWrites()).toEqual([]);
+  });
+
+  it("does not cache a result made without a CanLII key", async () => {
+    useEmptyCache();
+    mockAnthropicSuccess();
+    delete process.env.CANLII_API_KEY;
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.body.meta.case_law.reason).toBe("missing_api_key");
+    expect(analyzeCacheWrites()).toEqual([]);
+  });
+
+  it("does not cache a result built while a CanLII lookup was failing", async () => {
+    // CanLII answering 500 or 429 fails fast: retrieval drops that citation
+    // and returns normally, so only the error count shows the result is short.
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [
+        {
+          citation: "R v Grant, 2009 SCC 32",
+          title: "R v Grant",
+          summary: "Charter s. 8 search of a phone without a warrant",
+          year: 2009,
+        },
+      ],
+      meta: {
+        reason: "verified_results",
+        verificationCalls: 2,
+        upstreamErrors: 1,
+      },
+    });
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.meta.case_law.retrieval.upstreamErrors).toBe(1);
+    expect(analyzeCacheWrites()).toEqual([]);
+  });
+
+  it.each([
+    [
+      "a timed-out retrieval",
+      {
+        source: "retrieval_error",
+        verifiedCount: 0,
+        reason: "retrieval_timeout",
+      },
+    ],
+    [
+      "a failed retrieval",
+      { source: "retrieval_error", verifiedCount: 0, reason: "retrieval_error" },
+    ],
+    [
+      "a missing CanLII key",
+      { source: "retrieval", verifiedCount: 0, reason: "missing_api_key" },
+    ],
+    [
+      "a failing CanLII lookup",
+      {
+        source: "retrieval_ranked",
+        verifiedCount: 0,
+        reason: "no_verified",
+        retrieval: { upstreamErrors: 2 },
+      },
+    ],
+  ])(
+    "ignores a cached result from %s and analyzes again",
+    async (_label, caseLawMeta) => {
+      // Entries written before this fix are still in Redis for up to 7 days.
+      mockRedis = {
+        get: vi.fn().mockResolvedValue(cachedResultWith(caseLawMeta)),
+        setex: vi.fn().mockResolvedValue("OK"),
+      };
+      mockAnthropicSuccess();
+      mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+        cases: [],
+        meta: { reason: "no_verified", upstreamErrors: 0 },
+      });
+
+      const res = createRes();
+      await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+      expect(res.statusCode).toBe(200);
+      expect(globalThis.fetch).toHaveBeenCalled();
+      expect(res.body.summary).toBe("Test summary");
+      expect(res.body.meta.case_law.source).toBe("retrieval_ranked");
+      const servedFromCache = mockLogRetrievalMetrics.mock.calls.some(
+        ([payload]) => payload?.source === "cache",
+      );
+      expect(servedFromCache).toBe(false);
+      // The fresh, healthy result replaces the bad entry.
+      expect(analyzeCacheWrites()).toHaveLength(1);
+    },
+  );
+
+  // The exact meta analyze.js wrote before upstreamErrors existed. It can't
+  // say whether a CanLII lookup failed fast, so one that made lookups runs again.
+  function preFixCaseLawMeta(verificationCalls) {
+    return {
+      source: "retrieval_ranked",
+      verifiedCount: 0,
+      reason: "no_verified",
+      retrieval: {
+        fallbackSearchUsed: false,
+        fallbackReason: null,
+        retrievalPass: "semantic_primary",
+        issuePrimary: "charter_search_seizure",
+        verificationCalls,
+        candidateCount: 3,
+        termsTried: 3,
+      },
+    };
+  }
+
+  it("analyzes again a pre-fix cached result that made CanLII lookups", async () => {
+    mockRedis = {
+      get: vi.fn().mockResolvedValue(cachedResultWith(preFixCaseLawMeta(2))),
+      setex: vi.fn().mockResolvedValue("OK"),
+    };
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [],
+      meta: { reason: "no_verified", upstreamErrors: 0 },
+    });
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(globalThis.fetch).toHaveBeenCalled();
+    expect(res.body.summary).toBe("Test summary");
+    expect(analyzeCacheWrites()).toHaveLength(1);
+  });
+
+  it("still serves a pre-fix cached result that made no CanLII lookups", async () => {
+    mockRedis = {
+      get: vi.fn().mockResolvedValue(cachedResultWith(preFixCaseLawMeta(0))),
+      setex: vi.fn().mockResolvedValue("OK"),
+    };
+    globalThis.fetch = vi.fn();
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.body.summary).toBe("Cached summary");
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+
+  // A fast CanLII failure that leaves nothing to show is an outage. Logged as
+  // "no_verified" it counted as a relevance miss and pushed the no-verified
+  // alert instead of the error-rate one.
+  it("logs a fast upstream failure that left no case law as a retrieval error", async () => {
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [],
+      meta: { reason: "no_verified", verificationCalls: 3, upstreamErrors: 3 },
+    });
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.meta.case_law.reason).toBe("retrieval_error");
+    const metric = mockLogRetrievalMetrics.mock.calls.find(
+      ([payload]) => payload?.source === "retrieval",
+    );
+    expect(metric[0]).toMatchObject({
+      reason: "retrieval_error",
+      retrievalError: true,
+      errorMessage: "upstream_error",
+      finalCaseLawCount: 0,
+    });
+  });
+
+  it("keeps no_verified when the ranker emptied cases retrieval did return", async () => {
+    // A minor traffic stop drops loosely related landmarks on purpose. A failed
+    // lookup elsewhere in the same request doesn't make that an outage.
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [
+        {
+          citation: "R v Hape, 2007 SCC 26",
+          title: "R v Hape",
+          summary:
+            "Charter extraterritoriality doctrine and foreign investigations",
+          matched_content: "Landmark RAG Match",
+          year: 2007,
+          isLandmark: true,
+          retrievalScore: 24,
+        },
+      ],
+      meta: {
+        reason: "verified_results",
+        verifiedCount: 1,
+        verificationCalls: 2,
+        upstreamErrors: 1,
+      },
+    });
+
+    const res = createRes();
+    await handler(
+      createReq({
+        body: {
+          scenario: "I was pulled over for going 1 km/h over the speed limit",
+        },
+      }),
+      res,
+    );
+
+    expect(res.body.case_law).toEqual([]);
+    expect(res.body.meta.case_law.reason).toBe("no_verified");
+    const metric = mockLogRetrievalMetrics.mock.calls.find(
+      ([payload]) => payload?.source === "retrieval",
+    );
+    expect(metric[0]).toMatchObject({
+      reason: "no_verified",
+      retrievalError: false,
+    });
+  });
+
+  it("logs a partial upstream failure that still showed case law as a success", async () => {
+    useEmptyCache();
+    mockAnthropicSuccess();
+    mockRetrieveVerifiedCaseLaw.mockResolvedValue({
+      cases: [
+        {
+          citation: "R v Grant, 2009 SCC 32",
+          title: "R v Grant",
+          summary: "Charter s. 8 search of a phone without a warrant",
+          year: 2009,
+        },
+      ],
+      meta: {
+        reason: "verified_results",
+        verificationCalls: 2,
+        upstreamErrors: 1,
+      },
+    });
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.body.meta.case_law.reason).toBe("verified_results");
+    const metric = mockLogRetrievalMetrics.mock.calls.find(
+      ([payload]) => payload?.source === "retrieval",
+    );
+    expect(metric[0]).toMatchObject({
+      reason: "verified_results",
+      retrievalError: false,
+    });
+    expect(metric[0].errorMessage).toBeUndefined();
+  });
+
+  it("still serves a healthy cached result without calling the model", async () => {
+    mockRedis = {
+      get: vi.fn().mockResolvedValue(
+        cachedResultWith({
+          source: "retrieval_ranked",
+          verifiedCount: 0,
+          reason: "no_verified",
+          retrieval: { upstreamErrors: 0 },
+        }),
+      ),
+      setex: vi.fn().mockResolvedValue("OK"),
+    };
+    globalThis.fetch = vi.fn();
+
+    const res = createRes();
+    await handler(createReq({ body: { scenario: SCENARIO } }), res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.summary).toBe("Cached summary");
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+    expect(analyzeCacheWrites()).toEqual([]);
+  });
+});
+
 describe("analyze response request IDs", () => {
   it("attaches the requestId to cache-miss responses", async () => {
     mockAnthropicSuccess();

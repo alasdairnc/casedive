@@ -2675,6 +2675,7 @@ export async function retrieveVerifiedCaseLaw({
         candidateCount: 0,
         verificationCalls: 0,
         verifiedCount: 0,
+        upstreamErrors: 0,
       },
     };
   }
@@ -2696,6 +2697,7 @@ export async function retrieveVerifiedCaseLaw({
         candidateCount: 0,
         verificationCalls: 0,
         verifiedCount: 0,
+        upstreamErrors: 0,
       },
     };
   }
@@ -2846,6 +2848,10 @@ export async function retrieveVerifiedCaseLaw({
   }
 
   let openSearchCandidates = 0;
+  // Sources that failed (CanLII 5xx/429, network error, timeout; A2AJ down).
+  // They fail open, so the result is just shorter; analyze.js reads this count
+  // to keep such a result out of its cache.
+  let upstreamErrors = 0;
   // Thin pool (the model named little and the corpus matched little): ask the
   // open case-law index. Added after the AI prefilter above because the index
   // already ranked these by the same words.
@@ -2858,6 +2864,9 @@ export async function retrieveVerifiedCaseLaw({
       scenario,
       aiSuggestions,
       filters,
+      onError: () => {
+        upstreamErrors += 1;
+      },
     });
     openSearchCandidates = openHits.length;
     aiCitationCandidates.push(...openHits);
@@ -2920,6 +2929,7 @@ export async function retrieveVerifiedCaseLaw({
         candidateCount: 0,
         verificationCalls: 0,
         verifiedCount: 0,
+        upstreamErrors,
         relevanceScoreAvg: null,
         fallbackPathUsed: localFallbackUsed,
         fallbackReason: localFallbackUsed ? "local_fallback" : null,
@@ -3048,6 +3058,11 @@ export async function retrieveVerifiedCaseLaw({
   const verificationResults = await Promise.all(
     toVerify.map((candidate) => cachedLookupCase(candidate.citation, apiKey)),
   );
+  // "error" is the only lookup status that means CanLII didn't answer; a 404
+  // is "not_found", a real answer.
+  upstreamErrors += verificationResults.filter(
+    (result) => result?.status === "error",
+  ).length;
 
   const verifiedCases = [];
   for (let i = 0; i < toVerify.length; i++) {
@@ -3189,6 +3204,7 @@ export async function retrieveVerifiedCaseLaw({
       candidateCount: aiCitationCandidates.length,
       verificationCalls: verificationCallsTotal,
       verifiedCount: cases.length,
+      upstreamErrors,
       aiCitationsVerified: aiCitationCandidates.length,
       relevanceScoreAvg,
       fallbackPathUsed: Boolean(fallbackReason),

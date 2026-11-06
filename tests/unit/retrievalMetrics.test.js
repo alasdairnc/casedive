@@ -1,6 +1,32 @@
 import { describe, expect, it } from "vitest";
 
 import { buildRetrievalMetrics } from "../../api/_retrievalMetrics.js";
+import { classifyEvent, normalizeEvent } from "../../api/_retrievalEvents.js";
+
+// analyze.js reports a fast CanLII failure with nothing left to show as an
+// error; check it lands in the error rate, not the no-verified rate.
+describe("an upstream failure with no case law, as analyze.js logs it", () => {
+  it("counts as an error, not a no-verified relevance miss", () => {
+    const payload = buildRetrievalMetrics({
+      source: "retrieval",
+      reason: "retrieval_error",
+      retrievalError: true,
+      errorMessage: "upstream_error",
+      finalCaseLawCount: 0,
+      retrievalMeta: { verificationCalls: 3, upstreamErrors: 3 },
+      filters: { lawTypes: { case_law: true } },
+    });
+    const flags = classifyEvent(normalizeEvent({ ts: 1, ...payload }));
+
+    expect(payload.errorMessage).toBe("upstream_error");
+    expect(flags).toMatchObject({
+      operational: true,
+      isError: true,
+      noVerified: false,
+      isFailure: true,
+    });
+  });
+});
 
 describe("buildRetrievalMetrics", () => {
   it("normalizes phase-4 telemetry fields from retrieval meta", () => {

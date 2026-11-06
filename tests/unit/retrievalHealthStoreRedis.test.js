@@ -319,6 +319,26 @@ describe("retrieval health store with Redis", () => {
     expect(item).toMatchObject({ count: 2, snippet: null, textState: "erased" });
   });
 
+  it("clears a stale error label when the scenario later fails without one", async () => {
+    await recordRetrievalMetricsEvent(
+      metrics("retrieval_error", {
+        scenario: "my chair was stolen",
+        retrievalError: true,
+        errorMessage: "upstream_error",
+      }),
+    );
+    await recordRetrievalMetricsEvent(
+      metrics("no_verified", { scenario: "my chair was stolen" }),
+    );
+
+    const [item] = (await getFailureQueue({ status: "all" })).items;
+    expect(item).toMatchObject({
+      reason: "no_verified",
+      count: 2,
+      errorMessage: null,
+    });
+  });
+
   it("fails closed: if the status can't be read, the record updates but no text is written", async () => {
     mockRedis.hget = vi.fn(async () => {
       throw new Error("boom");

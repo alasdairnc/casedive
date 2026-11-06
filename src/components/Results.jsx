@@ -273,7 +273,16 @@ export default function Results({
     caseLawMeta?.reason !== "filter_disabled" &&
     (!Array.isArray(data.case_law) || data.case_law.length === 0);
 
-  const caseLawEmptyMessage = caseLawMeta?.reason?.startsWith("retrieval_error")
+  // A timeout or error sets source "retrieval_error" (the reason alone,
+  // "retrieval_timeout", used to fall through to "no match"). CanLII failing
+  // fast with nothing returned keeps source "retrieval_ranked" and sets
+  // reason "retrieval_error"; the server decides that, so a deliberate empty
+  // from the ranker keeps its own message.
+  const caseLawRetrievalFailed =
+    caseLawMeta?.source === "retrieval_error" ||
+    caseLawMeta?.reason === "retrieval_error";
+
+  const caseLawEmptyMessage = caseLawRetrievalFailed
     ? "Case law retrieval is temporarily unavailable. Please try again in a moment."
     : caseLawMeta?.reason === "missing_api_key"
       ? "Case law retrieval is unavailable (CanLII not configured)."
@@ -290,7 +299,8 @@ export default function Results({
           "Include the trigger facts, like search, detention, counsel, or delay.",
           "If you want a broader doctrine answer, name the Charter section or offence provision.",
         ]
-      : caseLawMeta?.reason === "missing_api_key"
+      : // An outage isn't fixed by rewording the scenario.
+        caseLawRetrievalFailed || caseLawMeta?.reason === "missing_api_key"
         ? []
         : issuePrimary === "minor_traffic_stop"
           ? [
@@ -662,8 +672,7 @@ export default function Results({
       <SectionHeading label="Case Law" t={t} />
       <Callout
         tone={
-          caseLawMeta?.reason?.startsWith("retrieval_error") ||
-          caseLawMeta?.reason === "missing_api_key"
+          caseLawRetrievalFailed || caseLawMeta?.reason === "missing_api_key"
             ? t.accentOlive
             : t.accent
         }
