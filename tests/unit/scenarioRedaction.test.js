@@ -106,11 +106,34 @@ describe("redactScenario", () => {
       );
     });
 
-    it("documents the remaining gaps: lowercase names and a lone name opening a sentence", () => {
-      // Heuristic masking cannot see these. The privacy text must not claim
-      // names are always removed.
-      expect(redactScenario("my brother mike took my bike")).toContain("mike");
-      expect(redactScenario("Mike took my bike")).toContain("Mike");
+    it("masks a common first name in any case, with no cue word", () => {
+      expect(redactScenario("police busted down my door to find drugs samantha")).toBe(
+        "police busted down my door to find drugs [name]",
+      );
+      expect(redactScenario("my brother mike took my bike")).toBe(
+        "my brother [name] took my bike",
+      );
+      expect(redactScenario("Mike took my bike")).toBe("[name] took my bike");
+      expect(redactScenario("SARAH was there")).toBe("[name] was there");
+    });
+
+    it("never masks a given name that is also an ordinary or legal word", () => {
+      const text =
+        "I will mark the grant as said in Jordan, hunter chase the rose, a frank guy, and the jack don";
+      expect(redactScenario(text)).toBe(text);
+    });
+
+    it("keeps a shop by its full name while masking the person who shares a word with it", () => {
+      expect(redactScenario("tim took my car after Tim Hortons closed")).toBe(
+        "[name] took my car after Tim Hortons closed",
+      );
+    });
+
+    it("documents the remaining gaps: uncommon names and a surname on its own", () => {
+      // The first-name list is a heuristic, not a dictionary. The privacy text
+      // must not claim names are always removed.
+      expect(redactScenario("my neighbour zyrnak took my bike")).toContain("zyrnak");
+      expect(redactScenario("my neighbour patel took my bike")).toContain("patel");
     });
 
     it("keeps places, shops and apps: where it happened helps retrieval", () => {
@@ -184,10 +207,8 @@ describe("redactScenario", () => {
       );
     });
 
-    it("documents the cost of keeping context: a lone name with no cue slips through", () => {
-      // Kept on purpose, so shops and neighbourhoods are not hidden. The privacy
-      // text says names can slip through.
-      expect(redactScenario("I met Sarah yesterday")).toContain("Sarah");
+    it("an uncommon capitalised name with no cue is kept: the price of keeping places and shops", () => {
+      expect(redactScenario("I met Zyrnak yesterday")).toContain("Zyrnak");
     });
 
     it("does not mask pronouns or ordinary sentence openers", () => {
