@@ -125,9 +125,49 @@ describe("redactScenario", () => {
       }
     });
 
-    it("masks a single name before a verb a person does, including possessives", () => {
-      expect(redactScenario("Then Sarah grabbed my phone")).toContain("[name]");
-      expect(redactScenario("Then Sarah's lawyer called")).toContain("[name]");
+    it("masks a single name before a verb a person does", () => {
+      expect(redactScenario("My landlord said Sarah grabbed my phone")).toBe(
+        "My landlord said [name] grabbed my phone",
+      );
+    });
+
+    it("masks a possessive name mid-sentence, but not a place's possessive", () => {
+      expect(redactScenario("my landlord said Sarah's dog bit me")).toBe(
+        "my landlord said [name] dog bit me",
+      );
+      expect(redactScenario("I was in Toronto's west end and at Costco's lot")).toBe(
+        "I was in Toronto's west end and at Costco's lot",
+      );
+    });
+
+    it("does not swallow a sentence opener into the name", () => {
+      expect(redactScenario("Then Sarah grabbed my phone")).toBe(
+        "Then [name] grabbed my phone",
+      );
+    });
+
+    it("keeps a shop by its full name, but still masks a person who shares a word with it", () => {
+      expect(redactScenario("I stopped at Tim Hortons and a Canadian Tire in Barrie")).toBe(
+        "I stopped at Tim Hortons and a Canadian Tire in Barrie",
+      );
+      expect(redactScenario("my brother Tim took my car")).toBe(
+        "my brother [name] took my car",
+      );
+    });
+
+    it("keeps a city that is also a first name, unless a person signal is around it", () => {
+      expect(redactScenario("I live in Victoria and work in London")).toBe(
+        "I live in Victoria and work in London",
+      );
+      expect(redactScenario("my friend Victoria said it was fine")).toBe(
+        "my friend [name] said it was fine",
+      );
+    });
+
+    it("never overrides legal vocabulary, even with a person signal", () => {
+      expect(redactScenario("my lawyer said Charter rights applied")).toBe(
+        "my lawyer said Charter rights applied",
+      );
     });
 
     it("documents the cost of keeping context: a lone name with no cue slips through", () => {

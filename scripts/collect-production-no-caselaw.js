@@ -315,7 +315,12 @@ async function main() {
     return;
   }
 
-  const allFailures = Array.isArray(rawEvents) ? rawEvents : [];
+  // Out-of-scope answers (the scope check ruling a question not criminal law)
+  // are not retrieval failures: they must not feed the autofix volume gate or
+  // the proposals built from it.
+  const allFailures = (Array.isArray(rawEvents) ? rawEvents : []).filter(
+    (item) => item?.reason !== "non_criminal_scope",
+  );
   const noCaselawFailures = allFailures.filter((item) => {
     const reason = String(item?.reason || "");
     const finalCount = Number(item?.finalCaseLawCount || 0);

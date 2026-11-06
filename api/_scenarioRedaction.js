@@ -69,23 +69,39 @@ const LEGAL_AND_CALENDAR = words(
 // Where it happened: the jurisdiction matters for which cases apply, and a city
 // does not identify anyone.
 const PLACES = words(
-  "toronto ottawa mississauga brampton hamilton london markham vaughan kitchener " +
-    "waterloo cambridge guelph windsor burlington oakville oshawa barrie kingston " +
-    "sudbury thunder bay niagara falls etobicoke scarborough north york " +
-    "vancouver surrey burnaby richmond victoria kelowna abbotsford nanaimo " +
-    "calgary edmonton lethbridge winnipeg regina saskatoon montreal laval gatineau " +
-    "sherbrooke halifax dartmouth moncton fredericton charlottetown yellowknife " +
-    "whitehorse iqaluit st john's",
+  "toronto ottawa mississauga brampton hamilton markham vaughan kitchener " +
+    "waterloo guelph burlington oakville oshawa barrie sudbury etobicoke " +
+    "scarborough vancouver surrey burnaby kelowna abbotsford nanaimo calgary " +
+    "edmonton lethbridge winnipeg saskatoon montreal laval gatineau sherbrooke " +
+    "halifax dartmouth moncton fredericton charlottetown yellowknife whitehorse " +
+    "iqaluit",
 );
 
 // Shops, apps and services: what kind of place or platform it was.
 const BRANDS = words(
-  "walmart costco amazon uber lyft doordash skip lcbo tim hortons canadian tire " +
-    "home depot loblaws metro sobeys shoppers sephora mcdonald's starbucks subway " +
-    "apple google facebook instagram snapchat tiktok whatsapp netflix paypal " +
-    "interac visa mastercard ttc go via rcmp opp cbsa cra ikea best buy winners " +
-    "zellers rona staples wendy's harvey's",
+  "walmart costco amazon uber lyft doordash lcbo loblaws sobeys shoppers " +
+    "sephora starbucks subway apple google facebook instagram snapchat tiktok " +
+    "whatsapp netflix paypal interac visa mastercard ikea winners zellers rona " +
+    "staples metro",
 );
+
+// Multi-word names are matched as a PHRASE, never word by word, so that "Tim"
+// in "my brother Tim" is not kept just because "Tim Hortons" is.
+const PHRASES = [
+  "tim hortons",
+  "canadian tire",
+  "home depot",
+  "best buy",
+  "thunder bay",
+  "niagara falls",
+  "north york",
+];
+
+// Places that are also first names or surnames. Kept by default, but a cue
+// before ("my friend Victoria") or a person verb after ("Victoria said")
+// overrides it. Legal vocabulary is never overridden.
+const AMBIGUOUS = words("victoria regina richmond london windsor cambridge kingston");
+const AMBIGUOUS_KEEP = AMBIGUOUS;
 
 // A span containing one of these is a place or venue, not a person
 // ("Eaton Centre", "King Street", "Rec Room").
@@ -101,6 +117,7 @@ const KEEP = new Set([
   ...LEGAL_AND_CALENDAR,
   ...PLACES,
   ...BRANDS,
+  ...AMBIGUOUS_KEEP,
 ]);
 
 // "my brother Mike", "named Sarah", "told Sarah", "with Sarah".
@@ -115,7 +132,7 @@ const CUE_BEFORE = new RegExp(
 );
 // "Sarah grabbed", "Mike took", "Sarah's".
 const PERSON_AFTER = new RegExp(
-  "^(?:['’]s\\b|\\s+(?:said|says|told|asked|saw|took|hit|grabbed|kicked|called|" +
+  "^(?:\\s+(?:said|says|told|asked|saw|took|hit|grabbed|kicked|called|" +
     "texted|punched|pushed|threatened|stole|yelled|lied|admitted|confessed|" +
     "claimed|accused|gave|sold|and\\s+(?:i|me|my)\\b))",
   "i",
@@ -128,7 +145,18 @@ const TITLE_NAME = new RegExp(
 );
 const CAP_RUN = new RegExp("(?<![\\w\\[])" + WORD + "(?:\\s+" + WORD + ")*", "g");
 
-const isKept = (word) => KEEP.has(word.toLowerCase());
+const POSSESSIVE = /['’]s$/i;
+
+// Words that open a sentence and would otherwise be swallowed into a name span
+// ("Then Sarah grabbed my phone" must not mask "Then").
+const STARTERS = words(
+  "then and but so when after before while because if also later next finally " +
+    "suddenly meanwhile however yesterday today tonight afterwards once now",
+);
+
+// A person signal around a word: a cue before it, a person verb after it.
+const personSignal = (before, after) =>
+  CUE_BEFORE.test(before) || PERSON_AFTER.test(after);
 
 export function maskNames(text) {
   // "Officer Jones" / "Mr. Smith" -> "Officer [name]" (the title is kept).
@@ -149,16 +177,40 @@ export function maskNames(text) {
       cursor = at + w.length;
     }
 
+    // Mark whole phrases ("Tim Hortons") as kept.
+    const lower = tokens.map((t) => t.w.toLowerCase());
+    for (const phrase of PHRASES) {
+      const parts = phrase.split(" ");
+      for (let p = 0; p + parts.length <= lower.length; p += 1) {
+        if (parts.every((part, k) => lower[p + k] === part)) {
+          for (let k = 0; k < parts.length; k += 1) tokens[p + k].phrase = true;
+        }
+      }
+    }
+
+    const kept = (tok) => {
+      if (tok.phrase) return true;
+      const word = tok.w.toLowerCase();
+      if (LEGAL_AND_CALENDAR.has(word)) return true; // never overridden
+      if (!KEEP.has(word)) return false;
+      // A place that is also a name: a person signal around it wins.
+      if (AMBIGUOUS.has(word)) {
+        return !personSignal(out.slice(0, tok.start), out.slice(tok.end));
+      }
+      return true;
+    };
+
     // Consecutive words that are not kept form one span.
     let i = 0;
     while (i < tokens.length) {
-      if (isKept(tokens[i].w)) {
+      if (kept(tokens[i])) {
         i += 1;
         continue;
       }
       let j = i;
-      while (j + 1 < tokens.length && !isKept(tokens[j + 1].w)) j += 1;
+      while (j + 1 < tokens.length && !kept(tokens[j + 1])) j += 1;
       const span = tokens.slice(i, j + 1);
+      while (span.length > 1 && STARTERS.has(span[0].w.toLowerCase())) span.shift();
       const start = span[0].start;
       const end = span[span.length - 1].end;
       const before = out.slice(0, start);
@@ -168,11 +220,18 @@ export function maskNames(text) {
       if (span.length >= 2) {
         mask = !span.some((t) => PLACE_WORDS.has(t.w.toLowerCase()));
       } else {
+        const word = span[0].w;
         const atSentenceStart = start === 0 || /[.!?]\s+$/.test(before);
+        const possessive = POSSESSIVE.test(word);
+        // "Sarah's" is one token (the word pattern takes the 's), so a
+        // possessive is itself the person signal unless the owner is a known
+        // place or shop ("Toronto's", "Costco's").
+        const ownerKept = possessive && KEEP.has(word.slice(0, -2).toLowerCase());
         mask =
           !atSentenceStart &&
-          !PLACE_WORDS.has(span[0].w.toLowerCase()) &&
-          (CUE_BEFORE.test(before) || PERSON_AFTER.test(after));
+          !ownerKept &&
+          !PLACE_WORDS.has(word.toLowerCase()) &&
+          (possessive || personSignal(before, after));
       }
       if (mask) edits.push({ start, end });
       i = j + 1;

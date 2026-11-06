@@ -44,6 +44,21 @@ describe("buildRetrievalImprovements", () => {
     ]);
   });
 
+  it("makes no suggestion from out-of-scope items", () => {
+    expect(
+      buildRetrievalImprovements([
+        { classId: "general_criminal", reason: "non_criminal_scope", count: 5, concepts: [] },
+      ]),
+    ).toEqual([]);
+
+    const items = buildRetrievalImprovements([
+      { classId: "general_criminal", reason: "non_criminal_scope", count: 5 },
+      { classId: "theft", reason: "no_verified", count: 1 },
+    ]);
+    expect(items).toHaveLength(1);
+    expect(items[0].classId).toBe("theft");
+  });
+
   it("still suggests from records whose text has been deleted", () => {
     const [item] = buildRetrievalImprovements([
       { classId: "theft", count: 2, snippet: null, concepts: ["theft"] },

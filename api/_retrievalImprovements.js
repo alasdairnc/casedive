@@ -19,6 +19,9 @@ export function buildRetrievalImprovements(failures = []) {
 
   const grouped = new Map();
   for (const failure of failures) {
+    // An out-of-scope answer is the scope check working, not a retrieval miss:
+    // "tune the criminal query terms" is the wrong lesson from a tenancy question.
+    if (failure?.reason === "non_criminal_scope") continue;
     const classId = normalizeClassId(failure?.classId || failure?.issuePrimary);
     if (!grouped.has(classId)) {
       grouped.set(classId, {
