@@ -331,12 +331,15 @@ function tokenizeForRanking(text) {
 // pass too. This file used to keep its own copy, which missed the R v Grant
 // lay-detention fix and the forced-entry s. 8 fix.
 //
-// Shown items carry matched_content, not the candidate-side matchedTerm, so
-// it is passed in that slot to keep its text counting toward the domains.
+// Domains come from the case's own text only. Shown items' matched_content
+// also carries the SCENARIO's issue terms ("Issue signals: break and enter",
+// "Scenario terms: ..."); read as case text, they gave every case the
+// scenario's domain, and phone-search cases passed as break and enter.
 function caseDomainsForRanking(item) {
   return detectCandidateDomains({
-    ...item,
-    matchedTerm: item?.matched_content || item?.matchedTerm || "",
+    citation: item?.citation,
+    title: item?.title,
+    summary: item?.summary,
   });
 }
 
