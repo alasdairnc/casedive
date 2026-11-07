@@ -198,14 +198,3 @@ export function logError(
     }),
   );
 }
-
-/**
- * Helper to extract client IP from request
- * @param {Object} req - Vercel request object
- * @returns {string} Client IP address
- */
-export function getClientIpForLogging(req) {
-  return (
-    req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown"
-  );
-}

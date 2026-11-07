@@ -46,15 +46,11 @@ export function useSearchHistory(limit = GUEST_HISTORY_LIMIT) {
     [history],
   );
 
-  // Sorted newest first (already maintained by addToHistory)
-  const getHistory = useCallback(() => history, [history]);
-
   return {
     history,
     addToHistory,
     clearHistory,
     replaceHistory,
     rerunQuery,
-    getHistory,
   };
 }

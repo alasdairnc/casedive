@@ -49,7 +49,6 @@ vi.mock("../../src/hooks/useSearchHistory.js", () => ({
     addToHistory: vi.fn(),
     clearHistory: vi.fn(),
     rerunQuery: vi.fn(),
-    getHistory: vi.fn(() => []),
   }),
 }));
 

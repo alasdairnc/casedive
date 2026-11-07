@@ -286,7 +286,6 @@ async function callAnthropic(messages, system, apiKey, timeoutMs) {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
       "anthropic-version": "2023-06-01",
-      "anthropic-beta": "prompt-caching-2024-07-31",
     },
     body: JSON.stringify({
       model: ANTHROPIC_MODEL_ID,
@@ -877,9 +876,10 @@ export default async function handler(req, res) {
       }
     }
 
-    // Pre-retrieval pass: fetch CanLII cases from the raw scenario before calling
-    // Anthropic so they can be included as search_result blocks in the user message.
-    // The Phase B loop below still runs afterward using AI hints to refine results.
+    // Pre-model pass: retrieval with no model input yet, so it only matches the
+    // local corpus (landmark seeds and the fact-anchored fallback) and makes no
+    // CanLII calls. Its cases go into the user message as reference context.
+    // The pass after the model call is the one that looks citations up.
     let preRetrievedCases = [];
     const canliiKey = process.env.CANLII_API_KEY || "";
     if (filters.lawTypes.case_law !== false && canliiKey) {

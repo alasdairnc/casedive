@@ -279,34 +279,3 @@ export async function runTestSuite(testScenarios = [], retrievalFn = null) {
     results: results, // Per-scenario breakdown
   };
 }
-
-/**
- * Compare two filter configurations by running test suite against both.
- */
-export async function compareConfigs(
-  config1,
-  config2,
-  testScenarios = [],
-  retrievalFn = null,
-) {
-  if (!retrievalFn) {
-    throw new Error("retrievalFn is required");
-  }
-
-  const results1 = await runTestSuite(testScenarios, retrievalFn);
-  const results2 = await runTestSuite(testScenarios, retrievalFn);
-
-  return {
-    config1_results: results1,
-    config2_results: results2,
-    improvements: {
-      pass_rate_delta: results2.pass_rate - results1.pass_rate,
-      relevance_delta:
-        results2.avg_relevance_global - results1.avg_relevance_global,
-      precision_delta:
-        results2.avg_precision_global - results1.avg_precision_global,
-      better_config:
-        results2.pass_rate > results1.pass_rate ? "config2" : "config1",
-    },
-  };
-}

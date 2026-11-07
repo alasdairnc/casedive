@@ -1,12 +1,11 @@
 // api/_canliiCache.js
 // Redis-backed cache around CanLII citation verification (lookupCase).
 //
-// Why: each /api/analyze request verifies up to 20 citations (a pre-Anthropic
-// grounding pass + a Phase B pass), and the two passes verify overlapping
-// citations — AI suggestions repeat the same landmark cases the pre-pass already
-// verified. lookupCase() is the only CanLII network call in the retrieval path
-// and is uncached, so the same citations are re-verified on every request across
-// every user. This wrapper memoizes the verdict.
+// Why: each /api/analyze request looks up to 10 citations on CanLII (the
+// model's, plus open-search hits when that flag is on), in the pass after the
+// model call; the pre-model pass only matches the local corpus. lookupCase() is the only CanLII network
+// call in the retrieval path, and the same citations recur across users, so
+// this wrapper caches the verdict.
 //
 // Zero behavior change: on any miss / null Redis / timeout it falls straight
 // through to lookupCase(). Only the two statuses that cost a network round-trip
@@ -55,13 +54,10 @@ function ttlForStatus(status) {
  *
  * @param {string} citation
  * @param {string} apiKey
- * @param {Map<string, object>} [memo] optional in-request memo of resolved verdicts
  * @returns {Promise<{status: string, url?: string, searchUrl?: string, title?: string}>}
  */
-export async function cachedLookupCase(citation, apiKey, memo) {
+export async function cachedLookupCase(citation, apiKey) {
   const key = verifyCacheKey(citation);
-
-  if (memo?.has(key)) return memo.get(key);
 
   if (redis) {
     const hit = await withRedisTimeout(
@@ -69,22 +65,17 @@ export async function cachedLookupCase(citation, apiKey, memo) {
       API_REDIS_TIMEOUT_MS,
     ).catch(() => null);
     if (hit) {
-      const result = typeof hit === "string" ? JSON.parse(hit) : hit;
-      memo?.set(key, result);
-      return result;
+      return typeof hit === "string" ? JSON.parse(hit) : hit;
     }
   }
 
   const result = await lookupCase(citation, apiKey);
 
-  if (CACHEABLE.has(result.status)) {
-    if (redis) {
-      withRedisTimeout(
-        redis.setex(key, ttlForStatus(result.status), JSON.stringify(result)),
-        API_REDIS_TIMEOUT_MS,
-      ).catch(() => {});
-    }
-    memo?.set(key, result);
+  if (redis && CACHEABLE.has(result.status)) {
+    withRedisTimeout(
+      redis.setex(key, ttlForStatus(result.status), JSON.stringify(result)),
+      API_REDIS_TIMEOUT_MS,
+    ).catch(() => {});
   }
 
   return result;

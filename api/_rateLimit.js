@@ -23,12 +23,6 @@ const redisUrl =
 const redisToken =
   process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || "";
 
-export const redisConfigSource = process.env.UPSTASH_REDIS_REST_URL
-  ? "UPSTASH_REDIS_REST_*"
-  : process.env.KV_REST_API_URL
-    ? "KV_REST_API_*"
-    : "none";
-
 // Initialize Redis client only if credentials are provided
 if (redisUrl && redisToken) {
   redis = new Redis({
