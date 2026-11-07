@@ -1,6 +1,87 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { __testables } from "../../api/analyze.js";
+import { retrieveVerifiedCaseLaw } from "../../api/_caseLawRetrieval.js";
+import { normalizeFilters } from "../../api/_filters.js";
+
+// The landing page's "Break and enter" example chip.
+const BREAK_AND_ENTER_EXAMPLE =
+  "A person was found inside an occupied house at 2 a.m. with stolen electronics. The homeowner was home during the break-in and called 911.";
+
+// retrieveVerifiedCaseLaw appends the SCENARIO's issue terms to every shown
+// case's matched_content. This is what it wrote for R v Marakah and R v Vu on
+// the example above.
+const SCENARIO_ANNOTATION =
+  " | Semantic matches: person found | Selection signals: token_overlap:4, compat:-4, semantic_match:person found | Issue signals: break and enter, breaking and entering, break-in, breaking in, s. 348, section 348 | Scenario terms: person, found, electronic";
+
+describe("selectTopRetrievedCases reads a case's domains from the case", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("drops search cases whose only break-and-enter signal is the scenario's own annotation", () => {
+    // Read as case text, "Issue signals: break and enter" gave both search
+    // cases a break-and-enter domain, so the fit check let them through and
+    // the example showed two phone and computer search cases.
+    const selected = __testables.selectTopRetrievedCases(
+      BREAK_AND_ENTER_EXAMPLE,
+      [
+        {
+          citation: "2009 ABCA 310",
+          title: "R. v. Auger",
+          summary:
+            "Eighteen months was unfit for a repeat offender's break and enter into a home. break and enter breaking and entering dwelling house theft under laptop guilty plea",
+          matched_content:
+            "Landmark Case Law Database | Semantic matches: break and enter, breaking and entering, break-in",
+          year: "2009",
+        },
+        {
+          citation: "2017 SCC 59",
+          title: "R. v. Marakah",
+          summary:
+            "An accused can have a reasonable expectation of privacy in text messages sent to and found on another person's seized phone. text messages cell phones electronic evidence Charter s. 8 Search and Seizure Privacy",
+          matched_content: `Landmark Case Law Database${SCENARIO_ANNOTATION}`,
+          year: "2017",
+        },
+        {
+          citation: "2013 SCC 60",
+          title: "R. v. Vu",
+          summary:
+            "A warrant to search a place does not authorize the search of computers or cell phones found there. warrant computer search electronic devices privacy Charter s. 8 Search and Seizure Computers",
+          matched_content: `Landmark Case Law Database${SCENARIO_ANNOTATION}`,
+          year: "2013",
+        },
+      ],
+      3,
+    );
+
+    expect(selected.map((c) => c.title)).toEqual(["R. v. Auger"]);
+  });
+
+  it("shows only on-point case law for the break-and-enter example, end to end", async () => {
+    // Real corpus, real landmark matcher, real retrieval, then the ranking
+    // pass, as /api/analyze runs them (no model input, no network).
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({ ok: false, status: 404, json: async () => ({}) })),
+    );
+    const { cases } = await retrieveVerifiedCaseLaw({
+      scenario: BREAK_AND_ENTER_EXAMPLE,
+      filters: normalizeFilters({}),
+      landmarkMatches: __testables.matchLandmarkCases(BREAK_AND_ENTER_EXAMPLE),
+      apiKey: "offline",
+      maxResults: 10,
+    });
+
+    const titles = __testables
+      .selectTopRetrievedCases(BREAK_AND_ENTER_EXAMPLE, cases, 3)
+      .map((c) => c.title);
+
+    expect(titles).toContain("R. v. Auger");
+    expect(titles).not.toContain("R. v. Marakah");
+    expect(titles).not.toContain("R. v. Vu");
+  });
+});
 
 describe("selectTopRetrievedCases fallback", () => {
   it("keeps ranked candidates when strict overlap filter excludes all results", () => {
