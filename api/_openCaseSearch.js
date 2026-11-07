@@ -73,12 +73,15 @@ function stripMarkup(text) {
  * Candidates in the shape retrieval already uses. Only hits whose citation we
  * can parse are kept; `existenceProven` marks that a court source returned the
  * decision, which matters for pre-2000 cases CanLII's lookup cannot confirm.
+ * A failed search still returns [] (fails open); `onError` is called so the
+ * caller knows the empty list is an outage, not an answer.
  */
 export async function searchOpenCaseLaw({
   scenario,
   aiSuggestions = [],
   filters = {},
   timeoutMs = OPEN_SEARCH_TIMEOUT_MS,
+  onError,
 } = {}) {
   // No model terms means the pre-model retrieval pass. Scenario words alone
   // return noise (live check, 2026-11-02), so don't search on them.
@@ -102,7 +105,10 @@ export async function searchOpenCaseLaw({
     const res = await fetch(`${A2AJ_SEARCH_URL}?${params}`, {
       signal: controller.signal,
     });
-    if (!res?.ok) return [];
+    if (!res?.ok) {
+      onError?.();
+      return [];
+    }
     const body = await res.json();
     const out = [];
     for (const hit of Array.isArray(body?.results) ? body.results : []) {
@@ -131,7 +137,9 @@ export async function searchOpenCaseLaw({
     }
     return out;
   } catch {
-    return []; // timeout, network or parse failure: fall back to other sources
+    // Timeout, network or parse failure: fall back to other sources.
+    onError?.();
+    return [];
   } finally {
     clearTimeout(timer);
   }

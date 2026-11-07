@@ -394,6 +394,71 @@ describe("retrieveVerifiedCaseLaw landmark URL handling", () => {
   });
 });
 
+// A source that fails fast (CanLII 500/429, network error) drops its
+// candidates without throwing. analyze.js must know, or it caches a short
+// result for a week.
+describe("retrieveVerifiedCaseLaw upstream errors", () => {
+  const run = () =>
+    retrieveVerifiedCaseLaw({
+      apiKey: "test-key",
+      scenario:
+        "Police searched my phone without a warrant after arresting me for theft.",
+      aiCaseLaw: [
+        {
+          citation: "R v Smith, 2019 ONCA 123",
+          summary: "phone search warrant theft arrest",
+        },
+      ],
+      criminalCode: [{ citation: "s. 322" }],
+      maxResults: 10,
+    });
+
+  it("counts a CanLII lookup that failed", async () => {
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue({ ok: false, status: 500, json: async () => ({}) });
+
+    const { cases, meta } = await run();
+
+    expect(meta.verificationCalls).toBe(1);
+    expect(meta.upstreamErrors).toBe(1);
+    expect(cases.map((c) => c.citation)).not.toContain(
+      "R v Smith, 2019 ONCA 123",
+    );
+  });
+
+  it("counts a lookup that threw (network error or timeout)", async () => {
+    globalThis.fetch = vi.fn().mockRejectedValue(new Error("socket hang up"));
+
+    const { meta } = await run();
+
+    expect(meta.upstreamErrors).toBe(1);
+  });
+
+  it("does not count a 404: that is CanLII's answer, not a failure", async () => {
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue({ ok: false, status: 404, json: async () => ({}) });
+
+    const { meta } = await run();
+
+    expect(meta.verificationCalls).toBe(1);
+    expect(meta.upstreamErrors).toBe(0);
+  });
+
+  it("reports zero when every lookup answered", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ title: "R v Smith" }),
+    });
+
+    const { meta } = await run();
+
+    expect(meta.upstreamErrors).toBe(0);
+  });
+});
+
 describe("isClearlyNonCriminalScenario", () => {
   const nonCriminal = __testables.isClearlyNonCriminalScenario;
 

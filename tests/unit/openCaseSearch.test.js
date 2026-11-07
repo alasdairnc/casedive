@@ -142,6 +142,48 @@ describe("retrieveVerifiedCaseLaw with OPEN_CASE_SEARCH", () => {
     expect(hitA2aj).toBe(false);
   });
 
+  it.each([
+    [
+      "answers 500",
+      async () => ({ ok: false, status: 500, json: async () => ({}) }),
+    ],
+    [
+      "is unreachable",
+      async () => {
+        throw new Error("down");
+      },
+    ],
+  ])(
+    "counts the open search as an upstream error when A2AJ %s",
+    async (_label, a2ajResponse) => {
+      process.env.OPEN_CASE_SEARCH = "on";
+      globalThis.fetch = vi.fn(async (url) =>
+        String(url).includes("api.a2aj.ca")
+          ? a2ajResponse()
+          : { ok: true, status: 200, json: async () => ({ title: "x" }) },
+      );
+
+      const { cases, meta } = await run();
+
+      // The failed search adds nothing, and the pool here is otherwise empty.
+      expect(cases).toEqual([]);
+      expect(meta.upstreamErrors).toBe(1);
+    },
+  );
+
+  it("does not count an open search that answered with no usable hits", async () => {
+    process.env.OPEN_CASE_SEARCH = "on";
+    globalThis.fetch = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ results: [] }),
+    }));
+
+    const { meta } = await run();
+
+    expect(meta.upstreamErrors).toBe(0);
+  });
+
   it("surfaces open-index cases for a scenario the corpus lacks", async () => {
     process.env.OPEN_CASE_SEARCH = "on";
     mockFetch();

@@ -224,8 +224,17 @@ function defined(obj) {
   );
 }
 
-// The structured fields that are refreshed on every sighting.
+// The structured fields that are refreshed on every sighting. errorMessage is
+// always written ("" when this sighting had none, read back as null): left to
+// defined(), an outage label stuck to the record through later real misses.
 function latestFields(f) {
+  return {
+    ...latestDefinedFields(f),
+    errorMessage: f.errorMessage || "",
+  };
+}
+
+function latestDefinedFields(f) {
   return defined({
     lastSeen: f.ts,
     reason: f.reason,
@@ -242,7 +251,6 @@ function latestFields(f) {
     termsTried: f.termsTried,
     candidateCount: f.candidateCount,
     verificationCalls: f.verificationCalls,
-    errorMessage: f.errorMessage,
   });
 }
 

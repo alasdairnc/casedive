@@ -36,6 +36,7 @@ A failure is an operational event with an error, a timeout, or zero verified cas
 - Reviewing or ignoring a failure **deletes its text key**. The dashboard says so on each card. Promoted failures keep their text until it expires, so `npm run retrieval:promote` can show it to you.
 - If the status read that gates text storage fails, no text is written (fail closed).
 - `errorMessage` is reduced to a fixed label (`timeout`, `network_error`, `rate_limited`, `http_4xx`, `http_5xx`, `upstream_error`): raw upstream errors can echo the query.
+- A CanLII lookup or A2AJ search that fails fast (5xx, 429, network) doesn't throw; retrieval counts it in `upstreamErrors`. If retrieval then returned nothing, the event is an error labelled `upstream_error`, not a zero-result miss. If the ranker emptied cases retrieval did return (a minor traffic stop), it stays `no_verified`. Each sighting rewrites the label, so an old outage label doesn't stick to a later real miss.
 - Redaction runs inside the store, before the write, so no caller can store raw text. The metrics log line never carries scenario text either.
 - The id is `f` + 15 hex characters of a hash of the redacted text. The leading letter matters: `@upstash/redis` JSON-parses what it reads, so an all-digit id would come back as a number.
 - The same scenario seen again bumps `count` and `lastSeen`; it never resets the review status.
